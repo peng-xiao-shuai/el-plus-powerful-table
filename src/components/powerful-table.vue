@@ -41,6 +41,9 @@
 							    <template style="padding: 0 10px" v-if="each.data.slot" v-slot:[each.data.slot]>{{each.data.symbol}}</template>
 							</el-input>
 						</div>
+						<div v-else-if="each.type == 'iconfont'">
+							<i :class="[scope.row[each.popr],...each.data.class] || ['']" :style="each.data.style || {}"></i>
+						</div>
 						<div v-else-if="each.type == 'video'" style="border-radius: 10px;overflow: hidden;width: 100%;height: 100%;margin: 0 auto;">
 						  <video
 							v-if="scope.row[each.popr]"
@@ -91,6 +94,7 @@
 
 <script>
 	import { ElMessage } from 'element-plus'
+	import store from '/@/store';
 
 	export default {
 		name: "powerful-table",
@@ -127,7 +131,7 @@
 			},
 			pageSizes: {
 				type: Array,
-				default: () => [10, 20, 30]
+				default: () => [5, 20, 30]
 			},
 
 			// 批量操作
@@ -137,11 +141,17 @@
 					// null
 				}
 			},
-			// 分页
-			currentPage: {
-				type: Number,
-				default: 1
+			// 表格名
+			tableName:{
+				type: String,
+				default: '_num'
 			},
+			// 是否开启表格pageNum缓存
+			isCachePageNum:{
+				type: Boolean,
+				default: false
+			},
+
 			//  毕传
 			total: {
 				type: Number,
@@ -153,12 +163,32 @@
 			return {
 				listLoading: true,
 
+				// 分页
+				currentPage: 1,
+
 				// 当前页选中
 				currentSelect: [],
 				// 其他页面选中
 				otherSelect: [],
 				
 				pageSize: this.pageSizes[0],
+			}
+		},
+		computed:{
+			// 筛选是否存在pageNum
+			page(){
+				if(this.isCachePageNum){
+					return store.state.pageNum.pageNums.filter((item) =>{
+						return item && item.name == this.$route.name
+					})
+				}else{
+					return []
+				}
+			}
+		},
+		mounted(){
+			if(this.isCachePageNum){
+				this.currentPage = this.page.length > 0 && this.page[0].pages[this.tableName] || 1
 			}
 		},
 		methods: {
@@ -323,34 +353,26 @@
 			handleChange(e, type) {
 				// console.log('切换', e, type);
 
-				if(type == 'currentPage'){
-					this.$emit('update:currentPage',e)
-				}else{
-					this[type] = e
-				}
+				this[type] = e
 
 				this.get()
 			},
 
 			get() {
-				// 筛选是否存在pageNum
-				let page = computed(()=>{
-					return store.state.user.pageNums.filter((item) =>{
-						return item && item.name == route.name
-					})
-				})
-
 				// 存储pageNum
-				if(page.value.length <= 0){
-					store.commit('pageNumPush',{name: route.name,pages:{menuTable: 1}})
+				if(this.isCachePageNum){
+
+					if(this.page.length <= 0){
+						store.commit('pageNumPush',{name: this.$route.name,pages:{[this.tableName]: this.currentPage}})
+					}else{
+						this.page[0].pages[this.tableName] = this.currentPage
+					}
 				}
 
 				let data = {
 					pageNum: this.currentPage,
 					pageSize: this.pageSize
 				}
-
-				console.log(this.currentPage);
 
 				try {
 					// 如果父组件是getList方法 无需自定义事假

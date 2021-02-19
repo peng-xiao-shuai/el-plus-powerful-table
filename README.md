@@ -1,5 +1,5 @@
 # el-plus-powerful-table
-主要功能：分页多选，批量操作
+主要功能：分页多选，批量操作，暂存表格分页
 
 vue3.0的element-plus二次开发表格组件
 
@@ -9,17 +9,35 @@ vue3.0的element-plus二次开发表格组件
 
 2. `getList`接受`pageSize` or `pageNum`
 ```js
+// 示例
 function getList(e) {
-    // 开启暂存分页 如下 
-    // ps: 暂存分页会在刷新页面下重置，也需要手动删除
-    let page = computed(()=>{
-        return store.state.user.pageNums.filter((item) =>{
-            return item && item.name == route.name
-        })
-    })
-    // 
     let data = e ? e : {pageNum: page.value.length && page.value[0].pages.menuTable || 1,pageSize: 10})
 }
+```
+
+<!-- 如果需要开启缓存分页 则需在store/modules 下新增 pageNum.js-->
+```js
+const state = {
+	pageNums:[]
+}
+
+const mutations = {
+	pageNumPush(state: any,val: any){
+		state.pageNums.push(val)
+		console.log(state.pageNums);
+	},
+    pageNumDel(state: any,val: any){
+        state.pageNums.splice(val,1)
+    }
+}
+
+
+export default {
+	state,
+	mutations
+}
+
+// 在store/index.js 中引入
 ```
 
 ## powerful-table Attributes 表格组件
@@ -131,6 +149,12 @@ function getList(e) {
 | style | 视频样式 | object | - | - |
 | poster | 封面url路径 | string | - | - |
 | loop | 循环播放 | boolean  | true/false | false |
+
+##### type == iconfont
+|参数|说明|类型|可选值|默认值
+|--|--|--|--|--|
+| style | 样式 | object | - | - |
+| class | 类名称 | array | - | [''] |
 ---
 
 ##### Methods
