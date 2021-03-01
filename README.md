@@ -74,7 +74,7 @@ export default {
 #### header 表格头部数据
 |参数|说明|类型|可选值|默认值
 |--|--|--|--|--|
-| overflowTooltip | 当内容过长被隐藏时显示 | boolean| true / false | true|
+| overflowTooltip | 当内容过长被隐藏时显示 | boolean| true / false | false |
 | label | 显示的标题  | string | - | - |
 | minWidth | 对应列的最小宽度 | string | - | 100 |
 | width | 对应列的宽度 | string | - | - |
