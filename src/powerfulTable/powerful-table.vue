@@ -49,10 +49,10 @@
               <el-image
                 :src="scope.row[each.popr]"
                 :preview-src-list="
-                  each.data.preview ? [scope.row[each.popr]] : []
+                  each.data.preview == false ? [] : [scope.row[each.popr]]
                 "
-                :lazy="each.data.lazy || false"
-                :z-index="each.data.zIndex || 2000"
+                :lazy="each.data.lazy || true"
+                :z-index="each.data.zIndex || 6000"
                 :style="each.data.style || {}"
                 :fit="each.data.fit || 'cover'"
               ></el-image>
@@ -92,8 +92,8 @@
                 :active-text="each.data.activeText || ''"
                 v-model="scope.row[each.popr]"
                 :disabled="each.data.disabled || false"
-                :active-color="each.data.activeColor || '#409EFF'"
-                :inactive-color="each.data.inactiveColor || '#C0CCDA'"
+                :active-color="each.data.activeColor"
+                :inactive-color="each.data.inactiveColor"
                 :active-value="
                   each.data.activeValue || each.data.activeValue === 0
                     ? each.data.activeValue
@@ -218,7 +218,7 @@
                 }}{{
                   each.child
                     ? scope.row[each.popr][each.child]
-                    : scope.row[each.popr]
+                    : scope.row[each.popr] || each.reserve
                 }}
               </div>
             </div>
