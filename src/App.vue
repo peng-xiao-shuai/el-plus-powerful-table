@@ -13,16 +13,27 @@
       @update="handlerUpdate"
       @remove="handlerRemove"
       @batchOperate="batchOperate"
-    ></powerful-table>
+    >
+      <template #A="{ row }">
+        <div>
+          <el-image
+            style="width: 100px; border-radius: 10px"
+            :src="row.imageUrl"
+          ></el-image>
+        </div>
+      </template>
+    </powerful-table>
   </div>
 </template>
 
 <script>
 import { header, lists } from "./indexData"
+import { ElMessage } from 'element-plus'
 import { reactive, ref, onMounted } from "vue"
 
 export default {
-  setup () {
+  setup (props, context) {
+    let rowA = reactive({ value: {} })
     let list = reactive(lists)
     // 所有页面选中数组
     let selectData = reactive([{ a: 1 }])
@@ -30,7 +41,7 @@ export default {
     // let listLoading= ref(true)
     let isSelect = ref(true)
     let config = reactive(header)
-    let total = ref(50)
+    let total = ref(1)
     let operateData = reactive({
       value: "",
       size: "small",
@@ -55,7 +66,10 @@ export default {
 
       // 切换页面赋值
       selectData = selectData
-
+      if (obj) {
+        ElMessage.success('切换页面操作，参数详情，查看控制台')
+        console.log('page' + obj, '选中数组' + selectData)
+      }
       // listLoading.value = true
 
       // getData(data).then((response:any) => {
@@ -67,19 +81,22 @@ export default {
     }
 
     function batchOperate (ids, e, rows) {
+      ElMessage.success('批量操作，参数详情，查看控制台')
       console.log("批量操作", ids, e, rows)
     }
 
     function switchChange (e) {
+      ElMessage.success('开关修改操作，参数详情，查看控制台')
       console.log("修改", e)
     }
     // 修改
     function handlerUpdate (e) {
+      ElMessage.success('按钮修改操作，参数详情，查看控制台')
       console.log("修改", e)
     }
     function handlerRemove (e, i) {
+      ElMessage.success('按钮删除操作，参数详情，查看控制台')
       console.log("删除", e, i)
-      list.splice(i, 1)
     }
 
     onMounted(() => {
@@ -88,6 +105,7 @@ export default {
 
     return {
       // 变量
+      rowA,
       list,
       selectData,
       selectCompare,

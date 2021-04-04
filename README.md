@@ -1,7 +1,11 @@
 ## 待优化
 
-- 新增 solt 使组件更灵活
-- 优化 批量操作、自定义操作按钮 返回数据从 `content.emit('XXX',xx,xx)`修改为`content.emit('XXX',{xx,xx})`
+- 优化 批量操作、自定义操作按钮 返回数据从 `context.emit('XXX',xx,xx)`修改为`context.emit('XXX',{xx,xx})`
+
+## 1.2.8 20210404
+
+- 新增 slot 使组件更灵活 详见查看下方参数说明 <a href='#slot'>**`传送门`**</a>
+- `type == 'btn'` 时 `data` 新增 `text` 字段作为按钮文字显示 默认为 `tip` 字段文字
 
 ## 1.2.7 20210325
 
@@ -205,7 +209,7 @@ app.mount("#app");
 | showScore | 是否显示当前分数，show-score 和 show-text 不能同时为真                  | boolean | true/false | false                                                     |
 | texts     | 辅助文字数组                                                            | array   | -          | ['极差', '失望', '一般', '满意', '惊喜']                  |
 
-#### <font color='#7CCEFF'>type == href（超链接）</font></font>
+#### <font color='#7CCEFF'>type == href（超链接）</font>
 
 | 参数      | 说明                                            | 类型    | 可选值     | 默认值    |
 | --------- | ----------------------------------------------- | ------- | ---------- | --------- |
@@ -213,6 +217,12 @@ app.mount("#app");
 | type      | 主题类型                                        | string  | -          | 'primary' |
 | underline | 是否显示下划线                                  | boolean | true/false | false     |
 | popr      | 超链接文字该显示哪个 popr 的值 否则为 text 的值 | string  | -          | 空        |
+
+#### <font color='#7CCEFF' id='slot'>type == slot（插槽）</font>
+
+| 参数     | 说明     | 类型   | 可选值 | 默认值    |
+| -------- | -------- | ------ | ------ | --------- |
+| slotName | 插槽名称 | string | -      | 'default' |
 
 ---
 

@@ -81,7 +81,8 @@
                   @click="
                     btnChange(apiece.emit, scope.row, scope.$index, apiece.type)
                   "
-                ></el-button>
+                  >{{ apiece.text || apiece.tip }}</el-button
+                >
               </el-tooltip>
             </div>
             <!-- 开关 -->
@@ -211,6 +212,14 @@
                 暂无视频
               </div>
             </div>
+            <!-- 插槽 -->
+            <slot
+              v-else-if="each.type == 'slot'"
+              :name="each.slotName || 'default'"
+              :row="scope.row"
+              :index="scope.$index"
+            >
+            </slot>
             <!-- 正常 -->
             <div v-else>
               <div>
