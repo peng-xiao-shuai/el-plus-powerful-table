@@ -1,4 +1,4 @@
-const header: any[] = [
+let header = [
   {
     label: "编号", //显示的标题
     minWidth: "60", //对应列的最小宽度
@@ -102,6 +102,20 @@ const header: any[] = [
     ],
   },
   {
+    label: "标签", //显示的标题
+    overflowTooltip: false,
+    poprs: [
+      {
+        popr: "tag",
+        type: "tag",
+        data: {
+          effect: 'dark',
+          // type: 'success'
+        }
+      },
+    ],
+  },
+  {
     label: "图片", //显示的标题
     poprs: [
       {
@@ -143,9 +157,9 @@ const header: any[] = [
       },
     ],
   },
-];
+]
 
-const lists: any[] = [
+let lists = [
   {
     id: 1,
     name: "蓝猫",
@@ -153,10 +167,11 @@ const lists: any[] = [
     createTime: "2020-12-01",
     price: "",
     switchVal: 1,
+    tag: '可爱',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
   },
-];
+]
 
-export { header, lists };
+export { header, lists }

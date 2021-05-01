@@ -24,6 +24,6 @@
     "*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
-  "exclude": ["node_modules", "src/main.ts", "src/powerfulTable/index.ts"]
+, "src/powerfulTable/index.js", "src/indexData.ks", "src/main.js"  ],
+  "exclude": ["node_modules", "src/main.js", "src/powerfulTable/index.js"]
 }

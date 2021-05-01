@@ -1,6 +1,13 @@
 ## 待优化
 
 - 优化 批量操作、自定义操作按钮 返回数据从 `context.emit('XXX',xx,xx)`修改为`context.emit('XXX',{xx,xx})`
+- 修正 参数名称错误
+- 文档新增示例
+## 1.2.9 20210501
+
+- 新增 tag <a href='#tag'>**`传送门`**</a>
+- `tag` 支持筛选
+
 
 ## 1.2.8 20210404
 
@@ -106,7 +113,7 @@ app.mount("#app");
 | text   | 数据左侧显示的文字。（例：文字：数据）                                        | string        | -                                           | -      |
 | style  | 包裹组件外面那一层 div 样式                                                   | object        | -                                           | -      |
 
-#### <font color='#50BEFF'>filter 过滤</font>
+#### <font color='#50BEFF' id='filter'>filter 过滤</font>
 
 | 参数  | 说明           | 类型   | 可选值 | 默认值 |
 | ----- | -------------- | ------ | ------ | ------ |
@@ -224,9 +231,19 @@ app.mount("#app");
 | -------- | -------- | ------ | ------ | --------- |
 | slotName | 插槽名称 | string | -      | 'default' |
 
+#### <font color='#7CCEFF' id='tag'>type == tag</font>
+
+| 参数     | 说明     | 类型   | 可选值 | 默认值    |
+| -------- | -------- | ------ | ------ | --------- |
+| type | 类型 | string | 'primary / success / warning / danger / info'      | 'primary' |
+| effect | 主题 | string | 'dark / light / plain'      | 'light' |
+| color | 背景颜色 | string | -      | - |
+| hit | 是否描边 | boolean | -      | false |
+| filter | <a href='#filter'>查看详情</a> | array | -      | - |
+
 ---
 
-## Methods
+## Event
 
 | 方法名       | 说明                                                                                            | 参数                                                  |
 | ------------ | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------- |

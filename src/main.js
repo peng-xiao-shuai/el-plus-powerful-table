@@ -7,6 +7,6 @@ import powerfulTable from "./powerfulTable/index";
 import "element-plus/lib/theme-chalk/index.css";
 
 const app = createApp(App);
-app.use(powerfulTable);
 app.use(ElementPlus);
+app.use(powerfulTable);
 app.mount("#app");

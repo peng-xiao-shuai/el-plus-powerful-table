@@ -138,6 +138,21 @@
                 :style="each.data.style || {}"
               ></i>
             </div>
+            <!-- 标签 -->
+            <div v-else-if="each.type == 'tag'">
+              <el-tag
+                :closable="false"
+                :type="each.data.type || 'primary'"
+                :effect="(each.data && each.data.effect) || 'light'"
+                :color="(each.data && each.data.color) || ''"
+                :hit="(each.data && each.data.hit) || false"
+                >{{
+                  each.filter
+                    ? filterFun(scope.row[each.popr], each.filter)
+                    : scope.row[each.popr]
+                }}</el-tag
+              >
+            </div>
             <!-- 评分 -->
             <div v-else-if="each.type == 'rate'">
               {{ each.text || "" }}
