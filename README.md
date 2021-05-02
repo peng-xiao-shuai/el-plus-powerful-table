@@ -1,13 +1,13 @@
-## 待优化
-
+## 1.3.0 20210502
 - 优化 批量操作、自定义操作按钮 返回数据从 `context.emit('XXX',xx,xx)`修改为`context.emit('XXX',{xx,xx})`
 - 修正 参数名称错误
+- 1. `poprs` 修改为 `props`,`popr` 修改为 `prop`
+- 2. 自定义方法 新增 `query、success、add` 删除 `look`
 - 文档新增示例
 ## 1.2.9 20210501
 
 - 新增 tag <a href='#tag'>**`传送门`**</a>
 - `tag` 支持筛选
-
 
 ## 1.2.8 20210404
 
@@ -68,7 +68,7 @@ app.mount("#app");
 
 ### <font color='#1A72A6'>operateData 批量操作</font>
 
-> 如果表格有 `header.poprs.type` 为 `input` 的则需要先填写该行数据，在选中该行，否则会出现获取不到 `input` 的值
+> 如果表格有 `header.props.type` 为 `input` 的则需要先填写该行数据，在选中该行，否则会出现获取不到 `input` 的值
 
 | 参数     | 说明               | 类型          | 可选值                                             | 默认值  |
 | -------- | ------------------ | ------------- | -------------------------------------------------- | ------- |
@@ -89,6 +89,18 @@ app.mount("#app");
 
 ---
 
+```js
+// 参数示例
+const operateData = {
+  value: 0,
+  operates:[{
+    label: '删除',
+    value: 0
+  }]
+}
+```
+
+<a href='https://github.com/Peng-Xiao-Shuai-0902/el-plus-powerful-table/blob/master/src/indexData.js'>查看JSON参数</a>
 ### <font color='#1A72A6'>header 表格头部数据</font>
 
 | 参数            | 说明                   | 类型             | 可选值                  | 默认值 |
@@ -99,19 +111,55 @@ app.mount("#app");
 | width           | 对应列的宽度           | string           | -                       | -      |
 | sortable        | 排序                   | boolean / string | 'custom' / true / false | false  |
 | headerAlign     | 表头对齐方式           | string           | left / center / right   | center |
-| poprs           | 单元格数据             | array[object]    | -                       | -      |
+| props           | 单元格数据             | array[object]    | -                       | -      |
 
-#### <font color='#50BEFF'>poprs 单元格数据</font>
+#### <font color='#50BEFF'>props 单元格数据</font>
 
 | 参数   | 说明                                                                          | 类型          | 可选值                                      | 默认值 |
 | ------ | ----------------------------------------------------------------------------- | ------------- | ------------------------------------------- | ------ |
-| popr   | 数据 key 值                                                                   | string        | -                                           | -      |
-| child  | 当 popr 值是对象是用到 仅支持 `type 为 text`                                  | string        | -                                           | -      |
+| prop   | 数据 key 值                                                                   | string        | -                                           | -      |
+| child  | 当 prop 值是对象是用到 仅支持 `type 为 text`                                  | string        | -                                           | -      |
 | type   | 数据类型                                                                      | string        | image / text / switch / btn / video / input | text   |
 | data   | 每个类型不一样 data 里值也不一样，<br> type 为 btn 时数据类型为 array[object] | object        | -                                           | -      |
-| filter | 过滤，只支持 `type 为 text `                                                  | array[object] | -                                           | -      |
+| filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] | -                                           | -      |
 | text   | 数据左侧显示的文字。（例：文字：数据）                                        | string        | -                                           | -      |
+| reserve  | 当 prop 值 渲染数据为空时可用 reserve 代替空数据        | string        | -                                           | -      |
 | style  | 包裹组件外面那一层 div 样式                                                   | object        | -                                           | -      |
+
+```js
+
+// 假设有一个这样的数据
+const data = {
+  my:{
+    name: 'red'
+  },
+  myBrother: 'yellow'
+}
+
+// 参数示例
+[{
+  {
+  label: '我',
+  props:[{
+    type: 'text',
+    text: '我的名字',
+    prop: 'my',
+    child: 'name',
+    reserve: '我只有在数据空时显示',
+    filter:[{
+      key: 'red',
+      value: 'black'
+    }]
+  }]
+},
+{
+  label: '我的兄弟',
+  props:[{
+    prop: 'myBrother',
+  }]
+}
+}]
+```
 
 #### <font color='#50BEFF' id='filter'>filter 过滤</font>
 
@@ -119,6 +167,20 @@ app.mount("#app");
 | ----- | -------------- | ------ | ------ | ------ |
 | key   | 单元格里的数据 | string | -      | -      |
 | value | 需要替换的值   | string | -      | -      |
+
+```js
+// 参数示例
+{
+  label: '筛选',
+  props:[{
+    prop: 'name',
+    filter:[{
+      key: '1',
+      value: '替换1'
+    }]
+  }]
+}
+```
 
 #### <font color='#50BEFF'>data 类型数据</font>
 
@@ -128,7 +190,7 @@ app.mount("#app");
 //示例
 {
   type: 'image',
-  popr:'image',
+  prop:'image',
   data:{}
 }
 ```
@@ -143,6 +205,28 @@ app.mount("#app");
 | style   | 图片自定义样式                                                                                      | object  | -                                          | -      |
 | fit     | 图片如何适应容器框，同原生[object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) | string  | fill / contain / cover / none / scale-down | -      |
 
+```js
+//示例
+{
+  label: "图片", //显示的标题
+  props: [
+    {
+      type: "image",
+      prop: "imageUrl",
+      data: {
+        style: {
+          width: "120px",
+          height: "120px",
+          borderRadius: "10px",
+        },
+        lazy: true,
+        preview: true,
+      },
+    },
+  ],
+}
+```
+
 #### <font color='#7CCEFF'>type == btn（操作按钮）</font>
 
 | 参数     | 说明             | 类型    | 可选值                                               | 默认值  |
@@ -156,12 +240,45 @@ app.mount("#app");
 | condi    | 控制按钮显示隐藏 | object  | -                                                    | -       |
 | emit     | 自定义方法名     | string  | 'look', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
 
-#### <font color='#9FDBFF'>condi</font>
+```js
+// 参数示例
+{
+    label: "操作", //显示的标题
+    props: [
+      {
+        type: "btn",
+        data: [
+          {
+            tip: "编辑",
+            type: "info",
+            icon: "el-icon-edit-outline",
+            text: "U",
+            emit: "update",
+            condi: {
+              // 此时 name == 1 时才会显示
+              prop: 'name',
+              value: '1'
+            }
+          },
+          {
+            tip: "删除",
+            type: "danger",
+            text: "D",
+            icon: "el-icon-delete",
+            emit: "remove",
+          },
+        ],
+      },
+    ],
+  }
+```
+
+#### <font color='#9FDBFF'>condi（判断是否显示按钮）</font>
 
 | 参数  | 说明                     | 类型            | 可选值 | 默认值 |
 | ----- | ------------------------ | --------------- | ------ | ------ |
-| popr  | 根据判断的 popr          | string          | -      | -      |
-| value | 根据判断的 popr 的 value | string / number | -      | -      |
+| prop  | 根据判断的 prop          | string          | -      | -      |
+| value | 根据判断的 prop 的 value | string / number | -      | -      |
 
 #### <font color='#7CCEFF'>type == switch（开关）</font>
 
@@ -174,7 +291,28 @@ app.mount("#app");
 | activeValue   | 打开时的值       | number  | -          | 1      |
 | inactiveValue | 关闭时的值       | number  | -          | 0      |
 | disabled      | 是否禁用         | boolean | true/false | false  |
-| style         | 图片自定义样式   | object  | -          | -      |
+| style         | 开关自定义样式   | object  | -          | -      |
+
+
+```js
+//示例
+{
+    label: "开关", //显示的标题
+    overflowTooltip: false,
+    props: [
+      {
+        prop: "switchVal",
+        type: "switch",
+        data: {
+          inactiveText: "关闭",
+          activeText: "开启",
+          activeValue: 1,
+          inactiveValue: 0
+        },
+      },
+    ],
+  }
+```
 
 #### <font color='#7CCEFF'>type == input（输入框）</font>
 
@@ -187,6 +325,24 @@ app.mount("#app");
 | slot        | 输入框前置或后置  | string  | prepend / append      | -      |
 | symbol      | slot 文字或者符合 | string  | -                     | -      |
 
+```js
+//示例
+{
+  label: "价格", //显示的标题
+  props: [
+    {
+      prop: "price",
+      type: "input",
+      data: {
+        slot: "prepend",
+        symbol: "￥",
+        style: { width: "100%" },
+      },
+    },
+  ],
+}
+```
+
 #### <font color='#7CCEFF'>type == video（视频）</font>
 
 | 参数   | 说明           | 类型    | 可选值     | 默认值 |
@@ -196,6 +352,28 @@ app.mount("#app");
 | loop   | 循环播放       | boolean | true/false | false  |
 | style  | 图片自定义样式 | object  | -          | -      |
 
+```js
+//示例
+{
+  label: "视频", //显示的标题
+  props: [
+    {
+      prop: "videoUrl",
+      type: "video",
+      data: {
+        cover: "",
+        style: {
+          width: "120px",
+          height: "120px",
+          borderRadius: "10px",
+          border: "1px solid #ccc",
+        },
+      },
+    },
+  ],
+}
+```
+
 #### <font color='#7CCEFF'>type == iconfont（图标）</font>
 
 | 参数  | 说明           | 类型   | 可选值 | 默认值 |
@@ -203,12 +381,26 @@ app.mount("#app");
 | class | 样式类         | array  | -      | -      |
 | style | 图标自定义样式 | object | -      | -      |
 
+```js
+//示例
+{
+  type: 'iconfont',
+  prop:'icon',
+  data:{
+    class: ['viteicon','vitestar'],
+    style: {
+      background: 'yellow'
+    }
+  }
+}
+```
+
 #### <font color='#7CCEFF'>type == rate（评分）</font>
 
 | 参数      | 说明                                                                    | 类型    | 可选值     | 默认值                                                    |
 | --------- | ----------------------------------------------------------------------- | ------- | ---------- | --------------------------------------------------------- |
 | max       | 最大数值                                                                | number  | -          | 5                                                         |
-| style     | 图片自定义样式                                                          | object  | -          | -                                                         |
+| style     | 自定义样式                                                          | object  | -          | -                                                         |
 | colors    | 颜色数组                                                                | array   | -          | ['#F7BA2A', '#F7BA2A', '#F7BA2A']                         |
 | iconClass | 颜色数组                                                                | array   | -          | ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'] |
 | allowHalf | 是否允许半选                                                            | boolean | true/false | false                                                     |
@@ -216,20 +408,82 @@ app.mount("#app");
 | showScore | 是否显示当前分数，show-score 和 show-text 不能同时为真                  | boolean | true/false | false                                                     |
 | texts     | 辅助文字数组                                                            | array   | -          | ['极差', '失望', '一般', '满意', '惊喜']                  |
 
+
+```js
+//示例
+{
+  label: "评分", //显示的标题
+  props: [
+    {
+      type: "rate",
+      prop: "rate",
+      data: {
+        allowHalf: true,
+        showText: true,
+        colors: ['red', 'yellow', 'green']
+      },
+    },
+  ],
+}
+```
+
 #### <font color='#7CCEFF'>type == href（超链接）</font>
 
 | 参数      | 说明                                            | 类型    | 可选值     | 默认值    |
 | --------- | ----------------------------------------------- | ------- | ---------- | --------- |
+| style     | 自定义样式                                       | object  | -          | - |
 | target    | 跳转类型                                        | string  | -          | '\_blank' |
 | type      | 主题类型                                        | string  | -          | 'primary' |
 | underline | 是否显示下划线                                  | boolean | true/false | false     |
-| popr      | 超链接文字该显示哪个 popr 的值 否则为 text 的值 | string  | -          | 空        |
+| prop      | 超链接文字该显示哪个 prop 的值 否则为 text 的值 | string  | -          | 空        |
+
+```js
+//示例
+{
+  label: "超链接", //显示的标题
+  props: [
+    {
+      type: "href",
+      prop: "href",
+      data: {
+        prop: 'name',
+      },
+    },
+  ],
+}
+```
 
 #### <font color='#7CCEFF' id='slot'>type == slot（插槽）</font>
 
 | 参数     | 说明     | 类型   | 可选值 | 默认值    |
 | -------- | -------- | ------ | ------ | --------- |
 | slotName | 插槽名称 | string | -      | 'default' |
+
+
+```js
+//示例
+{
+  label: "slot（插槽）", //显示的标题
+  props: [
+    {
+      type: "slot",
+      slotName: "A",
+    },
+  ],
+}
+
+//vue
+<powerful-table>
+  <template #A="{ row,index }">
+    <div>
+      <el-image
+        style="width: 100px; border-radius: 10px"
+        :src="row.imageUrl"
+      ></el-image>
+    </div>
+  </template>
+</powerful-table>
+```
 
 #### <font color='#7CCEFF' id='tag'>type == tag</font>
 
@@ -242,6 +496,23 @@ app.mount("#app");
 | filter | <a href='#filter'>查看详情</a> | array | -      | - |
 
 ---
+
+```js
+//示例
+{
+  label: "标签", //显示的标题
+  props: [
+    {
+      prop: "tag",
+      type: "tag",
+      data: {
+        effect: 'dark',
+        // type: 'success'
+      }
+    },
+  ],
+}
+```
 
 ## Event
 

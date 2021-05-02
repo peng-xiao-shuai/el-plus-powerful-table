@@ -80,9 +80,9 @@ export default {
       // })
     }
 
-    function batchOperate (ids, e, rows) {
+    function batchOperate (e) {
       ElMessage.success('批量操作，参数详情，查看控制台')
-      console.log("批量操作", ids, e, rows)
+      console.log("批量操作", e, e.ids)
     }
 
     function switchChange (e) {
@@ -94,9 +94,9 @@ export default {
       ElMessage.success('按钮修改操作，参数详情，查看控制台')
       console.log("修改", e)
     }
-    function handlerRemove (e, i) {
+    function handlerRemove (e) {
       ElMessage.success('按钮删除操作，参数详情，查看控制台')
-      console.log("删除", e, i)
+      console.log("删除", e, e.index)
     }
 
     onMounted(() => {

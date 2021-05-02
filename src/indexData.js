@@ -3,9 +3,9 @@ let header = [
     label: "编号", //显示的标题
     minWidth: "60", //对应列的最小宽度
     sortable: true, //排序
-    poprs: [
+    props: [
       {
-        popr: "id",
+        prop: "id",
       },
     ],
   },
@@ -13,15 +13,15 @@ let header = [
     label: "名称", //显示的名称
     overflowTooltip: true,
     minWidth: "60", //对应列的最小宽度
-    poprs: [
+    props: [
       {
-        popr: "name",
+        prop: "name",
       },
     ],
   },
   {
     label: "slot（插槽）", //显示的标题
-    poprs: [
+    props: [
       {
         type: "slot",
         slotName: "A",
@@ -30,9 +30,9 @@ let header = [
   },
   {
     label: "性别", //显示的标题
-    poprs: [
+    props: [
       {
-        popr: "gender",
+        prop: "gender",
         filter: [
           {
             key: 1,
@@ -48,18 +48,18 @@ let header = [
   },
   {
     label: "创建时间", //显示的标题
-    poprs: [
+    props: [
       {
-        popr: "createTime",
+        prop: "createTime",
       },
     ],
     sortable: "custom", //排序
   },
   {
     label: "价格", //显示的标题
-    poprs: [
+    props: [
       {
-        popr: "price",
+        prop: "price",
         type: "input",
         data: {
           slot: "prepend",
@@ -71,9 +71,9 @@ let header = [
   },
   {
     label: "视频", //显示的标题
-    poprs: [
+    props: [
       {
-        popr: "videoUrl",
+        prop: "videoUrl",
         type: "video",
         data: {
           cover: "",
@@ -90,13 +90,13 @@ let header = [
   {
     label: "开关", //显示的标题
     overflowTooltip: false,
-    poprs: [
+    props: [
       {
-        popr: "switchVal",
+        prop: "switchVal",
         type: "switch",
         data: {
-          inactiveText: "关闭",
-          activeText: "开启",
+          // inactiveText: "关闭",
+          // activeText: "开启",
         },
       },
     ],
@@ -104,9 +104,9 @@ let header = [
   {
     label: "标签", //显示的标题
     overflowTooltip: false,
-    poprs: [
+    props: [
       {
-        popr: "tag",
+        prop: "tag",
         type: "tag",
         data: {
           effect: 'dark',
@@ -117,10 +117,10 @@ let header = [
   },
   {
     label: "图片", //显示的标题
-    poprs: [
+    props: [
       {
         type: "image",
-        popr: "imageUrl",
+        prop: "imageUrl",
         data: {
           style: {
             width: "120px",
@@ -134,8 +134,23 @@ let header = [
     ],
   },
   {
+    label: "评分", //显示的标题
+    props: [
+      {
+        type: "rate",
+        prop: "rate",
+        data: {
+          allowHalf: true,
+          showText: true,
+          // colors: ['red', 'yellow', 'green']
+          // showScore: true
+        },
+      },
+    ],
+  },
+  {
     label: "操作", //显示的标题
-    poprs: [
+    props: [
       {
         type: "btn",
         data: [
@@ -168,6 +183,7 @@ let lists = [
     price: "",
     switchVal: 1,
     tag: '可爱',
+    rate: 4.5,
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",

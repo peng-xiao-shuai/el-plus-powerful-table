@@ -27,31 +27,38 @@
         :header-align="item.headerAlign || 'center'"
         :show-overflow-tooltip="item.overflowTooltip || false"
         align="center"
-        :prop="item.poprs[0].child || item.poprs[0].popr"
+        :prop="item.props[0].child || item.props[0].prop"
         :label="item.label"
         :min-width="item.minWidth || 100"
         :width="item.width || ''"
       >
         <template #default="scope">
           <div
-            v-for="(each, idx) in item.poprs"
+            v-for="(each, idx) in item.props"
             :key="idx"
             :style="each.style || {}"
           >
             <!-- 筛选 -->
             <div v-if="each.filter">
               {{ each.text || ""
-              }}{{ filterFun(scope.row[each.popr], each.filter) }}
+              }}{{
+                filterFun(
+                  each.child
+                    ? scope.row[each.prop][each.child]
+                    : scope.row[each.prop],
+                  each.filter
+                )
+              }}
             </div>
             <!-- 图片 -->
             <div v-else-if="each.type == 'image'">
               {{ each.text || "" }}
               <el-image
-                :src="scope.row[each.popr]"
+                :src="scope.row[each.prop]"
                 :preview-src-list="
-                  each.data.preview == false ? [] : [scope.row[each.popr]]
+                  each.data.preview === false ? [] : [scope.row[each.prop]]
                 "
-                :lazy="each.data.lazy || true"
+                :lazy="each.data.lazy === false ? false : true"
                 :z-index="each.data.zIndex || 6000"
                 :style="each.data.style || {}"
                 :fit="each.data.fit || 'cover'"
@@ -70,7 +77,7 @@
                 <el-button
                   v-if="
                     apiece.condi
-                      ? scope.row[apiece.condi.popr] == apiece.condi.value
+                      ? scope.row[apiece.condi.prop] == apiece.condi.value
                       : true
                   "
                   :style="apiece.style || {}"
@@ -91,7 +98,7 @@
                 :style="each.data.style || {}"
                 :inactive-text="each.data.inactiveText || ''"
                 :active-text="each.data.activeText || ''"
-                v-model="scope.row[each.popr]"
+                v-model="scope.row[each.prop]"
                 :disabled="each.data.disabled || false"
                 :active-color="each.data.activeColor"
                 :inactive-color="each.data.inactiveColor"
@@ -104,7 +111,7 @@
                 @click="
                   switchChange(
                     scope.row,
-                    each.popr,
+                    each.prop,
                     each.data.activeValue,
                     each.data.inactiveValue
                   )
@@ -119,7 +126,7 @@
                 :style="each.data.style || {}"
                 :size="each.data.size || 'small'"
                 :placeholder="each.data.placeholder || ''"
-                v-model="scope.row[each.popr]"
+                v-model="scope.row[each.prop]"
                 :disabled="each.data.disabled || false"
               >
                 <template
@@ -134,7 +141,7 @@
             <div v-else-if="each.type == 'iconfont'">
               {{ each.text || "" }}
               <i
-                :class="[scope.row[each.popr], ...each.data.class] || ['']"
+                :class="[scope.row[each.prop], ...each.data.class] || ['']"
                 :style="each.data.style || {}"
               ></i>
             </div>
@@ -148,8 +155,8 @@
                 :hit="(each.data && each.data.hit) || false"
                 >{{
                   each.filter
-                    ? filterFun(scope.row[each.popr], each.filter)
-                    : scope.row[each.popr]
+                    ? filterFun(scope.row[each.prop], each.filter)
+                    : scope.row[each.prop]
                 }}</el-tag
               >
             </div>
@@ -157,7 +164,7 @@
             <div v-else-if="each.type == 'rate'">
               {{ each.text || "" }}
               <el-rate
-                v-model="scope.row[each.popr]"
+                v-model="scope.row[each.prop]"
                 :colors="each.data.colors || ['#F7BA2A', '#F7BA2A', '#F7BA2A']"
                 :max="each.data.max || 5"
                 :disabled="true"
@@ -182,11 +189,11 @@
                 :target="(each.data && each.data.target) || '_blank'"
                 :type="(each.data && each.data.type) || 'primary'"
                 :underline="(each.data && each.data.underline) || false"
-                :href="scope.row[each.popr]"
+                :href="scope.row[each.prop]"
                 :style="each.data.style || {}"
                 >{{
-                  scope.row[each.popr]
-                    ? scope.row[each.data.popr] || each.text
+                  scope.row[each.prop]
+                    ? scope.row[each.data.prop] || each.text
                     : "空"
                 }}</el-link
               >
@@ -203,8 +210,8 @@
             >
               {{ each.text || "" }}
               <video
-                v-if="scope.row[each.popr]"
-                :src="scope.row[each.popr]"
+                v-if="scope.row[each.prop]"
+                :src="scope.row[each.prop]"
                 :poster="each.data.poster || ''"
                 :loop="each.data.loop || false"
                 :style="each.data.style || {}"
@@ -241,8 +248,8 @@
                 {{ each.text || ""
                 }}{{
                   each.child
-                    ? scope.row[each.popr][each.child]
-                    : scope.row[each.popr] || each.reserve
+                    ? scope.row[each.prop][each.child]
+                    : scope.row[each.prop] || each.reserve
                 }}
               </div>
             </div>
@@ -368,7 +375,7 @@ export default {
       default: 0
     },
   },
-  emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'look', 'update', 'remove', 'occupyOne', 'occupyTwo'],
+  emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
   data () {
     return {
       listLoading: true,
@@ -457,7 +464,7 @@ export default {
           let ids = this.otherSelect.concat(this.currentSelect).map(item => item.id)
           let items = this.otherSelect.concat(this.currentSelect).map(item => item)
 
-          this.$emit('batchOperate', ids, this.operateData.operates[this.operateData.value], items)
+          this.$emit('batchOperate', { ids, item: this.operateData.operates[this.operateData.value], items })
         })
         .catch(err => {
           console.log('取消批量操作')
@@ -473,18 +480,18 @@ export default {
           type: 'warning'
         })
           .then(res => {
-            this.$emit(emit, row, index)
+            this.$emit(emit, { row, index })
           })
           .catch(err => {
             console.log('取消删除')
           })
       } else {
-        this.$emit(emit, row, index)
+        this.$emit(emit, { row, index })
       }
     },
     // 开关回调
-    switchChange (row, popr, val = 1, val2 = 0) {
-      let value = row[popr] == val ? val2 : val
+    switchChange (row, prop, val = 1, val2 = 0) {
+      let value = row[prop] == val ? val2 : val
       this.$confirm('是否要进行修改操作, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -494,7 +501,7 @@ export default {
           this.$emit('switchChange', row)
         })
         .catch(err => {
-          row[popr] = value
+          row[prop] = value
         })
     },
     // 获取选中
