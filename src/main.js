@@ -1,12 +1,13 @@
-import { createApp } from "vue";
-import App from "./App.vue";
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import powerfulTable from "./powerfulTable/index"
+import 'element-ui/lib/theme-chalk/index.css'
+import App from './App.vue'
 
-import ElementPlus from "element-plus";
-import powerfulTable from "./powerfulTable/index";
+Vue.use(ElementUI)
+Vue.use(powerfulTable)
 
-import "element-plus/lib/theme-chalk/index.css";
-
-const app = createApp(App);
-app.use(ElementPlus);
-app.use(powerfulTable);
-app.mount("#app");
+new Vue({
+  el: '#app',
+  render: h => h(App)
+})

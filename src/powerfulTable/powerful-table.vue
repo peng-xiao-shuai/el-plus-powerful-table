@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -108,7 +108,7 @@
                     : 1
                 "
                 :inactive-value="each.data.inactiveValue || 0"
-                @click="
+                @change="
                   switchChange(
                     scope.row,
                     each.prop,
@@ -306,9 +306,6 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus'
-// import store from '/@/store'
-
 export default {
   name: "powerful-table",
   props: {
@@ -375,11 +372,9 @@ export default {
       default: 0
     },
   },
-  emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
   data () {
     return {
       listLoading: true,
-
       // 分页
       currentPage: 1,
 
@@ -439,7 +434,7 @@ export default {
     batchOperate () {
       console.log(this.operateData.value)
       if (!this.operateData.value && this.operateData.value != '0') {
-        ElMessage({
+        this.$message({
           message: '请选择操作类型',
           type: 'warning',
           duration: 1000
@@ -448,7 +443,7 @@ export default {
       }
 
       if (this.currentSelect.length == 0) {
-        ElMessage({
+        this.$message({
           message: '请选择要操作的商品',
           type: 'warning',
           duration: 1000

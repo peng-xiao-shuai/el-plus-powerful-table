@@ -238,7 +238,7 @@ const data = {
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
 | size     | 按钮大小         | string  | medium / small / mini                                | small   |
 | condi    | 控制按钮显示隐藏 | object  | -                                                    | -       |
-| emit     | 自定义方法名     | string  | 'look', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
+| emit     | 自定义方法名     | string  | - | -       |
 
 ```js
 // 参数示例
@@ -521,5 +521,5 @@ const data = {
 | sizeChange   | 分页器切换                                                                                      | { pageNum , pageSize }，selectArr(所有页中选中的数据) |
 | sortCustom   | 远程排序                                                                                        | column                                                |
 | batchOperate | 批量操作                                                                                        | {ids , selection , rows}                              |
-| 自定义方法名 | 操作按钮 暂时只有 <font color='red'>'look', 'update', 'remove', 'occupyOne', 'occupyTwo'</font> | {row , index }                                        |
+| 自定义方法名 | - | {row , index }                                        |
 | switchChange | 开关组件操作                                                                                    | row                                                   |
