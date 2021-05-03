@@ -1,48 +1,29 @@
-## 1.3.0 20210502
-- 优化 批量操作、自定义操作按钮 返回数据从 `context.emit('XXX',xx,xx)`修改为`context.emit('XXX',{xx,xx})`
-- 修正 参数名称错误
-- 1. `poprs` 修改为 `props`,`popr` 修改为 `prop`
-- 2. 自定义方法 新增 `query、success、add` 删除 `look`
-- 文档新增示例
-## 1.2.9 20210501
-
-- 新增 tag <a href='#tag'>**`传送门`**</a>
-- `tag` 支持筛选
-
-## 1.2.8 20210404
-
-- 新增 slot 使组件更灵活 详见查看下方参数说明 <a href='#slot'>**`传送门`**</a>
-- `type == 'btn'` 时 `data` 新增 `text` 字段作为按钮文字显示 默认为 `tip` 字段文字
-
-## 1.2.7 20210325
-
-- `type == 'text'` 或者 `type` 不传时新增 `reserve` 字段作为替代 `空数据`
-- 图片预览 懒加载`lazy`、预览`preview` 默认`true`
-- 修复文档部分参数问题
-
-===========================================================================
-
-## el-plus-powerful-table
+## el-powerful-table
 
 主要功能：分页多选，批量操作
 
-vue3.0 的 element-plus 二次开发表格组件
+vue2.0 的 element-ui 二次开发表格组件
 
 ### 使用方法
 
 ```js
-npm i el-plus-powerful-table
+npm i el-powerful-table
 ```
 
 ```js
 //main.ts
-import ElementPlus from "element-plus";
-import powerfulTable from "el-plus-powerful-table";
+import Vue from 'vue'
+import App from './App.vue'
+import ElementUI from "element-ui";
+import powerfulTable from "el-powerful-table";
 
-const app = createApp(App);
-app.use(powerfulTable);
-app.use(ElementPlus);
-app.mount("#app");
+Vue.use(ElementUI)
+Vue.use(powerfulTable)
+
+new Vue({
+  el: '#app',
+  render: h => h(App)
+})
 
 //*.vue
 <powerful-table :list="list" :total="total" :header="header"></powerful-table>
