@@ -1,5 +1,6 @@
 import powerfulTable from "./powerful-table.vue"
-powerfulTable.install = (app) => {
-  app.component(powerfulTable.name, powerfulTable)
+powerfulTable.install = function (Vue) {
+  Vue.component(powerfulTable.name, powerfulTable)
 }
+
 export default powerfulTable
