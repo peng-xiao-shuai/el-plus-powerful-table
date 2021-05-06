@@ -32,7 +32,7 @@
         :min-width="item.minWidth || 100"
         :width="item.width || ''"
       >
-        <template #default="scope">
+        <template slot-scope="scope">
           <div
             v-for="(each, idx) in item.props"
             :key="idx"
@@ -258,7 +258,9 @@
       </el-table-column>
     </el-table>
 
-    <div style="display: flex; justify-content: space-between">
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 20px"
+    >
       <div
         class="pagination left"
         v-if="operateData && isSelect && operateData.operates.length > 0"
