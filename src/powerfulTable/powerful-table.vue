@@ -446,7 +446,7 @@ export default {
 
       if (this.currentSelect.length == 0) {
         this.$message({
-          message: '请选择要操作的商品',
+          message: '请选择要操作的数据',
           type: 'warning',
           duration: 1000
         })
