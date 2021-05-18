@@ -51,7 +51,7 @@
               }}
             </div>
             <!-- 图片 -->
-            <div v-else-if="each.type == 'image'">
+            <div v-else-if="each.type == 'image' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-image
                 :src="scope.row[each.prop]"
@@ -65,7 +65,10 @@
               ></el-image>
             </div>
             <!-- 按钮 -->
-            <div v-else-if="each.type == 'btn'" class="btnType">
+            <div
+              v-else-if="each.type == 'btn' && scope.row[each.prop]"
+              class="btnType"
+            >
               <el-tooltip
                 class="btnEach"
                 effect="dark"
@@ -93,7 +96,7 @@
               </el-tooltip>
             </div>
             <!-- 开关 -->
-            <div v-else-if="each.type == 'switch'">
+            <div v-else-if="each.type == 'switch' && scope.row[each.prop]">
               <el-switch
                 :style="each.data.style || {}"
                 :inactive-text="each.data.inactiveText || ''"
@@ -120,7 +123,7 @@
               </el-switch>
             </div>
             <!-- 输入框 -->
-            <div v-else-if="each.type == 'input'">
+            <div v-else-if="each.type == 'input' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-input
                 :style="each.data.style || {}"
@@ -146,7 +149,7 @@
               ></i>
             </div>
             <!-- 标签 -->
-            <div v-else-if="each.type == 'tag'">
+            <div v-else-if="each.type == 'tag' && scope.row[each.prop]">
               <el-tag
                 :closable="false"
                 :type="each.data.type || 'primary'"
@@ -161,7 +164,7 @@
               >
             </div>
             <!-- 评分 -->
-            <div v-else-if="each.type == 'rate'">
+            <div v-else-if="each.type == 'rate' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-rate
                 v-model="scope.row[each.prop]"
@@ -183,7 +186,7 @@
               ></el-rate>
             </div>
             <!-- 超链接 -->
-            <div v-else-if="each.type == 'href'">
+            <div v-else-if="each.type == 'href' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-link
                 :target="(each.data && each.data.target) || '_blank'"
@@ -199,7 +202,7 @@
               >
             </div>
             <div
-              v-else-if="each.type == 'video'"
+              v-else-if="each.type == 'video' && scope.row[each.prop]"
               style="
                 border-radius: 10px;
                 overflow: hidden;
@@ -243,15 +246,20 @@
             >
             </slot>
             <!-- 正常 -->
-            <div v-else>
+            <div v-else-if="scope.row[each.prop]">
               <div>
                 {{ each.text || ""
                 }}{{
                   each.child
                     ? scope.row[each.prop][each.child]
-                    : scope.row[each.prop] || each.reserve
+                    : scope.row[each.prop] || each.reserve || "暂无数据"
                 }}
               </div>
+            </div>
+
+            <div v-else>
+              <div v-if="each.reserve" v-html="each.reserve"></div>
+              <div v-else>暂无数据</div>
             </div>
           </div>
         </template>

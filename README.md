@@ -119,7 +119,6 @@ const data = {
 
 // 参数示例
 [{
-  {
   label: '我',
   props:[{
     type: 'text',
@@ -138,7 +137,6 @@ const data = {
   props:[{
     prop: 'myBrother',
   }]
-}
 }]
 ```
 

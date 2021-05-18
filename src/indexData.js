@@ -108,10 +108,12 @@ let header = [
       {
         prop: "tag",
         type: "tag",
+        reserve: '<i><b>VNode</b></i>',
         data: {
           effect: 'dark',
+
           // type: 'success'
-        }
+        },
       },
     ],
   },
@@ -182,7 +184,7 @@ let lists = [
     createTime: "2020-12-01",
     price: "",
     switchVal: 1,
-    tag: '可爱',
+    tag: undefined,
     rate: 4.5,
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
