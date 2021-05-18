@@ -51,7 +51,7 @@
               }}
             </div>
             <!-- 图片 -->
-            <div v-else-if="each.type == 'image'">
+            <div v-else-if="each.type == 'image' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-image
                 :src="scope.row[each.prop]"
@@ -65,7 +65,10 @@
               ></el-image>
             </div>
             <!-- 按钮 -->
-            <div v-else-if="each.type == 'btn'" class="btnType">
+            <div
+              v-else-if="each.type == 'btn' && scope.row[each.prop]"
+              class="btnType"
+            >
               <el-tooltip
                 class="btnEach"
                 effect="dark"
@@ -93,7 +96,7 @@
               </el-tooltip>
             </div>
             <!-- 开关 -->
-            <div v-else-if="each.type == 'switch'">
+            <div v-else-if="each.type == 'switch' && scope.row[each.prop]">
               <el-switch
                 :style="each.data.style || {}"
                 :inactive-text="each.data.inactiveText || ''"
@@ -120,7 +123,7 @@
               </el-switch>
             </div>
             <!-- 输入框 -->
-            <div v-else-if="each.type == 'input'">
+            <div v-else-if="each.type == 'input' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-input
                 :style="each.data.style || {}"
@@ -138,7 +141,7 @@
               </el-input>
             </div>
             <!-- iconfont -->
-            <div v-else-if="each.type == 'iconfont'">
+            <div v-else-if="each.type == 'iconfont' && scope.row[each.prop]">
               {{ each.text || "" }}
               <i
                 :class="[scope.row[each.prop], ...each.data.class] || ['']"
@@ -146,7 +149,7 @@
               ></i>
             </div>
             <!-- 标签 -->
-            <div v-else-if="each.type == 'tag'">
+            <div v-else-if="each.type == 'tag' && scope.row[each.prop]">
               <el-tag
                 :closable="false"
                 :type="each.data.type || 'primary'"
@@ -161,7 +164,7 @@
               >
             </div>
             <!-- 评分 -->
-            <div v-else-if="each.type == 'rate'">
+            <div v-else-if="each.type == 'rate' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-rate
                 v-model="scope.row[each.prop]"
@@ -183,7 +186,7 @@
               ></el-rate>
             </div>
             <!-- 超链接 -->
-            <div v-else-if="each.type == 'href'">
+            <div v-else-if="each.type == 'href' && scope.row[each.prop]">
               {{ each.text || "" }}
               <el-link
                 :target="(each.data && each.data.target) || '_blank'"
@@ -194,12 +197,12 @@
                 >{{
                   scope.row[each.prop]
                     ? scope.row[each.data.prop] || each.text
-                    : "空"
+                    : each.reserve || "暂无数据"
                 }}</el-link
               >
             </div>
             <div
-              v-else-if="each.type == 'video'"
+              v-else-if="each.type == 'video' && scope.row[each.prop]"
               style="
                 border-radius: 10px;
                 overflow: hidden;
@@ -243,15 +246,20 @@
             >
             </slot>
             <!-- 正常 -->
-            <div v-else>
+            <div v-else-if="scope.row[each.prop]">
               <div>
                 {{ each.text || ""
                 }}{{
                   each.child
                     ? scope.row[each.prop][each.child]
-                    : scope.row[each.prop] || each.reserve
+                    : scope.row[each.prop] || each.reserve || "暂无数据"
                 }}
               </div>
+            </div>
+
+            <div v-else>
+              <div v-if="each.reserve" v-html="each.reserve"></div>
+              <div v-else>暂无数据</div>
             </div>
           </div>
         </template>
@@ -261,7 +269,7 @@
     <div style="display: flex; justify-content: space-between">
       <div
         class="pagination left"
-        v-if="operateData && isSelect && operateData.operates.length > 0"
+        v-if="operateData && isSelect && operateData.operates"
       >
         <el-select
           v-model="operateData.value"
@@ -350,10 +358,7 @@ export default {
     // 批量操作
     operateData: {
       type: Object,
-      default: () => {
-        size: 'small'
-        // null
-      }
+      default: () => { }
     },
     // 表格名
     tableName: {
@@ -460,13 +465,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(res => {
+        .then(() => {
           let ids = this.otherSelect.concat(this.currentSelect).map(item => item.id)
           let items = this.otherSelect.concat(this.currentSelect).map(item => item)
 
           this.$emit('batchOperate', { ids, item: this.operateData.operates[this.operateData.value], items })
         })
-        .catch(err => {
+        .catch(() => {
           console.log('取消批量操作')
         })
 
@@ -479,10 +484,10 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-          .then(res => {
+          .then(() => {
             this.$emit(emit, { row, index })
           })
-          .catch(err => {
+          .catch(() => {
             console.log('取消删除')
           })
       } else {
@@ -497,10 +502,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(res => {
+        .then(() => {
           this.$emit('switchChange', row)
         })
-        .catch(err => {
+        .catch(() => {
           row[prop] = value
         })
     },
@@ -522,8 +527,8 @@ export default {
       if (all.length != 0) {
         // console.log('所有选中', all);
         // 获取当前页
-        arr.forEach((item, index) => {
-          let itm = this.list.filter((each, index) => {
+        arr.forEach((item) => {
+          let itm = this.list.filter((each) => {
             return item[this.selectCompare[0]] == each[this.selectCompare[1]]
           })
 
@@ -538,7 +543,7 @@ export default {
         if (current.length > 0) {
           other = JSON.parse(JSON.stringify(arr))
           for (let j in other) {
-            current.forEach((item, i) => {
+            current.forEach((item) => {
               if (item[this.selectCompare[1]] == other[j][this.selectCompare[0]]) {
                 other.splice(j, 1)
               }
@@ -552,7 +557,7 @@ export default {
         // console.log('其他页选中', this.otherSelect);
 
         if (current.length != 0) {
-          current.forEach((row, index) => {
+          current.forEach((row) => {
             this.$refs.multipleTable.toggleRowSelection(row)
           })
 
@@ -603,7 +608,7 @@ export default {
   watch: {
     // list数据有的话 关闭加载中...
     list: {
-      handler (val) {
+      handler () {
         // console.log('数据', val)
         this.listLoading = false
         this.$nextTick(() => {

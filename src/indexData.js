@@ -51,6 +51,7 @@ let header = [
     props: [
       {
         prop: "createTime",
+        reserve: '<b>暂无数据</b>'
       },
     ],
     sortable: "custom", //排序
@@ -111,7 +112,8 @@ let header = [
         data: {
           effect: 'dark',
           // type: 'success'
-        }
+        },
+        reserve: '<i><b>VNode</b></i>'
       },
     ],
   },
@@ -150,6 +152,7 @@ let header = [
   },
   {
     label: "操作", //显示的标题
+    width: 150,
     props: [
       {
         type: "btn",
@@ -179,10 +182,10 @@ let lists = [
     id: 1,
     name: "蓝猫",
     gender: 1,
-    createTime: "2020-12-01",
+    createTime: null,
     price: "",
     switchVal: 1,
-    tag: '可爱',
+    tag: null,
     rate: 4.5,
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",

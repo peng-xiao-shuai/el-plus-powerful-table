@@ -1,3 +1,7 @@
+## 1.3.1 20210518
+- 修改 `reserve` 字段可传 `HTML` 标签
+- 没有数据情况下 默认 `暂无数据`
+- 修改文档文字说明错误
 ## 1.3.0 20210502
 - 优化 批量操作、自定义操作按钮 返回数据从 `context.emit('XXX',xx,xx)`修改为`context.emit('XXX',{xx,xx})`
 - 修正 参数名称错误
@@ -123,7 +127,7 @@ const operateData = {
 | data   | 每个类型不一样 data 里值也不一样，<br> type 为 btn 时数据类型为 array[object] | object        | -                                           | -      |
 | filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] | -                                           | -      |
 | text   | 数据左侧显示的文字。（例：文字：数据）                                        | string        | -                                           | -      |
-| reserve  | 当 prop 值 渲染数据为空时可用 reserve 代替空数据        | string        | -                                           | -      |
+| reserve  | 当 prop 值 渲染数据为空时可用 reserve 代替空数据 可传 `HTML` 标签        | string        | -                                           | -      |
 | style  | 包裹组件外面那一层 div 样式                                                   | object        | -                                           | -      |
 
 ```js
@@ -137,7 +141,7 @@ const data = {
 }
 
 // 参数示例
-[{
+[
   {
   label: '我',
   props:[{
@@ -158,7 +162,7 @@ const data = {
     prop: 'myBrother',
   }]
 }
-}]
+]
 ```
 
 #### <font color='#50BEFF' id='filter'>filter 过滤</font>
@@ -238,7 +242,7 @@ const data = {
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
 | size     | 按钮大小         | string  | medium / small / mini                                | small   |
 | condi    | 控制按钮显示隐藏 | object  | -                                                    | -       |
-| emit     | 自定义方法名     | string  | 'look', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
+| emit     | 自定义方法名     | string  | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
 
 ```js
 // 参数示例
@@ -521,5 +525,5 @@ const data = {
 | sizeChange   | 分页器切换                                                                                      | { pageNum , pageSize }，selectArr(所有页中选中的数据) |
 | sortCustom   | 远程排序                                                                                        | column                                                |
 | batchOperate | 批量操作                                                                                        | {ids , selection , rows}                              |
-| 自定义方法名 | 操作按钮 暂时只有 <font color='red'>'look', 'update', 'remove', 'occupyOne', 'occupyTwo'</font> | {row , index }                                        |
+| 自定义方法名 | 操作按钮 暂时只有 <font color='red'>'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'</font> | {row , index }                                        |
 | switchChange | 开关组件操作                                                                                    | row                                                   |
