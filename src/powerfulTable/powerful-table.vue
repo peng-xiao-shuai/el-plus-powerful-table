@@ -97,6 +97,7 @@
             </div>
             <!-- 开关 -->
             <div v-else-if="each.type == 'switch' && scope.row[each.prop]">
+              {{ each.text || "" }}
               <el-switch
                 :style="each.data.style || {}"
                 :inactive-text="each.data.inactiveText || ''"
