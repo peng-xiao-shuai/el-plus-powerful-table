@@ -51,7 +51,11 @@
               }}
             </div>
             <!-- 图片 -->
-            <div v-else-if="each.type == 'image' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'image' && scope.row[each.prop] === 'undefined'
+              "
+            >
               {{ each.text || "" }}
               <el-image
                 :src="scope.row[each.prop]"
@@ -65,10 +69,7 @@
               ></el-image>
             </div>
             <!-- 按钮 -->
-            <div
-              v-else-if="each.type == 'btn' && scope.row[each.prop]"
-              class="btnType"
-            >
+            <div v-else-if="each.type == 'btn'" class="btnType">
               <el-tooltip
                 class="btnEach"
                 effect="dark"
@@ -96,7 +97,11 @@
               </el-tooltip>
             </div>
             <!-- 开关 -->
-            <div v-else-if="each.type == 'switch' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'switch' && scope.row[each.prop] === 'undefined'
+              "
+            >
               {{ each.text || "" }}
               <el-switch
                 :style="each.data.style || {}"
@@ -124,7 +129,11 @@
               </el-switch>
             </div>
             <!-- 输入框 -->
-            <div v-else-if="each.type == 'input' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'input' && scope.row[each.prop] === 'undefined'
+              "
+            >
               {{ each.text || "" }}
               <el-input
                 :style="each.data.style || {}"
@@ -142,7 +151,11 @@
               </el-input>
             </div>
             <!-- iconfont -->
-            <div v-else-if="each.type == 'iconfont' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'iconfont' && scope.row[each.prop] === 'undefined'
+              "
+            >
               {{ each.text || "" }}
               <i
                 :class="[scope.row[each.prop], ...each.data.class] || ['']"
@@ -150,7 +163,11 @@
               ></i>
             </div>
             <!-- 标签 -->
-            <div v-else-if="each.type == 'tag' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'tag' && scope.row[each.prop] === 'undefined'
+              "
+            >
               <el-tag
                 :closable="false"
                 :type="each.data.type || 'primary'"
@@ -165,7 +182,11 @@
               >
             </div>
             <!-- 评分 -->
-            <div v-else-if="each.type == 'rate' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'rate' && scope.row[each.prop] === 'undefined'
+              "
+            >
               {{ each.text || "" }}
               <el-rate
                 v-model="scope.row[each.prop]"
@@ -187,7 +208,11 @@
               ></el-rate>
             </div>
             <!-- 超链接 -->
-            <div v-else-if="each.type == 'href' && scope.row[each.prop]">
+            <div
+              v-else-if="
+                each.type == 'href' && scope.row[each.prop] === 'undefined'
+              "
+            >
               {{ each.text || "" }}
               <el-link
                 :target="(each.data && each.data.target) || '_blank'"
@@ -203,7 +228,9 @@
               >
             </div>
             <div
-              v-else-if="each.type == 'video' && scope.row[each.prop]"
+              v-else-if="
+                each.type == 'video' && scope.row[each.prop] === 'undefined'
+              "
               style="
                 border-radius: 10px;
                 overflow: hidden;
@@ -260,7 +287,9 @@
 
             <div v-else>
               <div v-if="each.reserve" v-html="each.reserve"></div>
-              <div v-else>暂无数据</div>
+              <div v-else>
+                <b>暂无数据</b>
+              </div>
             </div>
           </div>
         </template>

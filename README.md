@@ -1,4 +1,4 @@
-## 1.3.3 20210519
+## 1.3.4 20210519
 - 解决 `switch` 类型下 `text` 不生效问题
 ## 1.3.2 20210518
 - 修改 `reserve` 字段可传 `HTML` 标签
@@ -116,6 +116,7 @@ const operateData = {
 | minWidth        | 对应列的最小宽度       | string           | -                       | 100    |
 | width           | 对应列的宽度           | string           | -                       | -      |
 | sortable        | 排序                   | boolean / string | 'custom' / true / false | false  |
+| fixed | 固定列 | string / boolean          | true / left / right            | false  |
 | headerAlign     | 表头对齐方式           | string           | left / center / right   | center |
 | props           | 单元格数据             | array[object]    | -                       | -      |
 
