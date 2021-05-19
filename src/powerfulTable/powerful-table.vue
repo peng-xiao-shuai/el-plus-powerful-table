@@ -97,11 +97,7 @@
               </el-tooltip>
             </div>
             <!-- 开关 -->
-            <div
-              v-else-if="
-                each.type == 'switch' && scope.row[each.prop] === 'undefined'
-              "
-            >
+            <div v-else-if="each.type == 'switch'">
               {{ each.text || "" }}
               <el-switch
                 :style="each.data.style || {}"
