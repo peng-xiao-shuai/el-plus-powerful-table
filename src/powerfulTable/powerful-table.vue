@@ -53,7 +53,7 @@
             <!-- 图片 -->
             <div
               v-else-if="
-                each.type == 'image' && scope.row[each.prop] === 'undefined'
+                each.type == 'image' && scope.row[each.prop] !== 'undefined'
               "
             >
               {{ each.text || "" }}
@@ -127,7 +127,7 @@
             <!-- 输入框 -->
             <div
               v-else-if="
-                each.type == 'input' && scope.row[each.prop] === 'undefined'
+                each.type == 'input' && scope.row[each.prop] !== 'undefined'
               "
             >
               {{ each.text || "" }}
@@ -149,7 +149,7 @@
             <!-- iconfont -->
             <div
               v-else-if="
-                each.type == 'iconfont' && scope.row[each.prop] === 'undefined'
+                each.type == 'iconfont' && scope.row[each.prop] !== 'undefined'
               "
             >
               {{ each.text || "" }}
@@ -161,7 +161,7 @@
             <!-- 标签 -->
             <div
               v-else-if="
-                each.type == 'tag' && scope.row[each.prop] === 'undefined'
+                each.type == 'tag' && scope.row[each.prop] !== 'undefined'
               "
             >
               <el-tag
@@ -180,7 +180,7 @@
             <!-- 评分 -->
             <div
               v-else-if="
-                each.type == 'rate' && scope.row[each.prop] === 'undefined'
+                each.type == 'rate' && scope.row[each.prop] !== 'undefined'
               "
             >
               {{ each.text || "" }}
@@ -206,7 +206,7 @@
             <!-- 超链接 -->
             <div
               v-else-if="
-                each.type == 'href' && scope.row[each.prop] === 'undefined'
+                each.type == 'href' && scope.row[each.prop] !== 'undefined'
               "
             >
               {{ each.text || "" }}
@@ -225,7 +225,7 @@
             </div>
             <div
               v-else-if="
-                each.type == 'video' && scope.row[each.prop] === 'undefined'
+                each.type == 'video' && scope.row[each.prop] !== 'undefined'
               "
               style="
                 border-radius: 10px;
