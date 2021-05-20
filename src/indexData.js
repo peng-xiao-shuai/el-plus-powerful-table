@@ -182,9 +182,9 @@ let lists = [
     name: "蓝猫",
     gender: 1,
     createTime: "2020-12-01",
-    price: "",
+    price: null,
     switchVal: 1,
-    tag: undefined,
+    tag: null,
     rate: 4.5,
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
