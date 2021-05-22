@@ -1,3 +1,9 @@
+## 1.3.7 20210522
+- 解决 `filter` 没有数据 不显示默认空
+- 优化 `text` 类型下 长度过长时候使用...代替
+- `text` 类型 新增 `line` 字段，用于超出多少行使用...
+- `tag` 支持多个，支持只显示前`number`个
+
 ## 1.3.4 20210519
 - 解决 `switch` 类型下 `text` 不生效问题
 ## 1.3.2 20210518
@@ -192,7 +198,6 @@ const data = {
 #### <font color='#50BEFF'>data 类型数据</font>
 
 <font color='red'>type != 'text' 的并且没有 data 情况下 都建议写上 data:{}</font>
-
 ```js
 //示例
 {
@@ -201,6 +206,11 @@ const data = {
   data:{}
 }
 ```
+
+#### <font color='#7CCEFF'>type == text （默认text）</font>
+| 参数     | 说明             | 类型    | 可选值                                               | 默认值  |
+| -------- | ---------------- | ------- | ---------------------------------------------------- | ------- |
+| line      | 超出多少的行数使用...代替         | number  | -                                                    | -       |
 
 #### <font color='#7CCEFF'>type == image（图片）</font>
 
@@ -500,6 +510,7 @@ const data = {
 | effect | 主题 | string | 'dark / light / plain'      | 'light' |
 | color | 背景颜色 | string | -      | - |
 | hit | 是否描边 | boolean | -      | false |
+| number | 需要显示前多少个 | number | -    | 3 |
 | filter | <a href='#filter'>查看详情</a> | array | -      | - |
 
 ---

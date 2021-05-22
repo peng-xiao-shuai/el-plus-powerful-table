@@ -103,7 +103,8 @@ let header = [
     ],
   },
   {
-    label: "标签", //显示的标题
+    label: "标签(只显示两个)", //显示的标题
+    width: 200,
     overflowTooltip: false,
     props: [
       {
@@ -151,8 +152,18 @@ let header = [
     ],
   },
   {
+    label: "内容", //显示的标题
+    props: [
+      {
+        prop: "content",
+        line: 4
+      },
+    ],
+  },
+  {
     label: "操作", //显示的标题
     width: 150,
+    fixed: 'right',
     props: [
       {
         type: "btn",
@@ -181,12 +192,13 @@ let lists = [
   {
     id: 1,
     name: "蓝猫",
-    gender: 1,
+    gender: '',
     createTime: null,
     price: "",
     switchVal: 1,
-    tag: null,
+    tag: [1, 2, 3],
     rate: 4.5,
+    content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",

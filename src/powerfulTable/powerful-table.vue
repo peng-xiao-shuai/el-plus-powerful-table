@@ -40,15 +40,23 @@
           >
             <!-- 筛选 -->
             <div v-if="each.filter">
-              {{ each.text || ""
-              }}{{
-                filterFun(
-                  each.child
-                    ? scope.row[each.prop][each.child]
-                    : scope.row[each.prop],
-                  each.filter
-                )
-              }}
+              <div v-if="scope.row[each.prop]">
+                {{ each.text || ""
+                }}{{
+                  filterFun(
+                    each.child
+                      ? scope.row[each.prop][each.child]
+                      : scope.row[each.prop],
+                    each.filter
+                  )
+                }}
+              </div>
+              <div v-else>
+                <div v-if="each.reserve" v-html="each.reserve"></div>
+                <div v-else>
+                  <b>暂无数据</b>
+                </div>
+              </div>
             </div>
             <!-- 图片 -->
             <div
@@ -70,31 +78,36 @@
             </div>
             <!-- 按钮 -->
             <div v-else-if="each.type == 'btn'" class="btnType">
-              <el-tooltip
-                class="btnEach"
-                effect="dark"
-                :content="apiece.tip"
-                placement="top"
-                v-for="(apiece, idx) in each.data"
-                :key="idx"
-              >
-                <el-button
+              <template v-for="(apiece, idx) in each.data" :key="idx">
+                <el-tooltip
+                  class="btnEach"
+                  effect="dark"
+                  :content="apiece.tip"
+                  placement="top"
                   v-if="
                     apiece.condi
                       ? scope.row[apiece.condi.prop] == apiece.condi.value
                       : true
                   "
-                  :style="apiece.style || {}"
-                  :icon="apiece.icon || ''"
-                  :disabled="apiece.disabled || false"
-                  :type="apiece.type || 'primary'"
-                  :size="apiece.size || 'small'"
-                  @click="
-                    btnChange(apiece.emit, scope.row, scope.$index, apiece.type)
-                  "
-                  >{{ apiece.text || apiece.tip }}</el-button
                 >
-              </el-tooltip>
+                  <el-button
+                    :style="apiece.style || {}"
+                    :icon="apiece.icon || ''"
+                    :disabled="apiece.disabled || false"
+                    :type="apiece.type || 'primary'"
+                    :size="apiece.size || 'small'"
+                    @click="
+                      btnChange(
+                        apiece.emit,
+                        scope.row,
+                        scope.$index,
+                        apiece.type
+                      )
+                    "
+                    >{{ apiece.text || apiece.tip }}</el-button
+                  >
+                </el-tooltip>
+              </template>
             </div>
             <!-- 开关 -->
             <div v-else-if="each.type == 'switch'">
@@ -165,16 +178,18 @@
               "
             >
               <el-tag
+                v-for="tag in tagToArray(
+                  scope.row[each.prop],
+                  (each.data && each.data.number) || 3
+                )"
+                style="margin-right: 10px"
+                :key="tag"
                 :closable="false"
                 :type="each.data.type || 'primary'"
                 :effect="(each.data && each.data.effect) || 'light'"
                 :color="(each.data && each.data.color) || ''"
                 :hit="(each.data && each.data.hit) || false"
-                >{{
-                  each.filter
-                    ? filterFun(scope.row[each.prop], each.filter)
-                    : scope.row[each.prop]
-                }}</el-tag
+                >{{ each.filter ? filterFun(tag, each.filter) : tag }}</el-tag
               >
             </div>
             <!-- 评分 -->
@@ -271,7 +286,13 @@
             </slot>
             <!-- 正常 -->
             <div v-else-if="scope.row[each.prop]">
-              <div>
+              <div
+                :style="{
+                  display: '-webkit-box',
+                  '-webkit-box-orient': 'vertical',
+                  '-webkit-line-clamp': each.line || 1,
+                }"
+              >
                 {{ each.text || ""
                 }}{{
                   each.child
@@ -440,6 +461,15 @@ export default {
     }
   },
   methods: {
+    tagToArray (e, i) {
+      if (typeof e != 'string') {
+        let a = JSON.parse(JSON.stringify(e)).splice(0, i)
+        console.log(a)
+        return a
+      } else {
+        return e.split(',')
+      }
+    },
     // 筛选
     filterFun (e, row) {
       let val
