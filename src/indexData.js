@@ -96,6 +96,12 @@ let header = [
         prop: "switchVal",
         type: "switch",
         data: {
+          beforeFunction: function (row, prop) {
+            let val = row[prop]
+            // console.log(val)
+
+            return true
+          }
           // inactiveText: "关闭",
           // activeText: "开启",
         },

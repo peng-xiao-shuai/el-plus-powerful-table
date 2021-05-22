@@ -40,7 +40,7 @@
           >
             <!-- 筛选 -->
             <div v-if="each.filter">
-              <div v-if="scope.row[each.prop]">
+              <div v-if="scope.row[each.prop] !== 'undefined'">
                 {{ each.text || ""
                 }}{{
                   filterFun(
@@ -127,12 +127,14 @@
                 "
                 :inactive-value="each.data.inactiveValue || 0"
                 @click="
-                  switchChange(
-                    scope.row,
-                    each.prop,
-                    each.data.activeValue,
-                    each.data.inactiveValue
-                  )
+                  !each.data.disabled &&
+                    switchChange(
+                      scope.row,
+                      each.prop,
+                      each.data.activeValue,
+                      each.data.inactiveValue,
+                      each.data.beforeFunction
+                    )
                 "
               >
               </el-switch>
@@ -290,7 +292,7 @@
                 :style="{
                   display: '-webkit-box',
                   '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': each.line || 1,
+                  '-webkit-line-clamp': each.line || 3,
                 }"
               >
                 {{ each.text || ""
@@ -464,7 +466,6 @@ export default {
     tagToArray (e, i) {
       if (typeof e != 'string') {
         let a = JSON.parse(JSON.stringify(e)).splice(0, i)
-        console.log(a)
         return a
       } else {
         return e.split(',')
@@ -551,8 +552,13 @@ export default {
       }
     },
     // 开关回调
-    switchChange (row, prop, val = 1, val2 = 0) {
+    switchChange (row, prop, val = 1, val2 = 0, beforFunction) {
       let value = row[prop] == val ? val2 : val
+      // console.log(!beforFunction(row, prop))
+      if (!beforFunction(row, prop)) {
+        row[prop] = value
+        return false
+      }
       this.$confirm('是否要进行修改操作, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

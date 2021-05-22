@@ -1,3 +1,7 @@
+## 1.3.8 20210522
+- 解决 `switch` 类型下 `disabled` 为 `true` 时 还是可以点击
+- 新增 `switch` 类型下 `beforeFunction` 字段 详见查看下方参数说明 <a href='#switch'>**`传送门`**</a>
+
 ## 1.3.7 20210522
 - 解决 `filter` 没有数据 不显示默认空
 - 优化 `text` 类型下 长度过长时候使用...代替
@@ -297,7 +301,7 @@ const data = {
 | prop  | 根据判断的 prop          | string          | -      | -      |
 | value | 根据判断的 prop 的 value | string / number | -      | -      |
 
-#### <font color='#7CCEFF'>type == switch（开关）</font>
+#### <font color='#7CCEFF' id='beforeFunction'>type == switch（开关）</font>
 
 | 参数          | 说明             | 类型    | 可选值     | 默认值 |
 | ------------- | ---------------- | ------- | ---------- | ------ |
@@ -309,6 +313,8 @@ const data = {
 | inactiveValue | 关闭时的值       | number  | -          | 0      |
 | disabled      | 是否禁用         | boolean | true/false | false  |
 | style         | 开关自定义样式   | object  | -          | -      |
+| beforeFunction   | 修改前事件,beforeFunction(row.prop),return true时正常执行 false 不可点击   | function  | -          | -      |
+
 
 
 ```js
