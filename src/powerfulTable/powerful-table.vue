@@ -673,13 +673,16 @@ export default {
       handler () {
         // console.log('数据', val)
         this.listLoading = false
-        this.$nextTick(() => {
-          // setTimeout(()=>{
-          this.getSelect(this.selectData)
-          // },100)
-        })
       },
 
+      immediate: true
+    },
+    selectData: {
+      handler () {
+        this.$nextTick(() => {
+          this.getSelect(this.selectData)
+        })
+      },
       immediate: true
     }
   }
