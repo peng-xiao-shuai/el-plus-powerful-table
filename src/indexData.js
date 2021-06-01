@@ -179,11 +179,17 @@ let header = [
             type: "info",
             icon: "el-icon-edit-outline",
             text: "U",
+            showBtn: (e) => {
+              return false
+            },
             emit: "update",
           },
           {
             tip: "删除",
             type: "danger",
+            showBtn: (e) => {
+              return true
+            },
             text: "D",
             icon: "el-icon-delete",
             emit: "remove",

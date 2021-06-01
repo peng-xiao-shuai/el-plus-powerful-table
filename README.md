@@ -1,3 +1,6 @@
+## 1.4.0 20210601
+- 删除 `type = btn` 类型下 `data` 里的 `condi` 字段，改为 `showBtn` 字段，该字段是个函数类型 返回该行数据 <a href='#btn'>**`传送门`**</a>
+showBtn
 ## 1.3.9 20210531
 - 解决 选中是 异步加载的 选中数据 不能选中问题
 
@@ -251,7 +254,7 @@ const data = {
 }
 ```
 
-#### <font color='#7CCEFF'>type == btn（操作按钮）</font>
+#### <font color='#7CCEFF' id='btn' >type == btn（操作按钮）</font>
 
 | 参数     | 说明             | 类型    | 可选值                                               | 默认值  |
 | -------- | ---------------- | ------- | ---------------------------------------------------- | ------- |
@@ -261,7 +264,7 @@ const data = {
 | disabled | 按钮是否禁用     | boolean | true/false                                           | false   |
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
 | size     | 按钮大小         | string  | medium / small / mini                                | small   |
-| condi    | 控制按钮显示隐藏 | object  | -                                                    | -       |
+| showBtn    | 控制按钮显示隐藏 返回当前行数据 (row) | function  | -                                                    | -       |
 | emit     | 自定义方法名     | string  | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
 
 ```js
@@ -278,10 +281,8 @@ const data = {
             icon: "el-icon-edit-outline",
             text: "U",
             emit: "update",
-            condi: {
-              // 此时 name == 1 时才会显示
-              prop: 'name',
-              value: '1'
+            showBtn: (row)=>{
+              return false
             }
           },
           {
@@ -289,6 +290,9 @@ const data = {
             type: "danger",
             text: "D",
             icon: "el-icon-delete",
+             showBtn: (row)=>{
+              return true
+            }
             emit: "remove",
           },
         ],

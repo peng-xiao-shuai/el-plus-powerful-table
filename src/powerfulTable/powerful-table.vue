@@ -85,27 +85,29 @@
                   :content="apiece.tip"
                   placement="top"
                   v-if="
-                    apiece.condi
-                      ? scope.row[apiece.condi.prop] == apiece.condi.value
+                    apiece.showBtn(scope.row, scope.$index) === false
+                      ? false
                       : true
                   "
                 >
-                  <el-button
-                    :style="apiece.style || {}"
-                    :icon="apiece.icon || ''"
-                    :disabled="apiece.disabled || false"
-                    :type="apiece.type || 'primary'"
-                    :size="apiece.size || 'small'"
-                    @click="
-                      btnChange(
-                        apiece.emit,
-                        scope.row,
-                        scope.$index,
-                        apiece.type
-                      )
-                    "
-                    >{{ apiece.text || apiece.tip }}</el-button
-                  >
+                  <template #default>
+                    <el-button
+                      :style="apiece.style || {}"
+                      :icon="apiece.icon || ''"
+                      :disabled="apiece.disabled || false"
+                      :type="apiece.type || 'primary'"
+                      :size="apiece.size || 'small'"
+                      @click="
+                        btnChange(
+                          apiece.emit,
+                          scope.row,
+                          scope.$index,
+                          apiece.type
+                        )
+                      "
+                      >{{ apiece.text || apiece.tip }}</el-button
+                    >
+                  </template>
                 </el-tooltip>
               </template>
             </div>
