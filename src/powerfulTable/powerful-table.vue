@@ -85,7 +85,9 @@
                   :content="apiece.tip"
                   placement="top"
                   v-if="
-                    apiece.showBtn(scope.row, scope.$index) === false
+                    apiece.showBtn == undefined
+                      ? true
+                      : apiece.showBtn(scope.row, scope.$index) === false
                       ? false
                       : true
                   "

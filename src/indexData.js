@@ -187,9 +187,6 @@ let header = [
           {
             tip: "删除",
             type: "danger",
-            showBtn: (e) => {
-              return true
-            },
             text: "D",
             icon: "el-icon-delete",
             emit: "remove",
