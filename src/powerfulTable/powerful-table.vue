@@ -630,6 +630,8 @@ export default {
         } else {
           this.$refs.multipleTable.clearSelection()
         }
+      } else {
+        this.$refs.multipleTable.clearSelection()
       }
     },
 
