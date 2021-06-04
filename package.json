@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "main": "./src/powerfulTable/index.js",
   "private": false,
   "license": "MIT",

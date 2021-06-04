@@ -576,7 +576,7 @@ export default {
         })
     },
     // 获取选中
-    getSelect (arr) {
+    getSelect (arr, list = this.list) {
 
       // 1.获取当前页
       // 2.总选中减去当前页
@@ -594,7 +594,7 @@ export default {
         // console.log('所有选中', all);
         // 获取当前页
         arr.forEach((item) => {
-          let itm = this.list.filter((each) => {
+          let itm = list.filter((each) => {
             return item[this.selectCompare[0]] == each[this.selectCompare[1]]
           })
 
@@ -674,9 +674,12 @@ export default {
   watch: {
     // list数据有的话 关闭加载中...
     list: {
-      handler () {
+      handler (val) {
         // console.log('数据', val)
         this.listLoading = false
+        this.$nextTick(() => {
+          this.getSelect(this.selectData, val)
+        })
       },
 
       immediate: true
