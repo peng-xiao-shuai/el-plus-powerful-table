@@ -578,6 +578,8 @@ export default {
     // 获取选中
     getSelect (arr, list = this.list) {
 
+      if (!this.isSelect) return
+
       // 1.获取当前页
       // 2.总选中减去当前页
       // 3.得到其他页
