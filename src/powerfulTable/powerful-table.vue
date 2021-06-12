@@ -559,7 +559,7 @@ export default {
     switchChange (row, prop, val = 1, val2 = 0, beforFunction) {
       let value = row[prop] == val ? val2 : val
       // console.log(!beforFunction(row, prop))
-      if (!beforFunction(row, prop)) {
+      if (typeof beforFunction == 'function' && !beforFunction(row, prop)) {
         row[prop] = value
         return false
       }
