@@ -162,7 +162,8 @@ let header = [
     props: [
       {
         prop: "content",
-        line: 4
+        develop: true,
+        line: 1
       },
     ],
   },

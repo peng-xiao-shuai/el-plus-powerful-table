@@ -29,7 +29,7 @@
         align="center"
         :prop="item.props[0].child || item.props[0].prop"
         :label="item.label"
-        :min-width="item.minWidth || 100"
+        :min-width="item.minWidth || 140"
         :width="item.width || ''"
       >
         <template #default="scope">
@@ -291,12 +291,13 @@
             >
             </slot>
             <!-- 正常 -->
-            <div v-else-if="scope.row[each.prop]">
+            <div v-else-if="scope.row[each.prop]" class="content">
               <div
                 :style="{
                   display: '-webkit-box',
+                  overflow: 'hidden',
                   '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': each.line || 3,
+                  '-webkit-line-clamp': develop ? 99999 : each.line || 3,
                 }"
               >
                 {{ each.text || ""
@@ -305,6 +306,18 @@
                     ? scope.row[each.prop][each.child]
                     : scope.row[each.prop] || each.reserve || "暂无数据"
                 }}
+              </div>
+              <div
+                v-show="each.develop"
+                class="develop el-link el-link--primary"
+                @click="develop = !develop"
+              >
+                <span>
+                  {{ develop ? "收起" : "展开阅读全文" }}
+                  <i
+                    :class="develop ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
+                  ></i>
+                </span>
               </div>
             </div>
 
@@ -445,6 +458,9 @@ export default {
       currentSelect: [],
       // 其他页面选中
       otherSelect: [],
+
+      // 展开
+      develop: false,
 
       pageSize: this.pageSizes[0],
     }
@@ -701,6 +717,31 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  position: relative;
+  padding-bottom: 23px;
+}
+.content .develop {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.5)
+  );
+}
+
+.content .develop span {
+  position: absolute;
+  bottom: 0;
+  font-size: 12px;
+}
+
 .btnType .btnEach {
   margin-bottom: 10px;
 }
