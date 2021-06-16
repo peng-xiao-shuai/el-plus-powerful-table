@@ -146,11 +146,14 @@
             <!-- 输入框 -->
             <div
               v-else-if="
-                each.type == 'input' && scope.row[each.prop] !== 'undefined'
+                (each.type == 'input' || each.type == 'textarea') &&
+                scope.row[each.prop] !== 'undefined'
               "
             >
               {{ each.text || "" }}
               <el-input
+                :type="each.type"
+                :rows="each.data.size || 3"
                 :style="each.data.style || {}"
                 :size="each.data.size || 'small'"
                 :placeholder="each.data.placeholder || ''"

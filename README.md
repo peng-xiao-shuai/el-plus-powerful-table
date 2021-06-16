@@ -1,3 +1,5 @@
+## 1.4.8 202106016
+- 新增 `type = textarea`。新增 `type = textarea` 类型下 `rows` 字段，同`el-input` 的 `rows`
 ## 1.4.7 202106014
 - 新增 `type = text` 类型下 `develop` 字段，用于是否显示 “展开/收起 操作元素” <a href='#text'>**`传送门`**</a>
 ## 1.3.10 20210601
@@ -347,7 +349,7 @@ const data = {
   }
 ```
 
-#### <font color='#7CCEFF'>type == input（输入框）</font>
+#### <font color='#7CCEFF'>type == input/textarea（输入框）</font>
 
 | 参数        | 说明              | 类型    | 可选值                | 默认值 |
 | ----------- | ----------------- | ------- | --------------------- | ------ |
@@ -356,6 +358,7 @@ const data = {
 | placeholder | 输入框文字描述    | string  | -                     | -      |
 | disabled    | 输入框是否禁用    | boolean | true/false            | false  |
 | slot        | 输入框前置或后置  | string  | prepend / append      | -      |
+| rows        | 显示的高度 `textarea` 专有  | string  | -      | 3      |
 | symbol      | slot 文字或者符合 | string  | -                     | -      |
 
 ```js
