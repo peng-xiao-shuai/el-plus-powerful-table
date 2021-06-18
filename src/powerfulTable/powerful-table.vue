@@ -294,7 +294,7 @@
             >
             </slot>
             <!-- 正常 -->
-            <div v-else-if="scope.row[each.prop]" class="content">
+            <div v-else-if="scope.row[each.prop]" :class="{ content: develop }">
               <div
                 :style="{
                   display: '-webkit-box',
