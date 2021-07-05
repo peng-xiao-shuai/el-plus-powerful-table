@@ -713,7 +713,7 @@ export default {
           this.getSelect(this.selectData)
         })
       },
-      immediate: true
+      // immediate: true
     }
   }
 }
