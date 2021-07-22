@@ -1,7 +1,7 @@
 let header = [
   {
     label: "编号", //显示的标题
-    minWidth: "60", //对应列的最小宽度
+    minWidth: "80px", //对应列的最小宽度
     sortable: true, //排序
     props: [
       {
@@ -33,6 +33,9 @@ let header = [
     props: [
       {
         prop: "gender",
+        customFilterFun(row){
+          return '公'
+        },
         filter: [
           {
             key: 1,
@@ -43,18 +46,8 @@ let header = [
             value: "母",
           },
         ], //过滤
-      },
+      }
     ],
-  },
-  {
-    label: "创建时间", //显示的标题
-    props: [
-      {
-        prop: "createTime",
-        reserve: '<b>暂无数据</b>'
-      },
-    ],
-    sortable: "custom", //排序
   },
   {
     label: "价格", //显示的标题
@@ -118,6 +111,7 @@ let header = [
         type: "tag",
         data: {
           effect: 'dark',
+          number: '2'
           // type: 'success'
         },
         reserve: '<i><b>VNode</b></i>'
@@ -144,6 +138,7 @@ let header = [
   },
   {
     label: "评分", //显示的标题
+    width: '200',
     props: [
       {
         type: "rate",
@@ -163,7 +158,7 @@ let header = [
       {
         prop: "content",
         develop: true,
-        line: 1
+        line: 3
       },
     ],
   },
@@ -202,7 +197,35 @@ let lists = [
   {
     id: 1,
     name: "蓝猫",
-    gender: '',
+    gender: '1',
+    createTime: null,
+    price: "",
+    switchVal: 1,
+    tag: [1, 2, 3],
+    rate: 4.5,
+    content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+    videoUrl:
+      "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+    imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+  },
+  {
+    id: 2,
+    name: "蓝猫",
+    gender: '1',
+    createTime: null,
+    price: "",
+    switchVal: 1,
+    tag: [1, 2, 3],
+    rate: 4.5,
+    content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+    videoUrl:
+      "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+    imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+  },
+  {
+    id: 3,
+    name: "蓝猫",
+    gender: '1',
     createTime: null,
     price: "",
     switchVal: 1,

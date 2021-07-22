@@ -1,3 +1,8 @@
+## 1.4.11 20210722
+- 文档优化
+- `text` 支持自定义过滤 字段 `customFilterFun` <a href='#text'>**`传送门`**</a>
+## 1.4.10 20210722
+- 解决 `develop` 点击一列的展开，其他列的都展开
 ## 1.4.8 202106016
 - 新增 `type = textarea`。新增 `type = textarea` 类型下 `rows` 字段，同`el-input` 的 `rows`
 ## 1.4.7 202106014
@@ -100,7 +105,7 @@ app.mount("#app");
 | -------- | ------------------ | ------------- | -------------------------------------------------- | ------- |
 | value    | 下拉选中值         | string        | -                                                  | null    |
 | size     | 按钮和下拉框大小   | string        | medium / small / mini                              | small   |
-| type     | 按钮的类型         | string        | primary / success / warning / danger / info / text | primary |
+| type     | 按钮的类型         | string        | default / primary / success / warning / danger / info / text | primary |
 | disabled | 禁用               | boolean       | true / false                                       | false   |
 | icon     | 按钮上图标         | string        | -                                                  | -       |
 | style    | 按钮样式           | object        | -                                                  | -       |
@@ -146,7 +151,7 @@ const operateData = {
 | ------ | ----------------------------------------------------------------------------- | ------------- | ------------------------------------------- | ------ |
 | prop   | 数据 key 值                                                                   | string        | -                                           | -      |
 | child  | 当 prop 值是对象是用到 仅支持 `type 为 text`                                  | string        | -                                           | -      |
-| type   | 数据类型                                                                      | string        | image / text / switch / btn / video / input | text   |
+| type   | 数据类型                                                                      | string        | <a href='#image'>image</a> / <a href='#text'>text</a> / <a href='#switch'>switch</a> / <a href='#btn'>btn</a> / <a href='#video'>video</a> / <a href='#input'>input</a> / <a href='#iconfont'>iconfont</a> / <a href='#tag'>tag</a> / <a href='#rate'>rate</a> / <a href='#href'>href</a> / <a href='#slot'>slot</a> | text   |
 | data   | 每个类型不一样 data 里值也不一样，<br> type 为 btn 时数据类型为 array[object] | object        | -                                           | -      |
 | filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] | -                                           | -      |
 | text   | 数据左侧显示的文字。（例：文字：数据）                                        | string        | -                                           | -      |
@@ -221,13 +226,28 @@ const data = {
 }
 ```
 
-#### <font color='#7CCEFF'>type == text （默认text）</font>
+#### <font color='#7CCEFF' id='text'>type == text （默认text）</font>
 | 参数     | 说明             | 类型    | 可选值                                               | 默认值  |
 | -------- | ---------------- | ------- | ---------------------------------------------------- | ------- |
 | line      | 超出多少的行数使用...代替         | number  | -                                                    | -       |
 | develop      | 是否显示 “展开/收起 操作按钮”         | boolean  | false/true                                                    | false       |
+| customFilterFun      | 自定义过滤 返回当前行数据 (row)。优先级大于 `filter` | function  | - | - |
+```js
+{
+    label: "性别", //显示的标题
+    props: [
+      {
+        prop: "gender",
+        customFilterFun(row){
+          return '公'
+        }
+      }
+    ],
+  },
+```
 
-#### <font color='#7CCEFF'>type == image（图片）</font>
+
+#### <font color='#7CCEFF' id='image'>type == image（图片）</font>
 
 | 参数    | 说明                                                                                                | 类型    | 可选值                                     | 默认值 |
 | ------- | --------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------ | ------ |
@@ -306,7 +326,7 @@ const data = {
   }
 ```
 
-#### <font color='#9FDBFF'>condi（判断是否显示按钮）</font>
+#### <font color='#9FDBFF'>condi（判断是否显示按钮） <font color='yellow'>（即将废弃）</font> </font>
 
 | 参数  | 说明                     | 类型            | 可选值 | 默认值 |
 | ----- | ------------------------ | --------------- | ------ | ------ |
@@ -349,7 +369,7 @@ const data = {
   }
 ```
 
-#### <font color='#7CCEFF'>type == input/textarea（输入框）</font>
+#### <font color='#7CCEFF' id='input'>type == input/textarea（输入框）</font>
 
 | 参数        | 说明              | 类型    | 可选值                | 默认值 |
 | ----------- | ----------------- | ------- | --------------------- | ------ |
@@ -379,7 +399,7 @@ const data = {
 }
 ```
 
-#### <font color='#7CCEFF'>type == video（视频）</font>
+#### <font color='#7CCEFF' id='video'>type == video（视频）</font>
 
 | 参数   | 说明           | 类型    | 可选值     | 默认值 |
 | ------ | -------------- | ------- | ---------- | ------ |
@@ -410,7 +430,7 @@ const data = {
 }
 ```
 
-#### <font color='#7CCEFF'>type == iconfont（图标）</font>
+#### <font color='#7CCEFF' id='iconfont'>type == iconfont（图标）</font>
 
 | 参数  | 说明           | 类型   | 可选值 | 默认值 |
 | ----- | -------------- | ------ | ------ | ------ |
@@ -431,7 +451,7 @@ const data = {
 }
 ```
 
-#### <font color='#7CCEFF'>type == rate（评分）</font>
+#### <font color='#7CCEFF' id='rate'>type == rate（评分）</font>
 
 | 参数      | 说明                                                                    | 类型    | 可选值     | 默认值                                                    |
 | --------- | ----------------------------------------------------------------------- | ------- | ---------- | --------------------------------------------------------- |
@@ -463,7 +483,7 @@ const data = {
 }
 ```
 
-#### <font color='#7CCEFF'>type == href（超链接）</font>
+#### <font color='#7CCEFF' id='href'>type == href（超链接）</font>
 
 | 参数      | 说明                                            | 类型    | 可选值     | 默认值    |
 | --------- | ----------------------------------------------- | ------- | ---------- | --------- |

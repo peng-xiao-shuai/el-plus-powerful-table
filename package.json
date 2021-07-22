@@ -1,13 +1,13 @@
 {
   "name": "el-plus-powerful-table",
-  "version": "1.4.9",
-  "main": "./src/powerfulTable/index.js",
+  "version": "1.4.11",
+  "main": "./lib/powerful-table.umd.min.js",
   "private": false,
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name powerful-table --dest lib src/powerfulTable/index.js",
+    "lib": "vue-cli-service build --target lib --name powerful-table --dest lib ./src/powerfulTable/index.js",
     "test": "vue-cli-service test:unit --coverage"
   },
   "keywords": [
@@ -50,8 +50,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
+      "plugin:vue/vue3-essential"
     ],
     "parserOptions": {
       "parser": "babel-eslint"

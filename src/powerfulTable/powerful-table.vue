@@ -39,10 +39,15 @@
             :style="each.style || {}"
           >
             <!-- 筛选 -->
-            <div v-if="each.filter">
+            <div
+              v-if="
+                each.filter && (each.type == 'text' || each.type == undefined)
+              "
+            >
               <div v-if="scope.row[each.prop] !== 'undefined'">
                 {{ each.text || ""
                 }}{{
+                  each.customFilterFun(scope.row, scope.$index) ||
                   filterFun(
                     each.child
                       ? scope.row[each.prop][each.child]
@@ -294,13 +299,18 @@
             >
             </slot>
             <!-- 正常 -->
-            <div v-else-if="scope.row[each.prop]" :class="{ content: develop }">
+            <div
+              v-else-if="scope.row[each.prop]"
+              :class="{ content: develop[scope.$index] }"
+            >
               <div
                 :style="{
                   display: '-webkit-box',
                   overflow: 'hidden',
                   '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': develop ? 99999 : each.line || 3,
+                  '-webkit-line-clamp': develop[scope.$index]
+                    ? 99999
+                    : each.line || 3,
                 }"
               >
                 {{ each.text || ""
@@ -313,12 +323,16 @@
               <div
                 v-show="each.develop"
                 class="develop el-link el-link--primary"
-                @click="develop = !develop"
+                @click="develop[scope.$index] = !develop[scope.$index]"
               >
                 <span>
-                  {{ develop ? "收起" : "展开阅读全文" }}
+                  {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
                   <i
-                    :class="develop ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
+                    :class="
+                      develop[scope.$index]
+                        ? 'el-icon-arrow-up'
+                        : 'el-icon-arrow-down'
+                    "
                   ></i>
                 </span>
               </div>
@@ -335,19 +349,21 @@
       </el-table-column>
     </el-table>
 
-    <div style="display: flex; justify-content: space-between">
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 20px"
+    >
       <div
         class="pagination left"
-        v-if="operateData && isSelect && operateData.operates"
+        v-if="operate && isSelect && operate.operates"
       >
         <el-select
-          v-model="operateData.value"
+          v-model="operate.value"
           clearable
           placeholder="批量操作"
-          :size="operateData.size || 'small'"
+          :size="operate.size || 'small'"
         >
           <el-option
-            v-for="(item, index) in operateData.operates"
+            v-for="(item, index) in operate.operates"
             :key="index"
             :label="item.label"
             :value="item.value"
@@ -355,10 +371,10 @@
           </el-option>
         </el-select>
         <el-button
-          :style="operateData.style || { marginLeft: '20px' }"
-          :icon="operateData.icon || ''"
-          :type="operateData.type || 'primary'"
-          :size="operateData.size || 'small'"
+          :style="operate.style || { marginLeft: '20px' }"
+          :icon="operate.icon || ''"
+          :type="operate.type || 'primary'"
+          :size="operate.size || 'small'"
           class="search-button"
           @click="batchOperate"
         >
@@ -454,6 +470,9 @@ export default {
     return {
       listLoading: true,
 
+      // 承载props的operateData
+      operate: {},
+
       // 分页
       currentPage: 1,
 
@@ -522,8 +541,8 @@ export default {
 
     // 批量按钮
     batchOperate () {
-      console.log(this.operateData.value)
-      if (!this.operateData.value && this.operateData.value != '0') {
+      console.log(this.operate.value)
+      if (!this.operate.value && this.operate.value != '0') {
         ElMessage({
           message: '请选择操作类型',
           type: 'warning',
@@ -540,7 +559,7 @@ export default {
         })
         return
       }
-      this.$confirm(`是否要进行批量${this.operateData.operates[this.operateData.value].label}操作?`, '提示', {
+      this.$confirm(`是否要进行批量${this.operate.operates[this.operate.value].label}操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -549,7 +568,7 @@ export default {
           let ids = this.otherSelect.concat(this.currentSelect).map(item => item.id)
           let items = this.otherSelect.concat(this.currentSelect).map(item => item)
 
-          this.$emit('batchOperate', { ids, item: this.operateData.operates[this.operateData.value], items })
+          this.$emit('batchOperate', { ids, item: this.operate.operates[this.operate.value], items })
         })
         .catch(() => {
           console.log('取消批量操作')
@@ -695,10 +714,19 @@ export default {
     }
   },
   watch: {
+    operateData: {
+      handler (val) {
+        this.operate = val
+      },
+      immediate: true
+    },
     // list数据有的话 关闭加载中...
     list: {
       handler (val) {
         // console.log('数据', val)
+
+        // 更具当前list 数据 添加develop
+        this.develop = Array(val.length).fill(false)
         this.listLoading = false
         this.$nextTick(() => {
           this.getSelect(this.selectData, val)
@@ -724,9 +752,8 @@ export default {
   position: relative;
   padding-bottom: 23px;
 }
-.content .develop {
+.content > .develop {
   text-align: center;
-  width: 100%;
   height: 100%;
   position: absolute;
   left: 0;
@@ -739,10 +766,14 @@ export default {
   );
 }
 
-.content .develop span {
+.content > .develop span {
   position: absolute;
   bottom: 0;
   font-size: 12px;
+}
+
+.develop {
+  width: 100%;
 }
 
 .btnType .btnEach {
@@ -756,7 +787,6 @@ export default {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  padding-top: 20px;
 }
 
 .left {
