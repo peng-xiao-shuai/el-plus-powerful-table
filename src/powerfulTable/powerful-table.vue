@@ -323,6 +323,9 @@
               <div
                 v-show="each.develop"
                 class="develop el-link el-link--primary"
+                :style="{
+                  position: develop[scope.$index] ? 'absolute' : 'static',
+                }"
                 @click="develop[scope.$index] = !develop[scope.$index]"
               >
                 <span>
@@ -767,7 +770,7 @@ export default {
 }
 
 .content > .develop span {
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
   font-size: 12px;
 }
