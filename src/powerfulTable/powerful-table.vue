@@ -47,7 +47,8 @@
               <div v-if="scope.row[each.prop] !== 'undefined'">
                 {{ each.text || ""
                 }}{{
-                  each.customFilterFun(scope.row, scope.$index) ||
+                  (each.customFilterFun &&
+                    each.customFilterFun(scope.row, scope.$index)) ||
                   filterFun(
                     each.child
                       ? scope.row[each.prop][each.child]
@@ -323,12 +324,13 @@
               <div
                 v-show="each.develop"
                 class="develop el-link el-link--primary"
-                :style="{
-                  position: develop[scope.$index] ? 'absolute' : 'static',
-                }"
                 @click="develop[scope.$index] = !develop[scope.$index]"
               >
-                <span>
+                <span
+                  :style="{
+                    position: develop[scope.$index] ? 'absolute' : 'static',
+                  }"
+                >
                   {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
                   <i
                     :class="

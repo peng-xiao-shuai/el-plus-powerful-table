@@ -33,16 +33,16 @@ let header = [
     props: [
       {
         prop: "gender",
-        customFilterFun(row){
-          return '公'
-        },
+        // customFilterFun(row){
+        //   return '公'
+        // },
         filter: [
           {
             key: 1,
             value: "公",
           },
           {
-            key: 1,
+            key: 2,
             value: "母",
           },
         ], //过滤
@@ -211,7 +211,7 @@ let lists = [
   {
     id: 2,
     name: "蓝猫",
-    gender: '1',
+    gender: '2',
     createTime: null,
     price: "",
     switchVal: 1,
