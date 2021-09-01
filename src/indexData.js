@@ -111,9 +111,16 @@ let header = [
         type: "tag",
         data: {
           effect: 'dark',
-          number: '2'
-          // type: 'success'
+          number: '2',
+          type: 'success',
+          color:(r)=>{
+            return r == 1 ? '#409EFF' : '#F56C6C'
+          },
         },
+        filter: [
+          { key: 1, value: "男" },
+          { key: 2, value: "女" },
+        ],
         reserve: '<i><b>VNode</b></i>'
       },
     ],

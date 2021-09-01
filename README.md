@@ -1,3 +1,6 @@
+## 1.4.15 20210901
+- 文档优化
+- `tag` 更改 `color` 字段类型为 `function` <a href='#tag'>**`传送门`**</a>
 ## 1.4.11 20210722
 - 文档优化
 - `text` 支持自定义过滤 字段 `customFilterFun` <a href='#text'>**`传送门`**</a>
@@ -78,6 +81,11 @@ app.mount("#app");
 //*.vue
 <powerful-table :list="list" :total="total" :header="header"></powerful-table>
 ```
+### 传送门
+<a href='#filter'>**过滤**</a>&emsp;<a href='#text'>**文本**</a>&emsp;<a href='#image'>**图片**</a>&emsp;
+<a href='#btn'>**按钮**</a>&emsp;<a href='#beforeFunction'>**开关**</a>&emsp;<a href='#input'>**输入框**</a>&emsp;
+<a href='#video'>**视频**</a>&emsp;<a href='#iconfont'>**图标**</a>&emsp;<a href='#rate'>**评分**</a>&emsp;
+<a href='#href'>**超链接**</a>&emsp;<a href='#slot'>**插槽**</a>&emsp;<a href='#tag'>**标签**</a>
 
 ## powerful-table Attributes 表格组件
 
@@ -547,7 +555,7 @@ const data = {
 | -------- | -------- | ------ | ------ | --------- |
 | type | 类型 | string | 'primary / success / warning / danger / info'      | 'primary' |
 | effect | 主题 | string | 'dark / light / plain'      | 'light' |
-| color | 背景颜色 | string | -      | - |
+| color | 背景颜色 参数为当前 `(tag)` 返回颜色值 | function | -      | - |
 | hit | 是否描边 | boolean | -      | false |
 | number | 需要显示前多少个 | number | -    | 3 |
 | filter | <a href='#filter'>查看详情</a> | array | -      | - |

@@ -197,12 +197,15 @@
                   scope.row[each.prop],
                   (each.data && each.data.number) || 3
                 )"
-                style="margin-right: 10px"
+                :style="{
+                  marginRight: '10px',
+                  borderColor: (each.data && typeof each.data.color == 'function') ? 'rgba(0,0,0,0)' : 'auto'
+                }"
                 :key="tag"
                 :closable="false"
                 :type="each.data.type || 'primary'"
                 :effect="(each.data && each.data.effect) || 'light'"
-                :color="(each.data && each.data.color) || ''"
+                :color="(each.data && typeof each.data.color == 'function' && each.data.color(tag)) || ''"
                 :hit="(each.data && each.data.hit) || false"
                 >{{ each.filter ? filterFun(tag, each.filter) : tag }}</el-tag
               >
@@ -512,7 +515,7 @@ export default {
   methods: {
     tagToArray (e, i) {
       if (typeof e != 'string') {
-        let a = JSON.parse(JSON.stringify(e)).splice(0, i)
+        let a = [...e].splice(0, i)
         return a
       } else {
         return e.split(',')
@@ -524,6 +527,7 @@ export default {
 
       for (let i in row) {
         val = e == row[i].key ? row[i].value : e
+
         if (e == row[i].key) {
           val = row[i].value
 
