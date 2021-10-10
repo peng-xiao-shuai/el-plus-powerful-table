@@ -1,18 +1,10 @@
 <template>
   <div class="app-container">
     <powerful-table
-      :selectCompare="selectCompare"
-      :isSelect="isSelect"
-      :operateData="operateData"
       :selectData="selectData"
       :list="list"
       :header="config"
       :total="total"
-      @switchChange="switchChange"
-      @sortCustom="handlersort"
-      @update="handlerUpdate"
-      @remove="handlerRemove"
-      @batchOperate="batchOperate"
     >
       <template #A="{ row }">
         <div>
@@ -29,9 +21,9 @@
 <script>
 import { header, lists } from "./indexData"
 import { ElMessage } from 'element-plus'
-import { reactive, ref, onMounted } from "vue"
+import { reactive, ref, onMounted, defineComponent } from "vue"
 
-export default {
+export default defineComponent({
   setup (props, context) {
     let rowA = reactive({ value: {} })
     let list = reactive(lists)
@@ -123,5 +115,5 @@ export default {
       handlerRemove,
     }
   },
-};
+})
 </script>

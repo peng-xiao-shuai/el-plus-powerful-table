@@ -158,7 +158,7 @@ const operateData = {
 | 参数   | 说明                                                                          | 类型          | 可选值                                      | 默认值 |
 | ------ | ----------------------------------------------------------------------------- | ------------- | ------------------------------------------- | ------ |
 | prop   | 数据 key 值                                                                   | string        | -                                           | -      |
-| child  | 当 prop 值是对象是用到 仅支持 `type 为 text`                                  | string        | -                                           | -      |
+| child  | 当 prop 值是对象是用到 仅支持 `type 为 text`  <font color='red'>已删除</font>                                | string        | -                                           | -      |
 | type   | 数据类型                                                                      | string        | <a href='#image'>image</a> / <a href='#text'>text</a> / <a href='#switch'>switch</a> / <a href='#btn'>btn</a> / <a href='#video'>video</a> / <a href='#input'>input</a> / <a href='#iconfont'>iconfont</a> / <a href='#tag'>tag</a> / <a href='#rate'>rate</a> / <a href='#href'>href</a> / <a href='#slot'>slot</a> | text   |
 | data   | 每个类型不一样 data 里值也不一样，<br> type 为 btn 时数据类型为 array[object] | object        | -                                           | -      |
 | filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] | -                                           | -      |
@@ -209,7 +209,7 @@ const data = {
 | value | 需要替换的值   | string | -      | -      |
 
 ```js
-// 参数示例
+// 参数示例 内置替换是以 == 进行判断 所有 当key值为 '1' 而数据中的值为 1 仍然可以匹配上
 {
   label: '筛选',
   props:[{

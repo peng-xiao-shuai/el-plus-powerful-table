@@ -1,71 +1,39 @@
 {
   "name": "el-plus-powerful-table",
   "version": "1.4.15",
-  "main": "./src/powerfulTable/index.js",
+  "main": "./src/powerfulTable/index.ts",
   "private": false,
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name powerful-table --dest lib ./src/powerfulTable/index.js",
+    "lib": "vue-cli-service build --target lib --name powerful-table --dest lib ./src/powerfulTable/index.ts",
     "test": "vue-cli-service test:unit --coverage"
   },
   "keywords": [
-    "elment-plus",
+    "element-plus",
     "vue3.0",
     "table",
+    "ts",
     "el-table"
   ],
   "bugs": {
-    "url": "https://github.com/Peng-Xiao-Shuai-0902/el-plus-powerful-table/issues",
+    "url": "https://github.com/Peng-Xiao-Shuai/el-plus-powerful-table/issues",
     "email": "1612565136@qq.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Peng-Xiao-Shuai-0902/el-plus-powerful-table.git"
+    "url": "git+https://github.com/Peng-Xiao-Shuai/el-plus-powerful-table.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "element-plus": "^1.0.2-beta.60",
+    "vue": "^3.2.0"
+  },
   "devDependencies": {
-    "element-plus": "^1.0.2-beta.31",
-    "vue": "^3.0.4",
     "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "@vue/test-utils": "^2.0.0-rc.4",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-vue": "^7.0.0",
-    "node-sass": "^4.12.0",
-    "prettier": "^2.2.1",
-    "sass-loader": "^8.0.2",
-    "vue-jest": "^5.0.0-0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {},
-    "overrides": [
-      {
-        "files": [
-          "**/test/*.{j,t}s?(x)",
-          "<rootDir>/test/unit/specs/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
-    ]
+    "@vue/compiler-sfc": "^3.2.0",
+    "typescript": "^4.4.3"
   }
 }
