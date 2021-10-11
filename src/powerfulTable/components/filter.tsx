@@ -9,7 +9,7 @@ export default defineComponent({
     },
     index: Number,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps>,
+      type: Object as PropType<PowerfulTableHeaderProps & {data?: TextDataType}>,
       default: () => {}
     }
   },
@@ -26,8 +26,8 @@ export default defineComponent({
           { props.prop.text || ""
           }{
             (
-              (props.prop.data as TextDataType)?.customFilterFun &&
-              (props.prop.data as TextDataType & {customFilterFun: Function}).customFilterFun(props.row, props.index)
+              props.prop.data?.customFilterFun &&
+              (props.prop.data as {customFilterFun: Function}).customFilterFun(props.row, props.index)
             )
             ||
             filterFun(props.row[props.prop.prop], props.prop.filter as PowerfulTableFilter[])

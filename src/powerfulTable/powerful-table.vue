@@ -26,7 +26,7 @@
         :sortable="item.sortable || false"
         :header-align="item.headerAlign || 'center'"
         :show-overflow-tooltip="item.overflowTooltip || false"
-        align="center"
+        :align="item.headerAlign || 'center'"
         :prop="item.props[0].child || item.props[0].prop"
         :label="item.label"
         :min-width="item.minWidth || 140"
@@ -46,23 +46,13 @@
               :prop="prop"
             />
             <!-- 图片 -->
-            <div
-              v-else-if="
-                prop.type == 'image' && scope.row[prop.prop] !== 'undefined'
-              "
-            >
-              {{ prop.text || "" }}
-              <el-image
-                :src="scope.row[prop.prop]"
-                :preview-src-list="
-                  prop.data.preview === false ? [] : [scope.row[prop.prop]]
-                "
-                :lazy="prop.data.lazy === false ? false : true"
-                :z-index="prop.data.zIndex || 6000"
-                :style="prop.data.style || {}"
-                :fit="prop.data.fit || 'cover'"
-              ></el-image>
-            </div>
+            <Image 
+              v-else-if="prop.type == 'image' && scope.row[prop.prop] !== 'undefined'"
+              :row="scope.row"
+              :index="scope.$index"
+              :prop="prop"
+              :align="item.headerAlign"
+            />
             <!-- 按钮 -->
             <div v-else-if="prop.type == 'btn'" class="btnType">
               <template v-for="(apiece, idx) in prop.data" :key="idx">
@@ -101,35 +91,13 @@
               </template>
             </div>
             <!-- 开关 -->
-            <div v-else-if="prop.type == 'switch'">
-              {{ prop.text || "" }}
-              <el-switch
-                :style="prop.data.style || {}"
-                :inactive-text="prop.data.inactiveText || ''"
-                :active-text="prop.data.activeText || ''"
-                v-model="scope.row[prop.prop]"
-                :disabled="prop.data.disabled || false"
-                :active-color="prop.data.activeColor"
-                :inactive-color="prop.data.inactiveColor"
-                :active-value="
-                  prop.data.activeValue || prop.data.activeValue === 0
-                    ? prop.data.activeValue
-                    : 1
-                "
-                :inactive-value="prop.data.inactiveValue || 0"
-                @click="
-                  !prop.data.disabled &&
-                    switchChange(
-                      scope.row,
-                      prop.prop,
-                      prop.data.activeValue,
-                      prop.data.inactiveValue,
-                      prop.data.beforeFunction
-                    )
-                "
-              >
-              </el-switch>
-            </div>
+            <Switch 
+              v-else-if="prop.type == 'switch'"
+              :row="scope.row"
+              :index="scope.$index"
+              :prop="prop"
+              @returnEmit="returnEmit"
+            />
             <!-- 输入框 -->
             <div
               v-else-if="
@@ -393,6 +361,8 @@ import type { PropType } from 'vue'
 import type { PowerfulTableHeader, PowerfulTableOperateData, EmitType } from '../../types/powerful-table'
 
 import Filter from './components/filter';
+import Image from './components/image';
+import Switch from './components/switch';
 
 export default defineComponent({
   name: "powerful-table",
@@ -449,7 +419,15 @@ export default defineComponent({
     },
   },
   components: {
-    Filter
+    Filter,
+    Image,
+    Switch
+  },
+  provide: {
+    justifyFun: (val: string) => {
+      const bol = ['center', 'left', 'right'].includes(val)
+      return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
+    }
   },
   emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
   setup(props, { emit }) {
@@ -631,25 +609,11 @@ export default defineComponent({
         emit(emitName, { row, index })
       }
     }
-    /* ------ 开关回调 ------ */
-    const switchChange = (row: any, prop: string, val = 1, val2 = 0, beforFunction: Function) => {
-      let value = row[prop] == val ? val2 : val
-      // console.log(!beforFunction(row, prop))
-      if (typeof beforFunction == 'function' && !beforFunction(row, prop)) {
-        row[prop] = value
-        return false
-      }
-      proxy.$confirm('是否要进行修改操作, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          proxy.$emit('switchChange', row)
-        })
-        .catch(() => {
-          row[prop] = value
-        })
+    /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
+    const returnEmit = (emitName: EmitType, objVal: any) => {
+      console.log('触发回调', emitName, objVal);
+      
+      emit(emitName, objVal)
     }
     /* ------ 添加选中 ------ */
     const handleSelectionChange = (e: any[]) => {
@@ -688,12 +652,12 @@ export default defineComponent({
       pageSize,
       multipleTable,
 
+      returnEmit,
       tagToArray,
       handleChange,
       sortChange,
       batchOperate,
       btnChange,
-      switchChange,
       handleSelectionChange
     }
 

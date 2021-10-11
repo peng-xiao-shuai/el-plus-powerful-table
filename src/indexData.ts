@@ -83,26 +83,25 @@ let header: PowerfulTableHeader[] = [
   //     },
   //   ],
   // },
-  // {
-  //   label: "开关", //显示的标题
-  //   overflowTooltip: false,
-  //   props: [
-  //     {
-  //       prop: "switchVal",
-  //       type: "switch",
-  //       data: {
-  //         // beforeFunction: function (row, prop) {
-  //         //   let val = row[prop]
-  //         //   // console.log(val)
-
-  //         //   return true
-  //         // }
-  //         // inactiveText: "关闭",
-  //         // activeText: "开启",
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    label: "开关", //显示的标题
+    overflowTooltip: false,
+    props: [
+      {
+        prop: "switchVal",
+        type: "switch",
+        text: '开关：',
+        data: {
+          disabled: (e: any) => false,
+          beforeFunction: function (row:any, val:any, old: any) {
+            return true
+          },
+          inactiveText: "关闭",
+          activeText: "开启",
+        },
+      },
+    ],
+  },
   // {
   //   label: "标签(只显示两个)", //显示的标题
   //   width: 200,
@@ -127,24 +126,24 @@ let header: PowerfulTableHeader[] = [
   //     },
   //   ],
   // },
-  // {
-  //   label: "图片", //显示的标题
-  //   props: [
-  //     {
-  //       type: "image",
-  //       prop: "imageUrl",
-  //       data: {
-  //         style: {
-  //           width: "120px",
-  //           height: "120px",
-  //           borderRadius: "10px",
-  //         },
-  //         lazy: true,
-  //         preview: true,
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    label: "图片", //显示的标题
+    props: [
+      {
+        type: "image",
+        prop: "imageUrl",
+        text: '图片：',
+        data: {
+          style: {
+            width: '40px',
+            height: '40px'
+          },
+          lazy: true,
+          preview: true,
+        },
+      },
+    ],
+  },
   // {
   //   label: "评分", //显示的标题
   //   width: '200',
