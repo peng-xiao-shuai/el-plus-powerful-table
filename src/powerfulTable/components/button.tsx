@@ -9,7 +9,7 @@ export default defineComponent({
     },
     index: Number,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps>,
+      type: Object as PropType<PowerfulTableHeaderProps<BtnDataType[]>>,
       default: () => {}
     },
     align: {

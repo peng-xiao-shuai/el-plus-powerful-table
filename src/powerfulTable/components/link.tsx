@@ -1,5 +1,5 @@
 import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, InputDataType, EmitType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, HrefDataType, EmitType } from '../../../types/powerful-table'
 
 export default defineComponent({
   props: {
@@ -9,7 +9,7 @@ export default defineComponent({
     },
     index: Number,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<InputDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<HrefDataType>>,
       default: () => {}
     },
     align: {
@@ -27,21 +27,17 @@ export default defineComponent({
         <span style={{margin: props.prop.text ? '10px' : '0px'}}>
           { props.prop.text || "" }
         </span>
-        <el-input
-          v-slots={
-            {
-              [props.prop.data?.slot as string]: () => <span style={{padding: '0 10px'}}> {props.prop.data?.symbol} </span>
-            }
-          }
-          type={props.prop.type}
-          rows={props.prop.data?.rows || 3}
+
+        <el-link
+          size={size}
+          target={( props.prop.data?.target) || '_blank'}
+          type={( props.prop.data?.type) || 'primary'}
+          underline={( props.prop.data?.underline) || false}
+          href={props.row[props.prop.prop]}
           style={props.prop.data?.style || {}}
-          size={size || 'small'}
-          placeholder={props.prop.data?.placeholder || ''}
-          v-model={props.row[props.prop.prop]}
-          disabled={props.prop.data?.disabled || false}
         >
-        </el-input>
+          { typeof props.prop.data?.text == 'function' ? props.prop.data?.text() : props.prop.data?.text}
+        </el-link>
       </div>
     )
   }

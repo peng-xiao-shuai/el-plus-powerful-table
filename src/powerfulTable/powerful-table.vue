@@ -1,311 +1,259 @@
 <template>
   <div>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      ref="multipleTable"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-      @sort-change="sortChange"
-    >
-      <el-table-column
-        v-if="isSelect"
-        align="center"
-        type="selection"
-        width="45"
+    <el-config-provider :locale="locale">
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        ref="multipleTable"
+        element-loading-text="Loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
       >
-      </el-table-column>
+        <el-table-column
+          v-if="isSelect"
+          align="center"
+          type="selection"
+          width="45"
+        >
+        </el-table-column>
 
-      <el-table-column
-        v-for="(item, index) in header"
-        :key="index"
-        :fixed="item.fixed || false"
-        :sortable="item.sortable || false"
-        :header-align="item.headerAlign || 'center'"
-        :show-overflow-tooltip="item.overflowTooltip || false"
-        :align="item.headerAlign || 'center'"
-        :prop="item.props[0].child || item.props[0].prop"
-        :label="item.label"
-        :min-width="item.minWidth || 140"
-        :width="item.width || ''"
-      >
-        <template #default="scope">
-          <div
-            v-for="(prop, idx) in item.props"
-            :key="idx"
-            :style="prop.style || {}"
-          >
-            <!-- 筛选 -->
-            <Filter 
-              v-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
-              :row="scope.row"
-              :index="scope.$index"
-              :prop="prop"
-            />
-            <!-- 图片 -->
-            <Image 
-              v-else-if="prop.type == 'image' && scope.row[prop.prop] !== 'undefined'"
-              :row="scope.row"
-              :index="scope.$index"
-              :prop="prop"
-              :align="item.headerAlign"
-            />
-            <!-- 按钮 -->
-              <Button
-                v-else-if="prop.type == 'btn'" class="btnType"
+        <el-table-column
+          v-for="(item, index) in header"
+          :key="index"
+          :fixed="item.fixed || false"
+          :sortable="item.sortable || false"
+          :header-align="item.headerAlign || 'center'"
+          :show-overflow-tooltip="item.overflowTooltip || false"
+          :align="item.headerAlign || 'center'"
+          :prop="item.props[0].child || item.props[0].prop"
+          :label="item.label"
+          :min-width="item.minWidth || 140"
+          :width="item.width || ''"
+        >
+          <template #default="scope">
+            <div
+              v-for="(prop, idx) in item.props"
+              :key="idx"
+              :style="prop.style || {}"
+            >
+              <!-- 筛选 -->
+              <Filter 
+                v-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <!-- 图片 -->
+              <Image 
+                v-else-if="prop.type == 'image' && scope.row[prop.prop] !== 'undefined'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
                 :align="item.headerAlign"
+              />
+              <!-- 按钮 -->
+                <Button
+                  v-else-if="prop.type == 'btn'" class="btnType"
+                  :row="scope.row"
+                  :index="scope.$index"
+                  :prop="prop"
+                  :align="item.headerAlign"
+                  @returnEmit="returnEmit"
+                />
+              <!-- 开关 -->
+              <Switch 
+                v-else-if="prop.type == 'switch'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
                 @returnEmit="returnEmit"
               />
-            <!-- 开关 -->
-            <Switch 
-              v-else-if="prop.type == 'switch'"
-              :row="scope.row"
-              :index="scope.$index"
-              :prop="prop"
-              @returnEmit="returnEmit"
-            />
-            <!-- 输入框 -->
-            <Input
-              v-else-if="(prop.type == 'input' || prop.type == 'textarea') && scope.row[prop.prop] !== 'undefined'"
-              :row="scope.row"
-              :index="scope.$index"
-              :prop="prop"
-            />
-            <!-- iconfont -->
-            <div
-              v-else-if="
-                prop.type == 'iconfont' && scope.row[prop.prop] !== 'undefined'
-              "
-            >
-              {{ prop.text || "" }}
-              <i
-                :class="[scope.row[prop.prop], ...prop.data.class] || ['']"
-                :style="prop.data.style || {}"
-              ></i>
-            </div>
-            <!-- 标签 -->
-            <div
-              v-else-if="
-                prop.type == 'tag' && scope.row[prop.prop] !== 'undefined'
-              "
-            >
-              <el-tag
-                v-for="tag in tagToArray(
-                  scope.row[prop.prop],
-                  (prop.data && prop.data.number) || 3
-                )"
-                :style="{
-                  marginRight: '10px',
-                  borderColor: (prop.data && typeof prop.data.color == 'function') ? 'rgba(0,0,0,0)' : 'auto'
-                }"
-                :key="tag"
-                :closable="false"
-                :type="prop.data.type || 'primary'"
-                :effect="(prop.data && prop.data.effect) || 'light'"
-                :color="(prop.data && typeof prop.data.color == 'function' && prop.data.color(tag)) || ''"
-                :hit="(prop.data && prop.data.hit) || false"
-                >{{ prop.filter ? filterFun(tag, prop.filter) : tag }}</el-tag
-              >
-            </div>
-            <!-- 评分 -->
-            <div
-              v-else-if="
-                prop.type == 'rate' && scope.row[prop.prop] !== 'undefined'
-              "
-            >
-              {{ prop.text || "" }}
-              <el-rate
-                v-model="scope.row[prop.prop]"
-                :colors="prop.data.colors || ['#F7BA2A', '#F7BA2A', '#F7BA2A']"
-                :max="prop.data.max || 5"
-                :disabled="true"
-                :style="prop.data.style || {}"
-                :allow-half="prop.data.allowHalf || false"
-                :icon-classes="
-                  prop.data.iconClass || [
-                    'el-icon-star-on',
-                    'el-icon-star-on',
-                    'el-icon-star-on',
-                  ]
-                "
-                :show-text="prop.data.showText || false"
-                :show-score="prop.data.showScore || false"
-                :texts="prop.data.texts"
-              ></el-rate>
-            </div>
-            <!-- 超链接 -->
-            <div
-              v-else-if="
-                prop.type == 'href' && scope.row[prop.prop] !== 'undefined'
-              "
-            >
-              {{ prop.text || "" }}
-              <el-link
-                :target="(prop.data && prop.data.target) || '_blank'"
-                :type="(prop.data && prop.data.type) || 'primary'"
-                :underline="(prop.data && prop.data.underline) || false"
-                :href="scope.row[prop.prop]"
-                :style="prop.data.style || {}"
-                >{{
-                  scope.row[prop.prop]
-                    ? scope.row[prop.data.prop] || prop.text
-                    : prop.reserve || "暂无数据"
-                }}</el-link
-              >
-            </div>
-            <div
-              v-else-if="
-                prop.type == 'video' && scope.row[prop.prop] !== 'undefined'
-              "
-              style="
-                border-radius: 10px;
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-                margin: 0 auto;
-              "
-            >
-              {{ prop.text || "" }}
-              <video
-                v-if="scope.row[prop.prop]"
-                :src="scope.row[prop.prop]"
-                :poster="prop.data.poster || ''"
-                :loop="prop.data.loop || false"
-                :style="prop.data.style || {}"
-                class="avatar video-avatar"
-                :controls="true"
-              >
-                您的浏览器不支持视频播放
-              </video>
-
+              <!-- 输入框 -->
+              <Input
+                v-else-if="(prop.type == 'input' || prop.type == 'textarea') && scope.row[prop.prop] !== 'undefined'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <!-- iconfont -->
+              <Icon
+                v-else-if="prop.type == 'iconfont' && scope.row[prop.prop]"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <!-- 标签 -->
+              <Tags
+                v-else-if="prop.type == 'tag' && scope.row[prop.prop]"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <!-- 评分 -->
+              <Rate
+                v-else-if="prop.type == 'rate' && scope.row[prop.prop]"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <!-- 超链接 -->
+              <Link
+                v-else-if="prop.type == 'href' && scope.row[prop.prop]"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
               <div
-                v-else
+                v-else-if="
+                  prop.type == 'video' && scope.row[prop.prop] !== 'undefined'
+                "
                 style="
-                  display: flex;
-                  align-items: center;
-                  height: 100%;
+                  border-radius: 10px;
+                  overflow: hidden;
                   width: 100%;
-                  justify-content: center;
+                  height: 100%;
+                  margin: 0 auto;
                 "
               >
-                暂无视频
+                {{ prop.text || "" }}
+                <video
+                  v-if="scope.row[prop.prop]"
+                  :src="scope.row[prop.prop]"
+                  :poster="prop.data.poster || ''"
+                  :loop="prop.data.loop || false"
+                  :style="prop.data.style || {}"
+                  class="avatar video-avatar"
+                  :controls="true"
+                >
+                  您的浏览器不支持视频播放
+                </video>
+
+                <div
+                  v-else
+                  style="
+                    display: flex;
+                    align-items: center;
+                    height: 100%;
+                    width: 100%;
+                    justify-content: center;
+                  "
+                >
+                  暂无视频
+                </div>
               </div>
-            </div>
-            <!-- 插槽 -->
-            <slot
-              v-else-if="prop.type == 'slot'"
-              :name="prop.slotName || 'default'"
-              :row="scope.row"
-              :index="scope.$index"
-            >
-            </slot>
-            <!-- 正常 -->
-            <div
-              v-else-if="scope.row[prop.prop]"
-              :class="{ content: develop[scope.$index] }"
-            >
-              <div
-                :style="{
-                  display: '-webkit-box',
-                  overflow: 'hidden',
-                  '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': develop[scope.$index]
-                    ? 99999
-                    : prop.line || 3,
-                }"
+              <!-- 插槽 -->
+              <slot
+                v-else-if="prop.type == 'slot'"
+                :name="prop.slotName || 'default'"
+                :row="scope.row"
+                :index="scope.$index"
               >
-                {{ prop.text || ""
-                }}{{
-                  prop.child
-                    ? scope.row[prop.prop][prop.child]
-                    : scope.row[prop.prop] || prop.reserve || "暂无数据"
-                }}
-              </div>
+              </slot>
+              <!-- 正常 -->
               <div
-                v-show="prop.develop"
-                class="develop el-link el-link--primary"
-                @click="develop[scope.$index] = !develop[scope.$index]"
+                v-else-if="scope.row[prop.prop]"
+                :class="{ content: develop[scope.$index] }"
               >
-                <span
+                <div
                   :style="{
-                    position: develop[scope.$index] ? 'absolute' : 'static',
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    '-webkit-box-orient': 'vertical',
+                    '-webkit-line-clamp': develop[scope.$index]
+                      ? 99999
+                      : prop.line || 3,
                   }"
                 >
-                  {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
-                  <i
-                    :class="
-                      develop[scope.$index]
-                        ? 'el-icon-arrow-up'
-                        : 'el-icon-arrow-down'
-                    "
-                  ></i>
-                </span>
+                  {{ prop.text || ""
+                  }}{{
+                    prop.child
+                      ? scope.row[prop.prop][prop.child]
+                      : scope.row[prop.prop] || prop.reserve || "暂无数据"
+                  }}
+                </div>
+                <div
+                  v-show="prop.develop"
+                  class="develop el-link el-link--primary"
+                  @click="develop[scope.$index] = !develop[scope.$index]"
+                >
+                  <span
+                    :style="{
+                      position: develop[scope.$index] ? 'absolute' : 'static',
+                    }"
+                  >
+                    {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
+                    <i
+                      :class="
+                        develop[scope.$index]
+                          ? 'el-icon-arrow-up'
+                          : 'el-icon-arrow-down'
+                      "
+                    ></i>
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <div v-else>
-              <div v-if="prop.reserve" v-html="prop.reserve"></div>
               <div v-else>
-                <!-- <span>暂无数据</span> -->
+                <div v-if="prop.reserve" v-html="prop.reserve"></div>
+                <div v-else>
+                  <!-- <span>暂无数据</span> -->
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <div
-      style="display: flex; justify-content: space-between; margin-top: 20px"
-    >
       <div
-        class="pagination left"
-        v-if="operate && isSelect && operate.operates"
+        style="display: flex; justify-content: space-between; margin-top: 20px"
       >
-        <el-select
-          v-model="operate.value"
-          clearable
-          placeholder="批量操作"
-          :size="operate.size || 'small'"
+        <div
+          class="pagination left"
+          v-if="operate && isSelect && operate.operates"
         >
-          <el-option
-            v-for="(item, index) in operate.operates"
-            :key="index"
-            :label="item.label"
-            :value="item.value"
+          <el-select
+            v-model="operate.value"
+            clearable
+            placeholder="批量操作"
+            :size="operate.size || 'small'"
           >
-          </el-option>
-        </el-select>
-        <el-button
-          :style="operate.style || { marginLeft: '20px' }"
-          :icon="operate.icon || ''"
-          :type="operate.type || 'primary'"
-          :size="operate.size || 'small'"
-          class="search-button"
-          @click="batchOperate"
-        >
-          确定
-        </el-button>
-      </div>
+            <el-option
+              v-for="(item, index) in operate.operates"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <el-button
+            :style="operate.style || { marginLeft: '20px' }"
+            :icon="operate.icon || ''"
+            :type="operate.type || 'primary'"
+            :size="operate.size || 'small'"
+            class="search-button"
+            @click="batchOperate"
+          >
+            确定
+          </el-button>
+        </div>
 
-      <div class="pagination" v-if="isPagination">
-        <el-pagination
-          @size-change="handleChange($event, 'pageSize')"
-          @current-change="handleChange($event, 'currentPage')"
-          :current-page="currentPage"
-          :page-sizes="pageSizes"
-          :page-size="pageSize"
-          :layout="layout"
-          :total="total"
-        >
-        </el-pagination>
+        <div class="pagination" v-if="isPagination">
+          <el-pagination
+            @size-change="handleChange($event, 'pageSize')"
+            @current-change="handleChange($event, 'currentPage')"
+            :current-page="currentPage"
+            :page-sizes="pageSizes"
+            :page-size="pageSize"
+            :layout="layout"
+            :total="total"
+          >
+          </el-pagination>
+        </div>
       </div>
-    </div>
+    </el-config-provider>
   </div>
 </template>
 
@@ -313,24 +261,35 @@
 import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance } from 'vue';
 import type { PropType } from 'vue'
 import type { PowerfulTableHeader, PowerfulTableOperateData, EmitType } from '../../types/powerful-table'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import en from 'element-plus/lib/locale/lang/en'
 
 import Filter from './components/filter';
 import Image from './components/image';
 import Switch from './components/switch';
 import Button from './components/button';
 import Input from './components/input';
+import Tags from './components/tags';
+import Icon from './components/icon';
+import Rate from './components/rate';
 
 export default defineComponent({
   name: "powerful-table",
   props: {
+    locale: {
+      type: Object,
+      default: zhCn
+    },
     // 组件大小
-    size: String,
+    size: {
+      type: String,
+      default: 'small'
+    },
     // 当前数据
     list: {
       type: Array,
       default: () => []
     },
-
     // 所有选中
     selectData: {
       type: Array,
@@ -381,13 +340,18 @@ export default defineComponent({
     Image,
     Switch,
     Button,
-    Input
+    Input,
+    Tags,
+    Icon,
+    Rate
   },
   emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
   setup(props, { emit }) {
     /* ------ 注入数据 ------ */
+    // 组件语言
+    provide('locale', props.locale)
     // 组件大小
-    provide('size', props.size || 'small')
+    provide('size', props.size)
     // 单元格内布局
     provide('justifyFun', (val: string) => {
       const bol = ['center', 'left', 'right'].includes(val)
@@ -501,15 +465,6 @@ export default defineComponent({
       }
     }
 
-    /* ------ 标签string转array ------ */
-    const tagToArray = (e: string | [], i: number) => {
-      if (typeof e != 'string') {
-        let a = [...e].splice(0, i)
-        return a
-      } else {
-        return e.split(',')
-      }
-    }
     /* ------ 排序方法 ------ */
     const sortChange = (obj: any) => {
       if (obj.column) {
@@ -598,7 +553,6 @@ export default defineComponent({
       multipleTable,
 
       returnEmit,
-      tagToArray,
       handleChange,
       sortChange,
       batchOperate,

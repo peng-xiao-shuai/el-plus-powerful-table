@@ -90,7 +90,6 @@ let header: PowerfulTableHeader[] = [
       {
         prop: "switchVal",
         type: "switch",
-        text: '开关：',
         data: {
           disabled: (e: any) => false,
           beforeFunction: function (row:any, val:any, old: any) {
@@ -102,30 +101,46 @@ let header: PowerfulTableHeader[] = [
       },
     ],
   },
-  // {
-  //   label: "标签(只显示两个)", //显示的标题
-  //   width: 200,
-  //   overflowTooltip: false,
-  //   props: [
-  //     {
-  //       prop: "tag",
-  //       type: "tag",
-  //       data: {
-  //         effect: 'dark',
-  //         number: 2,
-  //         type: 'success',
-  //         color:(r: any)=>{
-  //           return r == 1 ? '#409EFF' : '#F56C6C'
-  //         },
-  //       },
-  //       filter: [
-  //         { key: 1, value: "男" },
-  //         { key: 2, value: "女" },
-  //       ],
-  //       reserve: '<i><b>VNode</b></i>'
-  //     },
-  //   ],
-  // },
+  {
+    label: "图标", //显示的标题
+    props: [
+      {
+        prop: "icon",
+        type: "iconfont",
+        text: '图标：',
+        data: {
+          class: 'aaa',
+          style: {
+            fontSize: '20px'
+          }
+        },
+      },
+    ],
+  },
+  {
+    label: "标签(只显示两个)", //显示的标题
+    width: 200,
+    overflowTooltip: false,
+    props: [
+      {
+        prop: "tag",
+        type: "tag",
+        data: {
+          effect: 'dark',
+          number: 2,
+          type: 'success',
+          color:(r: any)=>{
+            return r == 1 ? '#409EFF' : '#F56C6C'
+          },
+        },
+        filter: [
+          { key: 1, value: "男" },
+          { key: 2, value: "女" },
+        ],
+        reserve: '<i><b>VNode</b></i>'
+      },
+    ],
+  },
   {
     label: "图片", //显示的标题
     props: [
@@ -144,22 +159,36 @@ let header: PowerfulTableHeader[] = [
       },
     ],
   },
-  // {
-  //   label: "评分", //显示的标题
-  //   width: '200',
-  //   props: [
-  //     {
-  //       type: "rate",
-  //       prop: "rate",
-  //       data: {
-  //         allowHalf: true,
-  //         showText: true,
-  //         // colors: ['red', 'yellow', 'green']
-  //         // showScore: true
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    label: "评分", //显示的标题
+    width: '200',
+    props: [
+      {
+        type: "rate",
+        prop: "rate",
+        data: {
+          // allowHalf: true,
+          showText: true,
+          max: 6,
+          colors: ['red', 'yellow', 'green'],
+        //   // showScore: true
+        },
+      },
+    ],
+  },
+  {
+    label: "超链接", //显示的标题
+    width: '200',
+    props: [
+      {
+        type: "href",
+        prop: "href",
+        data: {
+          text: 'aaa'
+        }
+      },
+    ],
+  },
   // {
   //   label: "内容", //显示的标题
   //   props: [
@@ -227,6 +256,7 @@ let lists = [
   {
     id: 1,
     name: "蓝猫",
+    icon: 'el-icon-hot-water',
     gender: '1',
     createTime: null,
     price: "",
@@ -237,30 +267,34 @@ let lists = [
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
   },
   {
     id: 2,
     name: "蓝猫",
+    icon: 'el-icon-hot-water',
     gender: 2,
     createTime: null,
     price: "",
     switchVal: 1,
-    tag: [1, 2, 3],
+    tag: '1,2,3',
     rate: 4.5,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+    href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
   },
   {
     id: 3,
     name: "蓝猫",
+    icon: 'el-icon-hot-water',
     gender: 3,
     createTime: null,
     price: "",
     switchVal: 1,
     tag: [1, 2, 3],
-    rate: 4.5,
+    rate: 4,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",

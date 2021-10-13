@@ -467,7 +467,7 @@ const data = {
 | max       | 最大数值                                                                | number  | -          | 5                                                         |
 | style     | 自定义样式                                                          | object  | -          | -                                                         |
 | colors    | 颜色数组                                                                | array   | -          | ['#F7BA2A', '#F7BA2A', '#F7BA2A']                         |
-| iconClass | 颜色数组                                                                | array   | -          | ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'] |
+| iconClass | 图标数组                                                                | array   | -          | ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'] |
 | allowHalf | 是否允许半选                                                            | boolean | true/false | false                                                     |
 | showText  | 是否显示辅助文字，若为真，则会从 texts 数组中选取当前分数对应的文字内容 | boolean | -          | false                                                     |
 | showScore | 是否显示当前分数，show-score 和 show-text 不能同时为真                  | boolean | true/false | false                                                     |

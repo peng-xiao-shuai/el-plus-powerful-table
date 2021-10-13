@@ -1,6 +1,11 @@
 import { defineComponent, PropType } from "vue";
 import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter } from '../../../types/powerful-table'
 
+export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => {
+  const current = filter.filter((item) => item.key == s)
+  return current.length ? current[0].value : s
+}
+
 export default defineComponent({
   props: {
     row: {
@@ -9,16 +14,11 @@ export default defineComponent({
     },
     index: Number,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps & {data?: TextDataType}>,
+      type: Object as PropType<PowerfulTableHeaderProps<TextDataType>>,
       default: () => {}
     }
   },
   setup(props) {
-    const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => {
-      const current = filter.filter((item) => item.key == s)
-      return current.length ? current[0].value : s
-    }
-
     return () => (
       <>
         {props.row[props.prop.prop] !== 'undefined' ?

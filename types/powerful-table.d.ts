@@ -3,6 +3,8 @@ export interface PowerfulTable {
   list: any[];
   pageSizes: number[];
   total: number
+  size?: string,
+  locale?: string,
   selectData?: any[];
   isSelect?: boolean;
   selectCompare?: string[];
@@ -39,12 +41,12 @@ export interface PowerfulTableHeader {
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
-  props: PowerfulTableHeaderProps[];
+  props: PowerfulTableHeaderProps<TextDataType | ImageDataType | BtnDataType[] | SwitchDataType | InputDataType | VideoDataType | IconFontDataType | RateDataType | HrefDataType | SlotDataType | TagDataType>[];
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps {
+export interface PowerfulTableHeaderProps<T> {
   prop: string;
-  data?: TextDataType | ImageDataType | BtnDataType[] | SwitchDataType | InputDataType | VideoDataType | IconFontDataType | RateDataType | HrefDataType | SlotDataType | TagDataType;
+  data?: T;
   child?: string;
   type?: Type;
   filter?: PowerfulTableFilter[];
@@ -113,7 +115,7 @@ export type VideoDataType = {
 }
 
 export type IconFontDataType = {
-  class: string[];
+  class?: string[] | string;
   style?: {};
 }
 
@@ -133,7 +135,7 @@ export type HrefDataType = {
   style?: {};
   type?: ThemeType;
   underline?: boolean;
-  prop?: string;
+  text?: string | Function 
 }
 
 export type SlotDataType = {

@@ -9,7 +9,7 @@ export default defineComponent({
     },
     index: Number,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps & {data?: SwitchDataType}>,
+      type: Object as PropType<PowerfulTableHeaderProps<SwitchDataType>>,
       default: () => {}
     },
     align: {
