@@ -54,42 +54,14 @@
               :align="item.headerAlign"
             />
             <!-- 按钮 -->
-            <div v-else-if="prop.type == 'btn'" class="btnType">
-              <template v-for="(apiece, idx) in prop.data" :key="idx">
-                <el-tooltip
-                  class="btnEach"
-                  effect="dark"
-                  :content="apiece.tip"
-                  placement="top"
-                  v-if="
-                    apiece.showBtn == undefined
-                      ? true
-                      : apiece.showBtn(scope.row, scope.$index) === false
-                      ? false
-                      : true
-                  "
-                >
-                  <template #default>
-                    <el-button
-                      :style="apiece.style || {}"
-                      :icon="apiece.icon || ''"
-                      :disabled="apiece.disabled || false"
-                      :type="apiece.type || 'primary'"
-                      :size="apiece.size || 'small'"
-                      @click="
-                        btnChange(
-                          apiece.emit,
-                          scope.row,
-                          scope.$index,
-                          apiece.type
-                        )
-                      "
-                      >{{ apiece.text || apiece.tip }}</el-button
-                    >
-                  </template>
-                </el-tooltip>
-              </template>
-            </div>
+              <Button
+                v-else-if="prop.type == 'btn'" class="btnType"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+                @returnEmit="returnEmit"
+              />
             <!-- 开关 -->
             <Switch 
               v-else-if="prop.type == 'switch'"
@@ -99,30 +71,12 @@
               @returnEmit="returnEmit"
             />
             <!-- 输入框 -->
-            <div
-              v-else-if="
-                (prop.type == 'input' || prop.type == 'textarea') &&
-                scope.row[prop.prop] !== 'undefined'
-              "
-            >
-              {{ prop.text || "" }}
-              <el-input
-                :type="prop.type"
-                :rows="prop.data.size || 3"
-                :style="prop.data.style || {}"
-                :size="prop.data.size || 'small'"
-                :placeholder="prop.data.placeholder || ''"
-                v-model="scope.row[prop.prop]"
-                :disabled="prop.data.disabled || false"
-              >
-                <template
-                  style="padding: 0 10px"
-                  v-if="prop.data.slot"
-                  v-slot:[prop.data.slot]
-                  >{{ prop.data.symbol }}</template
-                >
-              </el-input>
-            </div>
+            <Input
+              v-else-if="(prop.type == 'input' || prop.type == 'textarea') && scope.row[prop.prop] !== 'undefined'"
+              :row="scope.row"
+              :index="scope.$index"
+              :prop="prop"
+            />
             <!-- iconfont -->
             <div
               v-else-if="
@@ -356,17 +310,21 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, nextTick, ref, watchEffect, toRefs, reactive, getCurrentInstance } from 'vue';
+import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance } from 'vue';
 import type { PropType } from 'vue'
 import type { PowerfulTableHeader, PowerfulTableOperateData, EmitType } from '../../types/powerful-table'
 
 import Filter from './components/filter';
 import Image from './components/image';
 import Switch from './components/switch';
+import Button from './components/button';
+import Input from './components/input';
 
 export default defineComponent({
   name: "powerful-table",
   props: {
+    // 组件大小
+    size: String,
     // 当前数据
     list: {
       type: Array,
@@ -421,16 +379,21 @@ export default defineComponent({
   components: {
     Filter,
     Image,
-    Switch
-  },
-  provide: {
-    justifyFun: (val: string) => {
-      const bol = ['center', 'left', 'right'].includes(val)
-      return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
-    }
+    Switch,
+    Button,
+    Input
   },
   emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
   setup(props, { emit }) {
+    /* ------ 注入数据 ------ */
+    // 组件大小
+    provide('size', props.size || 'small')
+    // 单元格内布局
+    provide('justifyFun', (val: string) => {
+      const bol = ['center', 'left', 'right'].includes(val)
+      return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
+    })
+
     const { proxy } = getCurrentInstance() as any
 
     // 页面是否加载中
@@ -591,24 +554,6 @@ export default defineComponent({
         })
 
     }
-    /* ------ 按钮回调 ------ */
-    const btnChange = (emitName: EmitType, row: any, index: number, type: string) => {
-      if (type == 'danger') {
-        proxy.$confirm('是否要进行删除操作, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-            emit(emitName, { row, index })
-          })
-          .catch(() => {
-            console.log('取消删除')
-          })
-      } else {
-        emit(emitName, { row, index })
-      }
-    }
     /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
     const returnEmit = (emitName: EmitType, objVal: any) => {
       console.log('触发回调', emitName, objVal);
@@ -657,7 +602,6 @@ export default defineComponent({
       handleChange,
       sortChange,
       batchOperate,
-      btnChange,
       handleSelectionChange
     }
 
@@ -694,13 +638,18 @@ export default defineComponent({
   width: 100%;
 }
 
-.btnType .btnEach {
-  margin-bottom: 10px;
+:deep(.btnType) {
+  flex-wrap: wrap;
 }
 
-.btnType .btnEach:nth-last-child(2) {
-  margin-bottom: 0;
+:deep(.btnType .btnEach) {
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
+:deep(.btnType .notSpan span) {
+  display: none;
+}
+
 .pagination {
   width: 100%;
   display: flex;

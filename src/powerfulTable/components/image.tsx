@@ -33,7 +33,7 @@ export default defineComponent({
             z-index={props.prop.data?.zIndex || 6000}
             style={props.prop.data?.style || {}}
             fit={props.prop.data?.fit || 'cover'}
-          ></el-image>
+          />
         :
         <div> { props.prop.reserve ? <div v-html={props.prop.reserve}></div> : <b>暂无数据</b> } </div>
         }

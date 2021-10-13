@@ -52,20 +52,20 @@ let header: PowerfulTableHeader[] = [
       }
     ],
   },
-  // {
-  //   label: "价格", //显示的标题
-  //   props: [
-  //     {
-  //       prop: "price",
-  //       type: "input",
-  //       data: {
-  //         slot: "prepend",
-  //         symbol: "￥",
-  //         style: { width: "100%" },
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    label: "价格", //显示的标题
+    props: [
+      {
+        prop: "price",
+        type: "input",
+        data: {
+          slot: "prepend",
+          symbol: "￥",
+          style: { width: "100%" },
+        },
+      },
+    ],
+  },
   // {
   //   label: "视频", //显示的标题
   //   props: [
@@ -173,36 +173,54 @@ let header: PowerfulTableHeader[] = [
   //     },
   //   ],
   // },
-  // {
-  //   label: "操作", //显示的标题
-  //   width: 150,
-  //   fixed: 'right',
-  //   props: [
-  //     {
-  //       type: "btn",
-  //       prop: "btn",
-  //       data: [
-  //         {
-  //           tip: "编辑",
-  //           type: "info",
-  //           icon: "el-icon-edit-outline",
-  //           text: "U",
-  //           showBtn: (e:any) => {
-  //             return false
-  //           },
-  //           emit: "update",
-  //         },
-  //         {
-  //           tip: "删除",
-  //           type: "danger",
-  //           text: "D",
-  //           icon: "el-icon-delete",
-  //           emit: "remove",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    label: "操作", //显示的标题
+    width: 150,
+    fixed: 'right',
+    props: [
+      {
+        type: "btn",
+        prop: "btn",
+        data: [
+          {
+            tip: "编辑",
+            type: "info",
+            icon: "el-icon-edit-outline",
+            text: "1",
+            showBtn: false,
+            emit: "update",
+          },
+          {
+            tip: "编辑",
+            type: "info",
+            icon: "el-icon-edit-outline",
+            text: "",
+            showBtn: (e:any) => {
+              return true
+            },
+            emit: "update",
+          },
+          {
+            tip: "编辑",
+            type: "info",
+            icon: "el-icon-edit-outline",
+            text: "uuu",
+            showBtn: (e:any) => {
+              return false
+            },
+            emit: "update",
+          },
+          {
+            tip: "删除",
+            type: "danger",
+            text: "",
+            icon: "el-icon-delete",
+            emit: "remove",
+          },
+        ],
+      },
+    ],
+  }
 ]
 
 let lists = [
@@ -212,7 +230,7 @@ let lists = [
     gender: '1',
     createTime: null,
     price: "",
-    switchVal: 1,
+    switchVal: 0,
     tag: [1, 2, 3],
     rate: 4.5,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',

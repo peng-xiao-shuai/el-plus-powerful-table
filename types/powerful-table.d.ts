@@ -53,7 +53,7 @@ export interface PowerfulTableHeaderProps {
   style?: {};
 }
 
-type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot'
+type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot' | 'textarea'
 
 export type PowerfulTableFilter = {
   key: string | number;
@@ -81,7 +81,7 @@ export type BtnDataType = {
   text?: string;
   style?: {};
   type?: ThemeType,
-  showBtn?: Function;
+  showBtn?: Function | boolean;
   emit: EmitType
 }
 
@@ -100,7 +100,7 @@ export type SwitchDataType = {
 export type InputDataType = {
   symbol?: string;
   placeholder?: string;
-  rows?: string;
+  rows?: string | number;
   disabled?: boolean;
   style?: {};
   slot?: 'prepend' | 'append';

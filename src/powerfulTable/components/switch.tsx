@@ -20,6 +20,8 @@ export default defineComponent({
   emits: ['returnEmit'],
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
+    const size = inject('size') as string
+
     const { proxy } = getCurrentInstance() as any
     /* ------ 开关回调 ------ */
     const switchChange = (row: any, prop: string, val = 1, val2 = 0, beforeFunction: Function | undefined) => {
@@ -47,6 +49,7 @@ export default defineComponent({
           { props.prop.text || "" }
         </span>
         <el-switch
+          size={size}
           style={props.prop.data?.style || {}}
           inactive-text={props.prop.data?.inactiveText || ''}
           active-text={props.prop.data?.activeText || ''}
@@ -63,8 +66,7 @@ export default defineComponent({
           onClick={
             () => switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
           }
-        >
-        </el-switch>
+        />
       </div>
     )
   }
