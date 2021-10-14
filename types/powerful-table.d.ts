@@ -1,3 +1,5 @@
+import { VNode } from "@vue/runtime-core"
+
 /* ------ props ------ */
 export interface PowerfulTable {
   list: any[];
@@ -33,7 +35,7 @@ export interface PowerfulTableOperateData {
 
 /* ------ header 表格头部数据 ------ */
 // header 表格头部数据
-export interface PowerfulTableHeader {
+export interface PowerfulTableHeader<U = any> {
   overflowTooltip?: boolean;
   label: string;
   minWidth?: string | number;
@@ -41,16 +43,17 @@ export interface PowerfulTableHeader {
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
-  props: PowerfulTableHeaderProps<TextDataType | ImageDataType | BtnDataType[] | SwitchDataType | InputDataType | VideoDataType | IconFontDataType | RateDataType | HrefDataType | SlotDataType | TagDataType>[];
+  props: PowerfulTableHeaderProps<any, U>[];
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps<T> {
+export interface PowerfulTableHeaderProps<T, U = any> {
   prop: string;
   data?: T;
   child?: string;
   type?: Type;
   filter?: PowerfulTableFilter[];
   text?: string;
+  render?: (h: Function, row: U,index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
 }
@@ -65,7 +68,7 @@ export type PowerfulTableFilter = {
 export type TextDataType = {
   line?: number;
   develop?: boolean;
-  customFilterFun?: Function;
+  customFilterFun?: (row: any, index?: number) => string | number;
 }
 
 export type ImageDataType = {
@@ -83,7 +86,7 @@ export type BtnDataType = {
   text?: string;
   style?: {};
   type?: ThemeType,
-  showBtn?: Function | boolean;
+  showBtn?: ((row: any, index?: number) => boolean) | boolean;
   emit: EmitType
 }
 
@@ -94,9 +97,9 @@ export type SwitchDataType = {
   activeText?: string;
   activeValue?: number;
   inactiveValue?: number;
-  disabled?: boolean | Function;
+  disabled?: boolean | ((row: any) => boolean);
   style?: {};
-  beforeFunction?: Function;
+  beforeFunction?: (row: any, value: number | string, oldValue: number | string) => boolean;
 }
 
 export type InputDataType = {
@@ -109,7 +112,7 @@ export type InputDataType = {
 }
 
 export type VideoDataType = {
-  poster?: string;
+  poster?: ((row: any, index?: number) => string) | string;
   loop?: boolean;
   style?: {};
 }
@@ -135,7 +138,7 @@ export type HrefDataType = {
   style?: {};
   type?: ThemeType;
   underline?: boolean;
-  text?: string | Function 
+  text?: string | ((row: any) => string) 
 }
 
 export type SlotDataType = {
@@ -145,7 +148,7 @@ export type SlotDataType = {
 export type TagDataType = {
   type?: ThemeType;
   effect?: 'dark' | 'light' | 'plain';
-  color?: Function;
+  color?: (row: any, tag: string) => string;
   hit?: boolean;
   number?: number;
   filter?: PowerfulTableFilter[]

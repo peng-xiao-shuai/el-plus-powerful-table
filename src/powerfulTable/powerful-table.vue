@@ -39,16 +39,28 @@
               :key="idx"
               :style="prop.style || {}"
             >
+              <RenderJsx
+                v-if="typeof prop.render == 'function'" 
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <div v-else-if="scope.row[prop.prop] == undefined || scope.row[prop.prop] == null">
+                <div v-if="prop.reserve" v-html="prop.reserve"></div>
+                <div v-else>
+                  <!-- <span>暂无数据</span> -->
+                </div>
+              </div>
               <!-- 筛选 -->
               <Filter 
-                v-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
+                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
               />
               <!-- 图片 -->
               <Image 
-                v-else-if="prop.type == 'image' && scope.row[prop.prop] !== 'undefined'"
+                v-else-if="prop.type == 'image'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
@@ -73,77 +85,45 @@
               />
               <!-- 输入框 -->
               <Input
-                v-else-if="(prop.type == 'input' || prop.type == 'textarea') && scope.row[prop.prop] !== 'undefined'"
+                v-else-if="prop.type == 'input' || prop.type == 'textarea'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
               />
               <!-- iconfont -->
               <Icon
-                v-else-if="prop.type == 'iconfont' && scope.row[prop.prop]"
+                v-else-if="prop.type == 'iconfont'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
               />
               <!-- 标签 -->
               <Tags
-                v-else-if="prop.type == 'tag' && scope.row[prop.prop]"
+                v-else-if="prop.type == 'tag'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
               />
               <!-- 评分 -->
               <Rate
-                v-else-if="prop.type == 'rate' && scope.row[prop.prop]"
+                v-else-if="prop.type == 'rate'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
               />
               <!-- 超链接 -->
               <Link
-                v-else-if="prop.type == 'href' && scope.row[prop.prop]"
+                v-else-if="prop.type == 'href'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
               />
-              <div
-                v-else-if="
-                  prop.type == 'video' && scope.row[prop.prop] !== 'undefined'
-                "
-                style="
-                  border-radius: 10px;
-                  overflow: hidden;
-                  width: 100%;
-                  height: 100%;
-                  margin: 0 auto;
-                "
-              >
-                {{ prop.text || "" }}
-                <video
-                  v-if="scope.row[prop.prop]"
-                  :src="scope.row[prop.prop]"
-                  :poster="prop.data.poster || ''"
-                  :loop="prop.data.loop || false"
-                  :style="prop.data.style || {}"
-                  class="avatar video-avatar"
-                  :controls="true"
-                >
-                  您的浏览器不支持视频播放
-                </video>
-
-                <div
-                  v-else
-                  style="
-                    display: flex;
-                    align-items: center;
-                    height: 100%;
-                    width: 100%;
-                    justify-content: center;
-                  "
-                >
-                  暂无视频
-                </div>
-              </div>
+              <Video
+                v-else-if="prop.type == 'video'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
               <!-- 插槽 -->
               <slot
                 v-else-if="prop.type == 'slot'"
@@ -193,13 +173,6 @@
                       "
                     ></i>
                   </span>
-                </div>
-              </div>
-
-              <div v-else>
-                <div v-if="prop.reserve" v-html="prop.reserve"></div>
-                <div v-else>
-                  <!-- <span>暂无数据</span> -->
                 </div>
               </div>
             </div>
@@ -264,6 +237,7 @@ import type { PowerfulTableHeader, PowerfulTableOperateData, EmitType } from '..
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
 
+import RenderJsx from './components/render-jsx';
 import Filter from './components/filter';
 import Image from './components/image';
 import Switch from './components/switch';
@@ -272,6 +246,8 @@ import Input from './components/input';
 import Tags from './components/tags';
 import Icon from './components/icon';
 import Rate from './components/rate';
+import Link from './components/link';
+import Video from './components/video';
 
 export default defineComponent({
   name: "powerful-table",
@@ -336,6 +312,7 @@ export default defineComponent({
     },
   },
   components: {
+    RenderJsx,
     Filter,
     Image,
     Switch,
@@ -343,13 +320,13 @@ export default defineComponent({
     Input,
     Tags,
     Icon,
-    Rate
+    Rate,
+    Link,
+    Video,
   },
   emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
   setup(props, { emit }) {
     /* ------ 注入数据 ------ */
-    // 组件语言
-    provide('locale', props.locale)
     // 组件大小
     provide('size', props.size)
     // 单元格内布局

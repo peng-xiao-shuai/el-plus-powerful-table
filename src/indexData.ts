@@ -1,5 +1,5 @@
 import type { PowerfulTableHeader } from '../types/powerful-table'
-let header: PowerfulTableHeader[] = [
+let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "编号", //显示的标题
     minWidth: "80px", //对应列的最小宽度
@@ -66,23 +66,28 @@ let header: PowerfulTableHeader[] = [
       },
     ],
   },
-  // {
-  //   label: "视频", //显示的标题
-  //   props: [
-  //     {
-  //       prop: "videoUrl",
-  //       type: "video",
-  //       data: {
-  //         style: {
-  //           width: "120px",
-  //           height: "120px",
-  //           borderRadius: "10px",
-  //           border: "1px solid #ccc",
-  //         },
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    label: "视频", //显示的标题
+    width: 200,
+    props: [
+      {
+        prop: "videoUrl",
+        type: "video",
+        text: '1',
+        data: {
+          loop: true,
+          poster: (e: any) => e.imageUrl,
+          style: {
+            width: "100%",
+            height: "120px",
+            borderRadius: "10px",
+            overflow: 'hidden',
+            border: "1px solid #ccc",
+          }
+        },
+      },
+    ],
+  },
   {
     label: "开关", //显示的标题
     overflowTooltip: false,
@@ -184,7 +189,10 @@ let header: PowerfulTableHeader[] = [
         type: "href",
         prop: "href",
         data: {
-          text: 'aaa'
+          text: (e:any) => e.name,
+        },
+        render: (h, row, index) => {
+          return h('b',{}, row.gender)
         }
       },
     ],
@@ -252,7 +260,22 @@ let header: PowerfulTableHeader[] = [
   }
 ]
 
-let lists = [
+interface Lists {
+  id: number;
+  name: string;
+  icon: string;
+  gender: string | number;
+  createTime: null | string;
+  price: string | number;
+  switchVal: number;
+  tag: (number | string)[] | string;
+  rate: number;
+  content: string;
+  videoUrl: string;
+  imageUrl: string;
+  href?: string
+}
+let lists: Lists[] = [
   {
     id: 1,
     name: "蓝猫",

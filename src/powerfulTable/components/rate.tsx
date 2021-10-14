@@ -21,7 +21,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
     const size = inject('size') as string
-    const locale = (inject('locale') as {el: any, name: string}).name
+    const locale = (inject('ElLocaleInjection') as {lang: {value: string}}).lang.value
 
     return () => (
       <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>

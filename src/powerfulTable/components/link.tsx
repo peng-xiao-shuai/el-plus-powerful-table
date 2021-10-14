@@ -30,13 +30,13 @@ export default defineComponent({
 
         <el-link
           size={size}
-          target={( props.prop.data?.target) || '_blank'}
-          type={( props.prop.data?.type) || 'primary'}
-          underline={( props.prop.data?.underline) || false}
+          target={props.prop.data?.target || '_blank'}
+          type={'primary'}
+          underline={props.prop.data?.underline || false}
           href={props.row[props.prop.prop]}
           style={props.prop.data?.style || {}}
         >
-          { typeof props.prop.data?.text == 'function' ? props.prop.data?.text() : props.prop.data?.text}
+          { typeof props.prop.data?.text == 'function' ? props.prop.data?.text(props.row) : props.prop.data?.text}
         </el-link>
       </div>
     )

@@ -46,7 +46,7 @@ export default defineComponent({
               closable={false}
               type={props.prop.data?.type || 'primary'}
               effect={props.prop.data?.effect || 'light'}
-              color={(typeof props.prop.data?.color == 'function' && props.prop.data?.color(tag)) || ''}
+              color={(typeof props.prop.data?.color == 'function' && props.prop.data?.color(props.row, tag)) || ''}
               hit={(props.prop.data?.hit) || false}
             >
               { props.prop.filter ? filterFun(tag, props.prop.filter) : tag }
