@@ -373,7 +373,7 @@ export default defineComponent({
     // 当前页选中
     const currentSelect = ref([])
     // 其他页面选中
-    const otherSelect = ref([])
+    const otherSelect = ref<any[]>([])
     const pageSize = ref(props.pageSizes[0])
 
     // 展开
@@ -395,7 +395,7 @@ export default defineComponent({
     })
 
     /* ------ 获取选中 ------ */
-    const getSelect = (arr: any, list = props.list) => {
+    const getSelect = (arr: any[], list = props.list) => {
 
       if (!props.isSelect) return
 
@@ -406,15 +406,15 @@ export default defineComponent({
       // 所有选中
       let all = arr
       // 获取当前页选中
-      let current:any = []
+      let current:any[] = []
       // 获取 其他页选中
-      let other:any = []
+      let other:any[] = []
 
       // 获取当前页
       if (all.length != 0) {
         // console.log('所有选中', all);
         // 获取当前页
-        arr.forEach((item:any) => {
+        arr.forEach((item) => {
           let itm = list.filter((each) => {
             return item[props.selectCompare[0]] == (each as any)[props.selectCompare[1]]
           })
@@ -429,9 +429,9 @@ export default defineComponent({
         if (current.length > 0) {
           other = JSON.parse(JSON.stringify(arr))
           for (let j in other) {
-            current.forEach((item:any) => {
+            current.forEach((item) => {
               if (item[props.selectCompare[1]] == other[j][props.selectCompare[0]]) {
-                other.splice(j, 1)
+                other.splice(Number(j), 1)
               }
             })
           }
@@ -443,7 +443,7 @@ export default defineComponent({
         // console.log('其他页选中', otherSelect.value);
 
         if (current.length != 0) {
-          current.forEach((row:any) => {
+          current.forEach((row) => {
             (multipleTable.value as any).toggleRowSelection(row)
           })
 
@@ -489,7 +489,7 @@ export default defineComponent({
         type: 'warning'
       })
         .then(() => {
-          let ids = otherSelect.value.concat(currentSelect.value).map((item: any) => item.id)
+          let ids = otherSelect.value.concat(currentSelect.value).map((item) => item.id)
           let items = otherSelect.value.concat(currentSelect.value).map(item => item)
 
           emit('batchOperate', { ids, item: operate.operates[0], items })
@@ -514,7 +514,7 @@ export default defineComponent({
       currentSelect.value = JSON.parse(JSON.stringify(e))
     }
     /* ------ 条数或页数切换 ------ */
-    const handleChange = (e: any, type: any) => {
+    const handleChange = (e: number, type: string) => {
       type === 'pageSize' ? pageSize.value = e : currentPage.value = e
       get()
     }
