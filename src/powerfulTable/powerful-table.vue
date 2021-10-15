@@ -465,7 +465,7 @@ export default defineComponent({
     }
     /* ------ 批量按钮 ------ */
     const batchOperate = () => {
-      console.log(operate.value)
+      // console.log(operate.value)
       if ((operate.value == undefined || operate.value == null) && operate.value !== 0) {
         proxy.$message({
           message: '请选择操作类型',
@@ -495,7 +495,7 @@ export default defineComponent({
           emit('batchOperate', { ids, item: operate.operates[0], items })
         })
         .catch(() => {
-          console.log('取消批量操作')
+          // console.log('取消批量操作')
         })
 
     }
@@ -504,7 +504,7 @@ export default defineComponent({
     }
     /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
     const returnEmit = (emitName: EmitType, objVal: any) => {
-      console.log('触发回调', emitName, objVal);
+      // console.log('触发回调', emitName, objVal);
       
       emit(emitName, objVal)
     }
@@ -529,8 +529,6 @@ export default defineComponent({
         // 如果父组件是getList方法 无需自定义事假
         proxy.$parent._getList(data, otherSelect.value.concat(currentSelect.value))
       } catch (error) {
-        console.log(otherSelect.value);
-        
         emit('sizeChange', data, otherSelect.value.concat(currentSelect.value))
       }
     }
