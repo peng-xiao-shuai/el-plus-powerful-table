@@ -57,7 +57,6 @@ export default defineComponent({
     let total = ref(lists.length)
     let operateData = reactive({
       value: "",
-      size: "small",
       operates: [
         {
           label: "删除",

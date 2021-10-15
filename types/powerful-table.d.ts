@@ -1,4 +1,4 @@
-import { VNode } from "@vue/runtime-core"
+import { VNode, Plugin } from "@vue/runtime-core"
 
 /* ------ props ------ */
 export interface PowerfulTable {
@@ -159,6 +159,14 @@ export type TagDataType = {
   number?: number;
   filter?: PowerfulTableFilter[]
 }
+
+// 组件注入数据
+export type InjectProps = {
+  size?: 'medium' | 'small' | 'mini';
+  locale: Object
+}
+
+export type SFCWithInstall<T> = T & Plugin
 
 type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
 type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'

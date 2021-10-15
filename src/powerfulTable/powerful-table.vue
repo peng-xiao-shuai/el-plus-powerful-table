@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-config-provider :locale="locale">
+    <el-config-provider ref="configProvider" :locale="locale || (injectProps && injectProps.locale) || zhCn">
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -210,7 +210,12 @@
       <div style="display: flex; justify-content: space-between; margin-top: 20px">
         <!-- 批量操作 -->
         <div class="pagination left" v-if="operate && isSelect && operate.operates">
-          <el-select v-model="operate.value" clearable placeholder="批量操作" :size="size || 'small'">
+          <el-select 
+            v-model="operate.value"
+            clearable
+            :placeholder="(configProvider && configProvider.locale.name == 'zh-cn') ? '批量操作' : 'lot operation'"
+            :size="size || (injectProps && injectProps.size) || 'small'"
+          >
             <el-option v-for="(item, index) in operate.operates" :key="index" :label="item.label" :value="item.value" />
           </el-select>
 
@@ -218,7 +223,7 @@
             :style="operate.style || { marginLeft: '20px' }"
             :icon="operate.icon || ''"
             :type="operate.type || 'primary'"
-            :size="size || 'small'"
+            :size="size || (injectProps && injectProps.size) || 'small'"
             class="search-button"
             @click="batchOperate"
           >
@@ -245,9 +250,9 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance, toRaw } from 'vue';
+import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance, inject } from 'vue';
 import type { PropType } from 'vue'
-import type { PowerfulTableHeader, PowerfulTableOperateData, PowerfulTableTree, EmitType } from '../../types/powerful-table'
+import type { PowerfulTableHeader, PowerfulTableOperateData, PowerfulTableTree, EmitType, InjectProps } from '../../types/powerful-table'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
 import RenderJsx from './components/render-jsx';
@@ -261,19 +266,18 @@ import Icon from './components/icon';
 import Rate from './components/rate';
 import Link from './components/link';
 import Video from './components/video';
+// 获取 布局方向
+const justifyFun = (val: string) => {
+  const bol = ['center', 'left', 'right'].includes(val)
+  return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
+}
 
 export default defineComponent({
   name: "powerful-table",
   props: {
-    locale: {
-      type: Object,
-      default: zhCn
-    },
+    locale: Object,
     // 组件大小
-    size: {
-      type: String,
-      default: 'small'
-    },
+    size: String,
     // 当前数据
     list: {
       type: Array,
@@ -346,18 +350,17 @@ export default defineComponent({
     'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo', 'row-click'
   ],
   setup(props, { emit }) {
-    const justifyFun = (val: string) => {
-      const bol = ['center', 'left', 'right'].includes(val)
-      return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
-    }
+    const { proxy } = getCurrentInstance() as any
+    // 全局此组件注入的数据
+    const injectProps = inject<InjectProps>('powerfulTable')
+
     /* ------ 注入数据 ------ */
     // 组件大小
-    provide('size', props.size)
+    provide('size', props.size || injectProps?.size || 'small')
     // 单元格内布局
     provide('justifyFun', justifyFun)
 
-    const { proxy } = getCurrentInstance() as any
-
+    /* ------ data数据 ------ */
     // 页面是否加载中
     const listLoading = ref(true)
     // 承载props的operateData
@@ -365,7 +368,7 @@ export default defineComponent({
       value: undefined,
       disabled: false,
       icon: '',
-      style: {},
+      style: undefined,
       operates: []
     })
     // 分页
@@ -375,12 +378,12 @@ export default defineComponent({
     // 其他页面选中
     const otherSelect = ref<any[]>([])
     const pageSize = ref(props.pageSizes[0])
-
     // 展开
     const develop = ref<boolean[]>([])
 
     /* ----- 组件实例 ----- */
     const multipleTable = ref(null)
+    const configProvider = ref<{locale: {name: string}} | null>(null)
 
     watchEffect(() => {
       Object.assign(operate, props.operateData)
@@ -454,7 +457,6 @@ export default defineComponent({
         (multipleTable.value as any).clearSelection()
       }
     }
-
     /* ------ 排序方法 ------ */
     const sortChange = (obj: any) => {
       if (obj.column) {
@@ -542,8 +544,10 @@ export default defineComponent({
       otherSelect,
       pageSize,
       multipleTable,
+      configProvider,
+      injectProps,
+      zhCn,
 
-      justifyFun,
       rowClick,
       returnEmit,
       handleChange,
