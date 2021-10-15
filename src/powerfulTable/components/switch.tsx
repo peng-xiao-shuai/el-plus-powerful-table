@@ -45,7 +45,7 @@ export default defineComponent({
 
     return () => (
       <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>
-        <span style={{margin: props.prop.text ? '10px' : '0px'}}>
+        <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
           { props.prop.text || "" }
         </span>
         <el-switch
@@ -63,9 +63,10 @@ export default defineComponent({
               : 1
           }
           inactive-value={props.prop.data?.inactiveValue || 0}
-          onClick={
-            () => switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
-          }
+          onClick={(e: Event) => {
+            e.stopPropagation()
+            switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
+          }}
         />
       </div>
     )

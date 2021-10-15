@@ -25,11 +25,9 @@ export default defineComponent({
         <div>
           { props.prop.text || ""
           }{
-            (
-              props.prop.data?.customFilterFun &&
-              (props.prop.data as {customFilterFun: Function}).customFilterFun(props.row, props.index)
-            )
-            ||
+            typeof props.prop.filter == 'function' ?
+            props.prop.filter(props.row, props.index)
+            :
             filterFun(props.row[props.prop.prop], props.prop.filter as PowerfulTableFilter[])
           }
         </div>

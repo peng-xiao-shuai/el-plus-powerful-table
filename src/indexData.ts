@@ -7,6 +7,9 @@ let header: PowerfulTableHeader<Lists>[] = [
     props: [
       {
         prop: "id",
+        // data: {
+        //   develop: false
+        // }
       },
     ],
   },
@@ -20,17 +23,16 @@ let header: PowerfulTableHeader<Lists>[] = [
   //     },
   //   ],
   // },
-  // {
-  //   label: "slot（插槽）", //显示的标题
-  //   props: [
-  //     {
-  //       type: "slot",
-  //       data: {
-  //         slotName: "A"
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    label: "slot（插槽）", //显示的标题
+    props: [
+      {
+        prop: '',
+        type: "slot",
+        slotName: "A"
+      },
+    ],
+  },
   {
     label: "性别", //显示的标题
     props: [
@@ -39,16 +41,9 @@ let header: PowerfulTableHeader<Lists>[] = [
         // customFilterFun(row){
         //   return '公'
         // },
-        filter: [
-          {
-            key: 1,
-            value: "公",
-          },
-          {
-            key: 2,
-            value: "母",
-          },
-        ], //过滤
+        filter: (row:any) => {
+          return ({1:'公', 2: '母', 3: '未知'} as any)[row.gender]
+        }, //过滤
       }
     ],
   },
@@ -79,7 +74,7 @@ let header: PowerfulTableHeader<Lists>[] = [
           poster: (e: any) => e.imageUrl,
           style: {
             width: "100%",
-            height: "120px",
+            height: "40px",
             borderRadius: "10px",
             overflow: 'hidden',
             border: "1px solid #ccc",
@@ -108,6 +103,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: "图标", //显示的标题
+    headerAlign: 'center',
     props: [
       {
         prop: "icon",
@@ -134,13 +130,14 @@ let header: PowerfulTableHeader<Lists>[] = [
           effect: 'dark',
           number: 2,
           type: 'success',
-          color:(r: any)=>{
-            return r == 1 ? '#409EFF' : '#F56C6C'
+          color:(r: any, tag: string | number)=>{
+            return tag == 1 ? '#409EFF' : '#F56C6C'
           },
         },
         filter: [
           { key: 1, value: "男" },
           { key: 2, value: "女" },
+          { key: 3, value: "未知" },
         ],
         reserve: '<i><b>VNode</b></i>'
       },
@@ -184,6 +181,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "超链接", //显示的标题
     width: '200',
+    headerSlotName: 'Link',
     props: [
       {
         type: "href",
@@ -197,19 +195,19 @@ let header: PowerfulTableHeader<Lists>[] = [
       },
     ],
   },
-  // {
-  //   label: "内容", //显示的标题
-  //   props: [
-  //     {
-  //       prop: "content",
-  //       type: 'text',
-  //       data: {
-  //         develop: true,
-  //         line: 3
-  //       }
-  //     },
-  //   ],
-  // },
+  {
+    label: "内容", //显示的标题
+    props: [
+      {
+        prop: "content",
+        type: 'text',
+        data: {
+          develop: true,
+          line: 2
+        }
+      },
+    ],
+  },
   {
     label: "操作", //显示的标题
     width: 150,
@@ -273,27 +271,43 @@ interface Lists {
   content: string;
   videoUrl: string;
   imageUrl: string;
-  href?: string
+  href?: string;
+  children?: Lists[]
 }
 let lists: Lists[] = [
   {
-    id: 1,
+    id: 2,
     name: "蓝猫",
     icon: 'el-icon-hot-water',
-    gender: '1',
+    gender: 1,
     createTime: null,
     price: "",
     switchVal: 0,
-    tag: [1, 2, 3],
+    tag: [1, 3, 3],
     rate: 4.5,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    children: [{
+      id: 4,
+      name: "蓝猫",
+      icon: 'el-icon-hot-water',
+      gender: 4,
+      createTime: null,
+      price: "",
+      switchVal: 1,
+      tag: [1, 2, 3],
+      rate: 4,
+      content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+      videoUrl:
+        "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+      imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    }]
   },
   {
-    id: 2,
+    id: 1,
     name: "蓝猫",
     icon: 'el-icon-hot-water',
     gender: 2,

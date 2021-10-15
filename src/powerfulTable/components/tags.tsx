@@ -1,5 +1,5 @@
 import { defineComponent, PropType, computed, inject } from "vue";
-import type { PowerfulTableHeaderProps, TagDataType, EmitType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, TagDataType, PowerfulTableFilter } from '../../../types/powerful-table'
 import { filterFun } from './filter'
 
 export default defineComponent({
@@ -30,7 +30,7 @@ export default defineComponent({
 
     return () => (
       <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>
-        <span style={{margin: props.prop.text ? '10px' : '0px'}}>
+        <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
           { props.prop.text || "" }
         </span>
         {
@@ -49,7 +49,17 @@ export default defineComponent({
               color={(typeof props.prop.data?.color == 'function' && props.prop.data?.color(props.row, tag)) || ''}
               hit={(props.prop.data?.hit) || false}
             >
-              { props.prop.filter ? filterFun(tag, props.prop.filter) : tag }
+              { 
+                props.prop.filter ? 
+                  (
+                    typeof props.prop.filter == 'function' ?
+                    props.prop.filter(props.row, props.index)
+                    :
+                    filterFun(tag, props.prop.filter as PowerfulTableFilter[])
+                  )
+                :
+                tag
+              }
             </el-tag>
           ))
         }

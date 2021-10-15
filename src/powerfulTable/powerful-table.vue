@@ -8,10 +8,22 @@
         element-loading-text="Loading"
         border
         fit
+        row-key="id"
         highlight-current-row
         @selection-change="handleSelectionChange"
         @sort-change="sortChange"
+        @row-click="rowClick"
+        :lazy="tree && tree.lazy || false"
+        :load="tree && tree.load"
+        :tree-props="tree && tree.props || {children: 'children', hasChildren: 'hasChildren'}"
       >
+
+        <template #empty>
+          <slot name='empty'>
+            <span>暂无数据</span>
+          </slot>
+        </template>
+
         <el-table-column
           v-if="isSelect"
           align="center"
@@ -26,100 +38,35 @@
           :fixed="item.fixed || false"
           :sortable="item.sortable || false"
           :header-align="item.headerAlign || 'center'"
-          :show-overflow-tooltip="item.overflowTooltip || false"
           :align="item.headerAlign || 'center'"
+          :show-overflow-tooltip="item.overflowTooltip || false"
           :prop="item.props[0].child || item.props[0].prop"
           :label="item.label"
           :min-width="item.minWidth || 140"
           :width="item.width || ''"
+          :class-name="item.headerAlign || 'center'"
         >
+          <!-- 自定义表头 -->
+          <template #header v-if="item.headerSlotName">
+            <slot
+              :name="item.headerSlotName"
+              :item="item"
+              :index="index"
+            >
+            </slot>
+          </template>
+
           <template #default="scope">
             <div
               v-for="(prop, idx) in item.props"
               :key="idx"
-              :style="prop.style || {}"
+              :style="{
+                display: index == 0 ? 'inline-block' : 'block',
+                ...prop.style
+              }"
             >
               <RenderJsx
                 v-if="typeof prop.render == 'function'" 
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <div v-else-if="scope.row[prop.prop] == undefined || scope.row[prop.prop] == null">
-                <div v-if="prop.reserve" v-html="prop.reserve"></div>
-                <div v-else>
-                  <!-- <span>暂无数据</span> -->
-                </div>
-              </div>
-              <!-- 筛选 -->
-              <Filter 
-                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <!-- 图片 -->
-              <Image 
-                v-else-if="prop.type == 'image'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                :align="item.headerAlign"
-              />
-              <!-- 按钮 -->
-                <Button
-                  v-else-if="prop.type == 'btn'" class="btnType"
-                  :row="scope.row"
-                  :index="scope.$index"
-                  :prop="prop"
-                  :align="item.headerAlign"
-                  @returnEmit="returnEmit"
-                />
-              <!-- 开关 -->
-              <Switch 
-                v-else-if="prop.type == 'switch'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                @returnEmit="returnEmit"
-              />
-              <!-- 输入框 -->
-              <Input
-                v-else-if="prop.type == 'input' || prop.type == 'textarea'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <!-- iconfont -->
-              <Icon
-                v-else-if="prop.type == 'iconfont'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <!-- 标签 -->
-              <Tags
-                v-else-if="prop.type == 'tag'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <!-- 评分 -->
-              <Rate
-                v-else-if="prop.type == 'rate'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <!-- 超链接 -->
-              <Link
-                v-else-if="prop.type == 'href'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-              />
-              <Video
-                v-else-if="prop.type == 'video'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
@@ -132,11 +79,99 @@
                 :index="scope.$index"
               >
               </slot>
+              <div v-else-if="(scope.row[prop.prop] == undefined || scope.row[prop.prop] == null) && prop.type != 'btn'">
+                <div v-if="prop.reserve" v-html="prop.reserve"></div>
+                <div v-else>
+                  <span>暂无数据</span>
+                </div>
+              </div>
+              <!-- 筛选 -->
+              <Filter 
+                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 图片 -->
+              <Image 
+                v-else-if="prop.type == 'image'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+              />
+              <!-- 按钮 -->
+              <Button
+                v-else-if="prop.type == 'btn'" class="btnType"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+                @returnEmit="returnEmit"
+              />
+              <!-- 开关 -->
+              <Switch 
+                v-else-if="prop.type == 'switch'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+                @returnEmit="returnEmit"
+              />
+              <!-- 输入框 -->
+              <Input
+                v-else-if="prop.type == 'input' || prop.type == 'textarea'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- iconfont -->
+              <Icon
+                v-else-if="prop.type == 'iconfont'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 标签 -->
+              <Tags
+                v-else-if="prop.type == 'tag'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 评分 -->
+              <Rate
+                v-else-if="prop.type == 'rate'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 超链接 -->
+              <Link
+                v-else-if="prop.type == 'href'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <Video
+                v-else-if="prop.type == 'video'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
               <!-- 正常 -->
               <div
                 v-else-if="scope.row[prop.prop]"
-                :class="{ content: develop[scope.$index] }"
+                :class="{ content: develop[scope.$index]}"
               >
+                <!-- 主体内容 -->
                 <div
                   :style="{
                     display: '-webkit-box',
@@ -144,34 +179,26 @@
                     '-webkit-box-orient': 'vertical',
                     '-webkit-line-clamp': develop[scope.$index]
                       ? 99999
-                      : prop.line || 3,
+                      : prop.data && prop.data.line || 3,
                   }"
                 >
-                  {{ prop.text || ""
-                  }}{{
-                    prop.child
-                      ? scope.row[prop.prop][prop.child]
-                      : scope.row[prop.prop] || prop.reserve || "暂无数据"
+                  {{
+                    prop.data && typeof prop.data.customFilterFun == 'function' ?
+                      prop.data.customFilterFun(scope.row, scope.$index)
+                      :
+                      scope.row[prop.prop]
                   }}
                 </div>
+
+                <!-- 展开全文或收起 -->
                 <div
-                  v-show="prop.develop"
+                  v-show="prop.data && prop.data.develop"
                   class="develop el-link el-link--primary"
-                  @click="develop[scope.$index] = !develop[scope.$index]"
+                  @click.stop="develop[scope.$index] = !develop[scope.$index]"
                 >
-                  <span
-                    :style="{
-                      position: develop[scope.$index] ? 'absolute' : 'static',
-                    }"
-                  >
+                  <span :style="{position: develop[scope.$index] ? 'absolute' : 'static'}">
                     {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
-                    <i
-                      :class="
-                        develop[scope.$index]
-                          ? 'el-icon-arrow-up'
-                          : 'el-icon-arrow-down'
-                      "
-                    ></i>
+                    <i :class="develop[scope.$index] ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
                   </span>
                 </div>
               </div>
@@ -180,32 +207,18 @@
         </el-table-column>
       </el-table>
 
-      <div
-        style="display: flex; justify-content: space-between; margin-top: 20px"
-      >
-        <div
-          class="pagination left"
-          v-if="operate && isSelect && operate.operates"
-        >
-          <el-select
-            v-model="operate.value"
-            clearable
-            placeholder="批量操作"
-            :size="operate.size || 'small'"
-          >
-            <el-option
-              v-for="(item, index) in operate.operates"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
+      <div style="display: flex; justify-content: space-between; margin-top: 20px">
+        <!-- 批量操作 -->
+        <div class="pagination left" v-if="operate && isSelect && operate.operates">
+          <el-select v-model="operate.value" clearable placeholder="批量操作" :size="size || 'small'">
+            <el-option v-for="(item, index) in operate.operates" :key="index" :label="item.label" :value="item.value" />
           </el-select>
+
           <el-button
             :style="operate.style || { marginLeft: '20px' }"
             :icon="operate.icon || ''"
             :type="operate.type || 'primary'"
-            :size="operate.size || 'small'"
+            :size="size || 'small'"
             class="search-button"
             @click="batchOperate"
           >
@@ -213,6 +226,7 @@
           </el-button>
         </div>
 
+        <!-- 分页操作 -->
         <div class="pagination" v-if="isPagination">
           <el-pagination
             @size-change="handleChange($event, 'pageSize')"
@@ -231,11 +245,10 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance } from 'vue';
+import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance, toRaw } from 'vue';
 import type { PropType } from 'vue'
-import type { PowerfulTableHeader, PowerfulTableOperateData, EmitType } from '../../types/powerful-table'
+import type { PowerfulTableHeader, PowerfulTableOperateData, PowerfulTableTree, EmitType } from '../../types/powerful-table'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import en from 'element-plus/lib/locale/lang/en'
 
 import RenderJsx from './components/render-jsx';
 import Filter from './components/filter';
@@ -310,6 +323,10 @@ export default defineComponent({
       type: Number,
       default: 0
     },
+    tree: {
+      type: Object as PropType<PowerfulTableTree>,
+      default: () => {}
+    }
   },
   components: {
     RenderJsx,
@@ -324,16 +341,20 @@ export default defineComponent({
     Link,
     Video,
   },
-  emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
+  emits: [
+    'update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange',
+    'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo', 'row-click'
+  ],
   setup(props, { emit }) {
+    const justifyFun = (val: string) => {
+      const bol = ['center', 'left', 'right'].includes(val)
+      return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
+    }
     /* ------ 注入数据 ------ */
     // 组件大小
     provide('size', props.size)
     // 单元格内布局
-    provide('justifyFun', (val: string) => {
-      const bol = ['center', 'left', 'right'].includes(val)
-      return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
-    })
+    provide('justifyFun', justifyFun)
 
     const { proxy } = getCurrentInstance() as any
 
@@ -353,22 +374,15 @@ export default defineComponent({
     const currentSelect = ref([])
     // 其他页面选中
     const otherSelect = ref([])
+    const pageSize = ref(props.pageSizes[0])
+
     // 展开
     const develop = ref<boolean[]>([])
-    const pageSize = ref(props.pageSizes[0])
 
     /* ----- 组件实例 ----- */
     const multipleTable = ref(null)
 
     watchEffect(() => {
-      console.log('触发');
-      
-      if (props.selectData && props.selectData.length) {
-        nextTick(() => {
-          getSelect(props.selectData)
-        })
-      }
-
       Object.assign(operate, props.operateData)
 
       // list数据有的话 关闭加载中...
@@ -410,7 +424,6 @@ export default defineComponent({
           }
         })
 
-        // props.currentSelect = current
         // console.log('当前页选中', current)
         // 获取其他页
         if (current.length > 0) {
@@ -486,6 +499,9 @@ export default defineComponent({
         })
 
     }
+    const rowClick = (...arg:any) => {
+      returnEmit('row-click',{...arg})
+    }
     /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
     const returnEmit = (emitName: EmitType, objVal: any) => {
       console.log('触发回调', emitName, objVal);
@@ -499,10 +515,8 @@ export default defineComponent({
     }
     /* ------ 条数或页数切换 ------ */
     const handleChange = (e: any, type: any) => {
-      // [type].value = e
-      console.log(type);
-// TODO
-      // get()
+      type === 'pageSize' ? pageSize.value = e : currentPage.value = e
+      get()
     }
     /* ------ 回调到组件上 ------ */
     const get = () => {
@@ -515,20 +529,24 @@ export default defineComponent({
         // 如果父组件是getList方法 无需自定义事假
         proxy.$parent._getList(data, otherSelect.value.concat(currentSelect.value))
       } catch (error) {
+        console.log(otherSelect.value);
+        
         emit('sizeChange', data, otherSelect.value.concat(currentSelect.value))
       }
     }
 
     return {
+      develop,
       listLoading,
       operate,
       currentPage,
       currentSelect,
       otherSelect,
-      develop,
       pageSize,
       multipleTable,
 
+      justifyFun,
+      rowClick,
       returnEmit,
       handleChange,
       sortChange,
@@ -541,6 +559,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* 树表格时icon和文字居中 */
+:deep(.cell) {
+  display: flex;
+  align-items: center;
+}
+:deep(.center .cell) {
+  justify-content: center;
+}
+:deep(.right .cell) {
+  justify-content: flex-end;
+}
+
 .content {
   position: relative;
   padding-bottom: 23px;

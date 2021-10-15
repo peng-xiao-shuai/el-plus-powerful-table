@@ -1,11 +1,32 @@
 <template>
   <div class="app-container">
     <powerful-table
-      :selectData="selectData"
       :list="list"
+      isSelect
+      :selectData="selectData"
+      :selectCompare="selectCompare"
       :header="config"
+      :operateData="operateData"
       :total="total"
+      :pageSizes="[2,5,7]"
+      @batchOperate="batchOperate"
+      @switchChange="switchChange"
+      @update="handlerUpdate"
+      @remove="handlerRemove"
+      @sizeChange="getList"
+      
     >
+      <template #empty>
+        <div>
+          23131
+        </div>
+      </template>
+      <template #Link>
+        <div>
+          <el-input size="mini" placeholder="输入关键字搜索" />
+        </div>
+      </template>
+
       <template #A="{ row }">
         <div>
           <el-image
@@ -26,14 +47,14 @@ import { reactive, ref, onMounted, defineComponent } from "vue"
 export default defineComponent({
   setup (props, context) {
     let rowA = reactive({ value: {} })
-    let list = reactive(lists)
+    let list = ref([])
     // 所有页面选中数组
-    let selectData = reactive([{ a: 1 }])
-    let selectCompare = reactive(["id", "a"])
+    let selectData = reactive([{ a: 1 },{ a: 2 },{ a: 3 }])
+    let selectCompare = reactive(["a", "id"])
     // let listLoading= ref(true)
     let isSelect = ref(true)
     let config = reactive(header)
-    let total = ref(1)
+    let total = ref(lists.length)
     let operateData = reactive({
       value: "",
       size: "small",
@@ -44,32 +65,28 @@ export default defineComponent({
         },
       ],
     })
+    const listQuery = reactive({
+      pageNum: 1,
+      pageSize: 2
+    })
 
-    function handlersort (e) {
+    function handlerSort (e) {
       console.log("远程排序", e)
     }
-    function getList (obj, selectData) {
-      let data = obj
-        ? obj
-        : {
-          pageNum: 1,
-          pageSize: 10,
-        }
-
+    function getList (data, selectData) {
       // 切换页面赋值
       selectData = selectData
-      if (obj) {
+      Object.assign(listQuery, data)
+      
+      if (data) {
         ElMessage.success('切换页面操作，参数详情，查看控制台')
-        console.log('page' + obj, '选中数组' + selectData)
+        console.log('page' , data, '选中数组' , selectData)
       }
       // listLoading.value = true
 
-      // getData(data).then((response:any) => {
-      // 	list = response.data.list
-      // // listLoading.value = false
-
-      // 	total = response.data.total
-      // })
+      setTimeout(() => {
+        list.value = lists.filter((item, index) => index >= (listQuery.pageNum - 1) * listQuery.pageSize && index < listQuery.pageNum * listQuery.pageSize)
+      })
     }
 
     function batchOperate (e) {
@@ -107,7 +124,7 @@ export default defineComponent({
       total,
       operateData,
       // 方法
-      handlersort,
+      handlerSort,
       getList,
       batchOperate,
       switchChange,

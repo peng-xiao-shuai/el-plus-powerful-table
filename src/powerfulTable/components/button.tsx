@@ -44,7 +44,7 @@ export default defineComponent({
 
     return () => (
       <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>
-        <span style={{margin: props.prop.text ? '10px' : '0px'}}>
+        <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
           { props.prop.text || "" }
         </span>
         {
@@ -63,7 +63,10 @@ export default defineComponent({
                 icon={item.icon || ''}
                 disabled={item.disabled || false}
                 type={item.type || 'primary'}
-                onClick={() => btnChange(item.emit, props.row, props.index as number, item.type || 'primary' )}
+                onClick={(e:Event) => {
+                  e.stopPropagation()
+                  btnChange(item.emit, props.row, props.index as number, item.type || 'primary' )
+                }}
               >
                 { item.text || item.tip }
               </el-button>

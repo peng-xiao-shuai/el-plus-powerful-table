@@ -14,6 +14,14 @@ export interface PowerfulTable {
   layout?: string;
   operateData?: PowerfulTableOperateData;
   isPagination?: boolean;
+  tree?: PowerfulTableTree
+}
+
+/* ------ tree 树结构数据 ------ */
+export type PowerfulTableTree = {
+  lazy?: boolean;
+  load?: (row: any, treeNode: any, resolve: Function) => void;
+  props?: {}
 }
 
 /* ------ operateData 批量操作 ------ */
@@ -43,6 +51,7 @@ export interface PowerfulTableHeader<U = any> {
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
+  headerSlotName?: string 
   props: PowerfulTableHeaderProps<any, U>[];
 }
 // props 单元格数据
@@ -51,8 +60,9 @@ export interface PowerfulTableHeaderProps<T, U = any> {
   data?: T;
   child?: string;
   type?: Type;
-  filter?: PowerfulTableFilter[];
+  filter?: PowerfulTableFilter[] | ((row: any, index?: number) => string | number);
   text?: string;
+  slotName?: string;
   render?: (h: Function, row: U,index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
@@ -141,10 +151,6 @@ export type HrefDataType = {
   text?: string | ((row: any) => string) 
 }
 
-export type SlotDataType = {
-  slotName: string;
-}
-
 export type TagDataType = {
   type?: ThemeType;
   effect?: 'dark' | 'light' | 'plain';
@@ -155,4 +161,4 @@ export type TagDataType = {
 }
 
 type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
-type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo'
+type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'

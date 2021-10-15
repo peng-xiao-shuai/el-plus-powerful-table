@@ -21,11 +21,9 @@ export default defineComponent({
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
 
-    console.log(props.row[props.prop.prop]);
-    
     return () => (
       <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>
-        <span style={{margin: props.prop.text ? '10px' : '0px'}}>
+        <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
           { props.prop.text || "" }
         </span>
         { props.prop.render?.(h, props.row, props.index as number) }
