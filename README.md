@@ -1,5 +1,8 @@
 ## el-plus-powerful-table-ts
 
+此插件已 `el-plus-powerful-table` 作为基础，进行重构。部分功能将领先 `el-plus-powerful-table` 基础版本。
+`el-plus-powerful-table` 的 `ts` 版本
+
 主要功能：分页多选，批量操作
 
 vue3.0 的 element-plus 二次开发表格组件
