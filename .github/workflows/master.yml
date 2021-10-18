@@ -15,7 +15,7 @@ jobs:
       - name: Build
         run: yarn install && yarn run build
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@master
+        uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} #secrets.ACCESS_TOKEN是项目配置的密钥
           BRANCH: gh-pages # 操作应部署到的分支。
