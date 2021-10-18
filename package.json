@@ -1,19 +1,18 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "author": "peng-xiao-shuai",
-  "main": "./src/powerfulTable/index.ts",
+  "main": "lib/powerful-table.umd.min.js",
   "private": false,
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "tsc": "tsc",
-    "lib": "vue-cli-service build --target lib --name powerful-table --dest lib ./src/powerfulTable/index.ts"
+    "lib": "vue-cli-service build --target lib --name powerful-table --dest lib ./src/powerfulTable/index.ts && cp ./types/powerful-table.d.ts ./lib/"
   },
   "files": [
-    "lib",
-    "types"
+    "lib"
   ],
   "keywords": [
     "element-plus",

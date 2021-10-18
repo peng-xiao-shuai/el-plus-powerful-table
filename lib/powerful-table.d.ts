@@ -1,7 +1,13 @@
-import { VNode, Plugin } from "@vue/runtime-core"
+import { VNode, Plugin, App } from "@vue/runtime-core"
+declare module 'el-plus-powerful-table-ts' {
+  const PowerfulTable: {
+    install: (app: App<any>, opt: any) => void;
+  }
+  export default PowerfulTable
+}
 
 /* ------ props ------ */
-export interface PowerfulTable {
+export interface PowerfulTableData {
   list: any[];
   pageSizes: number[];
   total: number
@@ -14,7 +20,7 @@ export interface PowerfulTable {
   layout?: string;
   operateData?: PowerfulTableOperateData;
   isPagination?: boolean;
-  tree?: PowerfulTableTree
+  tree?: PowerfulTableTree;
 }
 
 /* ------ tree 树结构数据 ------ */

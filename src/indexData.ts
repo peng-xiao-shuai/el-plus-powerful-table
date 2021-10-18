@@ -74,7 +74,7 @@ let header: PowerfulTableHeader<Lists>[] = [
           poster: (e: any) => e.imageUrl,
           style: {
             width: "100%",
-            height: "40px",
+            height: "80px",
             borderRadius: "10px",
             overflow: 'hidden',
             border: "1px solid #ccc",
@@ -229,7 +229,6 @@ let header: PowerfulTableHeader<Lists>[] = [
             tip: "编辑",
             type: "info",
             icon: "el-icon-edit-outline",
-            text: "",
             showBtn: (e:any) => {
               return true
             },
@@ -239,10 +238,7 @@ let header: PowerfulTableHeader<Lists>[] = [
             tip: "编辑",
             type: "info",
             icon: "el-icon-edit-outline",
-            text: "uuu",
-            showBtn: (e:any) => {
-              return false
-            },
+            text: "",
             emit: "update",
           },
           {

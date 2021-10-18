@@ -7,6 +7,8 @@
 
 vue3.0 的 element-plus 二次开发表格组件
 
+### [DEMO](https://peng-xiao-shuai.github.io/el-plus-powerful-table/)
+
 ### 使用方法
 
 ```js

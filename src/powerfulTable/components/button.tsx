@@ -43,7 +43,7 @@ export default defineComponent({
     }
 
     return () => (
-      <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>
+      <div style={{display: 'flex', alignItems: 'center', width: '100%', flexWrap: 'wrap', justifyContent: justifyFun(props.align)}}>
         <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
           { props.prop.text || "" }
         </span>
@@ -57,7 +57,7 @@ export default defineComponent({
               placement="top"
             >
               <el-button
-                class={item.text ? '' : 'notSpan'}
+                class={item.text == '' ?  'notSpan' : ''}
                 size={size}
                 style={item.style || {}}
                 icon={item.icon || ''}
@@ -68,7 +68,7 @@ export default defineComponent({
                   btnChange(item.emit, props.row, props.index as number, item.type || 'primary' )
                 }}
               >
-                { item.text || item.tip }
+                { typeof item.text != 'string'  ? item.tip : item.text }
               </el-button>
             </el-tooltip>
           ))
