@@ -20,8 +20,9 @@
     "vue3.0",
     "table",
     "ts",
+    "tsx",
     "el-table",
-    "operateData",
+    "batchOperation",
     "pagination",
     "checkbox"
   ],
