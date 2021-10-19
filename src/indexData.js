@@ -6,25 +6,29 @@ let header = [
     props: [
       {
         prop: "id",
+        // data: {
+        //   develop: false
+        // }
       },
     ],
   },
-  {
-    label: "名称", //显示的名称
-    overflowTooltip: true,
-    minWidth: "60", //对应列的最小宽度
-    props: [
-      {
-        prop: "name",
-      },
-    ],
-  },
+  // {
+  //   label: "名称", //显示的名称
+  //   overflowTooltip: true,
+  //   minWidth: "60", //对应列的最小宽度
+  //   props: [
+  //     {
+  //       prop: "name",
+  //     },
+  //   ],
+  // },
   {
     label: "slot（插槽）", //显示的标题
     props: [
       {
+        prop: '',
         type: "slot",
-        slotName: "A",
+        slotName: "A"
       },
     ],
   },
@@ -36,16 +40,9 @@ let header = [
         // customFilterFun(row){
         //   return '公'
         // },
-        filter: [
-          {
-            key: 1,
-            value: "公",
-          },
-          {
-            key: 2,
-            value: "母",
-          },
-        ], //过滤
+        filter: (row) => {
+          return {1:'公', 2: '母', 3: '未知'}[row.gender]
+        }, //过滤
       }
     ],
   },
@@ -56,6 +53,7 @@ let header = [
         prop: "price",
         type: "input",
         data: {
+          disabled: (e) => false,
           slot: "prepend",
           symbol: "￥",
           style: { width: "100%" },
@@ -65,18 +63,22 @@ let header = [
   },
   {
     label: "视频", //显示的标题
+    width: 200,
     props: [
       {
         prop: "videoUrl",
         type: "video",
+        text: '1',
         data: {
-          cover: "",
+          loop: true,
+          poster: (e) => e.imageUrl,
           style: {
-            width: "120px",
-            height: "120px",
+            width: "100%",
+            height: "80px",
             borderRadius: "10px",
+            overflow: 'hidden',
             border: "1px solid #ccc",
-          },
+          }
         },
       },
     ],
@@ -89,14 +91,29 @@ let header = [
         prop: "switchVal",
         type: "switch",
         data: {
-          // beforeFunction: function (row, prop) {
-          //   let val = row[prop]
-          //   // console.log(val)
-
-          //   return true
-          // }
-          // inactiveText: "关闭",
-          // activeText: "开启",
+          disabled: (e) => false,
+          beforeFunction: function (row, val, old) {
+            return true
+          },
+          inactiveText: "关闭",
+          activeText: "开启",
+        },
+      },
+    ],
+  },
+  {
+    label: "图标", //显示的标题
+    headerAlign: 'center',
+    props: [
+      {
+        prop: "icon",
+        type: "iconfont",
+        text: '图标：',
+        data: {
+          class: 'aaa',
+          style: {
+            fontSize: '20px'
+          }
         },
       },
     ],
@@ -111,15 +128,16 @@ let header = [
         type: "tag",
         data: {
           effect: 'dark',
-          number: '2',
+          number: 2,
           type: 'success',
-          color:(r)=>{
-            return r == 1 ? '#409EFF' : '#F56C6C'
+          color:(r, tag)=>{
+            return tag == 1 ? '#409EFF' : '#F56C6C'
           },
         },
         filter: [
           { key: 1, value: "男" },
           { key: 2, value: "女" },
+          { key: 3, value: "未知" },
         ],
         reserve: '<i><b>VNode</b></i>'
       },
@@ -131,11 +149,11 @@ let header = [
       {
         type: "image",
         prop: "imageUrl",
+        text: '图片：',
         data: {
           style: {
-            width: "120px",
-            height: "120px",
-            borderRadius: "10px",
+            width: '40px',
+            height: '40px'
           },
           lazy: true,
           preview: true,
@@ -151,11 +169,29 @@ let header = [
         type: "rate",
         prop: "rate",
         data: {
-          allowHalf: true,
+          // allowHalf: true,
           showText: true,
-          // colors: ['red', 'yellow', 'green']
-          // showScore: true
+          max: 6,
+          colors: ['red', 'yellow', 'green'],
+        //   // showScore: true
         },
+      },
+    ],
+  },
+  {
+    label: "超链接", //显示的标题
+    width: '200',
+    headerSlotName: 'Link',
+    props: [
+      {
+        type: "href",
+        prop: "href",
+        data: {
+          text: (e) => e.name,
+        },
+        render: (h, row, index) => {
+          return h('b',{}, row.gender)
+        }
       },
     ],
   },
@@ -164,8 +200,11 @@ let header = [
     props: [
       {
         prop: "content",
-        develop: true,
-        line: 3
+        type: 'text',
+        data: {
+          develop: true,
+          line: 2
+        }
       },
     ],
   },
@@ -176,68 +215,103 @@ let header = [
     props: [
       {
         type: "btn",
+        prop: "btn",
         data: [
           {
             tip: "编辑",
             type: "info",
             icon: "el-icon-edit-outline",
-            text: "U",
+            text: "1",
+            showBtn: false,
+            emit: "update",
+          },
+          {
+            tip: "编辑",
+            type: "info",
+            icon: "el-icon-edit-outline",
             showBtn: (e) => {
-              return false
+              return true
             },
+            emit: "update",
+          },
+          {
+            tip: "编辑",
+            type: "info",
+            icon: "el-icon-edit-outline",
+            text: "",
             emit: "update",
           },
           {
             tip: "删除",
             type: "danger",
-            text: "D",
+            text: "",
             icon: "el-icon-delete",
             emit: "remove",
           },
         ],
       },
     ],
-  },
+  }
 ]
 
 let lists = [
   {
-    id: 1,
+    id: 2,
     name: "蓝猫",
-    gender: '1',
+    icon: 'el-icon-hot-water',
+    gender: 1,
     createTime: null,
     price: "",
-    switchVal: 1,
-    tag: [1, 2, 3],
+    switchVal: 0,
+    tag: [1, 3, 3],
     rate: 4.5,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    children: [{
+      id: 4,
+      name: "蓝猫",
+      icon: 'el-icon-hot-water',
+      gender: 4,
+      createTime: null,
+      price: "",
+      switchVal: 1,
+      tag: [1, 2, 3],
+      rate: 4,
+      content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+      videoUrl:
+        "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+      imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    }]
   },
   {
-    id: 2,
+    id: 1,
     name: "蓝猫",
-    gender: '2',
+    icon: 'el-icon-hot-water',
+    gender: 2,
     createTime: null,
     price: "",
     switchVal: 1,
-    tag: [1, 2, 3],
+    tag: '1,2,3',
     rate: 4.5,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+    href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
   },
   {
     id: 3,
     name: "蓝猫",
-    gender: '1',
+    icon: 'el-icon-hot-water',
+    gender: 3,
     createTime: null,
     price: "",
     switchVal: 1,
     tag: [1, 2, 3],
-    rate: 4.5,
+    rate: 4,
     content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",

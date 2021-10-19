@@ -1,3 +1,23 @@
+## 1.5.0 20211019
+- 文档优化
+- 组件新增 语言配置 `locale`
+- 新增自定义列头 `headerSlotName`。<a href='#header'>**`传送门`**</a>
+- 新增全局组件注入 `locale` 和 `size`
+```js
+...
+import en from 'element-plus/lib/locale/lang/en'
+...
+app.use(powerfulTable, {size: 'small', locale: en})
+
+```
+- 删除部分类型中 `data` 和 `operateData` 下的 `size` 。改为传递给组件的 `props`
+- 删除 `child`。修改 `filter` 的类型从 `array[object]` 改为 `array[object] || function`。新增 `render` 渲染函数。将原 `slot` 类型下的`slotName`改为到 `props` 下<a href='#props'>**`传送门`**</a>
+- `btn` 类型下的 `showBtn` 类型从 `function` 改为 `boolean || function`<a href='#btn'>**`传送门`**</a>
+- `switch` 和 `input` 类型下的 `disabled` 类型从 `boolean` 改为 `boolean || function`。`switch` 类型下 `beforeFunction` 新增参数<a href='#beforeFunction'>**`传送门`**</a>
+- `text` 类型下的 `customFilterFun` 改为自定义返回值。需返回一个 **字符串** 或者 **数字**
+- `href` 类型下的 `prop`已删除。`text` 类型从 `string` 改为 `string || function`<a href='#href'>**`传送门`**</a>
+- 新增行点击事件 `row-click`
+
 ## 1.4.15 20210901
 - 文档优化
 - `tag` 更改 `color` 字段类型为 `function` <a href='#tag'>**`传送门`**</a>
@@ -61,6 +81,7 @@ showBtn
 主要功能：分页多选，批量操作
 
 vue3.0 的 element-plus 二次开发表格组件
+### [DEMO](https://peng-xiao-shuai.github.io/el-plus-powerful-table/)
 
 ### 使用方法
 
@@ -83,7 +104,7 @@ app.mount("#app");
 ```
 ### 传送门
 <a href='#filter'>**过滤**</a>&emsp;<a href='#text'>**文本**</a>&emsp;<a href='#image'>**图片**</a>&emsp;
-<a href='#btn'>**按钮**</a>&emsp;<a href='#beforeFunction'>**开关**</a>&emsp;<a href='#input'>**输入框**</a>&emsp;
+<a href='#btn'>**按钮**</a>&emsp;<a href='#switch'>**开关**</a>&emsp;<a href='#input'>**输入框**</a>&emsp;
 <a href='#video'>**视频**</a>&emsp;<a href='#iconfont'>**图标**</a>&emsp;<a href='#rate'>**评分**</a>&emsp;
 <a href='#href'>**超链接**</a>&emsp;<a href='#slot'>**插槽**</a>&emsp;<a href='#tag'>**标签**</a>
 
@@ -91,10 +112,11 @@ app.mount("#app");
 
 | 参数          | 说明                                                            | 类型    | 可选值                                                                        | 默认值                          |
 | ------------- | --------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------- | ------------------------------- |
+| locale          | 组件语言                          | object&lt;Language>  | - | zhCn |
+| size          | 组件大小                           | string   | medium / small / mini  |  small    |
 | list          | 当前数据                                                        | array   | -                                                                             | -                               |
 | header        | 表格头部数据                                                    | array   | -                                                                             | -                               |
 | total         | 分页总条数                                                      | number  | -                                                                             | 0                               |
-| tableName     | 表格名(用于缓存表格的分页) <font color='red'>已废弃</font>      | number  | -                                                                             | 1                               |
 | layout        | 组件布局，子组件名用逗号分隔                                    | string  | 详情参考[element 分页](https://element.eleme.cn/#/zh-CN/component/pagination) | total, sizes, prev, pager, next |
 | pageSizes     | 每页显示个数选择器的选项设置                                    | array   | -                                                                             | [10, 20, 30]                    |
 | selectData    | 选中的数据                                                      | array   | -                                                                             | -                               |
@@ -112,7 +134,6 @@ app.mount("#app");
 | 参数     | 说明               | 类型          | 可选值                                             | 默认值  |
 | -------- | ------------------ | ------------- | -------------------------------------------------- | ------- |
 | value    | 下拉选中值         | string        | -                                                  | null    |
-| size     | 按钮和下拉框大小   | string        | medium / small / mini                              | small   |
 | type     | 按钮的类型         | string        | default / primary / success / warning / danger / info / text | primary |
 | disabled | 禁用               | boolean       | true / false                                       | false   |
 | icon     | 按钮上图标         | string        | -                                                  | -       |
@@ -140,7 +161,7 @@ const operateData = {
 ```
 
 <a href='https://github.com/Peng-Xiao-Shuai-0902/el-plus-powerful-table/blob/master/src/indexData.js'>查看JSON参数</a>
-### <font color='#1A72A6'>header 表格头部数据</font>
+### <font color='#1A72A6' id='header'>header 表格头部数据</font>
 
 | 参数            | 说明                   | 类型             | 可选值                  | 默认值 |
 | --------------- | ---------------------- | ---------------- | ----------------------- | ------ |
@@ -151,30 +172,33 @@ const operateData = {
 | sortable        | 排序                   | boolean / string | 'custom' / true / false | false  |
 | fixed | 固定列 | string / boolean          | true / left / right            | false  |
 | headerAlign     | 表头对齐方式           | string           | left / center / right   | center |
+| headerSlotName  | 列头插槽           | string           | -   | - |
 | props           | 单元格数据             | array[object]    | -                       | -      |
 
-#### <font color='#50BEFF'>props 单元格数据</font>
+#### <font color='#50BEFF' id='props'>props 单元格数据</font>
 
 | 参数   | 说明                                                                          | 类型          | 可选值                                      | 默认值 |
 | ------ | ----------------------------------------------------------------------------- | ------------- | ------------------------------------------- | ------ |
 | prop   | 数据 key 值                                                                   | string        | -                                           | -      |
-| child  | 当 prop 值是对象是用到 仅支持 `type 为 text`                                  | string        | -                                           | -      |
+| child  | 当 prop 值是对象是用到 仅支持 `type 为 text`  <font color='red'>已删除</font>                                | string        | -                                           | -      |
 | type   | 数据类型                                                                      | string        | <a href='#image'>image</a> / <a href='#text'>text</a> / <a href='#switch'>switch</a> / <a href='#btn'>btn</a> / <a href='#video'>video</a> / <a href='#input'>input</a> / <a href='#iconfont'>iconfont</a> / <a href='#tag'>tag</a> / <a href='#rate'>rate</a> / <a href='#href'>href</a> / <a href='#slot'>slot</a> | text   |
 | data   | 每个类型不一样 data 里值也不一样，<br> type 为 btn 时数据类型为 array[object] | object        | -                                           | -      |
-| filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] | -                                           | -      |
+| filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] / function(row,index) => string | number | -                                           | -      |
 | text   | 数据左侧显示的文字。（例：文字：数据）                                        | string        | -                                           | -      |
-| reserve  | 当 prop 值 渲染数据为空时可用 reserve 代替空数据 可传 `HTML` 标签        | string        | -                                           | -      |
+| reserve  | 当 prop 值 渲染数据为空时可用 reserve 代替空数据 可传 `HTML` 标签        | string | HTMLElement        | -                                           | -      |
+| render  | [渲染函数](https://v3.cn.vuejs.org/guide/render-function.html#h-%E5%8F%82%E6%95%B0)，此渲染函数优先级最高       | function(h,row,index)        | -                                           | -      |
 | style  | 包裹组件外面那一层 div 样式                                                   | object        | -                                           | -      |
+| slotName | 插槽名称 | string | -      | 'default' |
 
 ```js
 
 // 假设有一个这样的数据
-const data = {
+const data = [{
   my:{
     name: 'red'
   },
   myBrother: 'yellow'
-}
+}]
 
 // 参数示例
 [
@@ -185,7 +209,10 @@ const data = {
     text: '我的名字',
     prop: 'my',
     child: 'name',
-    reserve: '我只有在数据空时显示',
+    reserve: '<b>我只有在数据空时显示</b>',
+    customFilterFun: (row, index) => {
+      return row.my.name
+    }
     filter:[{
       key: 'red',
       value: 'black'
@@ -209,7 +236,7 @@ const data = {
 | value | 需要替换的值   | string | -      | -      |
 
 ```js
-// 参数示例
+// 参数示例 内置替换是以 == 进行判断 所有 当key值为 '1' 而数据中的值为 1 仍然可以匹配上
 {
   label: '筛选',
   props:[{
@@ -224,7 +251,6 @@ const data = {
 
 #### <font color='#50BEFF'>data 类型数据</font>
 
-<font color='red'>type != 'text' 的并且没有 data 情况下 都建议写上 data:{}</font>
 ```js
 //示例
 {
@@ -237,17 +263,17 @@ const data = {
 #### <font color='#7CCEFF' id='text'>type == text （默认text）</font>
 | 参数     | 说明             | 类型    | 可选值                                               | 默认值  |
 | -------- | ---------------- | ------- | ---------------------------------------------------- | ------- |
-| line      | 超出多少的行数使用...代替         | number  | -                                                    | -       |
+| line      | 超出多少的行数使用...代替         | number  | -                                                    | 3       |
 | develop      | 是否显示 “展开/收起 操作按钮”         | boolean  | false/true                                                    | false       |
-| customFilterFun      | 自定义过滤 返回当前行数据 (row)。优先级大于 `filter` | function  | - | - |
+| customFilterFun      | 自定义当前单元格数据文本 (row)。 | function(row,index)  | - | - |
 ```js
 {
-    label: "性别", //显示的标题
+    label: "类型", //显示的标题
     props: [
       {
         prop: "gender",
         customFilterFun(row){
-          return '公'
+          return '风和自由'
         }
       }
     ],
@@ -292,12 +318,12 @@ const data = {
 | 参数     | 说明             | 类型    | 可选值                                               | 默认值  |
 | -------- | ---------------- | ------- | ---------------------------------------------------- | ------- |
 | tip      | 提示文字         | string  | -                                                    | -       |
+| text      | 按钮文字，不传默认提示文字         | string  | -                                                    | tip       |
 | style    | 按钮样式         | object  | -                                                    | -       |
 | icon     | 按钮上图标       | string  | -                                                    | -       |
 | disabled | 按钮是否禁用     | boolean | true/false                                           | false   |
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
-| size     | 按钮大小         | string  | medium / small / mini                                | small   |
-| showBtn    | 控制按钮显示隐藏 返回当前行数据 (row) | function  | -                                                    | -       |
+| showBtn    | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean | boolean / function(row,index)  | -                                                    | -       |
 | emit     | 自定义方法名     | string  | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
 
 ```js
@@ -321,7 +347,7 @@ const data = {
           {
             tip: "删除",
             type: "danger",
-            text: "D",
+            text: "", //将不会显示按钮文字
             icon: "el-icon-delete",
              showBtn: (row)=>{
               return true
@@ -333,15 +359,7 @@ const data = {
     ],
   }
 ```
-
-#### <font color='#9FDBFF'>condi（判断是否显示按钮） <font color='yellow'>（即将废弃）</font> </font>
-
-| 参数  | 说明                     | 类型            | 可选值 | 默认值 |
-| ----- | ------------------------ | --------------- | ------ | ------ |
-| prop  | 根据判断的 prop          | string          | -      | -      |
-| value | 根据判断的 prop 的 value | string / number | -      | -      |
-
-#### <font color='#7CCEFF' id='beforeFunction'>type == switch（开关）</font>
+#### <font color='#7CCEFF' id='switch'>type == switch（开关）</font>
 
 | 参数          | 说明             | 类型    | 可选值     | 默认值 |
 | ------------- | ---------------- | ------- | ---------- | ------ |
@@ -351,9 +369,9 @@ const data = {
 | activeText    | 关闭时的文字描述 | string  | -          | -      |
 | activeValue   | 打开时的值       | number  | -          | 1      |
 | inactiveValue | 关闭时的值       | number  | -          | 0      |
-| disabled      | 是否禁用         | boolean | true/false | false  |
+| disabled      | 是否禁用         | boolean / function(row) | true/false | false  |
 | style         | 开关自定义样式   | object  | -          | -      |
-| beforeFunction   | 修改前事件,beforeFunction(row.prop),return true时正常执行 false 不可点击   | function  | -          | -      |
+| beforeFunction   | 修改前事件,返回 true时正常执行 false 点击无变化，可以在此函数中自行处理 为false时提示   | function(row,value,oldValue)  | -          | -      |
 
 
 
@@ -382,11 +400,10 @@ const data = {
 | 参数        | 说明              | 类型    | 可选值                | 默认值 |
 | ----------- | ----------------- | ------- | --------------------- | ------ |
 | style       | 输入框样式        | object  | -                     | -      |
-| size        | 输入框大小        | string  | medium / small / mini | small  |
 | placeholder | 输入框文字描述    | string  | -                     | -      |
-| disabled    | 输入框是否禁用    | boolean | true/false            | false  |
-| slot        | 输入框前置或后置  | string  | prepend / append      | -      |
-| rows        | 显示的高度 `textarea` 专有  | string  | -      | 3      |
+| disabled    | 输入框是否禁用,使用函数需要返回boolean    | boolean / function(row) | true/false            | false  |
+| slot        | 输入框前置或后置  | string  | 'prepend' / 'append'      | -      |
+| rows        | 显示的高度 `textarea` 专有  | string / number  | -      | 3      |
 | symbol      | slot 文字或者符合 | string  | -                     | -      |
 
 ```js
@@ -414,7 +431,6 @@ const data = {
 | style  | 视频样式       | object  | -          | -      |
 | poster | 封面 url 路径  | string  | -          | -      |
 | loop   | 循环播放       | boolean | true/false | false  |
-| style  | 图片自定义样式 | object  | -          | -      |
 
 ```js
 //示例
@@ -466,7 +482,7 @@ const data = {
 | max       | 最大数值                                                                | number  | -          | 5                                                         |
 | style     | 自定义样式                                                          | object  | -          | -                                                         |
 | colors    | 颜色数组                                                                | array   | -          | ['#F7BA2A', '#F7BA2A', '#F7BA2A']                         |
-| iconClass | 颜色数组                                                                | array   | -          | ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'] |
+| iconClass | 图标数组                                                                | array   | -          | ['el-icon-star-on', 'el-icon-star-on', 'el-icon-star-on'] |
 | allowHalf | 是否允许半选                                                            | boolean | true/false | false                                                     |
 | showText  | 是否显示辅助文字，若为真，则会从 texts 数组中选取当前分数对应的文字内容 | boolean | -          | false                                                     |
 | showScore | 是否显示当前分数，show-score 和 show-text 不能同时为真                  | boolean | true/false | false                                                     |
@@ -499,7 +515,8 @@ const data = {
 | target    | 跳转类型                                        | string  | -          | '\_blank' |
 | type      | 主题类型                                        | string  | -          | 'primary' |
 | underline | 是否显示下划线                                  | boolean | true/false | false     |
-| prop      | 超链接文字该显示哪个 prop 的值 否则为 text 的值 | string  | -          | 空        |
+| text      | 所显示的文本                                 | string / function(row) | - | -     |
+| prop      | 超链接文字该显示哪个 prop 的值 否则为 text 的值 <font color='red'>已删除</font> | string  | -          | 空        |
 
 ```js
 //示例
@@ -518,11 +535,6 @@ const data = {
 ```
 
 #### <font color='#7CCEFF' id='slot'>type == slot（插槽）</font>
-
-| 参数     | 说明     | 类型   | 可选值 | 默认值    |
-| -------- | -------- | ------ | ------ | --------- |
-| slotName | 插槽名称 | string | -      | 'default' |
-
 
 ```js
 //示例
@@ -555,10 +567,10 @@ const data = {
 | -------- | -------- | ------ | ------ | --------- |
 | type | 类型 | string | 'primary / success / warning / danger / info'      | 'primary' |
 | effect | 主题 | string | 'dark / light / plain'      | 'light' |
-| color | 背景颜色 参数为当前 `(tag)` 返回颜色值 | function | -      | - |
+| color | 背景颜色 返回颜色值 | function(row,tag) | -      | - |
 | hit | 是否描边 | boolean | -      | false |
 | number | 需要显示前多少个 | number | -    | 3 |
-| filter | <a href='#filter'>查看详情</a> | array | -      | - |
+| filter | <a href='#filter'>查看详情</a> | array / function(row,index) | -      | - |
 
 ---
 
@@ -588,3 +600,4 @@ const data = {
 | batchOperate | 批量操作                                                                                        | {ids , selection , rows}                              |
 | 自定义方法名 | 操作按钮 暂时只有 <font color='red'>'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'</font> | {row , index }                                        |
 | switchChange | 开关组件操作                                                                                    | row                                                   |
+| row-click | 行点击事件                                                                                    | {row, column, event}                                                   |

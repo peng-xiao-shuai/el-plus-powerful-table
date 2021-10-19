@@ -8,11 +8,13 @@
       :list="list"
       :header="config"
       :total="total"
+      :pageSizes="[2,5,7]"
       @switchChange="switchChange"
       @sortCustom="handlersort"
       @update="handlerUpdate"
       @remove="handlerRemove"
       @batchOperate="batchOperate"
+      @sizeChange="getList"
     >
       <template #A="{ row }">
         <div>
@@ -34,14 +36,18 @@ import { reactive, ref, onMounted } from "vue"
 export default {
   setup (props, context) {
     let rowA = reactive({ value: {} })
-    let list = reactive(lists)
+    let list = ref([])
     // 所有页面选中数组
     let selectData = reactive([{ a: 1 }])
     let selectCompare = reactive(["id", "a"])
     // let listLoading= ref(true)
     let isSelect = ref(true)
     let config = reactive(header)
-    let total = ref(1)
+    let total = ref(lists.length)
+    const listQuery = reactive({
+      pageNum: 1,
+      pageSize: 2
+    })
     let operateData = reactive({
       value: "",
       size: "small",
@@ -56,28 +62,19 @@ export default {
     function handlersort (e) {
       console.log("远程排序", e)
     }
-    function getList (obj, selectData) {
-      let data = obj
-        ? obj
-        : {
-          pageNum: 1,
-          pageSize: 10,
-        }
-
+    function getList (data, selectData) {
       // 切换页面赋值
       selectData = selectData
-      if (obj) {
+      Object.assign(listQuery, data)
+      
+      if (data) {
         ElMessage.success('切换页面操作，参数详情，查看控制台')
-        console.log('page' + obj, '选中数组' + selectData)
+        console.log('page' , data, '选中数组' , selectData)
       }
-      // listLoading.value = true
 
-      // getData(data).then((response:any) => {
-      // 	list = response.data.list
-      // // listLoading.value = false
-
-      // 	total = response.data.total
-      // })
+      setTimeout(() => {
+        list.value = lists.filter((item, index) => index >= (listQuery.pageNum - 1) * listQuery.pageSize && index < listQuery.pageNum * listQuery.pageSize)
+      })
     }
 
     function batchOperate (e) {

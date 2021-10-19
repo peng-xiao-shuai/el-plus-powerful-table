@@ -1,428 +1,292 @@
 <template>
   <div>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      ref="multipleTable"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-      @sort-change="sortChange"
-    >
-      <el-table-column
-        v-if="isSelect"
-        align="center"
-        type="selection"
-        width="45"
+    <el-config-provider ref="configProvider" :locale="locale || (injectProps && injectProps.locale) || zhCn">
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        ref="multipleTable"
+        element-loading-text="Loading"
+        border
+        fit
+        row-key="id"
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
+        @row-click="rowClick"
+        :lazy="tree && tree.lazy || false"
+        :load="tree && tree.load"
+        :tree-props="tree && tree.props || {children: 'children', hasChildren: 'hasChildren'}"
       >
-      </el-table-column>
 
-      <el-table-column
-        v-for="(item, index) in header"
-        :key="index"
-        :fixed="item.fixed || false"
-        :sortable="item.sortable || false"
-        :header-align="item.headerAlign || 'center'"
-        :show-overflow-tooltip="item.overflowTooltip || false"
-        align="center"
-        :prop="item.props[0].child || item.props[0].prop"
-        :label="item.label"
-        :min-width="item.minWidth || 140"
-        :width="item.width || ''"
-      >
-        <template #default="scope">
-          <div
-            v-for="(each, idx) in item.props"
-            :key="idx"
-            :style="each.style || {}"
-          >
-            <!-- 筛选 -->
-            <div
-              v-if="
-                each.filter && (each.type == 'text' || each.type == undefined)
-              "
+        <template #empty>
+          <slot name='empty'>
+            <span>暂无数据</span>
+          </slot>
+        </template>
+
+        <el-table-column
+          v-if="isSelect"
+          align="center"
+          type="selection"
+          width="45"
+        >
+        </el-table-column>
+
+        <el-table-column
+          v-for="(item, index) in header"
+          :key="index"
+          :fixed="item.fixed || false"
+          :sortable="item.sortable || false"
+          :header-align="item.headerAlign || 'center'"
+          :align="item.headerAlign || 'center'"
+          :show-overflow-tooltip="item.overflowTooltip || false"
+          :prop="item.props[0].child || item.props[0].prop"
+          :label="item.label"
+          :min-width="item.minWidth || 140"
+          :width="item.width || ''"
+          :class-name="item.headerAlign || 'center'"
+        >
+          <!-- 自定义表头 -->
+          <template #header v-if="item.headerSlotName">
+            <slot
+              :name="item.headerSlotName"
+              :item="item"
+              :index="index"
             >
-              <div v-if="scope.row[each.prop] !== 'undefined'">
-                {{ each.text || ""
-                }}{{
-                  (each.customFilterFun &&
-                    each.customFilterFun(scope.row, scope.$index)) ||
-                  filterFun(
-                    each.child
-                      ? scope.row[each.prop][each.child]
-                      : scope.row[each.prop],
-                    each.filter
-                  )
-                }}
-              </div>
-              <div v-else>
-                <div v-if="each.reserve" v-html="each.reserve"></div>
+            </slot>
+          </template>
+
+          <template #default="scope">
+            <div
+              v-for="(prop, idx) in item.props"
+              :key="idx"
+              :style="{
+                display: index == 0 ? 'inline-block' : 'block',
+                ...prop.style
+              }"
+            >
+              <RenderJsx
+                v-if="typeof prop.render == 'function'" 
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+              />
+              <!-- 插槽 -->
+              <slot
+                v-else-if="prop.type == 'slot'"
+                :name="prop.slotName || 'default'"
+                :row="scope.row"
+                :index="scope.$index"
+              >
+              </slot>
+              <div v-else-if="(scope.row[prop.prop] == undefined || scope.row[prop.prop] == null) && prop.type != 'btn'">
+                <div v-if="prop.reserve" v-html="prop.reserve"></div>
                 <div v-else>
-                  <b>暂无数据</b>
+                  <span>暂无数据</span>
+                </div>
+              </div>
+              <!-- 筛选 -->
+              <Filter 
+                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 图片 -->
+              <Image 
+                v-else-if="prop.type == 'image'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+              />
+              <!-- 按钮 -->
+              <Button
+                v-else-if="prop.type == 'btn'" class="btnType"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+                @returnEmit="returnEmit"
+              />
+              <!-- 开关 -->
+              <Switch 
+                v-else-if="prop.type == 'switch'"
+                :row="scope.row"
+                :index="scope.$index"
+                :prop="prop"
+                :align="item.headerAlign"
+                @returnEmit="returnEmit"
+              />
+              <!-- 输入框 -->
+              <Input
+                v-else-if="prop.type == 'input' || prop.type == 'textarea'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- iconfont -->
+              <Icon
+                v-else-if="prop.type == 'iconfont'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 标签 -->
+              <Tags
+                v-else-if="prop.type == 'tag'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 评分 -->
+              <Rate
+                v-else-if="prop.type == 'rate'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 超链接 -->
+              <Link
+                v-else-if="prop.type == 'href'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <Video
+                v-else-if="prop.type == 'video'"
+                :row="scope.row"
+                :index="scope.$index"
+                :align="item.headerAlign"
+                :prop="prop"
+              />
+              <!-- 正常 -->
+              <div
+                v-else-if="scope.row[prop.prop]"
+                :class="{ content: develop[scope.$index]}"
+              >
+                <!-- 主体内容 -->
+                <div
+                  :style="{
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    '-webkit-box-orient': 'vertical',
+                    '-webkit-line-clamp': develop[scope.$index]
+                      ? 99999
+                      : prop.data && prop.data.line || 3,
+                  }"
+                >
+                  {{
+                    prop.data && typeof prop.data.customFilterFun == 'function' ?
+                      prop.data.customFilterFun(scope.row, scope.$index)
+                      :
+                      scope.row[prop.prop]
+                  }}
+                </div>
+
+                <!-- 展开全文或收起 -->
+                <div
+                  v-show="prop.data && prop.data.develop"
+                  class="develop el-link el-link--primary"
+                  @click.stop="develop[scope.$index] = !develop[scope.$index]"
+                >
+                  <span :style="{position: develop[scope.$index] ? 'absolute' : 'static'}">
+                    {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
+                    <i :class="develop[scope.$index] ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+                  </span>
                 </div>
               </div>
             </div>
-            <!-- 图片 -->
-            <div
-              v-else-if="
-                each.type == 'image' && scope.row[each.prop] !== 'undefined'
-              "
-            >
-              {{ each.text || "" }}
-              <el-image
-                :src="scope.row[each.prop]"
-                :preview-src-list="
-                  each.data.preview === false ? [] : [scope.row[each.prop]]
-                "
-                :lazy="each.data.lazy === false ? false : true"
-                :z-index="each.data.zIndex || 6000"
-                :style="each.data.style || {}"
-                :fit="each.data.fit || 'cover'"
-              ></el-image>
-            </div>
-            <!-- 按钮 -->
-            <div v-else-if="each.type == 'btn'" class="btnType">
-              <template v-for="(apiece, idx) in each.data" :key="idx">
-                <el-tooltip
-                  class="btnEach"
-                  effect="dark"
-                  :content="apiece.tip"
-                  placement="top"
-                  v-if="
-                    apiece.showBtn == undefined
-                      ? true
-                      : apiece.showBtn(scope.row, scope.$index) === false
-                      ? false
-                      : true
-                  "
-                >
-                  <template #default>
-                    <el-button
-                      :style="apiece.style || {}"
-                      :icon="apiece.icon || ''"
-                      :disabled="apiece.disabled || false"
-                      :type="apiece.type || 'primary'"
-                      :size="apiece.size || 'small'"
-                      @click="
-                        btnChange(
-                          apiece.emit,
-                          scope.row,
-                          scope.$index,
-                          apiece.type
-                        )
-                      "
-                      >{{ apiece.text || apiece.tip }}</el-button
-                    >
-                  </template>
-                </el-tooltip>
-              </template>
-            </div>
-            <!-- 开关 -->
-            <div v-else-if="each.type == 'switch'">
-              {{ each.text || "" }}
-              <el-switch
-                :style="each.data.style || {}"
-                :inactive-text="each.data.inactiveText || ''"
-                :active-text="each.data.activeText || ''"
-                v-model="scope.row[each.prop]"
-                :disabled="each.data.disabled || false"
-                :active-color="each.data.activeColor"
-                :inactive-color="each.data.inactiveColor"
-                :active-value="
-                  each.data.activeValue || each.data.activeValue === 0
-                    ? each.data.activeValue
-                    : 1
-                "
-                :inactive-value="each.data.inactiveValue || 0"
-                @click="
-                  !each.data.disabled &&
-                    switchChange(
-                      scope.row,
-                      each.prop,
-                      each.data.activeValue,
-                      each.data.inactiveValue,
-                      each.data.beforeFunction
-                    )
-                "
-              >
-              </el-switch>
-            </div>
-            <!-- 输入框 -->
-            <div
-              v-else-if="
-                (each.type == 'input' || each.type == 'textarea') &&
-                scope.row[each.prop] !== 'undefined'
-              "
-            >
-              {{ each.text || "" }}
-              <el-input
-                :type="each.type"
-                :rows="each.data.size || 3"
-                :style="each.data.style || {}"
-                :size="each.data.size || 'small'"
-                :placeholder="each.data.placeholder || ''"
-                v-model="scope.row[each.prop]"
-                :disabled="each.data.disabled || false"
-              >
-                <template
-                  style="padding: 0 10px"
-                  v-if="each.data.slot"
-                  v-slot:[each.data.slot]
-                  >{{ each.data.symbol }}</template
-                >
-              </el-input>
-            </div>
-            <!-- iconfont -->
-            <div
-              v-else-if="
-                each.type == 'iconfont' && scope.row[each.prop] !== 'undefined'
-              "
-            >
-              {{ each.text || "" }}
-              <i
-                :class="[scope.row[each.prop], ...each.data.class] || ['']"
-                :style="each.data.style || {}"
-              ></i>
-            </div>
-            <!-- 标签 -->
-            <div
-              v-else-if="
-                each.type == 'tag' && scope.row[each.prop] !== 'undefined'
-              "
-            >
-              <el-tag
-                v-for="tag in tagToArray(
-                  scope.row[each.prop],
-                  (each.data && each.data.number) || 3
-                )"
-                :style="{
-                  marginRight: '10px',
-                  borderColor: (each.data && typeof each.data.color == 'function') ? 'rgba(0,0,0,0)' : 'auto'
-                }"
-                :key="tag"
-                :closable="false"
-                :type="each.data.type || 'primary'"
-                :effect="(each.data && each.data.effect) || 'light'"
-                :color="(each.data && typeof each.data.color == 'function' && each.data.color(tag)) || ''"
-                :hit="(each.data && each.data.hit) || false"
-                >{{ each.filter ? filterFun(tag, each.filter) : tag }}</el-tag
-              >
-            </div>
-            <!-- 评分 -->
-            <div
-              v-else-if="
-                each.type == 'rate' && scope.row[each.prop] !== 'undefined'
-              "
-            >
-              {{ each.text || "" }}
-              <el-rate
-                v-model="scope.row[each.prop]"
-                :colors="each.data.colors || ['#F7BA2A', '#F7BA2A', '#F7BA2A']"
-                :max="each.data.max || 5"
-                :disabled="true"
-                :style="each.data.style || {}"
-                :allow-half="each.data.allowHalf || false"
-                :icon-classes="
-                  each.data.iconClass || [
-                    'el-icon-star-on',
-                    'el-icon-star-on',
-                    'el-icon-star-on',
-                  ]
-                "
-                :show-text="each.data.showText || false"
-                :show-score="each.data.showScore || false"
-                :texts="each.data.texts"
-              ></el-rate>
-            </div>
-            <!-- 超链接 -->
-            <div
-              v-else-if="
-                each.type == 'href' && scope.row[each.prop] !== 'undefined'
-              "
-            >
-              {{ each.text || "" }}
-              <el-link
-                :target="(each.data && each.data.target) || '_blank'"
-                :type="(each.data && each.data.type) || 'primary'"
-                :underline="(each.data && each.data.underline) || false"
-                :href="scope.row[each.prop]"
-                :style="each.data.style || {}"
-                >{{
-                  scope.row[each.prop]
-                    ? scope.row[each.data.prop] || each.text
-                    : each.reserve || "暂无数据"
-                }}</el-link
-              >
-            </div>
-            <div
-              v-else-if="
-                each.type == 'video' && scope.row[each.prop] !== 'undefined'
-              "
-              style="
-                border-radius: 10px;
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-                margin: 0 auto;
-              "
-            >
-              {{ each.text || "" }}
-              <video
-                v-if="scope.row[each.prop]"
-                :src="scope.row[each.prop]"
-                :poster="each.data.poster || ''"
-                :loop="each.data.loop || false"
-                :style="each.data.style || {}"
-                class="avatar video-avatar"
-                controls="controls"
-              >
-                您的浏览器不支持视频播放
-              </video>
+          </template>
+        </el-table-column>
+      </el-table>
 
-              <div
-                v-else
-                style="
-                  display: flex;
-                  align-items: center;
-                  height: 100%;
-                  width: 100%;
-                  justify-content: center;
-                "
-              >
-                暂无视频
-              </div>
-            </div>
-            <!-- 插槽 -->
-            <slot
-              v-else-if="each.type == 'slot'"
-              :name="each.slotName || 'default'"
-              :row="scope.row"
-              :index="scope.$index"
-            >
-            </slot>
-            <!-- 正常 -->
-            <div
-              v-else-if="scope.row[each.prop]"
-              :class="{ content: develop[scope.$index] }"
-            >
-              <div
-                :style="{
-                  display: '-webkit-box',
-                  overflow: 'hidden',
-                  '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': develop[scope.$index]
-                    ? 99999
-                    : each.line || 3,
-                }"
-              >
-                {{ each.text || ""
-                }}{{
-                  each.child
-                    ? scope.row[each.prop][each.child]
-                    : scope.row[each.prop] || each.reserve || "暂无数据"
-                }}
-              </div>
-              <div
-                v-show="each.develop"
-                class="develop el-link el-link--primary"
-                @click="develop[scope.$index] = !develop[scope.$index]"
-              >
-                <span
-                  :style="{
-                    position: develop[scope.$index] ? 'absolute' : 'static',
-                  }"
-                >
-                  {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
-                  <i
-                    :class="
-                      develop[scope.$index]
-                        ? 'el-icon-arrow-up'
-                        : 'el-icon-arrow-down'
-                    "
-                  ></i>
-                </span>
-              </div>
-            </div>
-
-            <div v-else>
-              <div v-if="each.reserve" v-html="each.reserve"></div>
-              <div v-else>
-                <b>暂无数据</b>
-              </div>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div
-      style="display: flex; justify-content: space-between; margin-top: 20px"
-    >
-      <div
-        class="pagination left"
-        v-if="operate && isSelect && operate.operates"
-      >
-        <el-select
-          v-model="operate.value"
-          clearable
-          placeholder="批量操作"
-          :size="operate.size || 'small'"
-        >
-          <el-option
-            v-for="(item, index) in operate.operates"
-            :key="index"
-            :label="item.label"
-            :value="item.value"
+      <div style="display: flex; justify-content: space-between; margin-top: 20px">
+        <!-- 批量操作 -->
+        <div class="pagination left" v-if="operate && isSelect && operate.operates">
+          <el-select 
+            v-model="operate.value"
+            clearable
+            :placeholder="(configProvider && configProvider.locale.name == 'zh-cn') ? '批量操作' : 'lot operation'"
+            :size="size || (injectProps && injectProps.size) || 'small'"
           >
-          </el-option>
-        </el-select>
-        <el-button
-          :style="operate.style || { marginLeft: '20px' }"
-          :icon="operate.icon || ''"
-          :type="operate.type || 'primary'"
-          :size="operate.size || 'small'"
-          class="search-button"
-          @click="batchOperate"
-        >
-          确定
-        </el-button>
-      </div>
+            <el-option v-for="(item, index) in operate.operates" :key="index" :label="item.label" :value="item.value" />
+          </el-select>
 
-      <div class="pagination" v-if="isPagination">
-        <el-pagination
-          @size-change="handleChange($event, 'pageSize')"
-          @current-change="handleChange($event, 'currentPage')"
-          :current-page="currentPage"
-          :page-sizes="pageSizes"
-          :page-size="pageSize"
-          :layout="layout"
-          :total="total"
-        >
-        </el-pagination>
+          <el-button
+            :style="operate.style || { marginLeft: '20px' }"
+            :icon="operate.icon || ''"
+            :type="operate.type || 'primary'"
+            :size="size || (injectProps && injectProps.size) || 'small'"
+            class="search-button"
+            @click="batchOperate"
+          >
+            确定
+          </el-button>
+        </div>
+
+        <!-- 分页操作 -->
+        <div class="pagination" v-if="isPagination">
+          <el-pagination
+            @size-change="handleChange($event, 'pageSize')"
+            @current-change="handleChange($event, 'currentPage')"
+            :current-page="currentPage"
+            :page-sizes="pageSizes"
+            :page-size="pageSize"
+            :layout="layout"
+            :total="total"
+          >
+          </el-pagination>
+        </div>
       </div>
-    </div>
+    </el-config-provider>
   </div>
 </template>
 
-<script>
-import { ElMessage } from 'element-plus'
-// import store from '/@/store'
+<script lang='ts'>
+import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance, inject } from 'vue';
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
-export default {
+import RenderJsx from './components/render-jsx.jsx';
+import Filter from './components/filter.jsx';
+import Image from './components/image.jsx';
+import Switch from './components/switch.jsx';
+import Button from './components/button.jsx';
+import Input from './components/input.jsx';
+import Tags from './components/tags.jsx';
+import Icon from './components/icon.jsx';
+import Rate from './components/rate.jsx';
+import Link from './components/link.jsx';
+import Video from './components/video.jsx';
+// 获取 布局方向
+const justifyFun = (val) => {
+  const bol = ['center', 'left', 'right'].includes(val)
+  return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
+}
+
+export default defineComponent({
   name: "powerful-table",
   props: {
+    locale: Object,
+    // 组件大小
+    size: String,
     // 当前数据
     list: {
       type: Array,
       default: () => []
     },
-
     // 所有选中
     selectData: {
       type: Array,
-      default: () => []
+      default: () => {
+        return new Array
+      }
     },
     isSelect: {
       type: Boolean,
@@ -451,19 +315,8 @@ export default {
     // 批量操作
     operateData: {
       type: Object,
-      default: () => { }
+      default: () => {}
     },
-    // 表格名
-    tableName: {
-      type: String,
-      default: '_num'
-    },
-    // 是否开启表格pageNum缓存
-    isCachePageNum: {
-      type: Boolean,
-      default: false
-    },
-
     isPagination: {
       type: Boolean,
       default: true
@@ -472,160 +325,80 @@ export default {
       type: Number,
       default: 0
     },
-  },
-  emits: ['update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange', 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'],
-  data () {
-    return {
-      listLoading: true,
-
-      // 承载props的operateData
-      operate: {},
-
-      // 分页
-      currentPage: 1,
-
-      // 当前页选中
-      currentSelect: [],
-      // 其他页面选中
-      otherSelect: [],
-
-      // 展开
-      develop: false,
-
-      pageSize: this.pageSizes[0],
+    tree: {
+      type: Object,
+      default: () => {}
     }
   },
-  computed: {
-    // 筛选是否存在pageNum
-    // page () {
-    //   if (this.isCachePageNum) {
-    //     return store.state.pageNum.pageNums.filter((item) => {
-    //       return item && item.name == this.$route.name
-    //     })
-    //   } else {
-    //     return []
-    //   }
-    // }
+  components: {
+    RenderJsx,
+    Filter,
+    Image,
+    Switch,
+    Button,
+    Input,
+    Tags,
+    Icon,
+    Rate,
+    Link,
+    Video,
   },
-  mounted () {
-    if (this.isCachePageNum) {
-      this.currentPage = this.page.length > 0 && this.page[0].pages[this.tableName] || 1
-    }
-  },
-  methods: {
-    tagToArray (e, i) {
-      if (typeof e != 'string') {
-        let a = [...e].splice(0, i)
-        return a
-      } else {
-        return e.split(',')
-      }
-    },
-    // 筛选
-    filterFun (e, row) {
-      let val
+  emits: [
+    'update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange',
+    'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo', 'row-click'
+  ],
+  setup(props, { emit }) {
+    const { proxy } = getCurrentInstance()
+    // 全局此组件注入的数据
+    const injectProps = inject('powerfulTable')
 
-      for (let i in row) {
-        val = e == row[i].key ? row[i].value : e
+    /* ------ 注入数据 ------ */
+    // 组件大小
+    provide('size', props.size || (injectProps && injectProps.size) || 'small')
+    // 单元格内布局
+    provide('justifyFun', justifyFun)
 
-        if (e == row[i].key) {
-          val = row[i].value
+    /* ------ data数据 ------ */
+    // 页面是否加载中
+    const listLoading = ref(true)
+    // 承载props的operateData
+    const operate = reactive({
+      value: undefined,
+      disabled: false,
+      icon: '',
+      style: undefined,
+      operates: []
+    })
+    // 分页
+    const currentPage = ref(1)
+    // 当前页选中
+    const currentSelect = ref([])
+    // 其他页面选中
+    const otherSelect = ref([])
+    const pageSize = ref(props.pageSizes[0])
+    // 展开
+    const develop = ref([])
 
-          break
-        } else {
-          val = e
-        }
+    /* ----- 组件实例 ----- */
+    const multipleTable = ref(null)
+    const configProvider = ref(null)
 
-      }
-      return val
-    },
-    // 排序方法
-    sortChange (obj) {
-      if (obj.column) {
-        if (obj.column.sortable == 'custom') {
-          this.$emit('sortCustom', obj)
-        }
-      }
-    },
+    watchEffect(() => {
+      Object.assign(operate, props.operateData)
 
-    // 批量按钮
-    batchOperate () {
-      console.log(this.operate.value)
-      if (!this.operate.value && this.operate.value != '0') {
-        ElMessage({
-          message: '请选择操作类型',
-          type: 'warning',
-          duration: 1000
-        })
-        return
-      }
-
-      if (this.currentSelect.length == 0) {
-        ElMessage({
-          message: '请选择要操作的数据',
-          type: 'warning',
-          duration: 1000
-        })
-        return
-      }
-      this.$confirm(`是否要进行批量${this.operate.operates[this.operate.value].label}操作?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      // list数据有的话 关闭加载中...
+      // 更具当前list 数据 添加develop
+      develop.value = Array(props.list.length).fill(false)
+      listLoading.value = false
+      nextTick(() => {
+        getSelect(props.selectData, props.list)
       })
-        .then(() => {
-          let ids = this.otherSelect.concat(this.currentSelect).map(item => item.id)
-          let items = this.otherSelect.concat(this.currentSelect).map(item => item)
+    })
 
-          this.$emit('batchOperate', { ids, item: this.operate.operates[this.operate.value], items })
-        })
-        .catch(() => {
-          console.log('取消批量操作')
-        })
+    /* ------ 获取选中 ------ */
+    const getSelect = (arr, list = props.list) => {
 
-    },
-    // 按钮回调
-    btnChange (emit, row, index, type) {
-      if (type == 'danger') {
-        this.$confirm('是否要进行删除操作, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-            this.$emit(emit, { row, index })
-          })
-          .catch(() => {
-            console.log('取消删除')
-          })
-      } else {
-        this.$emit(emit, { row, index })
-      }
-    },
-    // 开关回调
-    switchChange (row, prop, val = 1, val2 = 0, beforFunction) {
-      let value = row[prop] == val ? val2 : val
-      // console.log(!beforFunction(row, prop))
-      if (typeof beforFunction == 'function' && !beforFunction(row, prop)) {
-        row[prop] = value
-        return false
-      }
-      this.$confirm('是否要进行修改操作, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$emit('switchChange', row)
-        })
-        .catch(() => {
-          row[prop] = value
-        })
-    },
-    // 获取选中
-    getSelect (arr, list = this.list) {
-
-      if (!this.isSelect) return
+      if (!props.isSelect) return
 
       // 1.获取当前页
       // 2.总选中减去当前页
@@ -644,7 +417,7 @@ export default {
         // 获取当前页
         arr.forEach((item) => {
           let itm = list.filter((each) => {
-            return item[this.selectCompare[0]] == each[this.selectCompare[1]]
+            return item[props.selectCompare[1]] == each[props.selectCompare[0]]
           })
 
           if (itm.length > 0) {
@@ -652,15 +425,14 @@ export default {
           }
         })
 
-        // this.currentSelect = current
         // console.log('当前页选中', current)
         // 获取其他页
         if (current.length > 0) {
           other = JSON.parse(JSON.stringify(arr))
           for (let j in other) {
             current.forEach((item) => {
-              if (item[this.selectCompare[1]] == other[j][this.selectCompare[0]]) {
-                other.splice(j, 1)
+              if (item[props.selectCompare[1]] == other[j][props.selectCompare[0]]) {
+                other.splice(Number(j), 1)
               }
             })
           }
@@ -668,95 +440,137 @@ export default {
           other = JSON.parse(JSON.stringify(arr))
         }
 
-        this.otherSelect = other
-        // console.log('其他页选中', this.otherSelect);
+        otherSelect.value = other
+        // console.log('其他页选中', otherSelect.value);
 
         if (current.length != 0) {
           current.forEach((row) => {
-            this.$refs.multipleTable.toggleRowSelection(row)
+            multipleTable.value.toggleRowSelection(row)
           })
 
         } else {
-          this.$refs.multipleTable.clearSelection()
+          multipleTable.value.clearSelection()
         }
       } else {
-        this.$refs.multipleTable.clearSelection()
+        multipleTable.value.clearSelection()
       }
-    },
+    }
+    /* ------ 排序方法 ------ */
+    const sortChange = (obj) => {
+      if (obj.column) {
+        if (obj.column.sortable == 'custom') {
+          emit('sortCustom', obj)
+        }
+      }
+    }
+    /* ------ 批量按钮 ------ */
+    const batchOperate = () => {
+      // console.log(operate.value)
+      if ((operate.value == undefined || operate.value == null) && operate.value !== 0) {
+        proxy.$message({
+          message: '请选择操作类型',
+          type: 'warning',
+          duration: 1000
+        })
+        return
+      }
 
-    // 添加选中
-    handleSelectionChange (e) {
+      if (currentSelect.value.length == 0) {
+        proxy.$message({
+          message: '请选择要操作的数据',
+          type: 'warning',
+          duration: 1000
+        })
+        return
+      }
+      proxy.$confirm(`是否要进行批量${operate.operates[0].label}操作?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          let ids = otherSelect.value.concat(currentSelect.value).map((item) => item.id)
+          let items = otherSelect.value.concat(currentSelect.value).map(item => item)
+
+          emit('batchOperate', { ids, item: operate.operates[0], items })
+        })
+        .catch(() => {
+          // console.log('取消批量操作')
+        })
+
+    }
+    const rowClick = (...arg) => {
+      returnEmit('row-click',{...arg})
+    }
+    /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
+    const returnEmit = (emitName, objVal) => {
+      // console.log('触发回调', emitName, objVal);
+      
+      emit(emitName, objVal)
+    }
+    /* ------ 添加选中 ------ */
+    const handleSelectionChange = (e) => {
       // console.log('选中', e)
-      this.currentSelect = JSON.parse(JSON.stringify(e))
-    },
-
-    handleChange (e, type) {
-      // console.log('切换', e, type);
-
-      this[type] = e
-
-      this.get()
-    },
-
-    get () {
-      // 存储pageNum
-      if (this.isCachePageNum) {
-
-        // if (this.page.length <= 0) {
-        //   store.commit('pageNumPush', { name: this.$route.name, pages: { [this.tableName]: this.currentPage } })
-        // } else {
-        //   this.page[0].pages[this.tableName] = this.currentPage
-        // }
-      }
-
+      currentSelect.value = JSON.parse(JSON.stringify(e))
+    }
+    /* ------ 条数或页数切换 ------ */
+    const handleChange = (e, type) => {
+      type === 'pageSize' ? pageSize.value = e : currentPage.value = e
+      get()
+    }
+    /* ------ 回调到组件上 ------ */
+    const get = () => {
       let data = {
-        pageNum: this.currentPage,
-        pageSize: this.pageSize
+        pageNum: currentPage.value,
+        pageSize: pageSize.value
       }
 
       try {
         // 如果父组件是getList方法 无需自定义事假
-        this.$parent._getList(data, this.otherSelect.concat(this.currentSelect))
+        proxy.$parent._getList(data, otherSelect.value.concat(currentSelect.value))
       } catch (error) {
-        this.$emit('sizeChange', data, this.otherSelect.concat(this.currentSelect))
+        emit('sizeChange', data, otherSelect.value.concat(currentSelect.value))
       }
     }
-  },
-  watch: {
-    operateData: {
-      handler (val) {
-        this.operate = val
-      },
-      immediate: true
-    },
-    // list数据有的话 关闭加载中...
-    list: {
-      handler (val) {
-        // console.log('数据', val)
 
-        // 更具当前list 数据 添加develop
-        this.develop = Array(val.length).fill(false)
-        this.listLoading = false
-        this.$nextTick(() => {
-          this.getSelect(this.selectData, val)
-        })
-      },
+    return {
+      develop,
+      listLoading,
+      operate,
+      currentPage,
+      currentSelect,
+      otherSelect,
+      pageSize,
+      multipleTable,
+      configProvider,
+      injectProps,
+      zhCn,
 
-      immediate: true
-    },
-    selectData: {
-      handler () {
-        this.$nextTick(() => {
-          this.getSelect(this.selectData)
-        })
-      },
-      // immediate: true
+      rowClick,
+      returnEmit,
+      handleChange,
+      sortChange,
+      batchOperate,
+      handleSelectionChange
     }
+
   }
-}
+})
 </script>
 
 <style scoped>
+/* 树表格时icon和文字居中 */
+:deep(.cell) {
+  display: flex;
+  align-items: center;
+}
+:deep(.center .cell) {
+  justify-content: center;
+}
+:deep(.right .cell) {
+  justify-content: flex-end;
+}
+
 .content {
   position: relative;
   padding-bottom: 23px;
@@ -785,13 +599,18 @@ export default {
   width: 100%;
 }
 
-.btnType .btnEach {
-  margin-bottom: 10px;
+:deep(.btnType) {
+  flex-wrap: wrap;
 }
 
-.btnType .btnEach:nth-last-child(2) {
-  margin-bottom: 0;
+:deep(.btnType .btnEach) {
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
+:deep(.btnType .notSpan span) {
+  display: none;
+}
+
 .pagination {
   width: 100%;
   display: flex;
