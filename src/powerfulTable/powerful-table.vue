@@ -419,7 +419,7 @@ export default defineComponent({
         // 获取当前页
         arr.forEach((item) => {
           let itm = list.filter((each) => {
-            return item[props.selectCompare[0]] == (each as any)[props.selectCompare[1]]
+            return item[props.selectCompare[1]] == (each as any)[props.selectCompare[0]]
           })
 
           if (itm.length > 0) {

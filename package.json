@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "peng-xiao-shuai",
   "main": "lib/powerful-table.umd.min.js",
   "private": false,
