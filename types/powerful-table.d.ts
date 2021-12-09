@@ -52,12 +52,13 @@ export interface PowerfulTableOperateData {
 export interface PowerfulTableHeader<U = any> {
   overflowTooltip?: boolean;
   label: string;
+  hidden?: boolean;
   minWidth?: string | number;
   width?: string | number;
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
-  headerSlotName?: string 
+  headerSlotName?: string
   props: PowerfulTableHeaderProps<any, U>[];
 }
 // props 单元格数据
@@ -69,9 +70,11 @@ export interface PowerfulTableHeaderProps<T, U = any> {
   filter?: PowerfulTableFilter[] | ((row: any, index?: number) => string | number);
   text?: string;
   slotName?: string;
-  render?: (h: Function, row: U,index: number) => VNode | string | number;
+  render?: (h: Function, row: U, index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
+  filterItem?: boolean;
+  filtersType?: 'select' | 'date'
 }
 
 type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot' | 'textarea'
@@ -154,7 +157,7 @@ export type HrefDataType = {
   style?: {};
   type?: ThemeType;
   underline?: boolean;
-  text?: string | ((row: any) => string) 
+  text?: string | ((row: any) => string)
 }
 
 export type TagDataType = {

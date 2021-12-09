@@ -1,4 +1,34 @@
 import type { PowerfulTableHeader } from '../types/powerful-table'
+
+
+let btnConfig = {
+  // hidden: 'none',
+  btnList: [{
+    tip: '新增',
+    auth: '',
+    operateType: '',
+    effect: 'add',
+    type: '',
+    icon: 'el-icon-edit-outline'
+  }, {
+    tip: '修改',
+    auth: '',
+    operateType: 'single',
+    effect: 'edit',
+    type: 'primary',
+    icon: 'el-icon-edit-outline'
+  }, {
+    tip: '批量删除',
+    auth: '',
+    operateType: 'batch',
+    effect: 'remove',
+    type: 'danger',
+    icon: 'el-icon-edit-outline',
+    showTip: true,
+    // tipContent: '立即执行批量删除' 
+  }]
+}
+
 let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "编号", //显示的标题
@@ -13,18 +43,19 @@ let header: PowerfulTableHeader<Lists>[] = [
       },
     ],
   },
-  // {
-  //   label: "名称", //显示的名称
-  //   overflowTooltip: true,
-  //   minWidth: "60", //对应列的最小宽度
-  //   props: [
-  //     {
-  //       prop: "name",
-  //     },
-  //   ],
-  // },
+  // // {
+  // //   label: "名称", //显示的名称
+  // //   overflowTooltip: true,
+  // //   minWidth: "60", //对应列的最小宽度
+  // //   props: [
+  // //     {
+  // //       prop: "name",
+  // //     },
+  // //   ],
+  // // },
   {
     label: "slot（插槽）", //显示的标题
+    // hidden: true,
     props: [
       {
         prop: '',
@@ -41,9 +72,10 @@ let header: PowerfulTableHeader<Lists>[] = [
         // customFilterFun(row){
         //   return '公'
         // },
-        filter: (row:any) => {
-          return ({1:'公', 2: '母', 3: '未知'} as any)[row.gender]
-        }, //过滤
+        filter: [{ key: 1, value: '公' }, { key: 2, value: '母' }, { key: 3, value: '未知' }],
+        // filter: (row: any) => {
+        //   return ({ 1: '公', 2: '母', 3: '未知' } as any)[row.gender]
+        // }, //过滤
       }
     ],
   },
@@ -92,11 +124,13 @@ let header: PowerfulTableHeader<Lists>[] = [
         type: "switch",
         data: {
           disabled: (e: any) => false,
-          beforeFunction: function (row:any, val:any, old: any) {
+          beforeFunction: function (row: any, val: any, old: any) {
             return true
           },
           inactiveText: "关闭",
           activeText: "开启",
+          inactiveValue: "0",
+          activeValue: "1",
         },
       },
     ],
@@ -107,6 +141,7 @@ let header: PowerfulTableHeader<Lists>[] = [
     props: [
       {
         prop: "icon",
+        filterItem: true,
         type: "iconfont",
         text: '图标：',
         data: {
@@ -130,7 +165,7 @@ let header: PowerfulTableHeader<Lists>[] = [
           effect: 'dark',
           number: 2,
           type: 'success',
-          color:(r: any, tag: string | number)=>{
+          color: (r: any, tag: string | number) => {
             return tag == 1 ? '#409EFF' : '#F56C6C'
           },
         },
@@ -173,7 +208,7 @@ let header: PowerfulTableHeader<Lists>[] = [
           showText: true,
           max: 6,
           colors: ['red', 'yellow', 'green'],
-        //   // showScore: true
+          //   // showScore: true
         },
       },
     ],
@@ -187,10 +222,10 @@ let header: PowerfulTableHeader<Lists>[] = [
         type: "href",
         prop: "href",
         data: {
-          text: (e:any) => e.name,
+          text: (e: any) => e.name,
         },
         render: (h, row, index) => {
-          return h('b',{}, row.gender)
+          return h('b', {}, row.gender)
         }
       },
     ],
@@ -229,7 +264,7 @@ let header: PowerfulTableHeader<Lists>[] = [
             tip: "编辑",
             type: "info",
             icon: "el-icon-edit-outline",
-            showBtn: (e:any) => {
+            showBtn: (e: any) => {
               return true
             },
             emit: "update",
@@ -281,7 +316,7 @@ let lists: Lists[] = [
     switchVal: 0,
     tag: [1, 3, 3],
     rate: 4.5,
-    content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+    content: '11111444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
@@ -296,7 +331,7 @@ let lists: Lists[] = [
       switchVal: 1,
       tag: [1, 2, 3],
       rate: 4,
-      content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+      content: '22222444444444444444444444444444444444444444444444444444444444444444444444',
       videoUrl:
         "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
       imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
@@ -312,7 +347,7 @@ let lists: Lists[] = [
     switchVal: 1,
     tag: '1,2,3',
     rate: 4.5,
-    content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+    content: '3333444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
@@ -328,11 +363,11 @@ let lists: Lists[] = [
     switchVal: 1,
     tag: [1, 2, 3],
     rate: 4,
-    content: '455454545444444444444444444444444444444444444444444444444444444444444444444444',
+    content: '44444444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
   },
 ]
 
-export { header, lists }
+export { btnConfig, header, lists }

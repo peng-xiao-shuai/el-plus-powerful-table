@@ -1,9 +1,22 @@
 <template>
   <div>
-    <el-config-provider ref="configProvider" :locale="locale || (injectProps && injectProps.locale) || zhCn">
+    <el-config-provider
+      ref="configProvider"
+      :locale="locale || (injectProps && injectProps.locale) || zhCn"
+    >
+      <!-- 按钮组件 -->
+      <btn-plus
+        ref="btnPlusRef"
+        v-model:isTable="isTable"
+        :btn-config="btnConfig"
+        :table-config="tableConfigs"
+        :multiple-selection="currentSelect"
+        @functionBtnChange="functionBtnChange"
+        @btnChange="btnChange"
+      ></btn-plus>
       <el-table
         v-loading="listLoading"
-        :data="list"
+        :data="tableLists"
         ref="multipleTable"
         element-loading-text="Loading"
         border
@@ -13,13 +26,17 @@
         @selection-change="handleSelectionChange"
         @sort-change="sortChange"
         @row-click="rowClick"
-        :lazy="tree && tree.lazy || false"
+        :lazy="(tree && tree.lazy) || false"
         :load="tree && tree.load"
-        :tree-props="tree && tree.props || {children: 'children', hasChildren: 'hasChildren'}"
+        :tree-props="
+          (tree && tree.props) || {
+            children: 'children',
+            hasChildren: 'hasChildren',
+          }
+        "
       >
-
         <template #empty>
-          <slot name='empty'>
+          <slot name="empty">
             <span>暂无数据</span>
           </slot>
         </template>
@@ -33,8 +50,8 @@
         </el-table-column>
 
         <el-table-column
-          v-for="(item, index) in header"
-          :key="index"
+          v-for="(item, index) in headerLists"
+          :key="item.label + index"
           :fixed="item.fixed || false"
           :sortable="item.sortable || false"
           :header-align="item.headerAlign || 'center'"
@@ -47,13 +64,33 @@
           :class-name="item.headerAlign || 'center'"
         >
           <!-- 自定义表头 -->
-          <template #header v-if="item.headerSlotName">
-            <slot
-              :name="item.headerSlotName"
-              :item="item"
-              :index="index"
-            >
+          <!-- <template #header v-if="item.headerSlotName">
+            <slot :name="item.headerSlotName" :item="item" :index="index">
             </slot>
+          </template> -->
+
+          <template v-if="item.filters" #header>
+            <f-select
+              v-if="
+                getPropObj(item).filter ||
+                getPropObj(item).filtersType === 'select' ||
+                getPropObj(item).type === 'switch' ||
+                getPropObj(item).type === 'tag'
+              "
+              :header-data="item"
+              :prop-data="getPropObj(item)"
+              @headerFilterChange="headerFilterChange"
+            ></f-select>
+            <f-date-picker
+              v-else-if="getPropObj(item).filtersType === 'date'"
+              :header-data="item"
+              @headerFilterChange="headerFilterChange"
+            ></f-date-picker>
+            <f-input
+              v-else
+              :header-data="item"
+              @headerFilterChange="headerFilterChange"
+            ></f-input>
           </template>
 
           <template #default="scope">
@@ -62,11 +99,11 @@
               :key="idx"
               :style="{
                 display: index == 0 ? 'inline-block' : 'block',
-                ...prop.style
+                ...prop.style,
               }"
             >
               <RenderJsx
-                v-if="typeof prop.render == 'function'" 
+                v-if="typeof prop.render == 'function'"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
@@ -79,22 +116,30 @@
                 :index="scope.$index"
               >
               </slot>
-              <div v-else-if="(scope.row[prop.prop] == undefined || scope.row[prop.prop] == null) && prop.type != 'btn'">
+              <div
+                v-else-if="
+                  (scope.row[prop.prop] == undefined ||
+                    scope.row[prop.prop] == null) &&
+                  prop.type != 'btn'
+                "
+              >
                 <div v-if="prop.reserve" v-html="prop.reserve"></div>
                 <div v-else>
                   <span>暂无数据</span>
                 </div>
               </div>
               <!-- 筛选 -->
-              <Filter 
-                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)" 
+              <Filter
+                v-else-if="
+                  prop.filter && (prop.type == 'text' || prop.type == undefined)
+                "
                 :row="scope.row"
                 :index="scope.$index"
                 :align="item.headerAlign"
                 :prop="prop"
               />
               <!-- 图片 -->
-              <Image 
+              <Image
                 v-else-if="prop.type == 'image'"
                 :row="scope.row"
                 :index="scope.$index"
@@ -103,7 +148,8 @@
               />
               <!-- 按钮 -->
               <Button
-                v-else-if="prop.type == 'btn'" class="btnType"
+                v-else-if="prop.type == 'btn'"
+                class="btnType"
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
@@ -111,7 +157,7 @@
                 @returnEmit="returnEmit"
               />
               <!-- 开关 -->
-              <Switch 
+              <Switch
                 v-else-if="prop.type == 'switch'"
                 :row="scope.row"
                 :index="scope.$index"
@@ -169,7 +215,7 @@
               <!-- 正常 -->
               <div
                 v-else-if="scope.row[prop.prop]"
-                :class="{ content: develop[scope.$index]}"
+                :class="{ content: develop[scope.$index] }"
               >
                 <!-- 主体内容 -->
                 <div
@@ -179,14 +225,13 @@
                     '-webkit-box-orient': 'vertical',
                     '-webkit-line-clamp': develop[scope.$index]
                       ? 99999
-                      : prop.data && prop.data.line || 3,
+                      : (prop.data && prop.data.line) || 3,
                   }"
                 >
                   {{
-                    prop.data && typeof prop.data.customFilterFun == 'function' ?
-                      prop.data.customFilterFun(scope.row, scope.$index)
-                      :
-                      scope.row[prop.prop]
+                    prop.data && typeof prop.data.customFilterFun == "function"
+                      ? prop.data.customFilterFun(scope.row, scope.$index)
+                      : scope.row[prop.prop]
                   }}
                 </div>
 
@@ -196,9 +241,19 @@
                   class="develop el-link el-link--primary"
                   @click.stop="develop[scope.$index] = !develop[scope.$index]"
                 >
-                  <span :style="{position: develop[scope.$index] ? 'absolute' : 'static'}">
+                  <span
+                    :style="{
+                      position: develop[scope.$index] ? 'absolute' : 'static',
+                    }"
+                  >
                     {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
-                    <i :class="develop[scope.$index] ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+                    <i
+                      :class="
+                        develop[scope.$index]
+                          ? 'el-icon-arrow-up'
+                          : 'el-icon-arrow-down'
+                      "
+                    ></i>
                   </span>
                 </div>
               </div>
@@ -207,16 +262,30 @@
         </el-table-column>
       </el-table>
 
-      <div style="display: flex; justify-content: space-between; margin-top: 20px">
+      <div
+        style="display: flex; justify-content: space-between; margin-top: 20px"
+      >
         <!-- 批量操作 -->
-        <div class="pagination left" v-if="operate && isSelect && operate.operates">
-          <el-select 
+        <div
+          class="pagination left"
+          v-if="operate && isSelect && operate.operates"
+        >
+          <el-select
             v-model="operate.value"
             clearable
-            :placeholder="(configProvider && configProvider.locale.name == 'zh-cn') ? '批量操作' : 'lot operation'"
+            :placeholder="
+              configProvider && configProvider.locale.name == 'zh-cn'
+                ? '批量操作'
+                : 'lot operation'
+            "
             :size="size || (injectProps && injectProps.size) || 'small'"
           >
-            <el-option v-for="(item, index) in operate.operates" :key="index" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="(item, index) in operate.operates"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
 
           <el-button
@@ -250,89 +319,124 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, nextTick, ref, watchEffect, provide, reactive, getCurrentInstance, inject } from 'vue';
-import type { PropType } from 'vue'
-import type { PowerfulTableHeader, PowerfulTableOperateData, PowerfulTableTree, EmitType, InjectProps } from '../../types/powerful-table'
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import {
+  defineComponent,
+  nextTick,
+  ref,
+  watchEffect,
+  provide,
+  reactive,
+  getCurrentInstance,
+  inject,
+  toRefs,
+  computed,
+  watch,
+} from "vue";
+import type { PropType } from "vue";
+import type {
+  PowerfulTableHeader,
+  PowerfulTableOperateData,
+  PowerfulTableHeaderProps,
+  PowerfulTableTree,
+  EmitType,
+  InjectProps,
+} from "../../types/powerful-table";
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
-import RenderJsx from './components/render-jsx';
-import Filter from './components/filter';
-import Image from './components/image';
-import Switch from './components/switch';
-import Button from './components/button';
-import Input from './components/input';
-import Tags from './components/tags';
-import Icon from './components/icon';
-import Rate from './components/rate';
-import Link from './components/link';
-import Video from './components/video';
+import btnPlus from "./btnPlus/btnPlus.vue";
+import fDatePicker from "./components/filter/fDatePicker";
+import fInput from "./components/filter/fInput";
+import fSelect from "./components/filter/fSelect";
+
+import RenderJsx from "./components/render-jsx";
+import Filter from "./components/filter";
+import Image from "./components/image";
+import Switch from "./components/switch";
+import Button from "./components/button";
+import Input from "./components/input";
+import Tags from "./components/tags";
+import Icon from "./components/icon";
+import Rate from "./components/rate";
+import Link from "./components/link";
+import Video from "./components/video";
 // 获取 布局方向
 const justifyFun = (val: string) => {
-  const bol = ['center', 'left', 'right'].includes(val)
-  return bol ? {'center': 'center', 'left': 'flex-start', 'right': 'flex-end'}[val] : 'center'
-}
+  const bol = ["center", "left", "right"].includes(val);
+  return bol
+    ? { center: "center", left: "flex-start", right: "flex-end" }[val]
+    : "center";
+};
 
 export default defineComponent({
   name: "powerful-table",
   props: {
+    // 按钮组件配置数据
+    btnConfig: {
+      type: Object,
+      default: () => {},
+    },
     locale: Object,
     // 组件大小
     size: String,
     // 当前数据
     list: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     // 所有选中
     selectData: {
       type: Array,
       default: () => {
-        return new Array
-      }
+        return new Array();
+      },
     },
     isSelect: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selectCompare: {
       type: Array as PropType<string[]>,
-      default: () => ['id', 'id']
+      default: () => ["id", "id"],
     },
 
     header: {
       type: Array as PropType<PowerfulTableHeader[]>,
-      default: () => []
+      default: () => [],
     },
 
     // 分页数据
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next'
+      default: "total, sizes, prev, pager, next",
     },
     pageSizes: {
       type: Array,
-      default: () => [10, 20, 30]
+      default: () => [10, 20, 30],
     },
 
     // 批量操作
     operateData: {
       type: Object as PropType<PowerfulTableOperateData>,
-      default: () => {}
+      default: () => {},
     },
     isPagination: {
       type: Boolean,
-      default: true
+      default: true,
     },
     total: {
       type: Number,
-      default: 0
+      default: 0,
     },
     tree: {
       type: Object as PropType<PowerfulTableTree>,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   components: {
+    btnPlus,
+    fDatePicker,
+    fInput,
+    fSelect,
     RenderJsx,
     Filter,
     Image,
@@ -346,72 +450,196 @@ export default defineComponent({
     Video,
   },
   emits: [
-    'update:currentPage', 'sortCustom', 'batchOperate', 'switchChange', 'sizeChange',
-    'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo', 'row-click'
+    "btnChange",
+    "update:currentPage",
+    "sortCustom",
+    "batchOperate",
+    "switchChange",
+    "sizeChange",
+    "query",
+    "success",
+    "add",
+    "update",
+    "remove",
+    "occupyOne",
+    "occupyTwo",
+    "row-click",
   ],
   setup(props, { emit }) {
-    const { proxy } = getCurrentInstance() as any
+    const { proxy } = getCurrentInstance() as any;
     // 全局此组件注入的数据
-    const injectProps = inject<InjectProps>('powerfulTable')
+    const injectProps = inject<InjectProps>("powerfulTable");
 
     /* ------ 注入数据 ------ */
     // 组件大小
-    provide('size', props.size || injectProps?.size || 'small')
+    provide("size", props.size || injectProps?.size || "small");
     // 单元格内布局
-    provide('justifyFun', justifyFun)
+    provide("justifyFun", justifyFun);
 
     /* ------ data数据 ------ */
     // 页面是否加载中
-    const listLoading = ref(true)
+    const listLoading = ref(true);
     // 承载props的operateData
     const operate = reactive<PowerfulTableOperateData>({
       value: undefined,
       disabled: false,
-      icon: '',
+      icon: "",
       style: undefined,
-      operates: []
-    })
+      operates: [],
+    });
     // 分页
-    const currentPage = ref(1)
+    const currentPage = ref(1);
     // 当前页选中
-    const currentSelect = ref([])
+    const currentSelect = ref([]);
     // 其他页面选中
-    const otherSelect = ref<any[]>([])
-    const pageSize = ref(props.pageSizes[0])
+    const otherSelect = ref<any[]>([]);
+    const pageSize = ref(props.pageSizes[0]);
     // 展开
-    const develop = ref<boolean[]>([])
+    const develop = ref<boolean[]>([]);
+    // 组件参数
+    const state = reactive({
+      tableConfigs: {
+        headerList: props.header,
+      },
+      tableLists: [] as any[],
+      isPC: true,
+      isTable: true,
+    });
 
     /* ----- 组件实例 ----- */
-    const multipleTable = ref(null)
-    const configProvider = ref<{locale: {name: string}} | null>(null)
+    const multipleTable = ref();
+    const configProvider = ref<{ locale: { name: string } } | null>(null);
 
     watchEffect(() => {
-      Object.assign(operate, props.operateData)
+      Object.assign(operate, props.operateData);
 
       // list数据有的话 关闭加载中...
       // 更具当前list 数据 添加develop
-      develop.value = Array(props.list.length).fill(false)
-      listLoading.value = false
+      develop.value = Array(state.tableLists.length).fill(false);
+      listLoading.value = false;
       nextTick(() => {
-        getSelect(props.selectData, props.list)
-      })
-    })
+        getSelect(props.selectData, state.tableLists);
+      });
+    });
+
+    // 过滤被隐藏的列
+    const headerLists = computed(() => {
+      return props.header.filter((column: any) => !column.hidden);
+    });
+
+    /* --- 按钮组件参数及方法begin --- */
+    // 为表格数据重新赋值
+    watch(
+      () => [props.list],
+      ([newList]: any) => {
+        state.tableLists = newList;
+      },
+      { immediate: true, deep: true }
+    );
+    // 左侧按钮回调
+    const btnChange = (res: any) => {
+      if (res.showTip) {
+        let content = res.tipContent || `是否要进行${res.tip}操作?`;
+        proxy
+          .$confirm(content, "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+          .then(() => {
+            emit("btnChange", {
+              effect: res.effect,
+              list: currentSelect.value,
+            });
+          });
+      } else {
+        emit("btnChange", {
+          effect: res.effect,
+          list: currentSelect.value,
+        });
+      }
+    };
+    // 按钮右侧列按钮回调
+    const functionBtnChange = () => {
+      nextTick(() => {
+        multipleTable.value.doLayout();
+      });
+    };
+    /**
+     * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
+     */
+    const headerFilterChange = (value: any, column: any) => {
+      const tableLists = props.list;
+      let tableData: any[] = [];
+
+      if (!value) {
+        state.tableLists = tableLists;
+        return false;
+      }
+
+      let propObj: PowerfulTableHeaderProps<any> = getPropObj(column);
+
+      // 判断监听类型
+      if (
+        propObj.filter ||
+        propObj.filtersType === "select" ||
+        propObj.type === "switch" ||
+        propObj.type === "tag"
+      ) {
+        tableData = tableLists.filter((item: any) => {
+          let isShow = value.some((prop: any) => {
+            return item[propObj.prop] == prop;
+          });
+          return isShow;
+        });
+        // TODO 暂时无法并列过滤数据
+        // state.tableLists = [...state.tableLists, ...tableData];
+      } else if (propObj.filtersType === "date") {
+        tableData = tableLists.filter((item: any) => {
+          // return compare(item[propObj.prop], value[0], value[1]);
+        });
+      } else {
+        console.log(value, column, propObj.prop);
+        tableData = tableLists.filter((item: any) => {
+          console.log(item[propObj.prop]);
+          return item[propObj.prop] && item[propObj.prop].indexOf(value) >= 0;
+        });
+      }
+      state.tableLists = tableData;
+    };
+    const getPropObj = (column: any) => {
+      // 获取过滤项
+      let propObj: PowerfulTableHeaderProps<any> = { prop: "" };
+      // 首先判断单元格prop的数量
+      if (column.props.length === 1) {
+        propObj = column.props[0];
+      } else if (column.props.length > 1) {
+        // 如果数量在两个以上，则需要用户使用(filterItem: true)指定过滤项，未指定则取第一个
+        let iResult: PowerfulTableHeaderProps<any>[] = [{ prop: "" }];
+        iResult = column.props.filter((item: PowerfulTableHeaderProps<any>) => {
+          return item.filterItem;
+        });
+        // 如果设置了一个或多个过滤项则取过滤后的第一个，如果没设置则取props第一个prop
+        propObj = iResult.length ? iResult[0] : column.props[0];
+      }
+      return propObj;
+    };
+    /* --- 按钮组件参数及方法end --- */
 
     /* ------ 获取选中 ------ */
     const getSelect = (arr: any[], list = props.list) => {
-
-      if (!props.isSelect) return
+      if (!props.isSelect) return;
 
       // 1.获取当前页
       // 2.总选中减去当前页
       // 3.得到其他页
 
       // 所有选中
-      let all = arr
+      let all = arr;
       // 获取当前页选中
-      let current:any[] = []
+      let current: any[] = [];
       // 获取 其他页选中
-      let other:any[] = []
+      let other: any[] = [];
 
       // 获取当前页
       if (all.length != 0) {
@@ -419,123 +647,144 @@ export default defineComponent({
         // 获取当前页
         arr.forEach((item) => {
           let itm = list.filter((each) => {
-            return item[props.selectCompare[1]] == (each as any)[props.selectCompare[0]]
-          })
+            return (
+              item[props.selectCompare[1]] ==
+              (each as any)[props.selectCompare[0]]
+            );
+          });
 
           if (itm.length > 0) {
-            current.push(itm[0])
+            current.push(itm[0]);
           }
-        })
+        });
 
         // console.log('当前页选中', current)
         // 获取其他页
         if (current.length > 0) {
-          other = JSON.parse(JSON.stringify(arr))
+          other = JSON.parse(JSON.stringify(arr));
           for (let j in other) {
             current.forEach((item) => {
-              if (item[props.selectCompare[1]] == other[j][props.selectCompare[0]]) {
-                other.splice(Number(j), 1)
+              if (
+                item[props.selectCompare[1]] == other[j][props.selectCompare[0]]
+              ) {
+                other.splice(Number(j), 1);
               }
-            })
+            });
           }
         } else {
-          other = JSON.parse(JSON.stringify(arr))
+          other = JSON.parse(JSON.stringify(arr));
         }
 
-        otherSelect.value = other
+        otherSelect.value = other;
         // console.log('其他页选中', otherSelect.value);
 
         if (current.length != 0) {
           current.forEach((row) => {
-            (multipleTable.value as any).toggleRowSelection(row)
-          })
-
+            (multipleTable.value as any).toggleRowSelection(row);
+          });
         } else {
-          (multipleTable.value as any).clearSelection()
+          (multipleTable.value as any).clearSelection();
         }
       } else {
-        (multipleTable.value as any).clearSelection()
+        (multipleTable.value as any).clearSelection();
       }
-    }
+    };
     /* ------ 排序方法 ------ */
     const sortChange = (obj: any) => {
       if (obj.column) {
-        if (obj.column.sortable == 'custom') {
-          emit('sortCustom', obj)
+        if (obj.column.sortable == "custom") {
+          emit("sortCustom", obj);
         }
       }
-    }
+    };
     /* ------ 批量按钮 ------ */
     const batchOperate = () => {
       // console.log(operate.value)
-      if ((operate.value == undefined || operate.value == null) && operate.value !== 0) {
+      if (
+        (operate.value == undefined || operate.value == null) &&
+        operate.value !== 0
+      ) {
         proxy.$message({
-          message: '请选择操作类型',
-          type: 'warning',
-          duration: 1000
-        })
-        return
+          message: "请选择操作类型",
+          type: "warning",
+          duration: 1000,
+        });
+        return;
       }
 
       if (currentSelect.value.length == 0) {
         proxy.$message({
-          message: '请选择要操作的数据',
-          type: 'warning',
-          duration: 1000
-        })
-        return
+          message: "请选择要操作的数据",
+          type: "warning",
+          duration: 1000,
+        });
+        return;
       }
-      proxy.$confirm(`是否要进行批量${operate.operates[0].label}操作?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      proxy
+        .$confirm(`是否要进行批量${operate.operates[0].label}操作?`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
         .then(() => {
-          let ids = otherSelect.value.concat(currentSelect.value).map((item) => item.id)
-          let items = otherSelect.value.concat(currentSelect.value).map(item => item)
+          let ids = otherSelect.value
+            .concat(currentSelect.value)
+            .map((item) => item.id);
+          let items = otherSelect.value
+            .concat(currentSelect.value)
+            .map((item) => item);
 
-          emit('batchOperate', { ids, item: operate.operates[0], items })
+          emit("batchOperate", { ids, item: operate.operates[0], items });
         })
         .catch(() => {
           // console.log('取消批量操作')
-        })
-
-    }
-    const rowClick = (...arg:any) => {
-      returnEmit('row-click',{...arg})
-    }
+        });
+    };
+    const rowClick = (...arg: any) => {
+      returnEmit("row-click", { ...arg });
+    };
     /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
     const returnEmit = (emitName: EmitType, objVal: any) => {
       // console.log('触发回调', emitName, objVal);
-      
-      emit(emitName, objVal)
-    }
+
+      emit(emitName, objVal);
+    };
     /* ------ 添加选中 ------ */
     const handleSelectionChange = (e: any[]) => {
       // console.log('选中', e)
-      currentSelect.value = JSON.parse(JSON.stringify(e))
-    }
+      currentSelect.value = JSON.parse(JSON.stringify(e));
+    };
     /* ------ 条数或页数切换 ------ */
     const handleChange = (e: number, type: string) => {
-      type === 'pageSize' ? pageSize.value = e : currentPage.value = e
-      get()
-    }
+      type === "pageSize" ? (pageSize.value = e) : (currentPage.value = e);
+      get();
+    };
     /* ------ 回调到组件上 ------ */
     const get = () => {
       let data = {
         pageNum: currentPage.value,
-        pageSize: pageSize.value
-      }
+        pageSize: pageSize.value,
+      };
 
       try {
-        // 如果父组件是getList方法 无需自定义事假
-        proxy.$parent._getList(data, otherSelect.value.concat(currentSelect.value))
+        // 如果父组件是getList方法 无需自定义事件
+        proxy.$parent._getList(
+          data,
+          otherSelect.value.concat(currentSelect.value)
+        );
       } catch (error) {
-        emit('sizeChange', data, otherSelect.value.concat(currentSelect.value))
+        emit("sizeChange", data, otherSelect.value.concat(currentSelect.value));
       }
-    }
+    };
 
     return {
+      headerLists,
+      ...toRefs(state),
+      btnChange,
+      functionBtnChange,
+      headerFilterChange,
+      getPropObj,
+
       develop,
       listLoading,
       operate,
@@ -553,11 +802,10 @@ export default defineComponent({
       handleChange,
       sortChange,
       batchOperate,
-      handleSelectionChange
-    }
-
-  }
-})
+      handleSelectionChange,
+    };
+  },
+});
 </script>
 
 <style scoped>
