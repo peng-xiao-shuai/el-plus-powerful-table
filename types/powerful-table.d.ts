@@ -7,16 +7,16 @@ declare module 'el-plus-powerful-table-ts' {
 }
 
 /* ------ props ------ */
-export interface PowerfulTableData {
-  list: any[];
+export interface PowerfulTableData<L> {
+  list: L[];
   pageSizes: number[];
   total: number
-  size?: string,
+  size?: '', 'large', 'medium', 'small', 'mini',
   locale?: string,
   selectData?: any[];
   isSelect?: boolean;
   selectCompare?: string[];
-  header: PowerfulTableHeader[];
+  header: PowerfulTableHeader<L>[];
   layout?: string;
   operateData?: PowerfulTableOperateData;
   isPagination?: boolean;
@@ -49,7 +49,7 @@ export interface PowerfulTableOperateData {
 
 /* ------ header 表格头部数据 ------ */
 // header 表格头部数据
-export interface PowerfulTableHeader<U = any> {
+export interface PowerfulTableHeader<L = any> {
   overflowTooltip?: boolean;
   label: string;
   hidden?: boolean;
@@ -58,19 +58,20 @@ export interface PowerfulTableHeader<U = any> {
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
-  headerSlotName?: string
-  props: PowerfulTableHeaderProps<any, U>[];
+  headerSlotName?: string;
+  isFilterColumn?: Boolean;
+  props: PowerfulTableHeaderProps<L>[];
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps<T, U = any> {
+export interface PowerfulTableHeaderProps<L = any, D = any> {
   prop: string;
-  data?: T;
+  data?: D;
   child?: string;
   type?: Type;
-  filter?: PowerfulTableFilter[] | ((row: any, index?: number) => string | number);
+  filter?: PowerfulTableFilter[] | ((row: L, index?: number) => string | number);
   text?: string;
   slotName?: string;
-  render?: (h: Function, row: U, index: number) => VNode | string | number;
+  render?: (h: Function, row: L, index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
   filterItem?: boolean;
@@ -172,7 +173,10 @@ export type TagDataType = {
 // 组件注入数据
 export type InjectProps = {
   size?: 'medium' | 'small' | 'mini';
-  locale: Object
+  locale: {
+    name: string;
+    el: any
+  }
 }
 
 export type SFCWithInstall<T> = T & Plugin

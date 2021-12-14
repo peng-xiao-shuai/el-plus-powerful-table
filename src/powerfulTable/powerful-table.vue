@@ -2,7 +2,7 @@
   <div>
     <el-config-provider
       ref="configProvider"
-      :locale="locale || (injectProps && injectProps.locale) || zhCn"
+      :locale="locale || (injectProps && injectProps.locale) || en"
     >
       <!-- 按钮组件 -->
       <btn-plus
@@ -69,7 +69,7 @@
             </slot>
           </template> -->
 
-          <template v-if="item.filters" #header>
+          <template v-if="item.isFilterColumn" #header>
             <f-select
               v-if="
                 getPropObj(item).filter ||
@@ -130,87 +130,55 @@
               </div>
               <!-- 筛选 -->
               <Filter
-                v-else-if="
-                  prop.filter && (prop.type == 'text' || prop.type == undefined)
-                "
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 图片 -->
               <Image
                 v-else-if="prop.type == 'image'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                :align="item.headerAlign"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 按钮 -->
               <Button
                 v-else-if="prop.type == 'btn'"
                 class="btnType"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                :align="item.headerAlign"
+                v-bind="bindAttr(prop, scope, item)"
                 @returnEmit="returnEmit"
               />
               <!-- 开关 -->
               <Switch
                 v-else-if="prop.type == 'switch'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                :align="item.headerAlign"
+                v-bind="bindAttr(prop, scope, item)"
                 @returnEmit="returnEmit"
               />
               <!-- 输入框 -->
               <Input
                 v-else-if="prop.type == 'input' || prop.type == 'textarea'"
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- iconfont -->
               <Icon
                 v-else-if="prop.type == 'iconfont'"
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 标签 -->
               <Tags
                 v-else-if="prop.type == 'tag'"
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 评分 -->
               <Rate
                 v-else-if="prop.type == 'rate'"
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 超链接 -->
               <Link
                 v-else-if="prop.type == 'href'"
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <Video
                 v-else-if="prop.type == 'video'"
-                :row="scope.row"
-                :index="scope.$index"
-                :align="item.headerAlign"
-                :prop="prop"
+                v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 正常 -->
               <div
@@ -331,8 +299,8 @@ import {
   toRefs,
   computed,
   watch,
+  PropType
 } from "vue";
-import type { PropType } from "vue";
 import type {
   PowerfulTableHeader,
   PowerfulTableOperateData,
@@ -341,13 +309,13 @@ import type {
   EmitType,
   InjectProps,
 } from "../../types/powerful-table";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import { powerfulTableProps, powerfulTableEmits } from './powerful-table';
+import en from "element-plus/lib/locale/lang/en";
 
 import btnPlus from "./btnPlus/btnPlus.vue";
 import fDatePicker from "./components/filter/fDatePicker";
 import fInput from "./components/filter/fInput";
 import fSelect from "./components/filter/fSelect";
-
 import RenderJsx from "./components/render-jsx";
 import Filter from "./components/filter";
 import Image from "./components/image";
@@ -369,69 +337,8 @@ const justifyFun = (val: string) => {
 
 export default defineComponent({
   name: "powerful-table",
-  props: {
-    // 按钮组件配置数据
-    btnConfig: {
-      type: Object,
-      default: () => {},
-    },
-    locale: Object,
-    // 组件大小
-    size: String,
-    // 当前数据
-    list: {
-      type: Array,
-      default: () => [],
-    },
-    // 所有选中
-    selectData: {
-      type: Array,
-      default: () => {
-        return new Array();
-      },
-    },
-    isSelect: {
-      type: Boolean,
-      default: false,
-    },
-    selectCompare: {
-      type: Array as PropType<string[]>,
-      default: () => ["id", "id"],
-    },
-
-    header: {
-      type: Array as PropType<PowerfulTableHeader[]>,
-      default: () => [],
-    },
-
-    // 分页数据
-    layout: {
-      type: String,
-      default: "total, sizes, prev, pager, next",
-    },
-    pageSizes: {
-      type: Array,
-      default: () => [10, 20, 30],
-    },
-
-    // 批量操作
-    operateData: {
-      type: Object as PropType<PowerfulTableOperateData>,
-      default: () => {},
-    },
-    isPagination: {
-      type: Boolean,
-      default: true,
-    },
-    total: {
-      type: Number,
-      default: 0,
-    },
-    tree: {
-      type: Object as PropType<PowerfulTableTree>,
-      default: () => {},
-    },
-  },
+  props: powerfulTableProps,
+  emits: powerfulTableEmits,
   components: {
     btnPlus,
     fDatePicker,
@@ -449,28 +356,14 @@ export default defineComponent({
     Link,
     Video,
   },
-  emits: [
-    "btnChange",
-    "update:currentPage",
-    "sortCustom",
-    "batchOperate",
-    "switchChange",
-    "sizeChange",
-    "query",
-    "success",
-    "add",
-    "update",
-    "remove",
-    "occupyOne",
-    "occupyTwo",
-    "row-click",
-  ],
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance() as any;
     // 全局此组件注入的数据
     const injectProps = inject<InjectProps>("powerfulTable");
 
     /* ------ 注入数据 ------ */
+    // 语言
+    provide("locale", props.locale || (injectProps && injectProps.locale) || en);
     // 组件大小
     provide("size", props.size || injectProps?.size || "small");
     // 单元格内布局
@@ -515,6 +408,7 @@ export default defineComponent({
 
       // list数据有的话 关闭加载中...
       // 更具当前list 数据 添加develop
+
       develop.value = Array(state.tableLists.length).fill(false);
       listLoading.value = false;
       nextTick(() => {
@@ -565,6 +459,7 @@ export default defineComponent({
         multipleTable.value.doLayout();
       });
     };
+
     /**
      * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
      */
@@ -646,7 +541,7 @@ export default defineComponent({
         // console.log('所有选中', all);
         // 获取当前页
         arr.forEach((item) => {
-          let itm = list.filter((each) => {
+          let itm = list.filter((each: typeof list[0]) => {
             return (
               item[props.selectCompare[1]] ==
               (each as any)[props.selectCompare[0]]
@@ -795,9 +690,17 @@ export default defineComponent({
       multipleTable,
       configProvider,
       injectProps,
-      zhCn,
+      en,
 
       rowClick,
+      bindAttr: (prop: PowerfulTableHeaderProps<typeof scope>, scope: typeof props.list[0], item: PowerfulTableHeader<typeof scope>) => {
+        return {
+          row: scope.row,
+          index: scope.$index,
+          prop: prop,
+          aligning: item.headerAlign
+        }
+      },
       returnEmit,
       handleChange,
       sortChange,
@@ -812,6 +715,7 @@ export default defineComponent({
 /* 树表格时icon和文字居中 */
 :deep(.cell) {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 :deep(.center .cell) {

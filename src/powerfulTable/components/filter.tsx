@@ -1,18 +1,15 @@
 import { defineComponent, PropType } from "vue";
 import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter } from '../../../types/powerful-table'
+import { powerfulTableComponentProp } from '../powerful-table'
 
 export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => {
-  const current = filter.filter((item) => item.key == s)
-  return current.length ? current[0].value : s
+  const current = filter.find((item) => item.key == s)
+  return current ? current.value : s
 }
 
 export default defineComponent({
   props: {
-    row: {
-      type: Object,
-      default: () => {}
-    },
-    index: Number,
+    ...powerfulTableComponentProp,
     prop: {
       type: Object as PropType<PowerfulTableHeaderProps<TextDataType>>,
       default: () => {}

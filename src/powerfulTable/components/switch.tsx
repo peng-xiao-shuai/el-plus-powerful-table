@@ -1,20 +1,13 @@
 import { defineComponent, PropType, getCurrentInstance, inject } from "vue";
 import type { PowerfulTableHeaderProps, SwitchDataType } from '../../../types/powerful-table'
+import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
   props: {
-    row: {
-      type: Object,
-      default: () => {}
-    },
-    index: Number,
+    ...powerfulTableComponentProp,
     prop: {
       type: Object as PropType<PowerfulTableHeaderProps<SwitchDataType>>,
       default: () => {}
-    },
-    align: {
-      type: String,
-      default: 'center'
     }
   },
   emits: ['returnEmit'],
@@ -44,31 +37,33 @@ export default defineComponent({
     }
 
     return () => (
-      <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.align)}}>
-        <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
-          { props.prop.text || "" }
-        </span>
-        <el-switch
-          size={size}
-          style={props.prop.data?.style || {}}
-          inactive-text={props.prop.data?.inactiveText || ''}
-          active-text={props.prop.data?.activeText || ''}
-          v-model={props.row[props.prop.prop]}
-          disabled={typeof props.prop.data?.disabled === 'function' ? props.prop.data?.disabled(props.row) : props.prop.data?.disabled || false}
-          active-color={props.prop.data?.activeColor}
-          inactive-color={props.prop.data?.inactiveColor}
-          active-value={
-            props.prop.data?.activeValue || props.prop.data?.activeValue === 0
-              ? props.prop.data?.activeValue
-              : 1
-          }
-          inactive-value={props.prop.data?.inactiveValue || 0}
-          onClick={(e: Event) => {
-            e.stopPropagation()
-            switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
-          }}
-        />
-      </div>
+      <>
+        <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.aligning)}}>
+          <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
+            { props.prop.text || "" }
+          </span>
+          <el-switch
+            size={size}
+            style={props.prop.data?.style || {}}
+            inactive-text={props.prop.data?.inactiveText || ''}
+            active-text={props.prop.data?.activeText || ''}
+            v-model={props.row[props.prop.prop]}
+            disabled={typeof props.prop.data?.disabled === 'function' ? props.prop.data?.disabled(props.row) : props.prop.data?.disabled || false}
+            active-color={props.prop.data?.activeColor}
+            inactive-color={props.prop.data?.inactiveColor}
+            active-value={
+              props.prop.data?.activeValue || props.prop.data?.activeValue === 0
+                ? props.prop.data?.activeValue
+                : 1
+            }
+            inactive-value={props.prop.data?.inactiveValue || 0}
+            onClick={(e: Event) => {
+              e.stopPropagation()
+              switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
+            }}
+          />
+        </div>
+      </>
     )
   }
 })

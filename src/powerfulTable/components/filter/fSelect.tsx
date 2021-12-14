@@ -60,7 +60,7 @@ export default defineComponent({
 
     watch(
       props.propData,
-      (newProps: any, oldProps) => {
+      (newProps: any) => {
         if (newProps.filter) {
           if (Array.isArray(newProps.filter)) state.options = newProps.filter
           else {

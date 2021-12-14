@@ -36,7 +36,7 @@ export default defineComponent({
       state.visible = false
     }
 
-    const lebelClick = () => {
+    const labelClick = () => {
       state.visible = true
       datePickerRef.value.focus()
     }
@@ -50,7 +50,7 @@ export default defineComponent({
             }
             : {}
         }
-        onClick={lebelClick}
+        onClick={labelClick}
       >
         {props.headerData.label}
         <i class={['el-icon--right', state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down']}></i>

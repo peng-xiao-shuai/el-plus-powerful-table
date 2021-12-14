@@ -6,8 +6,7 @@ import ElementPlus from "element-plus"
 import powerfulTable from "./powerfulTable/index"
 // import powerfulTable from 'el-plus-powerful-table-ts'
 import en from 'element-plus/lib/locale/lang/en'
-
-import "element-plus/lib/theme-chalk/index.css"
+import "element-plus/theme-chalk/src/index.scss"
 
 const app = createApp(App)
 app.use(ElementPlus)

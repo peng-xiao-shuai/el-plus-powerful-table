@@ -21,7 +21,7 @@ export default defineComponent({
       visible: false
     })
 
-    const inpputChange = () => {
+    const inputChange = () => {
       state.visible = false
       emit('headerFilterChange', state.value, props.headerData)
     }
@@ -49,7 +49,7 @@ export default defineComponent({
     const btnSlots = {
       append: (e: any) => {
         return (
-          <el-button icon="el-icon-search" onClick={inpputChange}></el-button>
+          <el-button icon="el-icon-search" onClick={inputChange}></el-button>
         );
       },
     };
