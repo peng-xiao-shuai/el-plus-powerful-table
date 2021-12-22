@@ -57,7 +57,7 @@
           :header-align="item.headerAlign || 'center'"
           :align="item.headerAlign || 'center'"
           :show-overflow-tooltip="item.overflowTooltip || false"
-          :prop="item.props[0].child || item.props[0].prop"
+          :prop="Array.isArray(item.props) ? item.props[0].prop : item.props.prop"
           :label="item.label"
           :min-width="item.minWidth || 140"
           :width="item.width || ''"
@@ -95,7 +95,7 @@
 
           <template #default="scope">
             <div
-              v-for="(prop, idx) in item.props"
+              v-for="(prop, idx) in Array.isArray(item.props) ? item.props : [item.props]"
               :key="idx"
               :style="{
                 display: index == 0 ? 'inline-block' : 'block',

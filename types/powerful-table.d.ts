@@ -60,13 +60,12 @@ export interface PowerfulTableHeader<L = any> {
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
   headerSlotName?: string;
-  props: PowerfulTableHeaderProps<L>[];
+  props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>;
 }
 // props 单元格数据
 export interface PowerfulTableHeaderProps<L = any, D = any> {
   prop: string;
   data?: D;
-  child?: string;
   type?: Type;
   filter?: PowerfulTableFilter[] | ((row: L, index?: number) => string | number);
   text?: string;

@@ -84,39 +84,35 @@ let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "价格", //显示的标题
     isShowOrFilterColumn: 'filter',
-    props: [
-      {
-        prop: "price",
-        type: "input",
-        data: {
-          slot: "prepend",
-          symbol: "￥",
-          style: { width: "100%" },
-        },
+    props: {
+      prop: "price",
+      type: "input",
+      data: {
+        slot: "prepend",
+        symbol: "￥",
+        style: { width: "100%" },
       },
-    ],
+    },
   },
   {
     label: "视频", //显示的标题
     width: 200,
-    props: [
-      {
-        prop: "videoUrl",
-        type: "video",
-        text: '1',
-        data: {
-          loop: true,
-          poster: (e: any) => e.imageUrl,
-          style: {
-            width: "100%",
-            height: "80px",
-            borderRadius: "10px",
-            overflow: 'hidden',
-            border: "1px solid #ccc",
-          }
-        },
+    props: {
+      prop: "videoUrl",
+      type: "video",
+      text: '1',
+      data: {
+        loop: true,
+        poster: (e: any) => e.imageUrl,
+        style: {
+          width: "100%",
+          height: "80px",
+          borderRadius: "10px",
+          overflow: 'hidden',
+          border: "1px solid #ccc",
+        }
       },
-    ],
+    },
   },
   {
     label: "开关", //显示的标题
