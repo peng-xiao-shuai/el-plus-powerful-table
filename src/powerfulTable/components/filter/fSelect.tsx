@@ -16,6 +16,7 @@ export default defineComponent({
       default: () => { prop: '' },
     }
   },
+  emits: ['headerFilterChange'],
   setup(props, { emit }) {
 
     const state = reactive({

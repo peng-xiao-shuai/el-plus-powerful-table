@@ -13,6 +13,7 @@ export default defineComponent({
       default: () => { },
     }
   },
+  emits: ['headerFilterChange'],
   setup(props: Props, { emit }) {
 
     const datePickerRef = ref()
