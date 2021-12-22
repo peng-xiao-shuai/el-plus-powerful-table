@@ -6,7 +6,7 @@ let btnConfig = {
   btnList: [{
     tip: '新增',
     auth: '',
-    operateType: '',
+    operateType: true,
     effect: 'add',
     type: '',
     // icon: Plus
@@ -55,6 +55,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   // },
   {
     label: "slot（插槽）", //显示的标题
+    isShowOrFilterColumn: false,
     // hidden: true,
     props: [
       {
@@ -66,7 +67,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: "性别", //显示的标题
-    isFilterColumn: false,
+    isShowOrFilterColumn: 'show',
     props: [
       {
         prop: "gender",
@@ -82,6 +83,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: "价格", //显示的标题
+    isShowOrFilterColumn: 'filter',
     props: [
       {
         prop: "price",

@@ -1,19 +1,19 @@
 <template>
   <div>
+    <!-- 按钮组件 -->
+    <btn-plus
+      ref="btnPlusRef"
+      v-model:isTable="isTable"
+      :btn-config="btnConfig"
+      :headerList="header"
+      :multiple-selection="currentSelect"
+      @functionBtnChange="functionBtnChange"
+    ></btn-plus>
+
     <el-config-provider
       ref="configProvider"
       :locale="locale || (injectProps && injectProps.locale) || en"
     >
-      <!-- 按钮组件 -->
-      <btn-plus
-        ref="btnPlusRef"
-        v-model:isTable="isTable"
-        :btn-config="btnConfig"
-        :table-config="tableConfigs"
-        :multiple-selection="currentSelect"
-        @functionBtnChange="functionBtnChange"
-        @btnChange="btnChange"
-      ></btn-plus>
       <el-table
         v-loading="listLoading"
         :data="tableLists"
@@ -69,7 +69,7 @@
             </slot>
           </template> -->
 
-          <template v-if="item.isFilterColumn" #header>
+          <template v-if="item.isShowOrFilterColumn === 'filter'" #header>
             <f-select
               v-if="
                 getPropObj(item).filter ||
@@ -290,16 +290,13 @@
 import {
   defineComponent,
   nextTick,
-  ref,
   watchEffect,
   provide,
-  reactive,
   getCurrentInstance,
   inject,
   toRefs,
   computed,
   watch,
-  PropType
 } from "vue";
 import type {
   PowerfulTableHeader,
@@ -309,7 +306,7 @@ import type {
   EmitType,
   InjectProps,
 } from "../../types/powerful-table";
-import { powerfulTableProps, powerfulTableEmits } from './powerful-table';
+import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
 import en from "element-plus/lib/locale/lang/en";
 
 import btnPlus from "./btnPlus/btnPlus.vue";
@@ -358,8 +355,15 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance() as any;
-    // 全局此组件注入的数据
-    const injectProps = inject<InjectProps>("powerfulTable");
+
+    /* ------ data数据 ------ */
+    const {
+      multipleTable,
+      configProvider,
+      powerfulTableData,
+      injectProps,
+      state
+    } = useState(props)
 
     /* ------ 注入数据 ------ */
     // 语言
@@ -369,48 +373,24 @@ export default defineComponent({
     // 单元格内布局
     provide("justifyFun", justifyFun);
 
-    /* ------ data数据 ------ */
-    // 页面是否加载中
-    const listLoading = ref(true);
-    // 承载props的operateData
-    const operate = reactive<PowerfulTableOperateData>({
-      value: undefined,
-      disabled: false,
-      icon: "",
-      style: undefined,
-      operates: [],
-    });
-    // 分页
-    const currentPage = ref(1);
-    // 当前页选中
-    const currentSelect = ref([]);
-    // 其他页面选中
-    const otherSelect = ref<any[]>([]);
-    const pageSize = ref(props.pageSizes[0]);
-    // 展开
-    const develop = ref<boolean[]>([]);
-    // 组件参数
-    const state = reactive({
-      tableConfigs: {
-        headerList: props.header,
-      },
-      tableLists: [] as any[],
-      isPC: true,
-      isTable: true,
-    });
-
-    /* ----- 组件实例 ----- */
-    const multipleTable = ref();
-    const configProvider = ref<{ locale: { name: string } } | null>(null);
+    /* ------  操作方法  ------ */
+    const {
+      handleSelectionChange,
+      rowClick,
+      returnEmit,
+      sortChange,
+      batchOperate,
+      handleChange,
+      get
+    } = useFunction(emit, powerfulTableData)
 
     watchEffect(() => {
-      Object.assign(operate, props.operateData);
+      Object.assign(powerfulTableData.operate, props.operateData);
 
       // list数据有的话 关闭加载中...
       // 更具当前list 数据 添加develop
-
-      develop.value = Array(state.tableLists.length).fill(false);
-      listLoading.value = false;
+      powerfulTableData.develop = Array(state.tableLists.length).fill(false);
+      powerfulTableData.listLoading = false;
       nextTick(() => {
         getSelect(props.selectData, state.tableLists);
       });
@@ -430,29 +410,7 @@ export default defineComponent({
       },
       { immediate: true, deep: true }
     );
-    // 左侧按钮回调
-    const btnChange = (res: any) => {
-      if (res.showTip) {
-        let content = res.tipContent || `是否要进行${res.tip}操作?`;
-        proxy
-          .$confirm(content, "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          })
-          .then(() => {
-            emit("btnChange", {
-              effect: res.effect,
-              list: currentSelect.value,
-            });
-          });
-      } else {
-        emit("btnChange", {
-          effect: res.effect,
-          list: currentSelect.value,
-        });
-      }
-    };
+
     // 按钮右侧列按钮回调
     const functionBtnChange = () => {
       nextTick(() => {
@@ -570,8 +528,8 @@ export default defineComponent({
           other = JSON.parse(JSON.stringify(arr));
         }
 
-        otherSelect.value = other;
-        // console.log('其他页选中', otherSelect.value);
+        powerfulTableData.otherSelect = other;
+        // console.log('其他页选中', powerfulTableData.otherSelect);
 
         if (current.length != 0) {
           current.forEach((row) => {
@@ -584,109 +542,16 @@ export default defineComponent({
         (multipleTable.value as any).clearSelection();
       }
     };
-    /* ------ 排序方法 ------ */
-    const sortChange = (obj: any) => {
-      if (obj.column) {
-        if (obj.column.sortable == "custom") {
-          emit("sortCustom", obj);
-        }
-      }
-    };
-    /* ------ 批量按钮 ------ */
-    const batchOperate = () => {
-      // console.log(operate.value)
-      if (
-        (operate.value == undefined || operate.value == null) &&
-        operate.value !== 0
-      ) {
-        proxy.$message({
-          message: "请选择操作类型",
-          type: "warning",
-          duration: 1000,
-        });
-        return;
-      }
 
-      if (currentSelect.value.length == 0) {
-        proxy.$message({
-          message: "请选择要操作的数据",
-          type: "warning",
-          duration: 1000,
-        });
-        return;
-      }
-      proxy
-        .$confirm(`是否要进行批量${operate.operates[0].label}操作?`, "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-        .then(() => {
-          let ids = otherSelect.value
-            .concat(currentSelect.value)
-            .map((item) => item.id);
-          let items = otherSelect.value
-            .concat(currentSelect.value)
-            .map((item) => item);
-
-          emit("batchOperate", { ids, item: operate.operates[0], items });
-        })
-        .catch(() => {
-          // console.log('取消批量操作')
-        });
-    };
-    const rowClick = (...arg: any) => {
-      returnEmit("row-click", { ...arg });
-    };
-    /* ------ 当前组件的子组件回调 并在此组件暴露出去 ------ */
-    const returnEmit = (emitName: EmitType, objVal: any) => {
-      // console.log('触发回调', emitName, objVal);
-
-      emit(emitName, objVal);
-    };
-    /* ------ 添加选中 ------ */
-    const handleSelectionChange = (e: any[]) => {
-      // console.log('选中', e)
-      currentSelect.value = JSON.parse(JSON.stringify(e));
-    };
-    /* ------ 条数或页数切换 ------ */
-    const handleChange = (e: number, type: string) => {
-      type === "pageSize" ? (pageSize.value = e) : (currentPage.value = e);
-      get();
-    };
-    /* ------ 回调到组件上 ------ */
-    const get = () => {
-      let data = {
-        pageNum: currentPage.value,
-        pageSize: pageSize.value,
-      };
-
-      try {
-        // 如果父组件是getList方法 无需自定义事件
-        proxy.$parent._getList(
-          data,
-          otherSelect.value.concat(currentSelect.value)
-        );
-      } catch (error) {
-        emit("sizeChange", data, otherSelect.value.concat(currentSelect.value));
-      }
-    };
 
     return {
       headerLists,
       ...toRefs(state),
-      btnChange,
       functionBtnChange,
       headerFilterChange,
       getPropObj,
+      ...toRefs(powerfulTableData),
 
-      develop,
-      listLoading,
-      operate,
-      currentPage,
-      currentSelect,
-      otherSelect,
-      pageSize,
       multipleTable,
       configProvider,
       injectProps,
@@ -711,71 +576,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-/* 树表格时icon和文字居中 */
-:deep(.cell) {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-:deep(.center .cell) {
-  justify-content: center;
-}
-:deep(.right .cell) {
-  justify-content: flex-end;
-}
-
-.content {
-  position: relative;
-  padding-bottom: 23px;
-}
-.content > .develop {
-  text-align: center;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  border-radius: 10px;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.5)
-  );
-}
-
-.content > .develop span {
-  /* position: absolute; */
-  bottom: 0;
-  font-size: 12px;
-}
-
-.develop {
-  width: 100%;
-}
-
-:deep(.btnType) {
-  flex-wrap: wrap;
-}
-
-:deep(.btnType .btnEach) {
-  margin-bottom: 5px;
-  margin-top: 5px;
-}
-:deep(.btnType .notSpan span) {
-  display: none;
-}
-
-.pagination {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.left {
-  justify-content: flex-start;
-}
-
-.el-pagination {
-  width: auto;
-}
-</style>
+<style src='./powerful-table.css'></style>

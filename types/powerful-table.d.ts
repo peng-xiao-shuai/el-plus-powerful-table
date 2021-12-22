@@ -11,7 +11,7 @@ export interface PowerfulTableData<L> {
   list: L[];
   pageSizes: number[];
   total: number
-  size?: '', 'large', 'medium', 'small', 'mini',
+  size?: Size;
   locale?: string,
   selectData?: any[];
   isSelect?: boolean;
@@ -55,11 +55,11 @@ export interface PowerfulTableHeader<L = any> {
   hidden?: boolean;
   minWidth?: string | number;
   width?: string | number;
+  isShowOrFilterColumn?: false | 'show' | 'filter';
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
   headerSlotName?: string;
-  isFilterColumn?: Boolean;
   props: PowerfulTableHeaderProps<L>[];
 }
 // props 单元格数据
@@ -172,14 +172,31 @@ export type TagDataType = {
 
 // 组件注入数据
 export type InjectProps = {
-  size?: 'medium' | 'small' | 'mini';
+  size?: Size;
   locale: {
     name: string;
     el: any
   }
 }
 
+// btnPlus组件
+export namespace BtnConfig {
+  export type BtnList = {
+    type?: ThemeType;
+    icon?: '';
+    style?: {};
+    disabled?: boolean;
+    operateType: 'none' | 'single' | 'batch';
+    tip: string
+  }
+  export type Config = {
+    hidden?: 'left' | 'right' | 'none',
+    btnList: BtnList[]
+  }
+}
+
 export type SFCWithInstall<T> = T & Plugin
 
 type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
+type Size = '' | 'large' | 'medium' | 'small' | 'mini'
 type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'
