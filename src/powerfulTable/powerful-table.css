@@ -11,6 +11,12 @@
   justify-content: flex-end;
 }
 
+/* 操作按钮和dropdown */
+.el-button + .el-dropdown-more,
+.el-dropdown-more + .el-button {
+  margin-left: 10px;
+}
+
 .content {
   position: relative;
   padding-bottom: 23px;

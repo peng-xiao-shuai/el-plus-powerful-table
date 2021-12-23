@@ -6,7 +6,7 @@ export default defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<BtnDataType[]>>,
+      type: Object as PropType<PowerfulTableHeaderProps<any, BtnDataType[] | BtnDataType[][]>>,
       default: () => {}
     }
   },
@@ -35,37 +35,70 @@ export default defineComponent({
       }
     }
 
+    const btn = (item: BtnDataType) => (
+      <el-button
+        class={item.text == '' ?  'notSpan' : ''}
+        size={size}
+        style={item.style || {}}
+        icon={item.icon || ''}
+        disabled={item.disabled || false}
+        type={item.type || 'primary'}
+        onClick={(e:Event) => {
+          e.stopPropagation()
+          item.emit && btnChange(item.emit, props.row, props.index as number, item.type || 'primary' )
+        }}
+      >
+        { typeof item.text != 'string'  ? item.tip : item.text }
+      </el-button>
+    )
+
     return () => (
       <>
-        <div style={{display: 'flex', alignItems: 'center', width: '100%', flexWrap: 'wrap', justifyContent: justifyFun(props.aligning)}}>
-          <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
-            { props.prop.text || "" }
+        <div class="btnType" style={{display: 'flex', alignItems: 'center', width: '100%', flexWrap: 'wrap', justifyContent: justifyFun(props.aligning)}}>
+          <span style={{marginRight: props.prop?.text ? '10px' : '0px'}}>
+            { props.prop?.text || "" }
           </span>
           {
             (props.prop.data as BtnDataType[])?.filter(item => typeof item.showBtn === 'function' ? item.showBtn(props.row, props.index) : (item.showBtn === undefined ? true : item.showBtn))
-            .map(item =>(
-              <el-tooltip
-                class="btnEach"
-                effect="dark"
-                content={item.tip}
-                placement="top"
-              >
-                <el-button
-                  class={item.text == '' ?  'notSpan' : ''}
-                  size={size}
-                  style={item.style || {}}
-                  icon={item.icon || ''}
-                  disabled={item.disabled || false}
-                  type={item.type || 'primary'}
-                  onClick={(e:Event) => {
-                    e.stopPropagation()
-                    btnChange(item.emit, props.row, props.index as number, item.type || 'primary' )
-                  }}
+            .map(item => {
+              return Array.isArray(item)
+              ? (<el-dropdown class="el-dropdown-more" v-slots={{
+                  dropdown: () => (
+                    <el-dropdown-menu>
+                      {item.filter(each => !each.isMore).map(each => (<el-dropdown-item key={each.label}>
+                        <el-tooltip
+                          class="btnEach"
+                          effect="dark"
+                          content={each.tip}
+                          placement="top"
+                        >
+                          {btn(each)}
+                        </el-tooltip>
+                      </el-dropdown-item>))}
+                    </el-dropdown-menu>
+                  )
+                }}>
+                  <div>
+                    {(item.find(each => each.isMore)
+                      ? [item.find(each => each.isMore)]
+                      : [{tip: '更多'}])
+                      .map(each => (
+                        <>
+                        {btn(each)}
+                        </>
+                      ))
+                    }
+                  </div>
+                </el-dropdown>)
+              : (<el-tooltip
+                  class="btnEach"
+                  effect="dark"
+                  content={item.tip}
+                  placement="top"
                 >
-                  { typeof item.text != 'string'  ? item.tip : item.text }
-                </el-button>
-              </el-tooltip>
-            ))
+                  {btn(item)}
+                </el-tooltip>)
+            })
           }
         </div>
       </>

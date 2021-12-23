@@ -111,7 +111,7 @@ export const powerfulTableComponentProp = {
   },
   index: Number,
   aligning: {
-    type: String,
+    type: String as PropType<'left' | 'center' | 'right'>,
     default: 'center'
   }
 }

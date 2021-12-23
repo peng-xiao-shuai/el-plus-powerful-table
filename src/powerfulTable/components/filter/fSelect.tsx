@@ -78,10 +78,12 @@ export default defineComponent({
           const arr: any = []
           arr.push({
             label: '开启',
-            value: props.propData.data.activeValue || 1,
+            // value: props.propData.data.activeValue || 1,
+            value: 1,
           }, {
             label: '关闭',
-            value: props.propData.data.inactiveValue || 0,
+            // value: props.propData.data.inactiveValue || 0,
+            value: 0,
           });
           state.options = arr
         }

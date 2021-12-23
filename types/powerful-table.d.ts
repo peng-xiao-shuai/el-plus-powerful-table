@@ -63,7 +63,7 @@ export interface PowerfulTableHeader<L = any> {
   props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>;
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps<L = any, D = DataType> {
+export interface PowerfulTableHeaderProps<L = any, D = any> {
   prop: string;
   data?: D;
   type?: Type;
@@ -197,7 +197,6 @@ export namespace BtnConfig {
 
 export type SFCWithInstall<T> = T & Plugin
 
-export type DataType = TextDataType | ImageDataType | BtnDataType | SwitchDataType | InputDataType | VideoDataType | IconFontDataType | RateDataType | HrefDataType | TagDataType
 type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
 type Size = '' | 'large' | 'medium' | 'small' | 'mini'
 type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'

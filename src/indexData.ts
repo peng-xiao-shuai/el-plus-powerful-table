@@ -30,29 +30,29 @@ let btnConfig = {
 }
 
 let header: PowerfulTableHeader<Lists>[] = [
-  // {
-  //   label: "编号", //显示的标题
-  //   minWidth: "80px", //对应列的最小宽度
-  //   sortable: true, //排序
-  //   props: [
-  //     {
-  //       prop: "id",
-  //       // data: {
-  //       //   develop: false
-  //       // }
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: "名称", //显示的名称
-  //   overflowTooltip: true,
-  //   minWidth: "60", //对应列的最小宽度
-  //   props: [
-  //     {
-  //       prop: "name",
-  //     },
-  //   ],
-  // },
+  {
+    label: "编号", //显示的标题
+    minWidth: "80px", //对应列的最小宽度
+    sortable: true, //排序
+    props: [
+      {
+        prop: "id",
+        // data: {
+        //   develop: false
+        // }
+      },
+    ],
+  },
+  {
+    label: "名称", //显示的名称
+    overflowTooltip: true,
+    minWidth: "60", //对应列的最小宽度
+    props: [
+      {
+        prop: "name",
+      },
+    ],
+  },
   {
     label: "slot（插槽）", //显示的标题
     isShowOrFilterColumn: false,
@@ -237,55 +237,58 @@ let header: PowerfulTableHeader<Lists>[] = [
         type: 'text',
         data: {
           develop: true,
-          line: 2
+          line: 2,
         }
       },
     ],
   },
-  // {
-  //   label: "操作", //显示的标题
-  //   width: 150,
-  //   fixed: 'right',
-  //   props: [
-  //     {
-  //       type: "btn",
-  //       prop: "btn",
-  //       data: [
-  //         {
-  //           tip: "编辑",
-  //           type: "info",
-  //           // icon: Edit,
-  //           text: "1",
-  //           showBtn: false,
-  //           emit: "update",
-  //         },
-  //         {
-  //           tip: "编辑",
-  //           type: "info",
-  //           // icon: Edit,
-  //           showBtn: (e: any) => {
-  //             return true
-  //           },
-  //           emit: "update",
-  //         },
-  //         {
-  //           tip: "编辑",
-  //           type: "info",
-  //           // icon: Edit,
-  //           text: "",
-  //           emit: "update",
-  //         },
-  //         {
-  //           tip: "删除",
-  //           type: "danger",
-  //           text: "",
-  //           // icon: Delete,
-  //           emit: "remove",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // }
+  {
+    label: "操作", //显示的标题
+    width: 250,
+    fixed: 'right',
+    props: [
+      {
+        type: "btn",
+        prop: "btn",
+        data: [
+          {
+            tip: "编辑",
+            type: "info",
+            // icon: Edit,
+            text: "编辑",
+            // showBtn: false,
+            emit: "update",
+          },
+          [{
+            tip: "更多",
+            isMore: true,
+            type: "success",
+            // icon: Edit,
+          },{
+            tip: "编辑",
+            type: "text",
+            // icon: Edit,
+            emit: "update",
+          },
+          {
+            tip: "删除",
+            type: "text",
+            // icon: Delete,
+            emit: "remove",
+          }],
+          {
+            tip: "删除",
+            type: "danger",
+            // icon: Edit,
+            showBtn: (e: any) => {
+              return true
+            },
+            emit: "update",
+          },
+        ],
+      },
+    ],
+  }
 ]
 
 interface Lists {

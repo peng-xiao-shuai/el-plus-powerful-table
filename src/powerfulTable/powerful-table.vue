@@ -15,6 +15,7 @@
       :locale="locale || (injectProps && injectProps.locale) || en"
     >
       <el-table
+        class="powerful-table"
         v-loading="listLoading"
         :data="tableLists"
         ref="multipleTable"
@@ -141,7 +142,6 @@
               <!-- 按钮 -->
               <Button
                 v-else-if="prop.type == 'btn'"
-                class="btnType"
                 v-bind="bindAttr(prop, scope, item)"
                 @returnEmit="returnEmit"
               />
@@ -186,6 +186,7 @@
                 :class="{ content: develop[scope.$index] }"
               >
                 <!-- 主体内容 -->
+                <!-- asType<DataType.TextData>(prop) 用于重写类型 -->
                 <div
                   :style="{
                     display: '-webkit-box',
@@ -193,7 +194,7 @@
                     '-webkit-box-orient': 'vertical',
                     '-webkit-line-clamp': develop[scope.$index]
                       ? 99999
-                      : (prop.data && prop.data.line) || 3,
+                      : prop.data && prop.data.line || 3
                   }"
                 >
                   {{
@@ -303,8 +304,6 @@ import type {
   PowerfulTableOperateData,
   PowerfulTableHeaderProps,
   PowerfulTableTree,
-  EmitType,
-  InjectProps,
 } from "../../types/powerful-table";
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
 import en from "element-plus/lib/locale/lang/en";
@@ -381,7 +380,7 @@ export default defineComponent({
       sortChange,
       batchOperate,
       handleChange,
-      get
+      get,
     } = useFunction(emit, powerfulTableData)
 
     watchEffect(() => {
@@ -558,12 +557,12 @@ export default defineComponent({
       en,
 
       rowClick,
-      bindAttr: (prop: PowerfulTableHeaderProps<typeof scope>, scope: typeof props.list[0], item: PowerfulTableHeader<typeof scope>) => {
+      bindAttr: <D>(prop: PowerfulTableHeaderProps<any, D>, scope: typeof props.list[0], item: PowerfulTableHeader<typeof scope>) => {
         return {
           row: scope.row,
           index: scope.$index,
-          prop: prop,
-          aligning: item.headerAlign
+          prop,
+          aligning: item.headerAlign || 'center'
         }
       },
       returnEmit,
