@@ -7,7 +7,7 @@ export default defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<IconFontDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<any, IconFontDataType>>,
       default: () => {}
     }
   },

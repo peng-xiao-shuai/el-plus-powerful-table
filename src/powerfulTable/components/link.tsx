@@ -6,7 +6,7 @@ export default defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<HrefDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<any, HrefDataType>>,
       default: () => {}
     }
   },

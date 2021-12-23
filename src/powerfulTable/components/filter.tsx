@@ -11,7 +11,7 @@ export default defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<TextDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<any, TextDataType>>,
       default: () => {}
     }
   },

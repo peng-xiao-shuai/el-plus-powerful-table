@@ -6,7 +6,7 @@ export default defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<ImageDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<any, ImageDataType>>,
       default: () => {}
     }
   },

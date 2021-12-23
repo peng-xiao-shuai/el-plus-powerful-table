@@ -63,7 +63,7 @@ export interface PowerfulTableHeader<L = any> {
   props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>;
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps<L = any, D = any> {
+export interface PowerfulTableHeaderProps<L = any, D = DataType> {
   prop: string;
   data?: D;
   type?: Type;
@@ -103,10 +103,11 @@ export type BtnDataType = {
   icon?: string;
   disabled?: boolean;
   text?: string;
+  isMore?: boolean;
   style?: {};
-  type?: ThemeType,
+  type?: ThemeType;
   showBtn?: ((row: any, index?: number) => boolean) | boolean;
-  emit: EmitType
+  emit?: EmitType
 }
 
 export type SwitchDataType = {
@@ -114,8 +115,8 @@ export type SwitchDataType = {
   inactiveColor?: string;
   inactiveText?: string;
   activeText?: string;
-  activeValue?: number;
-  inactiveValue?: number;
+  activeValue?: number | string;
+  inactiveValue?: number | string;
   disabled?: boolean | ((row: any) => boolean);
   style?: {};
   beforeFunction?: (row: any, value: number | string, oldValue: number | string) => boolean;
@@ -196,6 +197,7 @@ export namespace BtnConfig {
 
 export type SFCWithInstall<T> = T & Plugin
 
+export type DataType = TextDataType | ImageDataType | BtnDataType | SwitchDataType | InputDataType | VideoDataType | IconFontDataType | RateDataType | HrefDataType | TagDataType
 type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
 type Size = '' | 'large' | 'medium' | 'small' | 'mini'
 type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'

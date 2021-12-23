@@ -6,7 +6,7 @@ export default defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<SwitchDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<any, SwitchDataType>>,
       default: () => {}
     }
   },
@@ -17,7 +17,7 @@ export default defineComponent({
 
     const { proxy } = getCurrentInstance() as any
     /* ------ 开关回调 ------ */
-    const switchChange = (row: any, prop: string, val = 1, val2 = 0, beforeFunction: Function | undefined) => {
+    const switchChange = (row: any, prop: string, val:string|number = 1, val2:string|number = 0, beforeFunction: Function | undefined) => {
       let value = row[prop] == val ? val2 : val
       if (typeof beforeFunction == 'function' && !beforeFunction(row, row[prop], value)) {
         row[prop] = value
