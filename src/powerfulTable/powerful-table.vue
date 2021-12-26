@@ -272,11 +272,9 @@
         <!-- 分页操作 -->
         <div class="pagination" v-if="isPagination">
           <el-pagination
-            @size-change="handleChange($event, 'pageSize')"
-            @current-change="handleChange($event, 'currentPage')"
-            :current-page="currentPage"
+            v-model:current-page="currentPage"
+            v-model:page-size="pageSize"
             :page-sizes="pageSizes"
-            :page-size="pageSize"
             :layout="layout"
             :total="total"
           >
@@ -379,7 +377,6 @@ export default defineComponent({
       returnEmit,
       sortChange,
       batchOperate,
-      handleChange,
       get,
     } = useFunction(emit, powerfulTableData)
 
@@ -404,11 +401,17 @@ export default defineComponent({
     // 为表格数据重新赋值
     watch(
       () => [props.list],
-      ([newList]: any) => {
+      ([newList, newPage, newSize]: any) => {
         state.tableLists = newList;
       },
       { immediate: true, deep: true }
     );
+    watch(
+      ()=> [powerfulTableData.currentPage, powerfulTableData.pageSize],
+      ([newPage, newSize]: any) => {
+        get()
+      }
+    )
 
     // 按钮右侧列按钮回调
     const functionBtnChange = () => {
@@ -499,26 +502,18 @@ export default defineComponent({
         // 获取当前页
         arr.forEach((item) => {
           let itm = list.filter((each: typeof list[0]) => {
-            return (
-              item[props.selectCompare[1]] ==
-              (each as any)[props.selectCompare[0]]
-            );
+            return item[props.selectCompare[0]] == (each as any)[props.selectCompare[1]]
           });
 
-          if (itm.length > 0) {
-            current.push(itm[0]);
-          }
+          if (itm.length > 0) current.push(itm[0]);
         });
 
-        // console.log('当前页选中', current)
         // 获取其他页
         if (current.length > 0) {
           other = JSON.parse(JSON.stringify(arr));
           for (let j in other) {
             current.forEach((item) => {
-              if (
-                item[props.selectCompare[1]] == other[j][props.selectCompare[0]]
-              ) {
+              if (item[props.selectCompare[1]] == other[j][props.selectCompare[0]]) {
                 other.splice(Number(j), 1);
               }
             });
@@ -528,7 +523,9 @@ export default defineComponent({
         }
 
         powerfulTableData.otherSelect = other;
-        // console.log('其他页选中', powerfulTableData.otherSelect);
+        powerfulTableData.currentSelect = current;
+        // console.log('当前页选中', current)
+        // console.log('其他页选中', other);
 
         if (current.length != 0) {
           current.forEach((row) => {
@@ -541,7 +538,6 @@ export default defineComponent({
         (multipleTable.value as any).clearSelection();
       }
     };
-
 
     return {
       headerLists,
@@ -566,10 +562,9 @@ export default defineComponent({
         }
       },
       returnEmit,
-      handleChange,
       sortChange,
       batchOperate,
-      handleSelectionChange,
+      handleSelectionChange
     };
   },
 });

@@ -11,6 +11,11 @@
   justify-content: flex-end;
 }
 
+/* 隐藏按钮提示 */
+.no-tooltip.el-popper.is-dark {
+  display: none;
+}
+
 /* 操作按钮和dropdown */
 .el-button + .el-dropdown-more,
 .el-dropdown-more + .el-button {

@@ -44,13 +44,23 @@ let header: PowerfulTableHeader<Lists>[] = [
     ],
   },
   {
-    label: "名称", //显示的名称
+    label: "名称/性别", //显示的名称
     overflowTooltip: true,
-    minWidth: "60", //对应列的最小宽度
+    headerAlign: 'left',
     props: [
       {
         prop: "name",
       },
+      {
+        prop: "gender",
+        // customFilterFun(row){
+        //   return '公'
+        // },
+        filter: [{ key: 1, value: '公' }, { key: 2, value: '母' }, { key: 3, value: '未知' }],
+        // filter: (row: any) => {
+        //   return ({ 1: '公', 2: '母', 3: '未知' } as any)[row.gender]
+        // }, //过滤
+      }
     ],
   },
   {
@@ -63,22 +73,6 @@ let header: PowerfulTableHeader<Lists>[] = [
         type: "slot",
         slotName: "A"
       },
-    ],
-  },
-  {
-    label: "性别", //显示的标题
-    isShowOrFilterColumn: 'show',
-    props: [
-      {
-        prop: "gender",
-        // customFilterFun(row){
-        //   return '公'
-        // },
-        filter: [{ key: 1, value: '公' }, { key: 2, value: '母' }, { key: 3, value: '未知' }],
-        // filter: (row: any) => {
-        //   return ({ 1: '公', 2: '母', 3: '未知' } as any)[row.gender]
-        // }, //过滤
-      }
     ],
   },
   {
@@ -257,7 +251,10 @@ let header: PowerfulTableHeader<Lists>[] = [
             // icon: Edit,
             text: "编辑",
             // showBtn: false,
-            emit: "update",
+            // isTooltip: true,
+            params: {
+              emit: "update",
+            }
           },
           [{
             tip: "更多",
@@ -268,13 +265,13 @@ let header: PowerfulTableHeader<Lists>[] = [
             tip: "编辑",
             type: "text",
             // icon: Edit,
-            emit: "update",
+            params: "update",
           },
           {
             tip: "删除",
             type: "text",
             // icon: Delete,
-            emit: "remove",
+            params: "remove",
           }],
           {
             tip: "删除",
@@ -283,7 +280,9 @@ let header: PowerfulTableHeader<Lists>[] = [
             showBtn: (e: any) => {
               return true
             },
-            emit: "update",
+            params: {
+              emit: "remove",
+            }
           },
         ],
       },

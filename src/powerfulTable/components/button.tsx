@@ -17,7 +17,12 @@ export default defineComponent({
     
     const { proxy } = getCurrentInstance() as any
     /* ------ 按钮回调 ------ */
-    const btnChange = (emitName: EmitType, row: any, index: number, type: string) => {
+    const btnChange = (item: BtnDataType, row: any, index: number, type: string) => {
+      const params = 
+        typeof item.params === 'object' 
+        ? Object.assign({type}, item.params) 
+        : Object.assign({type}, typeof item.params === 'undefined' ? {} : {params: item.params})
+
       if (type == 'danger') {
         proxy.$confirm('是否要进行删除操作, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -25,13 +30,13 @@ export default defineComponent({
           type: 'warning'
         })
           .then(() => {
-            emit('returnEmit', emitName, { row, index })
+            emit('returnEmit', 'btnClick', { params, row, index })
           })
           .catch(() => {
-            console.log('取消删除')
+            // console.log('取消删除')
           })
       } else {
-        emit('returnEmit', emitName, { row, index })
+        emit('returnEmit', 'btnClick', { params, row, index })
       }
     }
 
@@ -45,7 +50,7 @@ export default defineComponent({
         type={item.type || 'primary'}
         onClick={(e:Event) => {
           e.stopPropagation()
-          item.emit && btnChange(item.emit, props.row, props.index as number, item.type || 'primary' )
+          !item.isMore && btnChange(item, props.row, props.index as number, item.type || 'primary' )
         }}
       >
         { typeof item.text != 'string'  ? item.tip : item.text }
@@ -67,7 +72,7 @@ export default defineComponent({
                     <el-dropdown-menu>
                       {item.filter(each => !each.isMore).map(each => (<el-dropdown-item key={each.label}>
                         <el-tooltip
-                          class="btnEach"
+                          popper-class={item.isTooltip ? '' : 'no-tooltip'}
                           effect="dark"
                           content={each.tip}
                           placement="top"
@@ -91,7 +96,7 @@ export default defineComponent({
                   </div>
                 </el-dropdown>)
               : (<el-tooltip
-                  class="btnEach"
+                  popper-class={item.isTooltip ? '' : 'no-tooltip'}
                   effect="dark"
                   content={item.tip}
                   placement="top"

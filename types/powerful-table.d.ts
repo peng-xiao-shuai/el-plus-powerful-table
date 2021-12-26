@@ -107,7 +107,9 @@ export type BtnDataType = {
   style?: {};
   type?: ThemeType;
   showBtn?: ((row: any, index?: number) => boolean) | boolean;
-  emit?: EmitType
+  emit?: EmitType;
+  isTooltip?: boolean;
+  params?: any
 }
 
 export type SwitchDataType = {

@@ -94,13 +94,7 @@ export const powerfulTableEmits  = [
   "batchOperate",
   "switchChange",
   "sizeChange",
-  "query",
-  "success",
-  "add",
-  "update",
-  "remove",
-  "occupyOne",
-  "occupyTwo",
+  "btnClick",
   "row-click",
 ]
 
@@ -247,16 +241,6 @@ export const useFunction = (emit: Function, powerfulTableData: PowerfulTableData
     returnEmit("row-click", { ...arg });
   };
 
-  /**
-   * 条数或页数切换
-   * @param {number} e 
-   * @param {string} type 
-   */
-  const handleChange = (e: number, type: string) => {
-    type === "pageSize" ? (powerfulTableData.pageSize = e) : (powerfulTableData.currentPage = e);
-    get();
-  };
-
   /* ------ 回调到组件上 ------ */
   const get = () => {
     let data = {
@@ -290,7 +274,6 @@ export const useFunction = (emit: Function, powerfulTableData: PowerfulTableData
     returnEmit,
     sortChange,
     batchOperate,
-    handleChange,
     get
   }
 }
