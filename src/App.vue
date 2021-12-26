@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <powerful-table
+      ref='powerfulTable'
       :list="list"
       isSelect
       :btnConfig="btnConfigs"
@@ -12,8 +13,7 @@
       :pageSizes="[2, 5, 7]"
       @batchOperate="batchOperate"
       @switchChange="switchChange"
-      @update="handlerUpdate"
-      @remove="handlerRemove"
+      @btnClick="handlerUpdate"
       @sizeChange="getList"
       @btnChange="btnChange"
     >
@@ -38,15 +38,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { btnConfig, header, lists } from "./indexData"
 import { ElMessage } from 'element-plus'
-import { reactive, ref, onMounted, defineComponent } from "vue"
+import { reactive, ref, onMounted, defineComponent, nextTick } from "vue"
 
 export default defineComponent({
   setup (props, context) {
     let rowA = reactive({ value: {} })
-    let list = ref([])
+    let list = ref<any>([])
     // 所有页面选中数组
     let selectData = reactive([{ a: 1 }, { a: 2 }, { a: 3 }])
     let selectCompare = reactive(["a", "id"])
@@ -55,6 +55,7 @@ export default defineComponent({
     let config = reactive(header)
     let btnConfigs = reactive(btnConfig)
     let total = ref(lists.length)
+    const powerfulTable = ref(null)
     let operateData = reactive({
       value: "",
       operates: [
@@ -69,10 +70,10 @@ export default defineComponent({
       pageSize: 2
     })
 
-    function handlerSort (e) {
+    function handlerSort (e: any) {
       console.log("远程排序", e)
     }
-    function getList (data, selectData) {
+    function getList (data?: any, selectData?: any) {
       // 切换页面赋值
       selectData = selectData
       Object.assign(listQuery, data)
@@ -88,26 +89,26 @@ export default defineComponent({
       })
     }
 
-    function batchOperate (e) {
+    function batchOperate (e: any) {
       ElMessage.success('批量操作，参数详情，查看控制台')
       console.log("批量操作", e, e.ids)
     }
 
-    function switchChange (e) {
+    function switchChange (e: any) {
       ElMessage.success('开关修改操作，参数详情，查看控制台')
       console.log("修改", e)
     }
     // 修改
-    function handlerUpdate (e) {
+    function handlerUpdate (e: any) {
       ElMessage.success('按钮修改操作，参数详情，查看控制台')
       console.log("修改", e)
     }
-    function handlerRemove (e) {
+    function handlerRemove (e: any) {
       ElMessage.success('按钮删除操作，参数详情，查看控制台')
       console.log("删除", e, e.index)
     }
     // 左侧按钮回调
-    function btnChange (e) {
+    function btnChange (e: any) {
       if (e.effect === 'add') {
         ElMessage.success('新增操作，参数详情，查看控制台')
         console.log("新增操作", e.effect, e.list)
@@ -131,6 +132,7 @@ export default defineComponent({
       btnConfigs,
       selectData,
       selectCompare,
+      powerfulTable,
       // listLoading,
       isSelect,
       config,

@@ -15,6 +15,98 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
+
+## 1.5.1 20211226
+- 解决数据选中 `bug`
+- 优化部分样式问题
+- 优化 `props` 类型从数组 改为 数组或者对象均可
+- 按钮配置优化
+- - 可配置二维数组
+- - 删除 `emit`
+- - 新增 `isTooltip` 是否显示提示
+- - 新增 `params`，`isMore` 参数。`params` 自定义传入数据，将会在点击按钮时返回。例如：
+```js
+{
+  ...
+  params: {
+    emit: 'update'
+  }
+}
+
+// index.vue
+<powerfulTable v-on:btnClick='handleOperate'>
+</powerfulTable>
+
+...
+
+// row 当前行数据 params 自定义传入的数据 index 当前行的下标
+const handleOperate = ({row, params, index}) {
+
+}
+```
+`isMore` 用来判断是否将当前对象数据 显示为 更多按钮
+```js
+{
+  props: [
+    {
+      type: "btn",
+      prop: "btn",
+      data: [
+        {
+          tip: "编辑",
+          type: "info",
+          // icon: Edit,
+          text: "编辑",
+          // showBtn: false,
+          // isTooltip: true,
+          params: {
+            emit: "update",
+          }
+        },
+        [{
+          tip: "更多",
+          isMore: true,
+          type: "success",
+          // icon: Edit,
+        },{
+          tip: "编辑",
+          type: "text",
+          // icon: Edit,
+          params: "update",
+        },
+        {
+          tip: "更多a",
+          isMore: true, // 这个将不会被引用到
+          type: "success",
+          // icon: Edit,
+        },
+        {
+          tip: "删除",
+          type: "text",
+          // icon: Delete,
+          params: "remove",
+        }],
+        {
+          tip: "删除",
+          type: "danger",
+          // icon: Edit,
+          showBtn: (e: any) => {
+            return true
+          },
+          params: {
+            emit: "remove",
+          }
+        },
+      ],
+    },
+  ]
+}
+```
+
+- 删除 `child` 字段
+- 新增全局组件注入 `locale` 和 `size`
+
+===============================================================
 ## el-plus-powerful-table-ts
 
 此插件已 `el-plus-powerful-table` 作为基础，进行重构。部分功能将领先 `el-plus-powerful-table` 基础版本。
@@ -151,7 +243,7 @@ const data = [{
     type: 'text',
     text: '我的名字',
     prop: 'my',
-    child: 'name',
+    // child: 'name',
     reserve: '<b>我只有在数据空时显示</b>',
     customFilterFun: (row, index) => {
       return row.my.name
@@ -267,7 +359,11 @@ const data = [{
 | disabled | 按钮是否禁用     | boolean | true/false                                           | false   |
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
 | showBtn    | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean | function(row,index)  | -                                                    | -       |
-| emit     | 自定义方法名     | string  | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
+| isTooltip  | 是否启用按钮上方提示         | boolean   | true / false | false |
+| params     | 自定义数据         | -  | -   | {} |
+| isMore     | 是否更多 当 `data` 是二维数组时有效         | boolean   | true / false | false |
+
+| emit <font color='red'>已删除</font>     | 自定义方法名     | string  | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
 
 ```js
 // 参数示例
@@ -297,6 +393,24 @@ const data = [{
             }
             emit: "remove",
           },
+          [{
+            tip: "更多",
+            isMore: true,
+            type: "success",
+             showBtn: (row)=>{
+              return true
+            }
+            emit: "remove",
+          },{
+            tip: "删除",
+            type: "danger",
+            text: "", //将不会显示按钮文字
+            icon: "el-icon-delete",
+             showBtn: (row)=>{
+              return true
+            }
+            emit: "remove",
+          },]
         ],
       },
     ],
@@ -541,6 +655,6 @@ const data = [{
 | sizeChange   | 分页器切换                                                                                      | { pageNum , pageSize }，selectArr(所有页中选中的数据) |
 | sortCustom   | 远程排序                                                                                        | column                                                |
 | batchOperate | 批量操作                                                                                        | {ids , selection , rows}                              |
-| 自定义方法名 | 操作按钮 暂时只有 <font color='red'>'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo'</font> | {row , index }                                        |
+| btnClick | 操作按钮 | {row , index, params }                                        |
 | switchChange | 开关组件操作                                                                                    | row                                                   |
 | row-click | 行点击事件                                                                                    | {row, column, event}                                                   |

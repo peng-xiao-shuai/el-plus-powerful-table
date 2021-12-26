@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- 按钮组件 -->
-    <btn-plus
+    <!-- <btn-plus
       ref="btnPlusRef"
       v-model:isTable="isTable"
       :btn-config="btnConfig"
       :headerList="header"
       :multiple-selection="currentSelect"
       @functionBtnChange="functionBtnChange"
-    ></btn-plus>
+    ></btn-plus> -->
 
     <el-config-provider
       ref="configProvider"
@@ -188,14 +188,14 @@
                 <!-- 主体内容 -->
                 <!-- asType<DataType.TextData>(prop) 用于重写类型 -->
                 <div
-                  :style="{
+                  :style="prop.data && prop.data.develop ? {
                     display: '-webkit-box',
                     overflow: 'hidden',
                     '-webkit-box-orient': 'vertical',
                     '-webkit-line-clamp': develop[scope.$index]
                       ? 99999
                       : prop.data && prop.data.line || 3
-                  }"
+                  } : {}"
                 >
                   {{
                     prop.data && typeof prop.data.customFilterFun == "function"
