@@ -7,16 +7,16 @@ declare module 'el-plus-powerful-table-ts' {
 }
 
 /* ------ props ------ */
-export interface PowerfulTableData {
-  list: any[];
+export interface PowerfulTableData<L> {
+  list: L[];
   pageSizes: number[];
   total: number
-  size?: string,
+  size?: Size;
   locale?: string,
   selectData?: any[];
   isSelect?: boolean;
   selectCompare?: string[];
-  header: PowerfulTableHeader[];
+  header: PowerfulTableHeader<L>[];
   layout?: string;
   operateData?: PowerfulTableOperateData;
   isPagination?: boolean;
@@ -49,29 +49,32 @@ export interface PowerfulTableOperateData {
 
 /* ------ header 表格头部数据 ------ */
 // header 表格头部数据
-export interface PowerfulTableHeader<U = any> {
+export interface PowerfulTableHeader<L = any> {
   overflowTooltip?: boolean;
   label: string;
+  hidden?: boolean;
   minWidth?: string | number;
   width?: string | number;
+  isShowOrFilterColumn?: false | 'show' | 'filter';
   sortable?: boolean | 'custom';
   fixed?: boolean | 'left' | 'right';
   headerAlign?: 'left' | 'center' | 'right';
-  headerSlotName?: string 
-  props: PowerfulTableHeaderProps<any, U>[];
+  headerSlotName?: string;
+  props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>;
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps<T, U = any> {
+export interface PowerfulTableHeaderProps<L = any, D = any> {
   prop: string;
-  data?: T;
-  child?: string;
+  data?: D;
   type?: Type;
-  filter?: PowerfulTableFilter[] | ((row: any, index?: number) => string | number);
+  filter?: PowerfulTableFilter[] | ((row: L, index?: number) => string | number);
   text?: string;
   slotName?: string;
-  render?: (h: Function, row: U,index: number) => VNode | string | number;
+  render?: (h: Function, row: L, index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
+  filterItem?: boolean;
+  filtersType?: 'select' | 'date'
 }
 
 type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot' | 'textarea'
@@ -100,10 +103,13 @@ export type BtnDataType = {
   icon?: string;
   disabled?: boolean;
   text?: string;
+  isMore?: boolean;
   style?: {};
-  type?: ThemeType,
+  type?: ThemeType;
   showBtn?: ((row: any, index?: number) => boolean) | boolean;
-  emit: EmitType
+  emit?: EmitType;
+  isTooltip?: boolean;
+  params?: any
 }
 
 export type SwitchDataType = {
@@ -111,8 +117,8 @@ export type SwitchDataType = {
   inactiveColor?: string;
   inactiveText?: string;
   activeText?: string;
-  activeValue?: number;
-  inactiveValue?: number;
+  activeValue?: number | string;
+  inactiveValue?: number | string;
   disabled?: boolean | ((row: any) => boolean);
   style?: {};
   beforeFunction?: (row: any, value: number | string, oldValue: number | string) => boolean;
@@ -154,7 +160,7 @@ export type HrefDataType = {
   style?: {};
   type?: ThemeType;
   underline?: boolean;
-  text?: string | ((row: any) => string) 
+  text?: string | ((row: any) => string)
 }
 
 export type TagDataType = {
@@ -168,11 +174,31 @@ export type TagDataType = {
 
 // 组件注入数据
 export type InjectProps = {
-  size?: 'medium' | 'small' | 'mini';
-  locale: Object
+  size?: Size;
+  locale: {
+    name: string;
+    el: any
+  }
+}
+
+// btnPlus组件
+export namespace BtnConfig {
+  export type BtnList = {
+    type?: ThemeType;
+    icon?: '';
+    style?: {};
+    disabled?: boolean;
+    operateType: 'none' | 'single' | 'batch';
+    tip: string
+  }
+  export type Config = {
+    hidden?: 'left' | 'right' | 'none',
+    btnList: BtnList[]
+  }
 }
 
 export type SFCWithInstall<T> = T & Plugin
 
 type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
+type Size = '' | 'large' | 'medium' | 'small' | 'mini'
 type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'
