@@ -42,7 +42,7 @@ export interface PowerfulTableOperateData {
   value?: number;
   type?: ThemeType;
   disabled?: boolean;
-  icon?: string;
+  icon?: any;
   style?: {};
   operates: PowerfulTableLabelValue[]
 }
@@ -100,7 +100,7 @@ export type ImageDataType = {
 
 export type BtnDataType = {
   tip: string;
-  icon?: string;
+  icon?: any;
   disabled?: boolean;
   text?: string;
   isMore?: boolean;
@@ -175,6 +175,7 @@ export type TagDataType = {
 // 组件注入数据
 export type InjectProps = {
   size?: Size;
+  btnSlot?: 'left' | 'right' | 'none'; // 控制所有的组件 显示左侧或右侧操作按钮
   locale: {
     name: string;
     el: any
@@ -185,14 +186,18 @@ export type InjectProps = {
 export namespace BtnConfig {
   export type BtnList = {
     type?: ThemeType;
-    icon?: '';
+    icon?: any;
     style?: {};
     disabled?: boolean;
-    operateType: 'none' | 'single' | 'batch';
-    tip: string
+    operateType?: 'none' | 'single' | 'batch';
+    text?: string;
+    showTip?:  boolean;
+    effect?: string;
+    tipContent?: string;
   }
   export type Config = {
     hidden?: 'left' | 'right' | 'none',
+    btnSlot?: 'left' | 'right' | 'all'
     btnList: BtnList[]
   }
 }

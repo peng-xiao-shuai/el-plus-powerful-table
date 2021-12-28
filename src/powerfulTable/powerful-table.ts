@@ -89,7 +89,6 @@ export const powerfulTableProps = {
 // 主组件emits
 export const powerfulTableEmits  = [
   "btnChange",
-  "update:currentPage",
   "sortCustom",
   "batchOperate",
   "switchChange",

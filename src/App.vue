@@ -17,6 +17,18 @@
       @sizeChange="getList"
       @btnChange="btnChange"
     >
+      <!-- <template #btn-left>
+        <div>
+          <el-button>1</el-button>
+          <el-button>2</el-button>
+        </div>
+      </template> -->
+      <!-- <template #btn-right>
+        <div>
+          <el-button>1</el-button>
+          <el-button>2</el-button>
+        </div>
+      </template> -->
       <template #empty>
         <div>23131</div>
       </template>

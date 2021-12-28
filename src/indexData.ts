@@ -3,22 +3,22 @@ import { Edit, Delete, Plus } from '@element-plus/icons-vue'
 
 let btnConfig = {
   // hidden: 'none',
+  btnSlot: 'all',
   btnList: [{
-    tip: '新增',
+    text: '新增',
     auth: '',
-    operateType: true,
     effect: 'add',
     type: '',
     // icon: Plus
   }, {
-    tip: '修改',
+    text: '修改',
     auth: '',
     operateType: 'single',
     effect: 'edit',
     type: 'primary',
     // icon: Edit
   }, {
-    tip: '批量删除',
+    text: '批量删除',
     auth: '',
     operateType: 'batch',
     effect: 'remove',
@@ -240,6 +240,7 @@ let header: PowerfulTableHeader<Lists>[] = [
     label: "操作", //显示的标题
     width: 250,
     fixed: 'right',
+    isShowOrFilterColumn: false,
     props: [
       {
         type: "btn",

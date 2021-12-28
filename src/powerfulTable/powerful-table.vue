@@ -1,14 +1,20 @@
 <template>
   <div>
     <!-- 按钮组件 -->
-    <!-- <btn-plus
+    <btn-plus
       ref="btnPlusRef"
       v-model:isTable="isTable"
       :btn-config="btnConfig"
       :headerList="header"
       :multiple-selection="currentSelect"
-      @functionBtnChange="functionBtnChange"
-    ></btn-plus> -->
+    >
+      <template #btn-left v-if="$slots['btn-left']">
+        <slot name="btn-left"></slot>
+      </template>
+      <template #btn-right v-if="$slots['btn-right']">
+        <slot name="btn-right"></slot>
+      </template>
+    </btn-plus>
 
     <el-config-provider
       ref="configProvider"
@@ -186,7 +192,6 @@
                 :class="{ content: develop[scope.$index] }"
               >
                 <!-- 主体内容 -->
-                <!-- asType<DataType.TextData>(prop) 用于重写类型 -->
                 <div
                   :style="prop.data && prop.data.develop ? {
                     display: '-webkit-box',
@@ -413,8 +418,8 @@ export default defineComponent({
       }
     )
 
-    // 按钮右侧列按钮回调
-    const functionBtnChange = () => {
+    // 重新渲染表格
+    const anewRender = () => {
       nextTick(() => {
         multipleTable.value.doLayout();
       });
@@ -542,7 +547,6 @@ export default defineComponent({
     return {
       headerLists,
       ...toRefs(state),
-      functionBtnChange,
       headerFilterChange,
       getPropObj,
       ...toRefs(powerfulTableData),
@@ -561,6 +565,7 @@ export default defineComponent({
           aligning: item.headerAlign || 'center'
         }
       },
+      anewRender,
       returnEmit,
       sortChange,
       batchOperate,
