@@ -36,7 +36,8 @@
     "url": "https://github.com/peng-xiao-shuai/el-plus-powerful-table.git"
   },
   "dependencies": {
-    "element-plus": "^1.2.0-beta.5",
+    "@element-plus/icons-vue": "^0.2.4",
+    "element-plus": "1.2.0-beta.5",
     "vue": "^3.2.0"
   },
   "browserslist": [
@@ -52,6 +53,7 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.2.0",
+    "sass": "^1.45.1",
     "sass-loader": "^10",
     "typescript": "^4.4.3"
   }
