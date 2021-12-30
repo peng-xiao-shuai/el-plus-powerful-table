@@ -86,17 +86,20 @@
                 getPropObj(item).type === 'tag'
               "
               :header-data="item"
+              :list="list"
               :prop-data="getPropObj(item)"
               @headerFilterChange="headerFilterChange"
             ></f-select>
             <f-date-picker
               v-else-if="getPropObj(item).filtersType === 'date'"
               :header-data="item"
+              :list="list"
               @headerFilterChange="headerFilterChange"
             ></f-date-picker>
             <f-input
               v-else
               :header-data="item"
+              :list="list"
               @headerFilterChange="headerFilterChange"
             ></f-input>
           </template>
@@ -410,10 +413,11 @@ export default defineComponent({
 
     /* --- 按钮组件参数及方法begin --- */
     // 为表格数据重新赋值
-    watch(
-      () => [props.list],
-      ([newList]: any) => {
-        state.tableLists = newList;
+    watch(() => props.list,
+      (newList: any, oldList: any) => {
+        if (!state.tableLists.length || (state.tableLists.length && state.tableLists.length == oldList.length)) {
+          state.tableLists = newList
+        }
       },
       { immediate: true, deep: true }
     );

@@ -1,11 +1,23 @@
 import { Search, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
-import { PowerfulTableFilter } from '../../../../types/powerful-table';
+import { PropType } from 'vue';
+import { PowerfulTableHeader, PowerfulTableFilter } from '../../../../types/powerful-table';
 
 export type State = {
   value: string | (string | number)[],
   options?: PowerfulTableFilter[],
-  selectVisible?: boolean;
   visible: boolean
+}
+
+export const props = {
+  // 表格的配置数据
+  headerData: {
+    type: Object as PropType<PowerfulTableHeader<any>>,
+    default: () => { },
+  },
+  list: {
+    type: Array,
+    default: () => []
+  }
 }
 
 // 输入框插槽

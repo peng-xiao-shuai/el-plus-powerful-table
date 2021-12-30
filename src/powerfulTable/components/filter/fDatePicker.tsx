@@ -1,25 +1,16 @@
-import { defineComponent, ref, reactive, watch, Transition } from "vue";
-
-//定义props的类型
-interface Props {
-  headerData: any
-}
+import { defineComponent, ref, reactive, watchEffect } from "vue";
+import { ArrowUp } from '@element-plus/icons-vue';
+import { props } from './common';
 
 export default defineComponent({
-  props: {
-    // 表格的配置数据
-    headerData: {
-      type: Object,
-      default: () => { },
-    }
-  },
+  props,
   emits: ['headerFilterChange'],
-  setup(props: Props, { emit }) {
+  setup(props, { emit }) {
 
-    const datePickerRef = ref()
-
-    const state = reactive({
-      // value: newDate(),
+    const datePickerRef = ref<any>()
+    const state = reactive<import('./common').State & {
+      defaultTime: any
+    }>({
       value: '',
       visible: false,
       defaultTime: [
@@ -33,41 +24,34 @@ export default defineComponent({
       emit('headerFilterChange', value, props.headerData)
     }
 
-    const dataPickerBlur = () => {
-      state.visible = false
-    }
-
-    const labelClick = () => {
-      state.visible = true
-      datePickerRef.value.focus()
-    }
+    watchEffect(() => {
+      if (props.list.length && state.value?.length) {
+        datePickerChange(state.value)
+      }
+    })
 
     return () => (
       <span
-        style={
-          state.value
-            ? {
-              color: '#409EFF',
-            }
-            : {}
-        }
-        onClick={labelClick}
+        style={state.value.length ? { color: 'var(--el-color-primary)'} : {}}
+        onClick={() => {
+          state.visible = true
+          datePickerRef.value.focus()
+        }}
       >
         {props.headerData.label}
-        <i class={['el-icon--right', state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down']}></i>
+        <el-icon class={state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'}>
+          <ArrowUp />
+        </el-icon>
         <el-date-picker
           v-model={state.value}
           type="datetimerange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
           value-format="YYYY-MM-DD HH:mm:ss"
           default-time={state.defaultTime}
           ref={datePickerRef}
           class="date_style"
           size="mini"
           onChange={datePickerChange}
-          onBlur={dataPickerBlur}
+          onBlur={() => { state.visible = false }}
         >
         </el-date-picker>
       </span>

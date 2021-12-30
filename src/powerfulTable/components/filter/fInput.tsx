@@ -1,19 +1,12 @@
-import { defineComponent, inject, PropType, reactive, watch } from "vue";
-import { PowerfulTableHeader } from '../../../../types/powerful-table';
-import { btnSlots, slots, State } from './common';
+import { defineComponent, inject, watchEffect, reactive } from "vue";
+import { btnSlots, slots, props } from './common';
 
 export default defineComponent({
-  props: {
-    // 表格的配置数据
-    headerData: {
-      type: Object as PropType<PowerfulTableHeader<any>>,
-      default: () => { },
-    }
-  },
+  props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
     const size = inject('size') as string
-    const state = reactive<State>({
+    const state = reactive<import('./common').State>({
       value: '',
       visible: false
     })
@@ -22,6 +15,12 @@ export default defineComponent({
       state.visible = false
       emit('headerFilterChange', state.value, props.headerData)
     }
+
+    watchEffect(() => {
+      if (props.list.length && state.value.length) {
+        inputChange()
+      }
+    })
 
     return () => (
       <el-popover

@@ -1,19 +1,15 @@
-import { defineComponent, ref, reactive, watch, inject, PropType } from "vue";
+import { defineComponent, reactive, watch, inject, PropType, watchEffect } from "vue";
 import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
   PowerfulTableFilter
 } from "../../../../types/powerful-table";
 
-import { slots, State } from './common';
+import { slots, props } from './common';
 
 export default defineComponent({
   props: {
-    // 表头的配置数据
-    headerData: {
-      type: Object as PropType<PowerfulTableHeader<any>>,
-      default: () => { },
-    },
+    ...props,
     // 过滤的配置数据
     propData: {
       type: Object as PropType<PowerfulTableHeaderProps<any>>,
@@ -25,7 +21,7 @@ export default defineComponent({
     const size = inject('size') as string
     const locale = (inject('locale') as {name: string})?.name
 
-    const state = reactive<State>({
+    const state = reactive<import('./common').State>({
       value: [],
       options: [],
       visible: false
@@ -36,8 +32,14 @@ export default defineComponent({
       emit('headerFilterChange', val, props.headerData)
     }
 
+    watchEffect(() => {
+      if (props.list.length && state.value.length) {
+        selectChange(state.value)
+      }
+    })
+
     watch(
-      props.propData,
+      () => props.propData,
       (newProps) => {
         // 首先判断是否存在filter属性
         if (newProps.filter) {
@@ -46,14 +48,14 @@ export default defineComponent({
           else {
             console.warn(props.headerData.label, 'The filter attribute of the column must be an array.')
           }
-        } else if (props.propData.type === 'switch') {
+        } else if (newProps.type === 'switch') {
           const arr: PowerfulTableFilter[] = []
           arr.push({
             value: locale == 'zh-cn' ? '开启' : 'open',
-            key: props.propData.data.activeValue || 1,
+            key: newProps.data.activeValue || 1,
           }, {
             value: locale == 'zh-cn' ? '关闭' : 'close',
-            key: props.propData.data.inactiveValue || 0,
+            key: newProps.data.inactiveValue || 0,
           });
           state.options = arr
         }
@@ -74,6 +76,9 @@ export default defineComponent({
           clearable
           placeholder="请选择"
           size={size}
+          onVisible-change={(val: boolean) => {
+            if (!val) state.visible = false
+          }}
           onChange={selectChange}
         >
           {state.options?.map((item: any, index: number) => {
