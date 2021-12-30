@@ -70,13 +70,14 @@
           :width="item.width || ''"
           :class-name="item.headerAlign || 'center'"
         >
-          <!-- 自定义表头 -->
-          <!-- <template #header v-if="item.headerSlotName">
+          <!-- 用户自定义表头 -->
+          <template #header v-if="item.headerSlotName">
             <slot :name="item.headerSlotName" :item="item" :index="index">
             </slot>
-          </template> -->
+          </template>
 
-          <template v-if="item.isShowOrFilterColumn === 'filter'" #header>
+          <!-- 内置自定义表头 -->
+          <template v-if="item.filters && (item.isShowOrFilterColumn == undefined || item.isShowOrFilterColumn === 'filter') && !item.headerSlotName" #header>
             <f-select
               v-if="
                 getPropObj(item).filter ||
@@ -399,7 +400,7 @@ export default defineComponent({
 
     // 过滤被隐藏的列
     const headerLists = computed(() => {
-      return props.header.filter((column: any) => !column.hidden);
+      return props.header.filter(column => !column.hidden)
     });
 
     /* --- 按钮组件参数及方法begin --- */
@@ -428,9 +429,8 @@ export default defineComponent({
     /**
      * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
      */
-    const headerFilterChange = (value: any, column: any) => {
+    const headerFilterChange = (value: number | string | (number | string)[], column: PowerfulTableHeader) => {
       const tableLists = props.list;
-      let tableData: any[] = [];
 
       if (!value) {
         state.tableLists = tableLists;
@@ -443,44 +443,52 @@ export default defineComponent({
       if (
         propObj.filter ||
         propObj.filtersType === "select" ||
-        propObj.type === "switch" ||
-        propObj.type === "tag"
+        propObj.type === "switch"
       ) {
-        tableData = tableLists.filter((item: any) => {
-          let isShow = value.some((prop: any) => {
-            return item[propObj.prop] == prop;
+        state.tableLists = tableLists.filter((item: any) => {
+          let isShow = (value as (number | string)[]).some(prop => {
+            switch (propObj.type) {
+              // tag类型单独判断
+              case 'tag':
+                const tagVal: string[] = (typeof item[propObj.prop] == 'string' ? item[propObj.prop].split(',') : item[propObj.prop]).map((num: string | number) => String(num))
+                return tagVal.indexOf(String(prop)) != -1
+              default:
+                return item[propObj.prop] == prop;
+            }
           });
           return isShow;
         });
         // TODO 暂时无法并列过滤数据
         // state.tableLists = [...state.tableLists, ...tableData];
       } else if (propObj.filtersType === "date") {
-        tableData = tableLists.filter((item: any) => {
+        state.tableLists = tableLists.filter((item: any) => {
           // return compare(item[propObj.prop], value[0], value[1]);
         });
       } else {
-        console.log(value, column, propObj.prop);
-        tableData = tableLists.filter((item: any) => {
+        state.tableLists = tableLists.filter((item: typeof props.list[0]) => {
           console.log(item[propObj.prop]);
-          return item[propObj.prop] && item[propObj.prop].indexOf(value) >= 0;
+          return item[propObj.prop] && String(item[propObj.prop]).indexOf(String(value)) != -1;
         });
       }
-      state.tableLists = tableData;
     };
-    const getPropObj = (column: any) => {
+
+    /* ------  获取需要过滤的prop  ------ */
+    const getPropObj = (column: PowerfulTableHeader): PowerfulTableHeaderProps<any> => {
       // 获取过滤项
-      let propObj: PowerfulTableHeaderProps<any> = { prop: "" };
-      // 首先判断单元格prop的数量
+      let propObj: PowerfulTableHeaderProps<any> = {prop: ''}
+      // 判断是否数组
+      if (!Array.isArray(column.props)) {
+        propObj = column.props
+        return propObj
+      }
+      // 是数组的情况下 首先判断单元格prop的数量
       if (column.props.length === 1) {
         propObj = column.props[0];
       } else if (column.props.length > 1) {
         // 如果数量在两个以上，则需要用户使用(filterItem: true)指定过滤项，未指定则取第一个
-        let iResult: PowerfulTableHeaderProps<any>[] = [{ prop: "" }];
-        iResult = column.props.filter((item: PowerfulTableHeaderProps<any>) => {
-          return item.filterItem;
-        });
+        const queryFilterItem = column.props.find(item => item.filterItem)
         // 如果设置了一个或多个过滤项则取过滤后的第一个，如果没设置则取props第一个prop
-        propObj = iResult.length ? iResult[0] : column.props[0];
+        propObj = queryFilterItem ? queryFilterItem : column.props[0];
       }
       return propObj;
     };

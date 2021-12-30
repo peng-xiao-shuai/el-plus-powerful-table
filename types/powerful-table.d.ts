@@ -52,7 +52,8 @@ export interface PowerfulTableOperateData {
 export interface PowerfulTableHeader<L = any> {
   overflowTooltip?: boolean;
   label: string;
-  hidden?: boolean;
+  hidden?: boolean; //是否显示列
+  filters?: boolean;  //是否在表头显示过滤
   minWidth?: string | number;
   width?: string | number;
   isShowOrFilterColumn?: false | 'show' | 'filter';
@@ -73,7 +74,7 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   render?: (h: Function, row: L, index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
-  filterItem?: boolean;
+  filterItem?: boolean; // 指定过滤项
   filtersType?: 'select' | 'date'
 }
 

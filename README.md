@@ -15,7 +15,9 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
-
+## 1.0.7 20211226
+- 新增表格顶部按钮功能
+- - 新增配置项 **传送门**
 ## 1.0.6 20211226
 - 解决数据选中 `bug`
 - 优化部分样式问题
@@ -159,6 +161,7 @@ app.mount("#app");
 | isSelect      | 是否显示多选                                                    | boolean | false/true                                                                    | false                           |
 | isPagination  | 是否显示分页器                                                  | boolean | false/true                                                                    | false                           |
 | operateData   | 批量操作                                                        | object  | -                                                                             | {}                              |
+| btnConfig   | 表格顶部按钮配置                                                        | object  | -                                                                             | {}                              |
 
 ---
 
@@ -195,6 +198,60 @@ const operateData = {
 }
 ```
 
+### <font color='#1A72A6'>btnConfig 表格顶部按钮</font>
+| 参数     | 说明               | 类型          | 可选值                                             | 默认值  |
+| -------- | ------------------ | ------------- | -------------------------------------------------- | ------- |
+| hidden    | 隐藏 左侧、右侧以及全部按钮 (`none` 隐藏顶部所有按钮)。注意这里是使用 `display: none` 隐藏        | string        | 'left' / 'right' / 'none'                | null    |
+| btnSlot    | 是否启用顶部按钮插槽 `all` => 全部显示；`left` => 只显示左侧按钮；`right` => 只显示右侧按钮       | string        | 'left' / 'right' / 'all'                | null    |
+| btnList | 左侧按钮配置 | array[object] | -                                                  | -       |
+
+#### <font color='#50BEFF'>btnList 左侧按钮配置</font>
+
+| 参数  | 说明                   | 类型   | 可选值 | 默认值 |
+| ----- | ---------------------- | ------ | ------ | ------ |
+| type | 批量操作下拉框显示文字 | string | -      | -      |
+| icon | 图标       | Component | -      |  -    |
+| style | 样式       | object | -      |  {}    |
+| disabled | 是否禁用 如果为 `true` 那么 `operateType` 的禁用将会失效   | boolean | -      | -      |
+| operateType | 操作类型：`none`(默认) => 不需要选择数据；`single` => 有且只能操作一条数据；`batch` => 批量操作数据(至少选择一条数据以上)       | 'none' / 'single' / 'batch' | -      | -      |
+| text | 按钮中文字       | string | -      | -      |
+| showTip | 是否显示点击按钮后操作提示       | boolean | -      | -      |
+| tipContent | 操作提示文字       | string | -      | -      |
+| effect | 自定义操作类型将会在自定义事件 `btnChange` 抛出       | string | -      | -      |
+
+---
+
+```js
+// 参数示例
+const btnConfig = {
+  // hidden: 'none',
+  btnList: [{
+    text: '新增',
+    auth: '',
+    operateType: true,
+    effect: 'add',
+    type: '',
+    // icon: Plus
+  }, {
+    text: '修改',
+    auth: '',
+    operateType: 'single',
+    effect: 'edit',
+    type: 'primary',
+    // icon: Edit
+  }, {
+    text: '批量删除',
+    auth: '',
+    operateType: 'batch',
+    effect: 'remove',
+    type: 'danger',
+    // icon: Delete,
+    showTip: true,
+    // tipContent: '立即执行批量删除' 
+  }]
+}
+```
+
 <a href='https://github.com/Peng-Xiao-Shuai-0902/el-plus-powerful-table/blob/master/src/indexData.js'>查看JSON参数</a>
 ### <font color='#1A72A6'>header 表格头部数据</font>
 
@@ -208,6 +265,7 @@ const operateData = {
 | fixed | 固定列 | string / boolean          | true / left / right            | false  |
 | headerAlign     | 表头对齐方式           | string           | left / center / right   | center |
 | headerSlotName  | 列头插槽           | string           | -   | - |
+| isShowOrFilterColumn  | 右侧按钮选择列时是否显示（隐藏和筛选开关组件）           | string / boolean           | false / 'show' / 'filter'   | - |
 | props           | 单元格数据             | array[object]    | -                       | -      |
 
 #### <font color='#50BEFF'>props 单元格数据</font>
@@ -219,6 +277,9 @@ const operateData = {
 | type   | 数据类型                                                                      | string        | <a href='#image'>image</a> / <a href='#text'>text</a> / <a href='#switch'>switch</a> / <a href='#btn'>btn</a> / <a href='#video'>video</a> / <a href='#input'>input</a> / <a href='#iconfont'>iconfont</a> / <a href='#tag'>tag</a> / <a href='#rate'>rate</a> / <a href='#href'>href</a> / <a href='#slot'>slot</a> | text   |
 | data   | 每个类型不一样 data 里值也不一样，<br> type 为 btn 时数据类型为 array[object] | object        | -                                           | -      |
 | filter | 过滤，只支持 `type 为 text、tag`                                                  | array[object] / function(row,index) => string | number | -                                           | -      |
+-                                           | -      |
+| filtersType | 过滤类型 用于表格顶部右侧列按钮点击时，是否过滤，是的话，自定义表头将根据类型所弹出相应的操作元素（如果指定了 `headerSlotName` `和isShowOrFilterColumn` 为 `show` 或者 `false` 将会无效。如果是 `filtersType: select` 需要指定 `filter` 为数组类型） | string | "select" / "date" / "input"    | "input" |
+| filterItem   | 指定过滤项 (当 `props` 是数组且长度大于 `1` 时有用) 如果多个 prop 的情况下没有指定 filterItem 过滤项 那么将使用第一个作进行过滤       | boolean        | -       | -      |
 | text   | 数据左侧显示的文字。（例：文字：数据）                                        | string        | -                                           | -      |
 | reserve  | 当 prop 值 渲染数据为空时可用 reserve 代替空数据 可传 `HTML` 标签        | string | HTMLElement        | -                                           | -      |
 | render  | [渲染函数](https://v3.cn.vuejs.org/guide/render-function.html#h-%E5%8F%82%E6%95%B0)       | function(h,row,index)        | -                                           | -      |
@@ -655,6 +716,17 @@ const data = [{
 | sizeChange   | 分页器切换                                                                                      | { pageNum , pageSize }，selectArr(所有页中选中的数据) |
 | sortCustom   | 远程排序                                                                                        | column                                                |
 | batchOperate | 批量操作                                                                                        | {ids , selection , rows}                              |
-| btnClick | 操作按钮 | {row , index, params }                                        |
+| btnClick | 表格操作按钮 | {row , index, params }                                        |
+| btnChange | 表格顶部左侧操作按钮 | {rows , effect } 返回所有选中的行                                        |
 | switchChange | 开关组件操作                                                                                    | row                                                   |
 | row-click | 行点击事件                                                                                    | {row, column, event}                                                   |
+
+## Slot
+
+| 插槽名       | 说明                                                                                            |
+| ------------ | ----------------------------------------------------------------------------------------------- |
+| btn-left   | 表格顶部左侧按钮（btnSlot 需等于 all 或者 left）                            |
+| btn-right   | 表格顶部右侧按钮（btnSlot 需等于 all 或者 right                                       | 
+| empty | 表格内数据为空时内容                                                                                        |
+| [slotName] | 表格内自定义的插槽名称 |
+| [headerSlotName] | 表格列头内自定义的插槽名称 |

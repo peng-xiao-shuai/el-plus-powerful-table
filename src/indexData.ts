@@ -32,7 +32,8 @@ let btnConfig = {
 let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "编号", //显示的标题
-    minWidth: "80px", //对应列的最小宽度
+    minWidth: "100px", //对应列的最小宽度
+    filters: true,
     sortable: true, //排序
     props: [
       {
@@ -47,6 +48,7 @@ let header: PowerfulTableHeader<Lists>[] = [
     label: "名称/性别", //显示的名称
     overflowTooltip: true,
     headerAlign: 'left',
+    filters: true,
     props: [
       {
         prop: "name",
@@ -56,6 +58,8 @@ let header: PowerfulTableHeader<Lists>[] = [
         // customFilterFun(row){
         //   return '公'
         // },
+        filterItem: true,
+        filtersType: 'select',
         filter: [{ key: 1, value: '公' }, { key: 2, value: '母' }, { key: 3, value: '未知' }],
         // filter: (row: any) => {
         //   return ({ 1: '公', 2: '母', 3: '未知' } as any)[row.gender]
@@ -65,11 +69,12 @@ let header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: "slot（插槽）", //显示的标题
-    isShowOrFilterColumn: false,
+    filters: true,
     // hidden: true,
     props: [
       {
         prop: '',
+        filtersType: 'date',
         type: "slot",
         slotName: "A"
       },
@@ -91,6 +96,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "视频", //显示的标题
     width: 200,
+    filters: true,
     props: {
       prop: "videoUrl",
       type: "video",
@@ -111,6 +117,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "开关", //显示的标题
     overflowTooltip: false,
+    filters: true,
     props: [
       {
         prop: "switchVal",
@@ -150,6 +157,7 @@ let header: PowerfulTableHeader<Lists>[] = [
     label: "标签(只显示两个)", //显示的标题
     width: 200,
     overflowTooltip: false,
+    filters: true,
     props: [
       {
         prop: "tag",
@@ -305,7 +313,8 @@ interface Lists {
   videoUrl: string;
   imageUrl: string;
   href?: string;
-  children?: Lists[]
+  children?: Lists[];
+  data: Date
 }
 let lists: Lists[] = [
   {
@@ -323,6 +332,7 @@ let lists: Lists[] = [
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    data: new Date(),
     children: [{
       id: 4,
       name: "蓝猫",
@@ -337,6 +347,7 @@ let lists: Lists[] = [
       videoUrl:
         "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
       imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+      data: new Date()
     }]
   },
   {
@@ -354,6 +365,7 @@ let lists: Lists[] = [
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    data: new Date()
   },
   {
     id: 3,
@@ -369,6 +381,7 @@ let lists: Lists[] = [
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+    data: new Date()
   },
 ]
 

@@ -1,24 +1,20 @@
-import { defineComponent, ref, reactive, watch, Transition } from "vue";
-
-//定义props的类型
-interface Props {
-  headerData: any
-}
+import { defineComponent, inject, PropType, reactive, watch } from "vue";
+import { PowerfulTableHeader } from '../../../../types/powerful-table';
+import { btnSlots, slots, State } from './common';
 
 export default defineComponent({
   props: {
     // 表格的配置数据
     headerData: {
-      type: Object,
+      type: Object as PropType<PowerfulTableHeader<any>>,
       default: () => { },
     }
   },
   emits: ['headerFilterChange'],
-  setup(props: Props, { emit }) {
-
-    const state = reactive({
-      value: [],
-      options: [],
+  setup(props, { emit }) {
+    const size = inject('size') as string
+    const state = reactive<State>({
+      value: '',
       visible: false
     })
 
@@ -27,56 +23,21 @@ export default defineComponent({
       emit('headerFilterChange', state.value, props.headerData)
     }
 
-    const slots = {
-      reference: (e: any) => {
-        return (
-          <span
-            style={
-              state.value.length
-                ? {
-                  color: '#409EFF',
-                }
-                : {}
-            }
-            onClick={() => { state.visible = !state.visible }}
-          >
-            {props.headerData.label}
-            <i class={['el-icon--right', state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down']}></i>
-          </span>
-        );
-      },
-    };
-
-    const btnSlots = {
-      append: (e: any) => {
-        return (
-          <el-button icon="el-icon-search" onClick={inputChange}></el-button>
-        );
-      },
-    };
-
-    watch(
-      props.headerData,
-      (newProps, oldProps) => {
-        state.options = newProps.options ? newProps.options : [];
-      },
-      { immediate: true, deep: true }
-    );
     return () => (
       <el-popover
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
-        width="{400}"
+        width={state.value.length < 10 ? 200 : state.value.length * 20 > 400 ? 400 : state.value.length * 20}
         trigger="click"
-        v-slots={slots}
+        v-slots={slots(state, props.headerData.label)}
       >
         <el-input
           placeholder="请输入内容"
           v-model={state.value}
-          size="mini"
+          size={size}
           clearable
           class="input-with-select"
-          v-slots={btnSlots}
+          v-slots={btnSlots(inputChange)}
         >
         </el-input>
       </el-popover>

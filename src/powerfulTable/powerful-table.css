@@ -16,6 +16,19 @@
   display: none;
 }
 
+/* 使图标文字垂直居中 */
+.el-popover-center {
+  display: inline-flex;
+  align-items: center;
+}
+.el-popover-center .el-icon {
+  transition: all .3s;
+  margin-left: 5px;
+}
+.el-popover-center .el-icon.el-icon-arrow-down {
+  transform: rotate(180deg);
+}
+
 /* 操作按钮和dropdown */
 .el-button + .el-dropdown-more,
 .el-dropdown-more + .el-button {

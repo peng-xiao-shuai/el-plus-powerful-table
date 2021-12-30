@@ -40,10 +40,7 @@
 
       <template #A="{ row }">
         <div>
-          <el-image
-            style="width: 100px; border-radius: 10px"
-            :src="row.imageUrl"
-          ></el-image>
+          {{row.data}}
         </div>
       </template>
     </powerful-table>
