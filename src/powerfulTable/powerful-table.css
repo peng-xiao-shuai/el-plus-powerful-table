@@ -16,6 +16,14 @@
   display: none;
 }
 
+/* 隐藏过滤 fDatePicker组件的选择框 */
+.date_style {
+  margin-left: -10px;
+  height: 0px !important;
+  width: 10px !important;
+  z-index: -1;
+}
+
 /* 使图标文字垂直居中 */
 .el-popover-center {
   display: inline-flex;
@@ -74,7 +82,9 @@
 :deep(.btnType .notSpan span) {
   display: none;
 }
-
+.el-table th.el-table__cell {
+  padding: 10px 0 !important;
+}
 .pagination {
   width: 100%;
   display: flex;

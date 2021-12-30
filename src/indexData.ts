@@ -73,7 +73,7 @@ let header: PowerfulTableHeader<Lists>[] = [
     // hidden: true,
     props: [
       {
-        prop: '',
+        prop: 'data',
         filtersType: 'date',
         type: "slot",
         slotName: "A"
@@ -365,7 +365,7 @@ let lists: Lists[] = [
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
-    data: new Date()
+    data: new Date('2021/12/31')
   },
   {
     id: 3,
@@ -381,7 +381,7 @@ let lists: Lists[] = [
     videoUrl:
       "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
-    data: new Date()
+    data: new Date('2021/12/31')
   },
 ]
 

@@ -310,6 +310,7 @@ import type {
   PowerfulTableTree,
 } from "../../types/powerful-table";
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
+import { compare } from '../utils/format-data';
 import en from "element-plus/lib/locale/lang/en";
 
 import btnPlus from "./btnPlus/btnPlus.vue";
@@ -383,7 +384,7 @@ export default defineComponent({
       returnEmit,
       sortChange,
       batchOperate,
-      get,
+      get
     } = useFunction(emit, powerfulTableData)
 
     watchEffect(() => {
@@ -393,9 +394,13 @@ export default defineComponent({
       // 更具当前list 数据 添加develop
       powerfulTableData.develop = Array(state.tableLists.length).fill(false);
       powerfulTableData.listLoading = false;
-      nextTick(() => {
-        getSelect(props.selectData, state.tableLists);
-      });
+
+      // 为表格添加选中
+      if (state.tableLists.length && powerfulTableData.currentSelect.length == 0) {
+        nextTick(() => {
+          getSelect();
+        })
+      }
     });
 
     // 过滤被隐藏的列
@@ -407,7 +412,7 @@ export default defineComponent({
     // 为表格数据重新赋值
     watch(
       () => [props.list],
-      ([newList, newPage, newSize]: any) => {
+      ([newList]: any) => {
         state.tableLists = newList;
       },
       { immediate: true, deep: true }
@@ -461,12 +466,12 @@ export default defineComponent({
         // TODO 暂时无法并列过滤数据
         // state.tableLists = [...state.tableLists, ...tableData];
       } else if (propObj.filtersType === "date") {
-        state.tableLists = tableLists.filter((item: any) => {
-          // return compare(item[propObj.prop], value[0], value[1]);
+        const valueAs = value as any[]
+        state.tableLists = tableLists.filter((item: typeof props.list[0]) => {
+          return compare(item[propObj.prop], valueAs[0], valueAs[1]);
         });
       } else {
         state.tableLists = tableLists.filter((item: typeof props.list[0]) => {
-          console.log(item[propObj.prop]);
           return item[propObj.prop] && String(item[propObj.prop]).indexOf(String(value)) != -1;
         });
       }
@@ -495,23 +500,21 @@ export default defineComponent({
     /* --- 按钮组件参数及方法end --- */
 
     /* ------ 获取选中 ------ */
-    const getSelect = (arr: any[], list = props.list) => {
+    const getSelect = (arr: any[] = props.selectData, list = state.tableLists) => {
       if (!props.isSelect) return;
 
       // 1.获取当前页
       // 2.总选中减去当前页
       // 3.得到其他页
 
-      // 所有选中
-      let all = arr;
       // 获取当前页选中
       let current: any[] = [];
       // 获取 其他页选中
       let other: any[] = [];
 
       // 获取当前页
-      if (all.length != 0) {
-        // console.log('所有选中', all);
+      if (arr.length != 0) {
+        // console.log('所有选中', arr);
         // 获取当前页
         arr.forEach((item) => {
           let itm = list.filter((each: typeof list[0]) => {
@@ -577,7 +580,8 @@ export default defineComponent({
       returnEmit,
       sortChange,
       batchOperate,
-      handleSelectionChange
+      handleSelectionChange,
+      getSelect
     };
   },
 });
