@@ -48,7 +48,7 @@
             <el-button
               :size="size || 'small'"
               :type="item.type || 'primary'"
-              :icon="item.icon"
+              :icon="Refresh"
               @click="batchOperate('right', item)"
             />
           </el-tooltip>
@@ -59,7 +59,7 @@
             <el-button
               :size="size || 'small'"
               type="info"
-              icon="el-icon-s-grid"
+              :icon="Grid"
               @click="
                 batchOperate('right', {
                   effect: 'columns',
@@ -138,10 +138,11 @@ import {
   defineComponent,
   PropType,
   inject,
-  getCurrentInstance
+  getCurrentInstance,
+  Component
 } from "vue";
 import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '../../../types/powerful-table';
-// import { useStore } from '/@/store/index';
+import { Grid, Refresh } from '@element-plus/icons-vue';
 export default defineComponent({
   name: "btnPlus",
   props: {
@@ -180,7 +181,7 @@ export default defineComponent({
           effect?: string;
           tip: string;
           type?: ThemeType;
-          icon?: string;
+          icon?: string | Component;
           showTip?: Boolean;
           tipContent?: string;
       }[];
@@ -194,14 +195,14 @@ export default defineComponent({
           effect: "refresh",
           tip: "刷新",
           type: "info",
-          icon: "el-icon-refresh",
+          icon: Refresh,
         },
-        {
-          effect: "switch",
-          tip: "切换",
-          type: "info",
-          icon: "el-icon-tickets",
-        },
+        // {
+        //   effect: "switch",
+        //   tip: "切换",
+        //   type: "info",
+        //   icon: "el-icon-tickets",
+        // },
       ],
       // isPC: store.state.isPC.isPC,
       isPC: true,
@@ -252,6 +253,7 @@ export default defineComponent({
       const functionBtnItem = item as typeof state.functionBtnList[0]
       switch (functionBtnItem.effect) {
         case 'refresh':
+          proxy.$parent.returnEmit("refresh", {})
           break;
         case 'switch':
           emit("update:isTable", !props.isTable);
@@ -273,6 +275,8 @@ export default defineComponent({
     return {
       injectProps,
       clBtnPlus,
+      Grid,
+      Refresh,
       btnDisabled,
       size,
       functionBtnChange,

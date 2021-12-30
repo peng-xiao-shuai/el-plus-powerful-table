@@ -95,6 +95,7 @@ export const powerfulTableEmits  = [
   "sizeChange",
   "btnClick",
   "row-click",
+  "refresh"
 ]
 
 export const powerfulTableComponentProp = {

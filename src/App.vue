@@ -16,6 +16,7 @@
       @btnClick="handlerUpdate"
       @sizeChange="getList"
       @btnChange="btnChange"
+      @refresh="handleRefresh"
     >
       <!-- <template #btn-left>
         <div>
@@ -89,7 +90,7 @@ export default defineComponent({
 
       if (data) {
         ElMessage.success('切换页面操作，参数详情，查看控制台')
-        console.log('page', data, '选中数组', selectData)
+        console.log('page', listQuery, '选中数组', selectData)
       }
       // listLoading.value = true
 
@@ -130,6 +131,10 @@ export default defineComponent({
       }
     };
 
+    const handleRefresh = () => {
+      ElMessage.success('刷新')
+    }
+
     onMounted(() => {
       getList()
     })
@@ -154,7 +159,8 @@ export default defineComponent({
       switchChange,
       handlerUpdate,
       handlerRemove,
-      btnChange
+      btnChange,
+      handleRefresh
     }
   },
 })
