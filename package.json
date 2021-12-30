@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^0.2.4",
-    "element-plus": "1.2.0-beta.5",
+    "element-plus": "^1.2.0-beta.6",
     "vue": "^3.2.0"
   },
   "browserslist": [
