@@ -42,7 +42,7 @@ export interface PowerfulTableOperateData {
   value?: number;
   type?: ThemeType;
   disabled?: boolean;
-  icon?: any;
+  icon?: string | Component;
   style?: {};
   operates: PowerfulTableLabelValue[]
 }
@@ -101,7 +101,7 @@ export type ImageDataType = {
 
 export type BtnDataType = {
   tip: string;
-  icon?: any;
+  icon?: string | Component;
   disabled?: boolean;
   text?: string;
   isMore?: boolean;
@@ -187,7 +187,7 @@ export type InjectProps = {
 export namespace BtnConfig {
   export type BtnList = {
     type?: ThemeType;
-    icon?: any;
+    icon?: string | Component;
     style?: {};
     disabled?: boolean;
     operateType?: 'none' | 'single' | 'batch';
