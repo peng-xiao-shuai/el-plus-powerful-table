@@ -29,11 +29,11 @@
   display: inline-flex;
   align-items: center;
 }
-.el-popover-center .el-icon {
+.powerful-table .el-icon {
   transition: all .3s;
   margin-left: 5px;
 }
-.el-popover-center .el-icon.el-icon-arrow-down {
+.powerful-table .el-icon.el-icon-arrow-down {
   transform: rotate(180deg);
 }
 
