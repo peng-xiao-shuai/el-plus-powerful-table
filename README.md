@@ -728,5 +728,6 @@ const data = [{
 | btn-left   | 表格顶部左侧按钮（btnSlot 需等于 all 或者 left）                            |
 | btn-right   | 表格顶部右侧按钮（btnSlot 需等于 all 或者 right                                       | 
 | empty | 表格内数据为空时内容                                                                                        |
+| refresh | 刷新                           |
 | [slotName] | 表格内自定义的插槽名称 |
 | [headerSlotName] | 表格列头内自定义的插槽名称 |
