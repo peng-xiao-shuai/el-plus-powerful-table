@@ -1,7 +1,8 @@
 import { VNode, Plugin, App } from "@vue/runtime-core"
+
 declare module 'el-plus-powerful-table-ts' {
   const PowerfulTable: {
-    install: (app: App<any>, opt: any) => void;
+    install: (app: App<any>, opt: InjectProps | {}) => void;
   }
   export default PowerfulTable
 }
@@ -15,6 +16,7 @@ export interface PowerfulTableData<L> {
   locale?: string,
   selectData?: any[];
   isSelect?: boolean;
+  selectable?: (row: any, index: number) => boolean;
   selectCompare?: string[];
   header: PowerfulTableHeader<L>[];
   layout?: string;
@@ -34,12 +36,12 @@ export type PowerfulTableTree = {
 // operates 批量操作下拉框数据
 export type PowerfulTableLabelValue = {
   label: string;
-  value: string;
-  [s: string]: string
+  value: string | number;
+  [s: string]: string | number
 }
 // operateData 批量操作
 export interface PowerfulTableOperateData {
-  value?: number;
+  value?: number | '';
   type?: ThemeType;
   disabled?: boolean;
   icon?: string | Component;
@@ -177,7 +179,7 @@ export type TagDataType = {
 export type InjectProps = {
   size?: Size;
   btnSlot?: 'left' | 'right' | 'none'; // 控制所有的组件 显示左侧或右侧操作按钮
-  locale: {
+  locale?: {
     name: string;
     el: any
   }
@@ -194,6 +196,7 @@ export namespace BtnConfig {
     text?: string;
     showTip?:  boolean;
     effect?: string;
+    showBtn?: (() => boolean) | boolean;
     tipContent?: string;
   }
   export type Config = {
