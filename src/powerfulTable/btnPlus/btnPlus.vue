@@ -21,6 +21,7 @@
             :icon="item.icon"
             :style="item.style || {}"
             :disabled="item.disabled || btnDisabled(item.operateType)"
+            v-if="typeof item.showBtn === 'function' ? item.showBtn() : (item.showBtn === undefined ? true : item.showBtn)"
             @click="batchOperate('left', item)"
           >
             {{ item.text }}
