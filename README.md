@@ -15,9 +15,16 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
-## 1.0.7 20211226
+## 1.1.0 20211231
 - 新增表格顶部按钮功能
-- - 新增配置项 **传送门**
+- - 新增配置项 <a href="btnConfig">**传送门**</a>
+- - 新增插槽 `btn-left` `btn-right`
+- `header` 新增参数
+- - `isShowOrFilterColumn` 是否开启过滤或者显示隐藏列的开关
+- - `selectable` 行是否可以选中
+- `prop` 新增参数
+- - `filtersType` 过滤类型
+- - `filterItem` 指定过滤项
 ## 1.0.6 20211226
 - 解决数据选中 `bug`
 - 优化部分样式问题
@@ -132,7 +139,10 @@ import ElementPlus from "element-plus";
 import powerfulTable from "el-plus-powerful-table-ts";
 
 const app = createApp(App);
-app.use(powerfulTable);
+app.use(powerfulTable, {
+	btnSlot: 'all',
+	// locale: zhCn
+});
 app.use(ElementPlus);
 app.mount("#app");
 
@@ -145,6 +155,14 @@ app.mount("#app");
 <a href='#video'>**视频**</a>&emsp;<a href='#iconfont'>**图标**</a>&emsp;<a href='#rate'>**评分**</a>&emsp;
 <a href='#href'>**超链接**</a>&emsp;<a href='#slot'>**插槽**</a>&emsp;<a href='#tag'>**标签**</a>
 
+## powerful-table 表格组件全局参数 (优先级小于局部配置)
+| 参数          | 说明                                                            | 类型    | 可选值                                                                        | 默认值                          |
+| ------------- | --------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------- | ------------------------------- |
+| locale          | 组件语言                          | object&lt;Language>  | - | zhCn |
+| size          | 组件大小                           | string   | medium / small / mini  |  small    |
+| btnSlot          | 是否启用顶部按钮插槽 `all` => 全部显示；`left` => 只显示左侧按钮；`right` => 只显示右侧按钮                                                        | array   | 'left' / 'right' / 'none'                                                                        | -                               |
+
+---
 ## powerful-table Attributes 表格组件
 
 | 参数          | 说明                                                            | 类型    | 可选值                                                                        | 默认值                          |
@@ -159,6 +177,7 @@ app.mount("#app");
 | selectData    | 选中的数据                                                      | array   | -                                                                             | -                               |
 | selectCompare | 选中数据和列表数据相比较的参数`[0]选中数据参数,[1]列表数据参数` | array   | -                                                                             | ['id','id']                     |
 | isSelect      | 是否显示多选                                                    | boolean | false/true                                                                    | false                           |
+| selectable      | 当前行是否可以选中                                                    | function(row, index) |  -   |   - |
 | isPagination  | 是否显示分页器                                                  | boolean | false/true                                                                    | false                           |
 | operateData   | 批量操作                                                        | object  | -                                                                             | {}                              |
 | btnConfig   | 表格顶部按钮配置                                                        | object  | -                                                                             | {}                              |
@@ -198,7 +217,7 @@ const operateData = {
 }
 ```
 
-### <font color='#1A72A6'>btnConfig 表格顶部按钮</font>
+### <font color='#1A72A6' id='btnConfig'>btnConfig 表格顶部按钮</font>
 | 参数     | 说明               | 类型          | 可选值                                             | 默认值  |
 | -------- | ------------------ | ------------- | -------------------------------------------------- | ------- |
 | hidden    | 隐藏 左侧、右侧以及全部按钮 (`none` 隐藏顶部所有按钮)。注意这里是使用 `display: none` 隐藏        | string        | 'left' / 'right' / 'none'                | null    |
@@ -218,6 +237,7 @@ const operateData = {
 | showTip | 是否显示点击按钮后操作提示       | boolean | -      | -      |
 | tipContent | 操作提示文字       | string | -      | -      |
 | effect | 自定义操作类型将会在自定义事件 `btnChange` 抛出       | string | -      | -      |
+| showBtn | 控制按钮显示隐藏 | function() / boolean | -      | -      |
 
 ---
 
@@ -419,7 +439,7 @@ const data = [{
 | icon     | 按钮上图标       | string  | -                                                    | -       |
 | disabled | 按钮是否禁用     | boolean | true/false                                           | false   |
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
-| showBtn    | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean | function(row,index)  | -                                                    | -       |
+| showBtn    | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean | function(row,index) / boolean  | -                | -       |
 | isTooltip  | 是否启用按钮上方提示         | boolean   | true / false | false |
 | params     | 自定义数据         | -  | -   | {} |
 | isMore     | 是否更多 当 `data` 是二维数组时有效         | boolean   | true / false | false |
