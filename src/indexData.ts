@@ -1,25 +1,23 @@
-import type { PowerfulTableHeader } from '../types/powerful-table'
+import type { PowerfulTableHeader, BtnConfig } from '../types/powerful-table'
 import { Edit, Delete, Plus } from '@element-plus/icons-vue'
 
-let btnConfig = {
+let btnConfig: BtnConfig.Config = {
   // hidden: 'none',
   btnSlot: 'all',
   btnList: [{
     text: '新增',
-    auth: '',
     effect: 'add',
-    type: '',
+    showBtn: true,
     // icon: Plus
   }, {
     text: '修改',
-    auth: '',
     operateType: 'single',
     effect: 'edit',
     type: 'primary',
+    showBtn: () => false,
     // icon: Edit
   }, {
     text: '批量删除',
-    auth: '',
     operateType: 'batch',
     effect: 'remove',
     type: 'danger',

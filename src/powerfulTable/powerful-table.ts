@@ -47,6 +47,10 @@ export const powerfulTableProps = {
     type: Boolean,
     default: false,
   },
+  selectable: {
+    type: Function as PropType<(row: any,index: number) => boolean>,
+    default: () => undefined,
+  },
   selectCompare: {
     type: Array as PropType<string[]>,
     default: () => ["id", "id"],

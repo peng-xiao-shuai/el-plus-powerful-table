@@ -52,8 +52,13 @@
 import { btnConfig, header, lists } from "./indexData"
 import { ElMessage } from 'element-plus'
 import { reactive, ref, onMounted, defineComponent, nextTick } from "vue"
+import type { PowerfulTableOperateData } from '../types/powerful-table'
+import powerfulTable from './powerfulTable/index';
 
 export default defineComponent({
+  components: {
+    powerfulTable
+  },
   setup (props, context) {
     let rowA = reactive({ value: {} })
     let list = ref<any>([])
@@ -66,7 +71,7 @@ export default defineComponent({
     let btnConfigs = reactive(btnConfig)
     let total = ref(lists.length)
     const powerfulTable = ref(null)
-    let operateData = reactive({
+    let operateData = reactive<PowerfulTableOperateData>({
       value: "",
       operates: [
         {

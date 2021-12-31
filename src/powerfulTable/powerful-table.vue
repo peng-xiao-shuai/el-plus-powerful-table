@@ -53,6 +53,7 @@
           align="center"
           type="selection"
           width="45"
+          :selectable="selectable ? selectable : () => true"
         >
         </el-table-column>
 
