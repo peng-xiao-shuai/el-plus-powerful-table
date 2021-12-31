@@ -1,7 +1,8 @@
 import { VNode, Plugin, App } from "@vue/runtime-core"
+
 declare module 'el-plus-powerful-table-ts' {
   const PowerfulTable: {
-    install: (app: App<any>, opt: any) => void;
+    install: (app: App<any>, opt: InjectProps | {}) => void;
   }
   export default PowerfulTable
 }
@@ -15,6 +16,7 @@ export interface PowerfulTableData<L> {
   locale?: string,
   selectData?: any[];
   isSelect?: boolean;
+  selectable?: (row: any, index: number) => boolean;
   selectCompare?: string[];
   header: PowerfulTableHeader<L>[];
   layout?: string;
@@ -34,15 +36,15 @@ export type PowerfulTableTree = {
 // operates 批量操作下拉框数据
 export type PowerfulTableLabelValue = {
   label: string;
-  value: string;
-  [s: string]: string
+  value: string | number;
+  [s: string]: string | number
 }
 // operateData 批量操作
 export interface PowerfulTableOperateData {
-  value?: number;
+  value?: number | '';
   type?: ThemeType;
   disabled?: boolean;
-  icon?: string;
+  icon?: string | Component;
   style?: {};
   operates: PowerfulTableLabelValue[]
 }
@@ -52,7 +54,8 @@ export interface PowerfulTableOperateData {
 export interface PowerfulTableHeader<L = any> {
   overflowTooltip?: boolean;
   label: string;
-  hidden?: boolean;
+  hidden?: boolean; //是否显示列
+  filters?: boolean;  //是否在表头显示过滤
   minWidth?: string | number;
   width?: string | number;
   isShowOrFilterColumn?: false | 'show' | 'filter';
@@ -73,7 +76,7 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   render?: (h: Function, row: L, index: number) => VNode | string | number;
   reserve?: string | HTMLElement;
   style?: {};
-  filterItem?: boolean;
+  filterItem?: boolean; // 指定过滤项
   filtersType?: 'select' | 'date'
 }
 
@@ -100,7 +103,7 @@ export type ImageDataType = {
 
 export type BtnDataType = {
   tip: string;
-  icon?: string;
+  icon?: string | Component;
   disabled?: boolean;
   text?: string;
   isMore?: boolean;
@@ -175,7 +178,8 @@ export type TagDataType = {
 // 组件注入数据
 export type InjectProps = {
   size?: Size;
-  locale: {
+  btnSlot?: 'left' | 'right' | 'none'; // 控制所有的组件 显示左侧或右侧操作按钮
+  locale?: {
     name: string;
     el: any
   }
@@ -185,14 +189,19 @@ export type InjectProps = {
 export namespace BtnConfig {
   export type BtnList = {
     type?: ThemeType;
-    icon?: '';
+    icon?: string | Component;
     style?: {};
     disabled?: boolean;
-    operateType: 'none' | 'single' | 'batch';
-    tip: string
+    operateType?: 'none' | 'single' | 'batch';
+    text?: string;
+    showTip?:  boolean;
+    effect?: string;
+    showBtn?: (() => boolean) | boolean;
+    tipContent?: string;
   }
   export type Config = {
     hidden?: 'left' | 'right' | 'none',
+    btnSlot?: 'left' | 'right' | 'all'
     btnList: BtnList[]
   }
 }
