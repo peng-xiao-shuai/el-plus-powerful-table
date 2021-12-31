@@ -9,7 +9,6 @@ import type {
   PowerfulTableHeader,
   PowerfulTableOperateData,
   PowerfulTableTree,
-  PowerfulTableHeaderProps,
   EmitType,
   InjectProps,
   BtnConfig
@@ -268,12 +267,20 @@ export const useFunction = (emit: Function, powerfulTableData: PowerfulTableData
     powerfulTableData.currentSelect = JSON.parse(JSON.stringify(e));
   };
 
+  /**
+   * 匹配组件
+   * @param {string} type 类型
+   * @returns 组件名称
+   */
+  const matchComponents = (type: string) => ({'image': 'Image', 'btn': 'Button', 'switch': 'Switch', 'input': 'Input', 'textarea': 'Input', 'iconfont': 'Icon', 'tag': 'Tags', 'rate': 'Rate', 'href': 'Link', 'video': 'Video'}[type])
+
   return {
     handleSelectionChange,
     rowClick,
     returnEmit,
     sortChange,
     batchOperate,
-    get
+    get,
+    matchComponents
   }
 }

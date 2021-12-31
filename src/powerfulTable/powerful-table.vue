@@ -144,50 +144,10 @@
                 v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)"
                 v-bind="bindAttr(prop, scope, item)"
               />
-              <!-- 图片 -->
-              <Image
-                v-else-if="prop.type == 'image'"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- 按钮 -->
-              <Button
-                v-else-if="prop.type == 'btn'"
-                v-bind="bindAttr(prop, scope, item)"
-                @returnEmit="returnEmit"
-              />
-              <!-- 开关 -->
-              <Switch
-                v-else-if="prop.type == 'switch'"
-                v-bind="bindAttr(prop, scope, item)"
-                @returnEmit="returnEmit"
-              />
-              <!-- 输入框 -->
-              <Input
-                v-else-if="prop.type == 'input' || prop.type == 'textarea'"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- iconfont -->
-              <Icon
-                v-else-if="prop.type == 'iconfont'"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- 标签 -->
-              <Tags
-                v-else-if="prop.type == 'tag'"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- 评分 -->
-              <Rate
-                v-else-if="prop.type == 'rate'"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- 超链接 -->
-              <Link
-                v-else-if="prop.type == 'href'"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <Video
-                v-else-if="prop.type == 'video'"
+              <!-- 动态组件 -->
+              <component
+                v-else-if="prop.type && ['image', 'btn', 'switch', 'input', 'textarea', 'iconfont', 'tag', 'rate', 'href', 'video'].includes(prop.type)"
+                :is="matchComponents(prop.type)"
                 v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 正常 -->
@@ -301,16 +261,13 @@ import {
   watchEffect,
   provide,
   getCurrentInstance,
-  inject,
   toRefs,
   computed,
   watch,
 } from "vue";
 import type {
   PowerfulTableHeader,
-  PowerfulTableOperateData,
   PowerfulTableHeaderProps,
-  PowerfulTableTree,
 } from "../../types/powerful-table";
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
 import { compare } from '../utils/format-data';
@@ -387,7 +344,8 @@ export default defineComponent({
       returnEmit,
       sortChange,
       batchOperate,
-      get
+      get,
+      matchComponents
     } = useFunction(emit, powerfulTableData)
 
     watchEffect(() => {
@@ -585,7 +543,8 @@ export default defineComponent({
       sortChange,
       batchOperate,
       handleSelectionChange,
-      getSelect
+      getSelect,
+      matchComponents
     };
   },
 });

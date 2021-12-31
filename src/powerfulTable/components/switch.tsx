@@ -10,7 +10,6 @@ export default defineComponent({
       default: () => {}
     }
   },
-  emits: ['returnEmit'],
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
     const size = inject('size') as string
@@ -29,7 +28,7 @@ export default defineComponent({
         type: 'warning'
       })
       .then(() => {
-        emit('returnEmit', 'switchChange', row)
+        proxy.$parent.returnEmit("switchChange", row)
       })
       .catch(() => {
         row[prop] = value

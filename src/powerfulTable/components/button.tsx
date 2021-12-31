@@ -10,7 +10,6 @@ export default defineComponent({
       default: () => {}
     }
   },
-  emits: ['returnEmit'],
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
     const size = inject('size') as string
@@ -30,13 +29,13 @@ export default defineComponent({
           type: 'warning'
         })
           .then(() => {
-            emit('returnEmit', 'btnClick', { params, row, index })
+            proxy.$parent.returnEmit("btnClick", { params, row, index })
           })
           .catch(() => {
             // console.log('取消删除')
           })
       } else {
-        emit('returnEmit', 'btnClick', { params, row, index })
+        proxy.$parent.returnEmit("btnClick", { params, row, index })
       }
     }
 
