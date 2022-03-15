@@ -15,6 +15,13 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
+## 1.1.1 20220314
+- **新增支持内置组件导出`PT`开头：例如:`PTImage，PTButton`**
+- - 主要用于 `powerful-table-draggable` 组件的引用
+- `switch、btn` 类型新增参数
+- - `isConfirmTip` 是否开启点击时确认框提示
+- - `isConfirmTip` 确认框提示文字
+- 优化 `el-pagination small`参数随组件或全局 `size` 参数更改
 ## 1.1.0 20211231
 - 新增表格顶部按钮功能
 - - 新增配置项 <a href="btnConfig">**传送门**</a>
@@ -64,7 +71,7 @@ const handleOperate = ({row, params, index}) {
         {
           tip: "编辑",
           type: "info",
-          // icon: Edit,
+          icon: markRaw(Edit),
           text: "编辑",
           // showBtn: false,
           // isTooltip: true,
@@ -76,29 +83,29 @@ const handleOperate = ({row, params, index}) {
           tip: "更多",
           isMore: true,
           type: "success",
-          // icon: Edit,
+          icon: markRaw(Edit),
         },{
           tip: "编辑",
           type: "text",
-          // icon: Edit,
+          icon: markRaw(Edit),
           params: "update",
         },
         {
           tip: "更多a",
           isMore: true, // 这个将不会被引用到
           type: "success",
-          // icon: Edit,
+          icon: markRaw(Edit),
         },
         {
           tip: "删除",
           type: "text",
-          // icon: Delete,
+          icon: markRaw(Delete),
           params: "remove",
         }],
         {
           tip: "删除",
           type: "danger",
-          // icon: Edit,
+          icon: markRaw(Delete),
           showBtn: (e: any) => {
             return true
           },
@@ -193,7 +200,7 @@ app.mount("#app");
 | value    | 下拉选中值         | string        | -                                                  | null    |
 | type     | 按钮的类型         | string        | default / primary / success / warning / danger / info / text | primary |
 | disabled | 禁用               | boolean       | true / false                                       | false   |
-| icon     | 按钮上图标         | string        | -                                                  | -       |
+| icon     | 按钮上图标         | Component / string        | -                                                  | -       |
 | style    | 按钮样式           | object        | -                                                  | -       |
 | operates | 批量操作下拉框数据 | array[object] | -                                                  | -       |
 
@@ -229,7 +236,7 @@ const operateData = {
 | 参数  | 说明                   | 类型   | 可选值 | 默认值 |
 | ----- | ---------------------- | ------ | ------ | ------ |
 | type | 批量操作下拉框显示文字 | string | -      | -      |
-| icon | 图标       | Component | -      |  -    |
+| icon | 图标 使用`markRaw`将`Component`转为原始对象       | Component | -      |  -    |
 | style | 样式       | object | -      |  {}    |
 | disabled | 是否禁用 如果为 `true` 那么 `operateType` 的禁用将会失效   | boolean | -      | -      |
 | operateType | 操作类型：`none`(默认) => 不需要选择数据；`single` => 有且只能操作一条数据；`batch` => 批量操作数据(至少选择一条数据以上)       | 'none' / 'single' / 'batch' | -      | -      |
@@ -436,11 +443,13 @@ const data = [{
 | tip      | 提示文字         | string  | -                                                    | -       |
 | text      | 按钮文字，不传默认提示文字         | string  | -                                                    | tip       |
 | style    | 按钮样式         | object  | -                                                    | -       |
-| icon     | 按钮上图标       | string  | -                                                    | -       |
+| icon     | 按钮上图标 使用`markRaw`将`Component`转为原始对象       | Component / string  | -                                                    | -       |
 | disabled | 按钮是否禁用     | boolean | true/false                                           | false   |
 | type     | 按钮类型         | string  | primary / success / warning / danger / info / text   | primary |
 | showBtn    | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean | function(row,index) / boolean  | -                | -       |
 | isTooltip  | 是否启用按钮上方提示         | boolean   | true / false | false |
+| isConfirmTip  | 是否启用点击后确认操作提示  `可以使用 confirmTip 自定义`  | boolean   | true / false | false |
+| confirmTip  | 点击后确认操作提示文字         | string   | - | 是否要进行`[item.tip]`操作, 是否继续? |
 | params     | 自定义数据         | -  | -   | {} |
 | isMore     | 是否更多 当 `data` 是二维数组时有效         | boolean   | true / false | false |
 
@@ -486,7 +495,7 @@ const data = [{
             tip: "删除",
             type: "danger",
             text: "", //将不会显示按钮文字
-            icon: "el-icon-delete",
+            icon: markRaw(Delete),
              showBtn: (row)=>{
               return true
             }
@@ -508,6 +517,8 @@ const data = [{
 | activeValue   | 打开时的值       | number  | -          | 1      |
 | inactiveValue | 关闭时的值       | number  | -          | 0      |
 | disabled      | 是否禁用         | boolean | true/false | false  |
+| isConfirmTip  | 是否启用点击后确认操作提示  `可以使用 confirmTip 自定义`  | boolean   | true / false | false |
+| confirmTip  | 点击后确认操作提示文字         | string   | - | 是否要进行修改操作, 是否继续? |
 | style         | 开关自定义样式   | object  | -          | -      |
 | beforeFunction   | 修改前事件,返回 true时正常执行 false 点击无变化，可以在此函数中自行处理 为false时提示   | function(row,value,oldValue)  | -          | -      |
 
