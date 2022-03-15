@@ -13,7 +13,7 @@
 
 /* 隐藏按钮提示 */
 .no-tooltip.el-popper.is-dark {
-  display: none;
+  display: none !important;
 }
 
 /* 隐藏过滤 fDatePicker组件的选择框 */
