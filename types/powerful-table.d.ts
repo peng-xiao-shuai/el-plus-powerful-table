@@ -1,11 +1,4 @@
-import { VNode, Plugin, App } from "@vue/runtime-core"
-
-declare module 'el-plus-powerful-table-ts' {
-  const PowerfulTable: {
-    install: (app: App<any>, opt: InjectProps | {}) => void;
-  }
-  export default PowerfulTable
-}
+import { VNode, Plugin, App, Component } from "@vue/runtime-core"
 
 /* ------ props ------ */
 export interface PowerfulTableData<L> {
@@ -112,6 +105,8 @@ export type BtnDataType = {
   showBtn?: ((row: any, index?: number) => boolean) | boolean;
   emit?: EmitType;
   isTooltip?: boolean;
+  isConfirmTip?: boolean;
+  confirmTip?: string;
   params?: any
 }
 
@@ -124,6 +119,8 @@ export type SwitchDataType = {
   inactiveValue?: number | string;
   disabled?: boolean | ((row: any) => boolean);
   style?: {};
+  isConfirmTip?: boolean;
+  confirmTip?: string;
   beforeFunction?: (row: any, value: number | string, oldValue: number | string) => boolean;
 }
 
@@ -208,6 +205,6 @@ export namespace BtnConfig {
 
 export type SFCWithInstall<T> = T & Plugin
 
-type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
-type Size = '' | 'large' | 'medium' | 'small' | 'mini'
-type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'
+export type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
+export type Size = '' | 'large' | 'default' | 'small'
+export type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'
