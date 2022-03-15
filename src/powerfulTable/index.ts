@@ -1,11 +1,14 @@
-import type { App } from 'vue';
-import { SFCWithInstall } from '../../types/powerful-table'
-import PowerfulTable from "./powerful-table.vue"
-PowerfulTable.install = (app: App, option: {}): void => {
-  app.component(PowerfulTable.name, PowerfulTable)
+import type { App, Plugin } from 'vue';
+import Components from './Components';
+const makeInstaller = (components: Plugin[] = []) => {
+  const install = (app: App, options: {}) => {
+    components.forEach((c) => {
+      app.use(c)
+    })
+    app.provide('powerfulTable', options)
+  }
 
-  app.provide('powerfulTable', option)
+  return install
 }
-const _PowerfulTable = PowerfulTable as SFCWithInstall<typeof PowerfulTable>
-
-export default _PowerfulTable
+// export const install = makeInstaller([...Components]).install
+export default makeInstaller([...Components])

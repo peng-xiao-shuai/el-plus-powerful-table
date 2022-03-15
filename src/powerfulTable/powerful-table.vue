@@ -108,7 +108,7 @@
           <template #default="scope">
             <div
               v-for="(prop, idx) in Array.isArray(item.props) ? item.props : [item.props]"
-              :key="idx"
+              :key="'props' + idx"
               :style="{
                 display: index == 0 ? 'inline-block' : 'block',
                 ...prop.style,
@@ -145,10 +145,16 @@
                 v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)"
                 v-bind="bindAttr(prop, scope, item)"
               />
+              <!-- 筛选 -->
+              <PTImage
+                v-else-if="prop.type == 'image'"
+                v-bind="bindAttr(prop, scope, item)"
+              />
               <!-- 动态组件 -->
               <component
-                v-else-if="prop.type && ['image', 'btn', 'switch', 'input', 'textarea', 'iconfont', 'tag', 'rate', 'href', 'video'].includes(prop.type)"
+                v-else-if="prop.type && ['btn', 'switch', 'input', 'textarea', 'iconfont', 'tag', 'rate', 'href', 'video'].includes(prop.type)"
                 :is="matchComponents(prop.type)"
+                @returnEmit="returnEmit"
                 v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 正常 -->
@@ -221,7 +227,7 @@
           >
             <el-option
               v-for="(item, index) in operate.operates"
-              :key="index"
+              :key="'operate' + index"
               :label="item.label"
               :value="item.value"
             />
@@ -242,6 +248,7 @@
         <!-- 分页操作 -->
         <div class="pagination" v-if="isPagination">
           <el-pagination
+            :small="(size || (injectProps && injectProps.size) || 'small') === 'small' ? true : false"
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
             :page-sizes="pageSizes"
@@ -261,7 +268,6 @@ import {
   nextTick,
   watchEffect,
   provide,
-  getCurrentInstance,
   toRefs,
   computed,
   watch,
@@ -269,7 +275,7 @@ import {
 import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
-} from "../../types/powerful-table";
+} from "#/powerful-table";
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
 import { compare } from '../utils/format-data';
 import en from "element-plus/lib/locale/lang/en";
@@ -280,15 +286,7 @@ import fInput from "./components/filter/fInput";
 import fSelect from "./components/filter/fSelect";
 import RenderJsx from "./components/render-jsx";
 import Filter from "./components/filter";
-import Image from "./components/image";
-import Switch from "./components/switch";
-import Button from "./components/button";
-import Input from "./components/input";
-import Tags from "./components/tags";
-import Icon from "./components/icon";
-import Rate from "./components/rate";
-import Link from "./components/link";
-import Video from "./components/video";
+
 // 获取 布局方向
 const justifyFun = (val: string) => {
   const bol = ["center", "left", "right"].includes(val);
@@ -308,19 +306,8 @@ export default defineComponent({
     fSelect,
     RenderJsx,
     Filter,
-    Image,
-    Switch,
-    Button,
-    Input,
-    Tags,
-    Icon,
-    Rate,
-    Link,
-    Video,
   },
   setup(props, { emit }) {
-    const { proxy } = getCurrentInstance() as any;
-
     /* ------ data数据 ------ */
     const {
       multipleTable,
@@ -400,8 +387,9 @@ export default defineComponent({
     const headerFilterChange = (value: number | string | (number | string)[], column: PowerfulTableHeader) => {
       const tableLists = props.list;
 
-      if (!value) {
-        state.tableLists = tableLists;
+      if (!value || (value instanceof Array && !value.length)) {
+        state.tableLists = props.list;
+        console.log(state.tableLists);
         return false;
       }
 

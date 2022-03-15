@@ -7,7 +7,7 @@
       :btnConfig="btnConfigs"
       :selectData="selectData"
       :selectCompare="selectCompare"
-      :header="config"
+      :header="headers"
       :operateData="operateData"
       :total="total"
       :pageSizes="[2, 5, 7]"
@@ -35,7 +35,7 @@
       </template>
       <template #Link>
         <div>
-          <el-input size="mini" placeholder="输入关键字搜索" />
+          <el-input size="small" placeholder="输入关键字搜索" />
         </div>
       </template>
 
@@ -51,14 +51,15 @@
 <script lang="ts">
 import { btnConfig, header, lists } from "./indexData"
 import { ElMessage } from 'element-plus'
-import { reactive, ref, onMounted, defineComponent, nextTick } from "vue"
+import { reactive, ref, onMounted, defineComponent, markRaw } from "vue"
 import type { PowerfulTableOperateData } from '../types/powerful-table'
-import powerfulTable from './powerfulTable/index';
+import { Search } from "@element-plus/icons-vue"
+// import { powerfulTable} from './powerfulTable/index';
 
 export default defineComponent({
-  components: {
-    powerfulTable
-  },
+  // components: {
+  //   powerfulTable
+  // },
   setup (props, context) {
     let rowA = reactive({ value: {} })
     let list = ref<any>([])
@@ -67,12 +68,13 @@ export default defineComponent({
     let selectCompare = reactive(["a", "id"])
     // let listLoading= ref(true)
     let isSelect = ref(true)
-    let config = reactive(header)
+    let headers = reactive(header)
     let btnConfigs = reactive(btnConfig)
     let total = ref(lists.length)
     const powerfulTable = ref(null)
     let operateData = reactive<PowerfulTableOperateData>({
       value: "",
+      icon: markRaw(Search),
       operates: [
         {
           label: "删除",
@@ -154,7 +156,7 @@ export default defineComponent({
       powerfulTable,
       // listLoading,
       isSelect,
-      config,
+      headers,
       total,
       operateData,
       // 方法

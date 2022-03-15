@@ -9,7 +9,7 @@
       "#/*": ["./types/*"]
     },
     "typeRoots" : ["./types"],
-    "types": ["webpack-env", "element-plus/global"],
+    "types": ["webpack-env", "element-plus/global", "./types/components"],
     "outDir": "./dist",
     // typeRoots option has been previously configured
     // 以严格模式解析

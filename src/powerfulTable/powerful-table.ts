@@ -11,8 +11,9 @@ import type {
   PowerfulTableTree,
   EmitType,
   InjectProps,
-  BtnConfig
-} from "../../types/powerful-table";
+  BtnConfig,
+  Size
+} from "#/powerful-table";
 
 // 主组件props
 export const powerfulTableProps = {
@@ -27,7 +28,7 @@ export const powerfulTableProps = {
   }>,
   // 组件大小
   size: {
-    type: String as PropType<"" | "small" | "large" | "medium" | "mini">,
+    type: String as PropType<Size>,
     default: '',
     validator: (val: string) => ['', 'large', 'medium', 'small', 'mini'].includes(val)
   },
@@ -276,7 +277,7 @@ export const useFunction = (emit: Function, powerfulTableData: PowerfulTableData
    * @param {string} type 类型
    * @returns 组件名称
    */
-  const matchComponents = (type: string) => ({'image': 'Image', 'btn': 'Button', 'switch': 'Switch', 'input': 'Input', 'textarea': 'Input', 'iconfont': 'Icon', 'tag': 'Tags', 'rate': 'Rate', 'href': 'Link', 'video': 'Video'}[type])
+  const matchComponents = (type: string) => ({'image': 'PTImage', 'btn': 'PTButton', 'switch': 'PTSwitch', 'input': 'PTInput', 'textarea': 'PTInput', 'iconfont': 'PTIcon', 'tag': 'PTTags', 'rate': 'PTRate', 'href': 'PTLink', 'video': 'PTVideo'}[type])
 
   return {
     handleSelectionChange,
