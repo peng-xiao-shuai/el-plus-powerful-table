@@ -1,5 +1,6 @@
 import type { PowerfulTableHeader, BtnConfig } from '../types/powerful-table'
 import { Edit, Delete, Plus } from '@element-plus/icons-vue'
+import { markRaw } from 'vue';
 
 let btnConfig: BtnConfig.Config = {
   // hidden: 'none',
@@ -8,19 +9,21 @@ let btnConfig: BtnConfig.Config = {
     text: '新增',
     effect: 'add',
     showBtn: true,
-    // icon: Plus
+    icon: markRaw(Plus),
   }, {
     text: '修改',
     operateType: 'single',
     effect: 'edit',
     type: 'primary',
     showBtn: () => false,
+    icon: markRaw(Edit),
     // icon: Edit
   }, {
     text: '批量删除',
     operateType: 'batch',
     effect: 'remove',
     type: 'danger',
+    icon: markRaw(Delete),
     // icon: Delete,
     showTip: true,
     // tipContent: '立即执行批量删除' 
@@ -49,7 +52,12 @@ let header: PowerfulTableHeader<Lists>[] = [
     filters: true,
     props: [
       {
+        type: "href",
         prop: "name",
+        data: {
+          text: (row: Lists) => row.name
+        }
+
       },
       {
         prop: "gender",
@@ -121,6 +129,7 @@ let header: PowerfulTableHeader<Lists>[] = [
         prop: "switchVal",
         type: "switch",
         data: {
+          isConfirmTip: true,
           disabled: (e: any) => false,
           beforeFunction: function (row: any, val: any, old: any) {
             return true
@@ -255,10 +264,12 @@ let header: PowerfulTableHeader<Lists>[] = [
           {
             tip: "编辑",
             type: "info",
-            // icon: Edit,
+            icon: markRaw(Edit),
             text: "编辑",
             // showBtn: false,
             // isTooltip: true,
+            confirmTip: '正在进行修改操作，确认要修改？',
+            isConfirmTip: true,
             params: {
               emit: "update",
             }
@@ -267,23 +278,24 @@ let header: PowerfulTableHeader<Lists>[] = [
             tip: "更多",
             isMore: true,
             type: "success",
-            // icon: Edit,
+            icon: markRaw(Edit),
           },{
             tip: "编辑",
             type: "text",
-            // icon: Edit,
+            icon: markRaw(Edit),
             params: "update",
           },
           {
             tip: "删除",
             type: "text",
-            // icon: Delete,
+            isConfirmTip: true,
+            icon: markRaw(Delete),
             params: "remove",
           }],
           {
             tip: "删除",
             type: "danger",
-            // icon: Edit,
+            icon: markRaw(Edit),
             showBtn: (e: any) => {
               return true
             },
@@ -356,7 +368,7 @@ let lists: Lists[] = [
     createTime: null,
     price: "",
     switchVal: 1,
-    tag: '1,2,3',
+    tag: '1,2',
     rate: 4.5,
     content: '3333444444444444444444444444444444444444444444444444444444444444444444444',
     videoUrl:
