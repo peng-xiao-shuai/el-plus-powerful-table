@@ -1,8 +1,9 @@
 import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, VideoDataType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, VideoDataType } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
+  name: 'PTVideo',
   props: {
    ...powerfulTableComponentProp,
     prop: {
@@ -10,6 +11,7 @@ export default defineComponent({
       default: () => {}
     }
   },
+  emits: ['returnEmit'],
   setup(props) {
     const justifyFun = inject('justifyFun') as Function
     

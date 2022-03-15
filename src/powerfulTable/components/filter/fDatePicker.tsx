@@ -1,15 +1,17 @@
-import { defineComponent, ref, reactive, watchEffect } from "vue";
+import { defineComponent, ref, reactive, watchEffect, inject, nextTick } from "vue";
 import { ArrowUp } from '@element-plus/icons-vue';
 import { props } from './common';
+import type { Size } from '#/powerful-table';
 
 export default defineComponent({
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
 
+    const size = inject('size') as Size
     const datePickerRef = ref<any>()
     const state = reactive<import('./common').State & {
-      defaultTime: any
+      defaultTime: Date[]
     }>({
       value: '',
       visible: false,
@@ -33,9 +35,14 @@ export default defineComponent({
     return () => (
       <span
         style={state.value.length ? { color: 'var(--el-color-primary)'} : {}}
-        onClick={() => {
-          state.visible = true
+        onClick={async () => {
+          state.visible = !state.visible
+          
+          if (!state.visible) return
+          await nextTick()
           datePickerRef.value.focus()
+          console.log(datePickerRef.value);
+          
         }}
       >
         {props.headerData.label}
@@ -49,7 +56,8 @@ export default defineComponent({
           default-time={state.defaultTime}
           ref={datePickerRef}
           class="date_style"
-          size="mini"
+          style="padding: 0; overflow: hidden"
+          size={size || 'small'}
           onChange={datePickerChange}
           onBlur={() => { state.visible = false }}
         >

@@ -1,11 +1,12 @@
 import { defineComponent, inject, watchEffect, reactive } from "vue";
 import { btnSlots, slots, props } from './common';
+import type { Size } from '#/powerful-table';
 
 export default defineComponent({
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
-    const size = inject('size') as string
+    const size = inject('size') as Size
     const state = reactive<import('./common').State>({
       value: '',
       visible: false
@@ -33,7 +34,7 @@ export default defineComponent({
         <el-input
           placeholder="请输入内容"
           v-model={state.value}
-          size={size}
+          size={size || 'small'}
           clearable
           class="input-with-select"
           v-slots={btnSlots(inputChange)}

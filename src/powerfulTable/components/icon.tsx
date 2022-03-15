@@ -1,9 +1,10 @@
 import { defineComponent, PropType, computed, inject } from "vue";
-import type { PowerfulTableHeaderProps, IconFontDataType, EmitType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, IconFontDataType, EmitType } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 import { filterFun } from './filter'
 
 export default defineComponent({
+  name: 'PTIcon',
   props: {
     ...powerfulTableComponentProp,
     prop: {

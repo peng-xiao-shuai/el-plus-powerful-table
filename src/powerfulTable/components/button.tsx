@@ -1,8 +1,9 @@
 import { defineComponent, PropType, getCurrentInstance, inject } from "vue";
-import type { PowerfulTableHeaderProps, BtnDataType, EmitType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, BtnDataType, Size } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
+  name: 'PTButton',
   props: {
     ...powerfulTableComponentProp,
     prop: {
@@ -10,9 +11,10 @@ export default defineComponent({
       default: () => {}
     }
   },
+  emits: ['returnEmit'],
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
-    const size = inject('size') as string
+    const size = inject('size') as Size
     
     const { proxy } = getCurrentInstance() as any
     /* ------ 按钮回调 ------ */
@@ -22,20 +24,20 @@ export default defineComponent({
         ? Object.assign({type}, item.params) 
         : Object.assign({type}, typeof item.params === 'undefined' ? {} : {params: item.params})
 
-      if (type == 'danger') {
-        proxy.$confirm('是否要进行删除操作, 是否继续?', '提示', {
+      if (item.isConfirmTip) {
+        proxy.$confirm(item.confirmTip ? item.confirmTip : `是否要进行${item.tip}操作, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
           .then(() => {
-            proxy.$parent.returnEmit("btnClick", { params, row, index })
+            emit('returnEmit', "btnClick", { params, row, index })
           })
           .catch(() => {
             // console.log('取消删除')
           })
       } else {
-        proxy.$parent.returnEmit("btnClick", { params, row, index })
+        emit('returnEmit', "btnClick", { params, row, index })
       }
     }
 
@@ -43,8 +45,8 @@ export default defineComponent({
       <el-button
         class={item.text == '' ?  'notSpan' : ''}
         size={size}
-        style={item.style || {}}
         icon={item.icon || ''}
+        style={item.style || {}}
         disabled={item.disabled || false}
         type={item.type || 'primary'}
         onClick={(e:Event) => {

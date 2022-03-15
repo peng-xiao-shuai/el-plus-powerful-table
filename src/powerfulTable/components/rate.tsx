@@ -1,8 +1,9 @@
 import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, RateDataType, EmitType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, RateDataType, EmitType } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
+  name: 'PTRate',
   props: {
     ...powerfulTableComponentProp,
     prop: {

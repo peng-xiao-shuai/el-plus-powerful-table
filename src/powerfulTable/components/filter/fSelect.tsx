@@ -1,11 +1,11 @@
 import { defineComponent, reactive, watch, inject, PropType, watchEffect } from "vue";
 import type {
-  PowerfulTableHeader,
+  Size,
   PowerfulTableHeaderProps,
   PowerfulTableFilter
-} from "../../../../types/powerful-table";
+} from "#/powerful-table";
 
-import { slots, props } from './common';
+import { slots, props, State } from './common';
 
 export default defineComponent({
   props: {
@@ -13,30 +13,36 @@ export default defineComponent({
     // 过滤的配置数据
     propData: {
       type: Object as PropType<PowerfulTableHeaderProps<any>>,
-      default: () => { prop: '' },
+      default: () => {
+        return {
+          prop: ''
+        }
+      },
     }
   },
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
-    const size = inject('size') as string
+    const size = inject('size') as Size
     const locale = (inject('locale') as {name: string})?.name
 
-    const state = reactive<import('./common').State>({
+    const state = reactive<State<(string | number)[]>>({
       value: [],
       options: [],
       visible: false
     })
 
-    const selectChange = (val: any) => {
-      if (!val.length) val = ''
+    const selectChange = (val: (number | string)[]) => {
+      if (!val.length) val = []
       emit('headerFilterChange', val, props.headerData)
     }
 
-    watchEffect(() => {
-      if (props.list.length && state.value.length) {
-        selectChange(state.value)
-      }
-    })
+    // watch([() => props.list, () => state.value], ([lv, sv]) => {
+    //   console.log(sv);
+      
+    //   if (lv.length && sv.length) {
+    //     selectChange(sv)
+    //   }
+    // })
 
     watch(
       () => props.propData,
@@ -75,7 +81,7 @@ export default defineComponent({
           collapse-tags
           clearable
           placeholder="请选择"
-          size={size}
+          size={size || 'small'}
           onVisible-change={(val: boolean) => {
             if (!val) state.visible = false
           }}

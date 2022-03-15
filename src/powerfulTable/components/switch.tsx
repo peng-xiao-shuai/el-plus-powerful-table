@@ -1,8 +1,9 @@
 import { defineComponent, PropType, getCurrentInstance, inject } from "vue";
-import type { PowerfulTableHeaderProps, SwitchDataType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, SwitchDataType } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
+  name: 'PTSwitch',
   props: {
     ...powerfulTableComponentProp,
     prop: {
@@ -10,6 +11,7 @@ export default defineComponent({
       default: () => {}
     }
   },
+  emits: ['returnEmit'],
   setup(props, { emit }) {
     const justifyFun = inject('justifyFun') as Function
     const size = inject('size') as string
@@ -22,17 +24,22 @@ export default defineComponent({
         row[prop] = value
         return false
       }
-      proxy.$confirm('是否要进行修改操作, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-      .then(() => {
-        proxy.$parent.returnEmit("switchChange", row)
-      })
-      .catch(() => {
-        row[prop] = value
-      })
+      if (props.prop.data?.isConfirmTip) {
+        proxy.$confirm(props.prop.data?.confirmTip ? props.prop.data?.confirmTip : '是否要进行修改操作, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          emit('returnEmit', "switchChange", row)
+        })
+        .catch(() => {
+          row[prop] = value
+        })
+      } else {
+        emit('returnEmit', "switchChange", row)
+      }
+      
     }
 
     return () => (
@@ -58,6 +65,7 @@ export default defineComponent({
             inactive-value={props.prop.data?.inactiveValue || 0}
             onClick={(e: Event) => {
               e.stopPropagation()
+              if (typeof props.prop.data?.disabled === 'function' ? props.prop.data?.disabled(props.row) : props.prop.data?.disabled || false) return
               switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
             }}
           />

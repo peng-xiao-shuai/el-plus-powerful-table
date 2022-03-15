@@ -1,9 +1,10 @@
 import { defineComponent, PropType, computed, inject } from "vue";
-import type { PowerfulTableHeaderProps, TagDataType, PowerfulTableFilter } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, TagDataType, PowerfulTableFilter } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 import { filterFun } from './filter'
 
 export default defineComponent({
+  name: 'PTTags',
   props: {
     ...powerfulTableComponentProp,
     prop: {

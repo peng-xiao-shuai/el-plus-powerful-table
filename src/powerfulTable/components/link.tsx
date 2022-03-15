@@ -1,8 +1,9 @@
 import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, HrefDataType, EmitType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, HrefDataType, EmitType } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
+  name: 'PTLink',
   props: {
     ...powerfulTableComponentProp,
     prop: {

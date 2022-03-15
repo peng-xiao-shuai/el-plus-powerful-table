@@ -1,5 +1,5 @@
 import { defineComponent, PropType, h, inject } from "vue";
-import type { PowerfulTableHeaderProps } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({

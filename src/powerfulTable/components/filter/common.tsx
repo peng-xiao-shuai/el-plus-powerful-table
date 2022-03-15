@@ -1,9 +1,9 @@
 import { Search, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import { PropType } from 'vue';
-import { PowerfulTableHeader, PowerfulTableFilter } from '../../../../types/powerful-table';
+import { PowerfulTableHeader, PowerfulTableFilter } from '#/powerful-table';
 
-export type State = {
-  value: string | (string | number)[],
+export type State<T = string | (string | number)[]> = {
+  value: T,
   options?: PowerfulTableFilter[],
   visible: boolean
 }

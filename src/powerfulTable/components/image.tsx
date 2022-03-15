@@ -1,8 +1,9 @@
 import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, ImageDataType } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, ImageDataType } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export default defineComponent({
+  name: 'PTImage',
   props: {
     ...powerfulTableComponentProp,
     prop: {
@@ -10,6 +11,7 @@ export default defineComponent({
       default: () => {}
     }
   },
+  emits: ['returnEmit'],
   setup(props) {
     const justifyFun = inject('justifyFun') as Function
     

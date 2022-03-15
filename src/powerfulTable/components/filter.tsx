@@ -1,5 +1,5 @@
 import { defineComponent, PropType } from "vue";
-import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter } from '../../../types/powerful-table'
+import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter } from '#/powerful-table'
 import { powerfulTableComponentProp } from '../powerful-table'
 
 export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => {
