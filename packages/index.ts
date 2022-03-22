@@ -1,12 +1,12 @@
 import type { App, Plugin } from 'vue';
-import components from './components/index';
-import PowerfulTable from './powerful-table/index';
-import fComponents from './filter/index';
-import BtnPlus from './btn-plus/index';
-export * from './btn-plus/index';
-export * from './filter/index';
-export * from './powerful-table/index';
-export * from './components/index';
+import components from './components';
+import PowerfulTable from './powerful-table';
+import fComponents from './filter';
+import BtnPlus from './btn-plus';
+export * from './btn-plus';
+export * from './filter';
+export * from './powerful-table';
+export * from './components';
 const makeInstaller = (components: Plugin[] = []) => {
   const install = (app: App, options: {}) => {
     components.forEach((c) => {
