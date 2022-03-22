@@ -2,8 +2,10 @@
   "name": "el-plus-powerful-table-ts",
   "version": "1.1.0",
   "author": "peng-xiao-shuai",
-  "main": "lib/powerful-table.umd.js",
-  "module": "lib/indexa.esm.js",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "./lib/packages/index.d.ts",
+  "baseUrl": "./lib",
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -26,7 +28,6 @@
     "pagination",
     "checkbox"
   ],
-  "types": "lib/powerful-table.d.ts",
   "homepage": "https://github.com/peng-xiao-shuai/el-plus-powerful-table/tree/master-ts",
   "bugs": {
     "url": "https://github.com/Peng-Xiao-Shuai/el-plus-powerful-table/issues",

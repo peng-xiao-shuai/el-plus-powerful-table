@@ -30,7 +30,7 @@
     "types": ["webpack-env"],
     // 使用的JSX工厂函数
     //   "jsxFactory": "h",
-    "lib": ["dom", "esnext", "dom.iterable"]
+    "lib": ["dom", "esnext", "dom.iterable", "scripthost"]
   },
   "include": [
     "demo/**/*.vue",
@@ -39,7 +39,6 @@
     "packages/**/*.vue",
     "packages/**/*.tsx",
     "packages/**/*.ts",
-    "types/**/*.ts",
   ],
   "exclude": [
     "node_modules",
