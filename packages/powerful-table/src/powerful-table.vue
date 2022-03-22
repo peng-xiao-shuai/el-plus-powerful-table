@@ -280,7 +280,7 @@ import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from '.
 import { compare } from '$u/format-data';
 import en from "element-plus/lib/locale/lang/en";
 
-import btnPlus from "~/btn-plus/src/btn-plus.vue";
+import btnPlus from "../../btn-plus/src/btn-plus.vue";
 import fDatePicker from "~/filter/src/FDatePicker";
 import fInput from "~/filter/src/FInput";
 import fSelect from "~/filter/src/FSelect";
