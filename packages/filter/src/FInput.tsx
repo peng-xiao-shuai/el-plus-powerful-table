@@ -1,8 +1,8 @@
-import { defineComponent, inject, watchEffect, reactive } from "vue";
+import { defineComponent, inject, watchEffect, reactive, App } from "vue";
 import { btnSlots, slots, props } from './common';
-import type { Size } from '#/powerful-table';
+import type { Size, SFCWithInstall } from '../../../typings'
 
-export default defineComponent({
+const FInput = defineComponent({
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
@@ -44,3 +44,9 @@ export default defineComponent({
     );
   },
 });
+
+FInput.install = (app: App) => {
+  app.component(FInput.name, FInput);
+}
+export const PTFInput = FInput as SFCWithInstall<typeof FInput>
+export default FInput

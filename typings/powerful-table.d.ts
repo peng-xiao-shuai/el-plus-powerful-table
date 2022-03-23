@@ -73,7 +73,7 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   filtersType?: 'select' | 'date'
 }
 
-type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot' | 'textarea'
+export type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot' | 'textarea'
 
 export type PowerfulTableFilter = {
   key: string | number;

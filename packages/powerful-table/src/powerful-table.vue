@@ -275,7 +275,7 @@ import {
 import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
-} from "#/powerful-table";
+} from '../../../typings'
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
 import { compare } from '$u/format-data';
 import en from "element-plus/lib/locale/lang/en";
@@ -284,8 +284,8 @@ import btnPlus from "../../btn-plus/src/btn-plus.vue";
 import fDatePicker from "~/filter/src/FDatePicker";
 import fInput from "~/filter/src/FInput";
 import fSelect from "~/filter/src/FSelect";
-import RenderJsx from "~/components/RenderJsx";
-import Filter from "~/components/filter";
+import RenderJsx from "~/components/src/RenderJsx";
+import Filter from "~/components/src/filter";
 
 // 获取 布局方向
 const justifyFun = (val: string) => {

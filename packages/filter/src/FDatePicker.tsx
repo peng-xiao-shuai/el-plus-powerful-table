@@ -1,9 +1,9 @@
-import { defineComponent, ref, reactive, watchEffect, inject, nextTick } from "vue";
+import { defineComponent, ref, reactive, watchEffect, inject, nextTick, App } from "vue";
 import { ArrowUp } from '@element-plus/icons-vue';
 import { props } from './common';
-import type { Size } from '#/powerful-table';
+import type { Size, SFCWithInstall } from '../../../typings'
 
-export default defineComponent({
+const FDatePicker = defineComponent({
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
@@ -66,3 +66,9 @@ export default defineComponent({
     );
   },
 });
+
+FDatePicker.install = (app: App) => {
+  app.component(FDatePicker.name, FDatePicker);
+}
+export const PTFDatePicker = FDatePicker as SFCWithInstall<typeof FDatePicker>
+export default FDatePicker

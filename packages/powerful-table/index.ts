@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { SFCWithInstall } from '#/powerful-table';
+import { SFCWithInstall } from '../../typings'
 import powerful from './src/powerful-table.vue'
 
 // 定义 install 方法， App 作为参数

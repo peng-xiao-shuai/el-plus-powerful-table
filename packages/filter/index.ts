@@ -1,12 +1,11 @@
-import type { App, Plugin } from 'vue';
-import FDatePicker from './src/FDatePicker';
-import FInput from './src/FInput'
-import FSelect from './src/FSelect';
-import { withInst } from '$u/withInst';
+import type { Plugin } from 'vue';
+import { PTFDatePicker } from './src/FDatePicker';
+import { PTFInput } from './src/FInput'
+import { PTFSelect } from './src/FSelect';
 
-export const PTFDatePicker = withInst(FDatePicker)
-export const PTFInput = withInst(FInput)
-export const PTFSelect = withInst(FSelect)
+export * from './src/FDatePicker';
+export * from './src/FInput'
+export * from './src/FSelect';
 
 export default [
   PTFDatePicker,

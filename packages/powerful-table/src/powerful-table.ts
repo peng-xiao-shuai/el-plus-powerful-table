@@ -13,7 +13,7 @@ import type {
   InjectProps,
   BtnConfig,
   Size
-} from "typings/powerful-table";
+} from '../../../typings'
 
 // 主组件props
 export const powerfulTableProps = {

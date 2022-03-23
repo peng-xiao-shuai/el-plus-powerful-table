@@ -1,13 +1,13 @@
-import { defineComponent, reactive, watch, inject, PropType, watchEffect } from "vue";
+import { defineComponent, reactive, watch, inject, PropType, App } from "vue";
 import type {
   Size,
   PowerfulTableHeaderProps,
-  PowerfulTableFilter
-} from "#/powerful-table";
-
+  PowerfulTableFilter,
+  SFCWithInstall
+} from '../../../typings'
 import { slots, props, State } from './common';
 
-export default defineComponent({
+const FSelect = defineComponent({
   props: {
     ...props,
     // 过滤的配置数据
@@ -20,7 +20,7 @@ export default defineComponent({
       },
     }
   },
-  emits: ['headerFilterChange'],
+  emits: ['headerFSelectChange'],
   setup(props, { emit }) {
     const size = inject('size') as Size
     const locale = (inject('locale') as {name: string})?.name
@@ -33,7 +33,7 @@ export default defineComponent({
 
     const selectChange = (val: (number | string)[]) => {
       if (!val.length) val = []
-      emit('headerFilterChange', val, props.headerData)
+      emit('headerFSelectChange', val, props.headerData)
     }
 
     // watch([() => props.list, () => state.value], ([lv, sv]) => {
@@ -101,3 +101,9 @@ export default defineComponent({
     );
   },
 });
+
+FSelect.install = (app: App) => {
+  app.component(FSelect.name, FSelect);
+}
+export const PTFSelect = FSelect as SFCWithInstall<typeof FSelect>
+export default FSelect
