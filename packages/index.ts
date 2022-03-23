@@ -7,8 +7,9 @@ export * from './btn-plus';
 export * from './filter';
 export * from './powerful-table';
 export * from './components';
+import { InjectProps } from '../typings';
 const makeInstaller = (components: Plugin[] = []) => {
-  const install = (app: App, options: {}) => {
+  const install = (app: App, options: InjectProps | {}) => {
     components.forEach((c) => {
       app.use(c)
     })
@@ -17,5 +18,6 @@ const makeInstaller = (components: Plugin[] = []) => {
 
   return install
 }
-// export const install = makeInstaller([...Components]).install
-export default makeInstaller([...components, ...fComponents, BtnPlus, PowerfulTable])
+export default {
+    install: makeInstaller([...components, ...fComponents, BtnPlus, PowerfulTable])
+}

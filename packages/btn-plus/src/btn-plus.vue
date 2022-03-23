@@ -142,7 +142,7 @@ import {
   getCurrentInstance,
   Component
 } from "vue";
-import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '#/powerful-table';
+import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '../../../typings';
 import { Grid, Refresh } from '@element-plus/icons-vue';
 export default defineComponent({
   name: "btnPlus",
