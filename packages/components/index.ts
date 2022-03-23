@@ -1,4 +1,3 @@
-import type { Plugin } from 'vue';
 import { PTButton } from './src/button';
 import { PTImage } from './src/image';
 import { PTTags } from './src/tags';
@@ -35,4 +34,4 @@ export default [
   PTSwitch,
   PTFilter,
   PTRenderJsx
-] as Plugin[]
+] as import('vue').Plugin[]

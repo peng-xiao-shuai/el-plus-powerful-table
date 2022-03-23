@@ -7,13 +7,12 @@ export * from './btn-plus';
 export * from './filter';
 export * from './powerful-table';
 export * from './components';
-import { InjectProps } from '../typings';
 const makeInstaller = (components: Plugin[] = []) => {
-  const install = (app: App, options: InjectProps | {}) => {
+  const install = (app: App, options?: import('../typings').InjectProps) => {
     components.forEach((c) => {
       app.use(c)
     })
-    app.provide('powerfulTable', options)
+    app.provide('powerfulTable', options ? options : {})
   }
 
   return install
