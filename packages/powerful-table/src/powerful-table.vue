@@ -293,7 +293,7 @@ import Filter from "~/components/src/filter";
  * @param end 结束时间 可被new Date()解析
  * @returns boolean
  */
-const compare = (value: string, begin: string, end: string):boolean {
+const compare = (value: string, begin: string, end: string):boolean => {
   const valueData = new Date(value)
   const beginData = new Date(begin)
   const endData = new Date(end)
