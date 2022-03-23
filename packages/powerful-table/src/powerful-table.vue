@@ -277,7 +277,6 @@ import type {
   PowerfulTableHeaderProps,
 } from '../../../typings'
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
-import { compare } from '$u/format-data';
 import en from "element-plus/lib/locale/lang/en";
 
 import btnPlus from "../../btn-plus/src/btn-plus.vue";
@@ -286,6 +285,23 @@ import fInput from "~/filter/src/FInput";
 import fSelect from "~/filter/src/FSelect";
 import RenderJsx from "~/components/src/RenderJsx";
 import Filter from "~/components/src/filter";
+
+/**
+ * 比较指定时间是否在指定时间段内
+ * @param value 目标时间 可被new Date()解析
+ * @param begin 开始时间 可被new Date()解析
+ * @param end 结束时间 可被new Date()解析
+ * @returns boolean
+ */
+const compare = (value: string, begin: string, end: string):boolean {
+  const valueData = new Date(value)
+  const beginData = new Date(begin)
+  const endData = new Date(end)
+  if (valueData >= beginData && valueData <= endData) {
+    return true
+  }
+  return false
+}
 
 // 获取 布局方向
 const justifyFun = (val: string) => {
