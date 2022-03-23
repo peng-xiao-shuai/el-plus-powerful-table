@@ -1,5 +1,5 @@
-import { defineComponent, PropType } from "vue";
-import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter } from 'typings/powerful-table'
+import { defineComponent, PropType, App } from "vue";
+import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
 export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => {
@@ -7,7 +7,7 @@ export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => 
   return current ? current.value : s
 }
 
-export default defineComponent({
+const Filter = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
@@ -35,3 +35,8 @@ export default defineComponent({
     )
   }
 })
+Filter.install = (app: App) => {
+  app.component(Filter.name, Filter);
+}
+export const PTFilter = Filter as SFCWithInstall<typeof Filter>
+export default Filter

@@ -1,8 +1,8 @@
-import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, InputDataType, EmitType } from 'typings/powerful-table'
+import { defineComponent, PropType, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, InputDataType, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const Input = defineComponent({
   name: 'PTInput',
   props: {
     ...powerfulTableComponentProp,
@@ -43,3 +43,9 @@ export default defineComponent({
     )
   }
 })
+
+Input.install = (app: App) => {
+  app.component(Input.name, Input);
+}
+export const PTInput = Input as SFCWithInstall<typeof Input>
+export default Input

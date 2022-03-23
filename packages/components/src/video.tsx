@@ -1,8 +1,8 @@
-import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, VideoDataType } from 'typings/powerful-table'
+import { defineComponent, PropType, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, VideoDataType, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const Video = defineComponent({
   name: 'PTVideo',
   props: {
    ...powerfulTableComponentProp,
@@ -36,3 +36,9 @@ export default defineComponent({
     )
   }
 })
+
+Video.install = (app: App) => {
+  app.component(Video.name, Video);
+}
+export const PTVideo = Video as SFCWithInstall<typeof Video>
+export default Video

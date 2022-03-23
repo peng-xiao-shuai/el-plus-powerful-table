@@ -1,8 +1,8 @@
-import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, RateDataType, EmitType } from 'typings/powerful-table'
+import { defineComponent, PropType, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, RateDataType, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const Rate = defineComponent({
   name: 'PTRate',
   props: {
     ...powerfulTableComponentProp,
@@ -42,3 +42,9 @@ export default defineComponent({
     )
   }
 })
+
+Rate.install = (app: App) => {
+  app.component(Rate.name, Rate);
+}
+export const PTRate = Rate as SFCWithInstall<typeof Rate>
+export default Rate

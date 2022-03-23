@@ -1,8 +1,8 @@
-import { defineComponent, PropType, getCurrentInstance, inject } from "vue";
-import type { PowerfulTableHeaderProps, SwitchDataType } from 'typings/powerful-table'
+import { defineComponent, PropType, getCurrentInstance, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, SwitchDataType, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const Switch = defineComponent({
   name: 'PTSwitch',
   props: {
     ...powerfulTableComponentProp,
@@ -74,3 +74,9 @@ export default defineComponent({
     )
   }
 })
+
+Switch.install = (app: App) => {
+  app.component(Switch.name, Switch);
+}
+export const PTSwitch = Switch as SFCWithInstall<typeof Switch>
+export default Switch

@@ -1,8 +1,8 @@
-import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, ImageDataType } from 'typings/powerful-table'
+import { defineComponent, PropType, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, ImageDataType, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const Image = defineComponent({
   name: 'PTImage',
   props: {
     ...powerfulTableComponentProp,
@@ -39,3 +39,9 @@ export default defineComponent({
     )
   }
 })
+
+Image.install = (app: App) => {
+  app.component(Image.name, Image);
+}
+export const PTImage = Image as SFCWithInstall<typeof Image>
+export default Image

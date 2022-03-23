@@ -1,8 +1,8 @@
-import { defineComponent, PropType, inject } from "vue";
-import type { PowerfulTableHeaderProps, HrefDataType, EmitType } from 'typings/powerful-table'
+import { defineComponent, PropType, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, HrefDataType, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const Link = defineComponent({
   name: 'PTLink',
   props: {
     ...powerfulTableComponentProp,
@@ -38,3 +38,9 @@ export default defineComponent({
     )
   }
 })
+
+Link.install = (app: App) => {
+  app.component(Link.name, Link);
+}
+export const PTLink = Link as SFCWithInstall<typeof Link>
+export default Link

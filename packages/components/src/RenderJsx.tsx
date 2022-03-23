@@ -1,8 +1,8 @@
-import { defineComponent, PropType, h, inject } from "vue";
-import type { PowerfulTableHeaderProps } from '#/powerful-table'
+import { defineComponent, PropType, h, inject, App } from "vue";
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
-export default defineComponent({
+const RenderJsx = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
@@ -26,3 +26,9 @@ export default defineComponent({
     )
   }
 })
+
+RenderJsx.install = (app: App) => {
+  app.component(RenderJsx.name, RenderJsx);
+}
+export const PTRenderJsx = RenderJsx as SFCWithInstall<typeof RenderJsx>
+export default RenderJsx
