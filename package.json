@@ -1,10 +1,10 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "peng-xiao-shuai",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "types": "lib/typings/index.d.ts",
+  "types": "typings/index.d.ts",
   "style": "lib/index.min.css",
   "private": false,
   "license": "MIT",
@@ -12,10 +12,11 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "tsc": "tsc",
-    "lib": "rimraf ./lib && rollup -c && esno ./build/moveFolder.js && esno ./build/remove.js"
+    "lib": "rimraf ./lib && rollup -c"
   },
   "files": [
-    "lib"
+    "lib",
+    "typings"
   ],
   "keywords": [
     "element-plus",

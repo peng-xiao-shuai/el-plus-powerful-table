@@ -1,5 +1,4 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { copyFiles } from './build/copyFiles';
 import path from 'path'
 import babel from "@rollup/plugin-babel";
 import { terser } from 'rollup-plugin-terser'
@@ -11,8 +10,6 @@ import jsx from "acorn-jsx";
 import pkg from './package.json'
 const deps = Object.keys(pkg.dependencies)
 
-copyFiles(path.resolve(__dirname, './typings'), path.resolve(__dirname, './lib/typings'))
-console.log("\x1b[32m", '✨文件夹创建完成✨')
 // 如果开启压缩banner and footer将只能简单英文文字
 const banner = 
 `/**
@@ -40,7 +37,7 @@ export default {
     vue({
       target: 'browser',
       css: false,
-      exposeFilename: true,
+      exposeFilename: false,
     }),
     css({
       raw: false,
