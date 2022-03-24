@@ -18,9 +18,6 @@ module.exports = {
     //修改文件引入自定义路径
     config.resolve.alias
       .set('~', path.resolve('packages'))
-      .set('@', path.resolve('src'))
-      .set('#', path.resolve('types'))
-      .set('$u', path.resolve('utils'))
   },
   configureWebpack:{
     module: {

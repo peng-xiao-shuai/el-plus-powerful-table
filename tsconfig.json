@@ -20,14 +20,10 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["demo/*"],
-      "#/*": ["typings/*"],
       "~/*": ["packages/*"],
-      "$u/*": ["utils/*"],
     },
     // "typeRoots" :typingspes"],
-    // , "element-plus/global"
-    "types": ["webpack-env"],
+    "types": ["webpack-env", "element-plus/global"],
     // 使用的JSX工厂函数
     //   "jsxFactory": "h",
     "lib": ["dom", "esnext", "dom.iterable", "scripthost"]
