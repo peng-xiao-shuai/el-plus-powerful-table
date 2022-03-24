@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <!-- <PTBtnPlus></PTBtnPlus> -->
+    <!-- <PTButton></PTButton> -->
+    <!-- <PTFDatePicker></PTFDatePicker> -->
     <powerful-table
       ref='powerfulTable'
       :list="list"
@@ -52,14 +55,16 @@
 import { btnConfig, header, lists } from "./indexData"
 import { ElMessage } from 'element-plus'
 import { reactive, ref, onMounted, defineComponent, markRaw } from "vue"
-import type { PowerfulTableOperateData } from '#/powerful-table'
+import type { PowerfulTableOperateData } from '../typings'
 import { Search } from "@element-plus/icons-vue"
+// import { PTButton, PTBtnPlus } from '../lib/index.js';
 // import { powerfulTable} from './powerfulTable/index';
 
 export default defineComponent({
-  // components: {
-  //   powerfulTable
-  // },
+  components: {
+    // PTButton,
+    // PTBtnPlus
+  },
   setup (props, context) {
     let rowA = reactive({ value: {} })
     let list = ref<any>([])
