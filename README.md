@@ -15,13 +15,14 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
-## 1.1.1 20220314
+## 2.0.0 20220314
 - **新增支持内置组件导出`PT`开头：例如:`PTImage，PTButton`**
 - - 主要用于 `powerful-table-draggable` 组件的引用
 - `switch、btn` 类型新增参数
 - - `isConfirmTip` 是否开启点击时确认框提示
 - - `isConfirmTip` 确认框提示文字
 - 优化 `el-pagination small`参数随组件或全局 `size` 参数更改
+- 解决鼠标悬浮在组件上没有类型
 ## 1.1.0 20211231
 - 新增表格顶部按钮功能
 - - 新增配置项 <a href="btnConfig">**传送门**</a>
