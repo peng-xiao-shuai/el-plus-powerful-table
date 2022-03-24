@@ -1,10 +1,9 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "peng-xiao-shuai",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "types": "typings/index.d.ts",
   "style": "lib/index.min.css",
   "private": false,
   "license": "MIT",
