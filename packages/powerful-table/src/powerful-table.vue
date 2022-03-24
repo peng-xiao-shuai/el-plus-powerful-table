@@ -79,7 +79,7 @@
 
           <!-- 内置自定义表头 -->
           <template v-if="item.filters && (item.isShowOrFilterColumn == undefined || item.isShowOrFilterColumn === 'filter') && !item.headerSlotName" #header>
-            <f-select
+            <PTFSelect
               v-if="
                 getPropObj(item).filter ||
                 getPropObj(item).filtersType === 'select' ||
@@ -90,19 +90,19 @@
               :list="list"
               :prop-data="getPropObj(item)"
               @headerFilterChange="headerFilterChange"
-            ></f-select>
-            <f-date-picker
+            ></PTFSelect>
+            <PTFDatePicker
               v-else-if="getPropObj(item).filtersType === 'date'"
               :header-data="item"
               :list="list"
               @headerFilterChange="headerFilterChange"
-            ></f-date-picker>
-            <f-input
+            ></PTFDatePicker>
+            <PTFInput
               v-else
               :header-data="item"
               :list="list"
               @headerFilterChange="headerFilterChange"
-            ></f-input>
+            ></PTFInput>
           </template>
 
           <template #default="scope">
@@ -114,7 +114,7 @@
                 ...prop.style,
               }"
             >
-              <RenderJsx
+              <PTRenderJsx
                 v-if="typeof prop.render == 'function'"
                 :row="scope.row"
                 :index="scope.$index"
@@ -141,18 +141,13 @@
                 </div>
               </div>
               <!-- 筛选 -->
-              <Filter
+              <PTFilter
                 v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)"
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- 筛选 -->
-              <PTImage
-                v-else-if="prop.type == 'image'"
                 v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 动态组件 -->
               <component
-                v-else-if="prop.type && ['btn', 'switch', 'input', 'textarea', 'iconfont', 'tag', 'rate', 'href', 'video'].includes(prop.type)"
+                v-else-if="prop.type && ['image', 'btn', 'switch', 'input', 'textarea', 'iconfont', 'tag', 'rate', 'href', 'video'].includes(prop.type)"
                 :is="matchComponents(prop.type)"
                 @returnEmit="returnEmit"
                 v-bind="bindAttr(prop, scope, item)"
@@ -279,13 +274,6 @@ import type {
 import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
 import en from "element-plus/lib/locale/lang/en";
 
-import btnPlus from "../../btn-plus/src/btn-plus.vue";
-import fDatePicker from "~/filter/src/FDatePicker";
-import fInput from "~/filter/src/FInput";
-import fSelect from "~/filter/src/FSelect";
-import RenderJsx from "~/components/src/RenderJsx";
-import Filter from "~/components/src/filter";
-
 /**
  * 比较指定时间是否在指定时间段内
  * @param value 目标时间 可被new Date()解析
@@ -315,14 +303,6 @@ export default defineComponent({
   name: "powerful-table",
   props: powerfulTableProps,
   emits: powerfulTableEmits,
-  components: {
-    btnPlus,
-    fDatePicker,
-    fInput,
-    fSelect,
-    RenderJsx,
-    Filter,
-  },
   setup(props, { emit }) {
     /* ------ data数据 ------ */
     const {

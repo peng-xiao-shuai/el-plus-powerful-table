@@ -4,6 +4,7 @@ import { props } from './common';
 import type { Size, SFCWithInstall } from '../../../typings'
 
 const FDatePicker = defineComponent({
+  name: 'PTFDatePicker',
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
@@ -67,8 +68,11 @@ const FDatePicker = defineComponent({
   },
 });
 
-FDatePicker.install = (app: App) => {
+const PTFDatePicker = FDatePicker as SFCWithInstall<typeof FDatePicker>
+PTFDatePicker.install = (app: App) => {
   app.component(FDatePicker.name, FDatePicker);
 }
-export const PTFDatePicker = FDatePicker as SFCWithInstall<typeof FDatePicker>
+export {
+  PTFDatePicker
+}
 export default FDatePicker

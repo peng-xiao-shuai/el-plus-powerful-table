@@ -8,6 +8,7 @@ export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => 
 }
 
 const Filter = defineComponent({
+  name: "PTFilter",
   props: {
     ...powerfulTableComponentProp,
     prop: {

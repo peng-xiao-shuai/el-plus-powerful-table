@@ -3,6 +3,7 @@ import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
 
 const RenderJsx = defineComponent({
+  name: 'PTRenderJsx',
   props: {
     ...powerfulTableComponentProp,
     prop: {
@@ -27,8 +28,11 @@ const RenderJsx = defineComponent({
   }
 })
 
-RenderJsx.install = (app: App) => {
+const PTRenderJsx = RenderJsx as SFCWithInstall<typeof RenderJsx>
+PTRenderJsx.install = (app: App) => {
   app.component(RenderJsx.name, RenderJsx);
 }
-export const PTRenderJsx = RenderJsx as SFCWithInstall<typeof RenderJsx>
+export {
+  PTRenderJsx
+}
 export default RenderJsx

@@ -10,6 +10,7 @@ declare module 'vue' {
     PTInput: typeof import('../packages/index')['PTInput'],
     PTIcon: typeof import('../packages/index')['PTIcon'],
     PTFilter: typeof import('../packages/index')['PTFilter'],
+    PTRenderJsx: typeof import('../packages/index')['PTRenderJsx'],
     PTBtnPlus: typeof import('../packages/index')['PTBtnPlus'],
     PTFDatePicker: typeof import('../packages/index')['PTFDatePicker'],
     PTFInput: typeof import('../packages/index')['PTFInput'],

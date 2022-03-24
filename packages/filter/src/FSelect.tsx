@@ -8,6 +8,7 @@ import type {
 import { slots, props, State } from './common';
 
 const FSelect = defineComponent({
+  name: 'PTFSelect',
   props: {
     ...props,
     // 过滤的配置数据
@@ -102,8 +103,11 @@ const FSelect = defineComponent({
   },
 });
 
-FSelect.install = (app: App) => {
+const PTFSelect = FSelect as SFCWithInstall<typeof FSelect>
+PTFSelect.install = (app: App) => {
   app.component(FSelect.name, FSelect);
 }
-export const PTFSelect = FSelect as SFCWithInstall<typeof FSelect>
+export {
+  PTFSelect
+}
 export default FSelect

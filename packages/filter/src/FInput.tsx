@@ -3,6 +3,7 @@ import { btnSlots, slots, props } from './common';
 import type { Size, SFCWithInstall } from '../../../typings'
 
 const FInput = defineComponent({
+  name: 'PTFInput',
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
@@ -45,8 +46,11 @@ const FInput = defineComponent({
   },
 });
 
-FInput.install = (app: App) => {
+const PTFInput = FInput as SFCWithInstall<typeof FInput>
+PTFInput.install = (app: App) => {
   app.component(FInput.name, FInput);
 }
-export const PTFInput = FInput as SFCWithInstall<typeof FInput>
+export {
+  PTFInput
+}
 export default FInput
