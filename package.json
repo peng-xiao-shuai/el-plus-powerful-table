@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.0.3",
+  "version": "2.0.6",
   "author": "peng-xiao-shuai",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -12,6 +12,16 @@
     "build": "vue-cli-service build",
     "tsc": "tsc",
     "lib": "rimraf ./lib && rollup -c"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "types": "./global.d.ts"
+    },
+    "./lib/*": "./lib/*",
+    "./typings/*": "./typings/*",
+    "./package.json": "./package.json",
+    "./global": "./global.d.ts"
   },
   "files": [
     "lib",
