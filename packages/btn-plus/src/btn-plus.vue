@@ -2,6 +2,7 @@
   <div
     ref="clBtnPlus"
     :class="[
+      'pt-btn-plus',
       btnConfig.hidden === 'none' ? 'hidden' : '',
       isPC ? 'cl-btn-plus' : 'cl-btn-plus-mobile',
     ]"
@@ -145,7 +146,7 @@ import {
 import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '../../../typings';
 import { Grid, Refresh } from '@element-plus/icons-vue';
 export default defineComponent({
-  name: "btnPlus",
+  name: "PTBtnPlus",
   props: {
     // 按钮的配置数据
     btnConfig: {
@@ -288,10 +289,10 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.hidden {
+.pt-btn-plus.hidden {
   display: none !important;
 }
-.cl-btn-plus {
+.pt-btn-plus.cl-btn-plus {
   /* margin-top: 50px; */
   padding-bottom: 10px;
   display: flex;
@@ -299,7 +300,7 @@ export default defineComponent({
   align-items: center;
 }
 
-.el-dropdown-menu {
+.pt-btn-plus .el-dropdown-menu {
   padding: 10px 20px !important;
 }
 
