@@ -91,7 +91,8 @@ export type ImageDataType = {
   lazy?: boolean;
   zIndex?: number;
   style?: {};
-  fit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
+  fit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down';
+  componentProp?: {}
 }
 
 export type BtnDataType = {
@@ -107,7 +108,8 @@ export type BtnDataType = {
   isTooltip?: boolean;
   isConfirmTip?: boolean;
   confirmTip?: string;
-  params?: any
+  params?: any;
+  componentProp?: {}
 }
 
 export type SwitchDataType = {
@@ -122,15 +124,18 @@ export type SwitchDataType = {
   isConfirmTip?: boolean;
   confirmTip?: string;
   beforeFunction?: (row: any, value: number | string, oldValue: number | string) => boolean;
+  componentProp?: {}
 }
 
 export type InputDataType = {
+  type?: string;
   symbol?: string;
   placeholder?: string;
   rows?: string | number;
   disabled?: boolean;
   style?: {};
   slot?: 'prepend' | 'append';
+  componentProp?: {}
 }
 
 export type VideoDataType = {
@@ -152,24 +157,29 @@ export type RateDataType = {
   allowHalf?: boolean;
   showText?: boolean;
   showScore?: boolean;
-  texts?: string[]
+  texts?: string[];
+  componentProp?: {}
 }
 
-export type HrefDataType = {
-  target?: string;
+export type LinkDataType = {
+  target?: '_self'| '_blank' | '_parent' | '_top';
   style?: {};
   type?: ThemeType;
+  icon?: Component;
   underline?: boolean;
-  text?: string | ((row: any) => string)
+  text?: string | ((row: any) => string);
+  componentProp?: {}
 }
 
 export type TagDataType = {
   type?: ThemeType;
+  style?: {};
   effect?: 'dark' | 'light' | 'plain';
   color?: (row: any, tag: string) => string;
   hit?: boolean;
   number?: number;
-  filter?: PowerfulTableFilter[]
+  filter?: PowerfulTableFilter[];
+  componentProp?: {}
 }
 
 // 组件注入数据

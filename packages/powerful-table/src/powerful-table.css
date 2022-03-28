@@ -1,23 +1,26 @@
 /* 树表格时icon和文字居中 */
-:deep(.cell) {
+.pt .cell {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
-:deep(.center .cell) {
+.pt .cell > div {
+  width: 100%;
+}
+.pt .center .cell {
   justify-content: center;
 }
-:deep(.right .cell) {
+.pt .right .cell {
   justify-content: flex-end;
 }
 
 /* 隐藏按钮提示 */
-.no-tooltip.el-popper.is-dark {
+.pt .no-tooltip.el-popper.is-dark {
   display: none !important;
 }
 
 /* 隐藏过滤 fDatePicker组件的选择框 */
-.date_style {
+.pt .date_style {
   margin-left: -10px;
   height: 0px !important;
   width: 10px !important;
@@ -25,29 +28,29 @@
 }
 
 /* 使图标文字垂直居中 */
-.el-popover-center {
+.pt .el-popover-center {
   display: inline-flex;
   align-items: center;
 }
-.powerful-table .el-icon {
+.pt .powerful-table .el-icon {
   transition: all .3s;
   margin-left: 5px;
 }
-.powerful-table .el-icon.el-icon-arrow-down {
+.pt .powerful-table .el-icon.el-icon-arrow-down {
   transform: rotate(180deg);
 }
 
 /* 操作按钮和dropdown */
-.el-button + .el-dropdown-more,
-.el-dropdown-more + .el-button {
+.pt .el-button + .el-dropdown-more,
+.pt .el-dropdown-more + .el-button {
   margin-left: 10px;
 }
 
-.content {
+.pt .content {
   position: relative;
   padding-bottom: 23px;
 }
-.content > .develop {
+.pt .content > .develop {
   text-align: center;
   height: 100%;
   position: absolute;
@@ -61,40 +64,42 @@
   );
 }
 
-.content > .develop span {
+.pt .develop span {
   /* position: absolute; */
   bottom: 0;
   font-size: 12px;
+  cursor: pointer;
 }
 
-.develop {
+.pt .develop {
   width: 100%;
+  color: var(--el-color-primary);
 }
 
-:deep(.btnType) {
+.pt .btnType {
   flex-wrap: wrap;
 }
 
-:deep(.btnType .btnEach) {
+.pt .btnType .btnEach {
   margin-bottom: 5px;
   margin-top: 5px;
 }
-:deep(.btnType .notSpan span) {
+.pt .btnType .notSpan span {
   display: none;
 }
-.el-table th.el-table__cell {
+.pt .el-table th.el-table__cell {
   padding: 10px 0 !important;
 }
-.pagination {
+.pt .pagination {
   width: 100%;
   display: flex;
   justify-content: flex-end;
 }
 
-.left {
+.pt .left {
   justify-content: flex-start;
 }
 
-.el-pagination {
+.pt .el-pagination {
   width: auto;
 }

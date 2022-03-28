@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="pt">
     <!-- 按钮组件 -->
-    <btn-plus
+    <PTBtnPlus
       ref="btnPlusRef"
       v-model:isTable="isTable"
       :btn-config="btnConfig"
@@ -14,7 +14,7 @@
       <template #btn-right v-if="$slots['btn-right']">
         <slot name="btn-right"></slot>
       </template>
-    </btn-plus>
+    </PTBtnPlus>
 
     <el-config-provider
       ref="configProvider"
@@ -41,6 +41,7 @@
             hasChildren: 'hasChildren',
           }
         "
+        v-bind="{...property}"
       >
         <template #empty>
           <slot name="empty">
@@ -153,50 +154,11 @@
                 v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 正常 -->
-              <div
+              <PTText
                 v-else-if="scope.row[prop.prop]"
-                :class="{ content: develop[scope.$index] }"
-              >
-                <!-- 主体内容 -->
-                <div
-                  :style="prop.data && prop.data.develop ? {
-                    display: '-webkit-box',
-                    overflow: 'hidden',
-                    '-webkit-box-orient': 'vertical',
-                    '-webkit-line-clamp': develop[scope.$index]
-                      ? 99999
-                      : prop.data && prop.data.line || 3
-                  } : {}"
-                >
-                  {{
-                    prop.data && typeof prop.data.customFilterFun == "function"
-                      ? prop.data.customFilterFun(scope.row, scope.$index)
-                      : scope.row[prop.prop]
-                  }}
-                </div>
-
-                <!-- 展开全文或收起 -->
-                <div
-                  v-show="prop.data && prop.data.develop"
-                  class="develop el-link el-link--primary"
-                  @click.stop="develop[scope.$index] = !develop[scope.$index]"
-                >
-                  <span
-                    :style="{
-                      position: develop[scope.$index] ? 'absolute' : 'static',
-                    }"
-                  >
-                    {{ develop[scope.$index] ? "收起" : "展开阅读全文" }}
-                    <i
-                      :class="
-                        develop[scope.$index]
-                          ? 'el-icon-arrow-up'
-                          : 'el-icon-arrow-down'
-                      "
-                    ></i>
-                  </span>
-                </div>
-              </div>
+                v-bind="bindAttr(prop, scope, item)"
+                :listLength="tableLists.length"
+              />
             </div>
           </template>
         </el-table-column>

@@ -89,6 +89,10 @@ export const powerfulTableProps = {
     type: Object as PropType<PowerfulTableTree>,
     default: () => {},
   },
+  property: {
+    type: Object,
+    default: () => {}
+  }
 }
 // 主组件emits
 export const powerfulTableEmits  = [
