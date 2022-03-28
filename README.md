@@ -15,6 +15,17 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
+  ## 2.0.7 20220328
+- **新增props `property`**
+- - [**ElTable属性**](https://element-plus.gitee.io/zh-CN/component/table.html#table-attributes)
+- `type` 为 `btn、image、input、rate、switch、tag` 的 `data` 中新增 `componentProp` 扩展参数
+- `href` 类型更改为 `link`
+- - `link` 的 `data` 中新增属性 `icon`
+- - `link` 的 `data` 中 `text` 没有值时将显示 `prop` 数据在页面上
+- `input` 类型新增 `type` 同 `el-input type`
+- 修复 `rate` 类型中 `locale` 警告
+- 优化 `link` 的 `data` 中 `target` 参数类型固定
+- 修复 ` Failed to resolve component: PTBtnPlus ` 警告
 ## 2.0.0 20220314
 - **新增支持内置组件导出`PT`开头：例如:`PTImage，PTButton`**
 - - 主要用于 `powerful-table-draggable` 组件的引用
