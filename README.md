@@ -200,6 +200,7 @@ app.mount("#app");
 | isPagination  | 是否显示分页器                                                  | boolean | false/true                                                                    | false                           |
 | operateData   | 批量操作                                                        | object  | -                                                                             | {}                              |
 | btnConfig   | 表格顶部按钮配置                                                        | object  | -                                                                             | {}                              |
+| property   | 属性扩展字段                                                        | object  | -                                                                             | {}                              |
 
 ---
 
@@ -425,6 +426,7 @@ const data = [{
 | zIndex  | 图片预览层级                                                                                        | number  | -                                          | 6000   |
 | style   | 图片自定义样式                                                                                      | object  | -                                          | -      |
 | fit     | 图片如何适应容器框，同原生[object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) | string  | fill / contain / cover / none / scale-down | -      |
+| componentProps   | 属性扩展字段                                                        | object  | -                                                                             | {}                              |
 
 ```js
 //示例
@@ -466,6 +468,7 @@ const data = [{
 | isMore     | 是否更多 当 `data` 是二维数组时有效         | boolean   | true / false | false |
 
 | emit <font color='red'>已删除</font>     | 自定义方法名     | string  | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | -       |
+| componentProps   | 属性扩展字段                                                        | object  | -                                                                             | {}                              |
 
 ```js
 // 参数示例
@@ -533,6 +536,7 @@ const data = [{
 | confirmTip  | 点击后确认操作提示文字         | string   | - | 是否要进行修改操作, 是否继续? |
 | style         | 开关自定义样式   | object  | -          | -      |
 | beforeFunction   | 修改前事件,返回 true时正常执行 false 点击无变化，可以在此函数中自行处理 为false时提示   | function(row,value,oldValue)  | -          | -      |
+| componentProps   | 属性扩展字段        | object  | -     | {}     |
 
 
 
@@ -560,12 +564,14 @@ const data = [{
 
 | 参数        | 说明              | 类型    | 可选值                | 默认值 |
 | ----------- | ----------------- | ------- | --------------------- | ------ |
+| type       | 输入框类型        | string  | -                     | text     |
 | style       | 输入框样式        | object  | -                     | -      |
 | placeholder | 输入框文字描述    | string  | -                     | -      |
 | disabled    | 输入框是否禁用,使用函数需要返回boolean    | boolean / function(row) | true/false            | false  |
 | slot        | 输入框前置或后置  | string  | 'prepend' / 'append'      | -      |
 | rows        | 显示的高度 `textarea` 专有  | string / number  | -      | 3      |
 | symbol      | slot 文字或者符合 | string  | -                     | -      |
+| componentProps   | 属性扩展字段        | object  | -     | {}     |
 
 ```js
 //示例
@@ -648,6 +654,7 @@ const data = [{
 | showText  | 是否显示辅助文字，若为真，则会从 texts 数组中选取当前分数对应的文字内容 | boolean | -          | false                                                     |
 | showScore | 是否显示当前分数，show-score 和 show-text 不能同时为真                  | boolean | true/false | false                                                     |
 | texts     | 辅助文字数组                                                            | array   | -          | ['极差', '失望', '一般', '满意', '惊喜']                  |
+| componentProps   | 属性扩展字段        | object  | -     | {}     |
 
 
 ```js
@@ -668,13 +675,14 @@ const data = [{
 }
 ```
 
-#### <font color='#7CCEFF' id='href'>type == href（超链接）</font>
+#### <font color='#7CCEFF' id='link'>type == link（超链接）</font>
 
 | 参数      | 说明                                            | 类型    | 可选值     | 默认值    |
 | --------- | ----------------------------------------------- | ------- | ---------- | --------- |
 | style     | 自定义样式                                       | object  | -          | - |
 | target    | 跳转类型                                        | string  | -          | '\_blank' |
 | type      | 主题类型                                        | string  | -          | 'primary' |
+| icon      | 图标                                        | Component  | -          | - |
 | underline | 是否显示下划线                                  | boolean | true/false | false     |
 | text      | 所显示的文本                                 | string / function(row) | - | -     |
 | prop      | 超链接文字该显示哪个 prop 的值 否则为 text 的值 <font color='red'>已删除</font> | string  | -          | 空        |
@@ -732,6 +740,7 @@ const data = [{
 | hit | 是否描边 | boolean | -      | false |
 | number | 需要显示前多少个 | number | -    | 3 |
 | filter | <a href='#filter'>查看详情</a> | array / function(row,index) | -      | - |
+| componentProps   | 属性扩展字段        | object  | -     | {}     |
 
 ---
 
