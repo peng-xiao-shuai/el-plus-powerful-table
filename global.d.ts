@@ -3,6 +3,7 @@ declare module 'vue' {
     PTImage: typeof import("el-plus-powerful-table-ts")['PTImage']
     PTButton: typeof import('el-plus-powerful-table-ts')['PTButton'],
     PTTags: typeof import('el-plus-powerful-table-ts')['PTTags'],
+    PTText: typeof import('el-plus-powerful-table-ts')['PTText'],
     PTSwitch: typeof import('el-plus-powerful-table-ts')['PTSwitch'],
     PTVideo: typeof import('el-plus-powerful-table-ts')['PTVideo'],
     PTRate: typeof import('el-plus-powerful-table-ts')['PTRate'],

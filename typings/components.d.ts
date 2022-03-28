@@ -3,6 +3,7 @@ declare module 'vue' {
     PTImage: typeof import("../packages/index")['PTImage']
     PTButton: typeof import('../packages/index')['PTButton'],
     PTTags: typeof import('../packages/index')['PTTags'],
+    PTText: typeof import('../packages/index')['PTText'],
     PTSwitch: typeof import('../packages/index')['PTSwitch'],
     PTVideo: typeof import('../packages/index')['PTVideo'],
     PTRate: typeof import('../packages/index')['PTRate'],
