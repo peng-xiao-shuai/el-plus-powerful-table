@@ -34,7 +34,8 @@ const Tags = defineComponent({
               <el-tag
                 style={{
                   marginRight: '10px',
-                  borderColor: (typeof props.prop.data?.color == 'function') ? 'rgba(0,0,0,0)' : 'auto'
+                  borderColor: (typeof props.prop.data?.color == 'function') ? 'rgba(0,0,0,0)' : 'auto',
+                  ...props.prop.data?.style
                 }}
                 size={size}
                 key={tag}
@@ -43,6 +44,7 @@ const Tags = defineComponent({
                 effect={props.prop.data?.effect || 'light'}
                 color={(typeof props.prop.data?.color == 'function' && props.prop.data?.color(props.row, tag)) || ''}
                 hit={(props.prop.data?.hit) || false}
+                {...props.prop.data?.componentProp}
               >
                 { 
                   props.prop.filter ? 

@@ -68,6 +68,7 @@ const Switch = defineComponent({
               if (typeof props.prop.data?.disabled === 'function' ? props.prop.data?.disabled(props.row) : props.prop.data?.disabled || false) return
               switchChange(props.row, props.prop.prop, props.prop.data?.activeValue, props.prop.data?.inactiveValue, props.prop.data?.beforeFunction)
             }}
+            {...props.prop.data?.componentProp}
           />
         </div>
       </>

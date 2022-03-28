@@ -28,7 +28,7 @@ const Input = defineComponent({
                 [props.prop.data?.slot as string]: () => <span style={{padding: '0 10px'}}> {props.prop.data?.symbol} </span>
               }
             }
-            type={props.prop.type}
+            type={props.prop.data?.type || 'text'}
             rows={props.prop.data?.rows || 3}
             style={props.prop.data?.style || {}}
             size={size || 'small'}
@@ -36,6 +36,7 @@ const Input = defineComponent({
             v-model={props.row[props.prop.prop]}
             disabled={props.prop.data?.disabled || false}
             onClick={(e: Event) => e.stopPropagation()}
+            {...props.prop.data?.componentProp}
           >
           </el-input>
         </div>

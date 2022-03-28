@@ -53,6 +53,7 @@ const Button = defineComponent({
           e.stopPropagation()
           !item.isMore && btnChange(item, props.row, props.index as number, item.type || 'primary' )
         }}
+        {...item?.componentProp}
       >
         { typeof item.text != 'string'  ? item.tip : item.text }
       </el-button>

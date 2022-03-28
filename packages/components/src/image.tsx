@@ -30,6 +30,7 @@ const Image = defineComponent({
               style={props.prop.data?.style || {}}
               fit={props.prop.data?.fit || 'cover'}
               onClick={(e: Event) => e.stopPropagation()}
+              {...props.prop.data?.componentProp}
             />
           :
           <div> { props.prop.reserve ? <div v-html={props.prop.reserve}></div> : <b>暂无数据</b> } </div>
