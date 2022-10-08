@@ -18,7 +18,7 @@
 
     <el-config-provider
       ref="configProvider"
-      :locale="locale || (injectProps && injectProps.locale) || en"
+      :locale="locale || (injectProps && injectProps.locale)"
     >
       <el-table
         class="powerful-table"
@@ -233,8 +233,8 @@ import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
 } from '../../../typings'
-import { powerfulTableProps, powerfulTableEmits, useState, useFunction } from './powerful-table';
-import en from "element-plus/lib/locale/lang/en";
+import { powerfulTableProps, powerfulTableEmits, usePowerfulTableState, useFunction } from './powerful-table';
+// import en from "element-plus/lib/locale/lang/en";
 
 /**
  * 比较指定时间是否在指定时间段内
@@ -273,11 +273,11 @@ export default defineComponent({
       powerfulTableData,
       injectProps,
       state
-    } = useState(props)
+    } = usePowerfulTableState(props)
 
     /* ------ 注入数据 ------ */
     // 语言
-    provide("locale", props.locale || (injectProps && injectProps.locale) || en);
+    provide("locale", props.locale || (injectProps && injectProps.locale));
     // 组件大小
     provide("size", props.size || injectProps?.size || "small");
     // 单元格内布局
@@ -474,10 +474,9 @@ export default defineComponent({
       multipleTable,
       configProvider,
       injectProps,
-      en,
 
       rowClick,
-      bindAttr: <D>(prop: PowerfulTableHeaderProps<any, D>, scope: typeof props.list[0], item: PowerfulTableHeader<typeof scope>) => {
+      bindAttr: function <D>(prop: PowerfulTableHeaderProps<any, D>, scope: typeof props.list[0], item: PowerfulTableHeader<typeof scope>) {
         return {
           row: scope.row,
           index: scope.$index,

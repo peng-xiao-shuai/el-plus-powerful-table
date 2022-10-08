@@ -1,4 +1,5 @@
 import {
+  Ref,
   ref,
   inject,
   reactive,
@@ -127,13 +128,26 @@ export type PowerfulTableData = {
   otherSelect: any[];
   operate: PowerfulTableOperateData;
 }
-export const useState = (props: any) => {
+
+type ConfigProvider = null | { locale: { name: string } }
+type _State = {
+  tableLists: any[],
+  isPC: boolean
+  isTable: boolean
+}
+export const usePowerfulTableState = (props: any): {
+  multipleTable: any
+  configProvider: Ref<ConfigProvider>
+  powerfulTableData: PowerfulTableData
+  state: _State
+  injectProps: InjectProps | undefined
+} => {
   // 全局此组件注入的数据
   const injectProps = inject<InjectProps>("powerfulTable");
 
   /* ----- 组件实例 ----- */
   const multipleTable = ref();
-  const configProvider = ref<{ locale: { name: string } } | null>(null);
+  const configProvider = ref<ConfigProvider>(null);
 
   /* ------  表格数据  ------ */
   const powerfulTableData = reactive<PowerfulTableData>({
@@ -153,8 +167,8 @@ export const useState = (props: any) => {
   })
 
   // 组件参数
-  const state = reactive({
-    tableLists: [] as any[],
+  const state = reactive<_State>({
+    tableLists: [],
     isPC: true,
     isTable: true,
   });

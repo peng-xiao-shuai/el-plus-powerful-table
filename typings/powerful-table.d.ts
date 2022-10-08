@@ -1,4 +1,4 @@
-import { VNode, Plugin, App, Component } from "@vue/runtime-core"
+import { VNode, Plugin, App, Component } from "vue"
 
 /* ------ props ------ */
 export interface PowerfulTableData<L> {
