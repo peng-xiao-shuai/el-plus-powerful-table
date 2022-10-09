@@ -1,4 +1,5 @@
-declare module 'vue' {
+import '@vue/runtime-core'
+declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     PTImage: typeof import("../packages/index")['PTImage']
     PTButton: typeof import('../packages/index')['PTButton'],

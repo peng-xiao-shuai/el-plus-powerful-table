@@ -1,4 +1,4 @@
-import { App } from 'vue'
+import type { App } from 'vue'
 import BtnPlus from './src/btn-plus.vue'
 
 // 定义 install 方法， App 作为参数

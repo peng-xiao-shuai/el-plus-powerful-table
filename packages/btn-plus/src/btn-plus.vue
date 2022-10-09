@@ -48,7 +48,7 @@
             placement="top"
           >
             <el-button
-              :size="size || 'small'"
+              :size="item.size || size || 'small'"
               :type="item.type || 'primary'"
               :icon="Refresh"
               @click="batchOperate('right', item)"
@@ -80,7 +80,7 @@
                   height="350"
                   border
                   highlight-current-row
-                  size="mini"
+                  size="small"
                 >
                   <el-table-column
                     align="center"
@@ -131,141 +131,147 @@
 </template>
 
 <script setup lang='ts'>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onMounted,
-  watch,
-  defineComponent,
-  PropType,
-  inject,
-  getCurrentInstance,
-  Component
-} from "vue";
-import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '../../../typings';
-import { Grid, Refresh } from '@element-plus/icons-vue';
-// name: "PTBtnPlus",
-type Props = {
-// 按钮的配置数据
-btnConfig: BtnConfig.Config
-// 表格的配置数据
-headerList: PowerfulTableHeader[]
-// 表格当前选择的数据集合
-multipleSelection: any[]
-// 判断是否为移动端
-isTable: Boolean
-}
-const props = defineProps<Props>()
-const emit = defineEmits(["update:isTable", "btnChange"])
+  import {
+    ref,
+    reactive,
+    onMounted,
+    watch,
+    inject,
+    PropType,
+    getCurrentInstance,
+    Component
+  } from "vue";
+  import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '../../../typings';
+  import { Grid, Refresh } from '@element-plus/icons-vue';
 
-const size = inject('size') as Size
-const injectProps = inject<InjectProps>("powerfulTable");
+  type Props = {
+    // 按钮的配置数据
+    btnConfig: BtnConfig.Config
+    // 表格的配置数据
+    headerList: PowerfulTableHeader[]
+    // 表格当前选择的数据集合
+    multipleSelection: any[]
+    // 判断是否为移动端
+    isTable: Boolean
+  }
 
-const { proxy } = getCurrentInstance() as any;
-/* ------ 实例 ------ */
-const clBtnPlus = ref();
-// const store = useStore();
-type State = {
-  btnHeight: number;
-  headerData: PowerfulTableHeader[];
-  functionBtnList: {
-      size?: '',
-      effect?: string;
-      tip: string;
-      type?: ThemeType;
-      icon?: string | Component;
-      showTip?: Boolean;
-      tipContent?: string;
-  }[];
-  isPC: boolean;
-}
-const state = reactive<State>({
-  btnHeight: 0,
-  headerData: [],
-  functionBtnList: [
-    {
-      effect: "refresh",
-      tip: "刷新",
-      type: "info",
-      icon: Refresh,
-    },
-    // {
-    //   effect: "switch",
-    //   tip: "切换",
-    //   type: "info",
-    //   icon: "el-icon-tickets",
-    // },
-  ],
-  // isPC: store.state.isPC.isPC,
-  isPC: true,
-});
-/**
- * 判断左侧操作按钮是否禁用
- * @param item 当前按钮数据
- * item.operateType 操作类型：none(默认) => 不需要选择数据；single => 有且只能操作一条数据；batch => 批量操作数据(至少选择一条数据以上)
- */
-const btnDisabled = (operateType?: 'none'|'single'|'batch'): boolean => {
-  // 默认不需要操作数据
-  if (operateType === "single" && props.multipleSelection.length !== 1) return true;
-  if (operateType === "batch" && props.multipleSelection.length < 1) return true;
-  return false;
-};
+  const props = defineProps<Props>()
+  const emit = defineEmits(["update:isTable", "btnChange"])
 
-const functionBtnChange = (value: any, row: object) => {
-  proxy.$parent.anewRender()
-};
-const batchOperate = (type: string, item: unknown) => {
-  if (type === "left") {
-    const btnItem = item as BtnConfig.BtnList
-    // 是否显示提示
-    if (btnItem.showTip) {
-      let content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`;
-      proxy.$confirm(content, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-      .then(() => {
-        proxy.$parent.returnEmit("btnChange", {
-          effect: btnItem.effect,
-          list: props.multipleSelection,
+  const size = inject('size') as Size
+  const injectProps = inject<InjectProps>("powerfulTable");
+
+  const { proxy } = getCurrentInstance() as any;
+  /* ------ 实例 ------ */
+  const clBtnPlus = ref();
+  // const store = useStore();
+  type State = {
+    btnHeight: number;
+    headerData: PowerfulTableHeader[];
+    functionBtnList: {
+        size?: Size,
+        effect?: string;
+        tip: string;
+        type?: ThemeType;
+        icon?: PropType<string | Component>;
+        showTip?: Boolean;
+        tipContent?: string;
+    }[];
+    isPC: boolean;
+  }
+  const state = reactive<State>({
+    btnHeight: 0,
+    headerData: [],
+    functionBtnList: [
+      {
+        effect: "refresh",
+        tip: "刷新",
+        type: "info",
+        icon: Refresh,
+      },
+      // {
+      //   effect: "switch",
+      //   tip: "切换",
+      //   type: "info",
+      //   icon: "el-icon-tickets",
+      // },
+    ],
+    // isPC: store.state.isPC.isPC,
+    isPC: true,
+  });
+  /**
+   * 判断左侧操作按钮是否禁用
+   * @param item 当前按钮数据
+   * item.operateType 操作类型：none(默认) => 不需要选择数据；single => 有且只能操作一条数据；batch => 批量操作数据(至少选择一条数据以上)
+   */
+  const btnDisabled = (operateType?: 'none'|'single'|'batch'): boolean => {
+    // 默认不需要操作数据
+    if (operateType === "single" && props.multipleSelection.length !== 1) return true;
+    if (operateType === "batch" && props.multipleSelection.length < 1) return true;
+    return false;
+  };
+
+  const functionBtnChange = (value: any, row: object) => {
+    proxy.$parent.anewRender()
+  };
+  const batchOperate = (type: string, item: unknown) => {
+    if (type === "left") {
+      const btnItem = item as BtnConfig.BtnList
+      // 是否显示提示
+      if (btnItem.showTip) {
+        let content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`;
+        proxy.$confirm(content, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         })
+        .then(() => {
+          proxy.$parent.returnEmit("btnChange", {
+            effect: btnItem.effect,
+            list: props.multipleSelection,
+          })
+        })
+
+        return false
+      }
+      // 直接抛出
+      proxy.$parent.returnEmit("btnChange", {
+        effect: btnItem.effect,
+        list: props.multipleSelection,
       })
 
       return false
     }
-    // 直接抛出
-    proxy.$parent.returnEmit("btnChange", {
-      effect: btnItem.effect,
-      list: props.multipleSelection,
-    })
-
-    return false
-  }
-  const functionBtnItem = item as typeof state.functionBtnList[0]
-  switch (functionBtnItem.effect) {
-    case 'refresh':
-      proxy.$parent.returnEmit("refresh", {})
-      break;
-    case 'switch':
-      emit("update:isTable", !props.isTable);
-      break;
-    case 'columns':
-      break;
-  }
-};
-onMounted(() => {
-  state.btnHeight = clBtnPlus.value.offsetHeight;
-});
-watch(
-  () => [props.headerList],
-  ([newHeaderList]: any) => {
-    state.headerData = newHeaderList;
-  },
-  { immediate: true, deep: true }
-);
+    const functionBtnItem = item as typeof state.functionBtnList[0]
+    switch (functionBtnItem.effect) {
+      case 'refresh':
+        proxy.$parent.returnEmit("refresh", {})
+        break;
+      case 'switch':
+        emit("update:isTable", !props.isTable);
+        break;
+      case 'columns':
+        break;
+    }
+  };
+  onMounted(() => {
+    state.btnHeight = clBtnPlus.value.offsetHeight;
+  });
+  watch(
+    () => [props.headerList],
+    ([newHeaderList]: any) => {
+      state.headerData = newHeaderList;
+    },
+    { immediate: true, deep: true }
+  );
 </script>
+
+<script lang='ts'>
+  export default {
+    name: 'PTBtnPlus'
+  }
+</script>
+
 <style scoped>
 .pt-btn-plus.hidden {
   display: none !important;
