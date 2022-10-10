@@ -14,6 +14,10 @@
   justify-content: flex-end;
 }
 
+.pt .cell > .el-table__expand-icon + div{
+  width: auto;
+}
+
 /* 隐藏按钮提示 */
 .pt .no-tooltip.el-popper.is-dark {
   display: none !important;

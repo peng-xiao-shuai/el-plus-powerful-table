@@ -215,6 +215,6 @@ export namespace BtnConfig {
 
 export type SFCWithInstall<T> = T & Plugin
 
-export type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text'
+export type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 export type Size = '' | 'large' | 'default' | 'small'
 export type EmitType = 'query' | 'success' | 'add' | 'update' | 'remove' | 'occupyOne' | 'occupyTwo' | 'row-click'

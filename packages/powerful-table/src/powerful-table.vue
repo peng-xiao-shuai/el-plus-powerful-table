@@ -176,7 +176,7 @@
             v-model="operate.value"
             clearable
             :placeholder="
-              configProvider && configProvider.locale.name == 'zh-cn'
+              configProvider && configProvider.locale && configProvider.locale.name == 'zh-cn'
                 ? '批量操作'
                 : 'lot operation'
             "
@@ -262,7 +262,7 @@ const justifyFun = (val: string) => {
 };
 
 export default defineComponent({
-  name: "powerful-table",
+  name: "PowerfulTable",
   props: powerfulTableProps,
   emits: powerfulTableEmits,
   setup(props, { emit }) {

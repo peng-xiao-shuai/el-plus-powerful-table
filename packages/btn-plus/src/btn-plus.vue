@@ -56,22 +56,24 @@
           </el-tooltip>
         </template>
         <!-- 下拉操作列 -->
-        <el-dropdown trigger="click" :hide-on-click="false">
-          <el-tooltip class="each" effect="dark" content="列" placement="top">
-            <el-button
-              :size="size || 'small'"
-              type="info"
-              :icon="Grid"
-              @click="
-                batchOperate('right', {
-                  effect: 'columns',
-                  tip: '列',
-                  type: 'info',
-                  icon: 'el-icon-s-grid',
-                })
-              "
-            />
-          </el-tooltip>
+        <el-dropdown ref="dropdown" trigger="click" :hide-on-click="false">
+          <div>
+            <el-tooltip class="each" effect="dark" content="列" placement="top">
+              <el-button
+                :size="size || 'small'"
+                type="info"
+                :icon="Grid"
+                @click="
+                  batchOperate('right', {
+                    effect: 'columns',
+                    tip: '列',
+                    type: 'info',
+                    icon: 'el-icon-s-grid',
+                  })
+                "
+              />
+            </el-tooltip>
+          </div>
           <template #dropdown>
             <el-dropdown-menu>
               <div class="dropdown-table" style="padding: 10px">
@@ -199,6 +201,9 @@
     // isPC: store.state.isPC.isPC,
     isPC: true,
   });
+  
+  // 实例
+  const dropdown = ref()
   /**
    * 判断左侧操作按钮是否禁用
    * @param item 当前按钮数据
