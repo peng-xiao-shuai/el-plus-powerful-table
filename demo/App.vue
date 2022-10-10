@@ -1,9 +1,8 @@
 <template>
   <div class="app-container">
-    <!-- <PTBtnPlus></PTBtnPlus> -->
     <!-- <PTButton></PTButton> -->
     <!-- <PTFDatePicker></PTFDatePicker> -->
-    <powerful-table
+    <PowerfulTable
       ref='powerfulTable'
       :list="list"
       isSelect
@@ -47,7 +46,7 @@
           {{row.data}}
         </div>
       </template>
-    </powerful-table>
+    </PowerfulTable>
   </div>
 </template>
 
