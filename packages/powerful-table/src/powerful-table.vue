@@ -164,9 +164,7 @@
         </el-table-column>
       </el-table>
 
-      <div
-        style="display: flex; justify-content: space-between; margin-top: 20px"
-      >
+      <div style="display: flex; justify-content: space-between; margin-top: 20px">
         <!-- 批量操作 -->
         <div
           class="pagination left"
@@ -176,9 +174,9 @@
             v-model="operate.value"
             clearable
             :placeholder="
-              configProvider && configProvider.locale && configProvider.locale.name == 'zh-cn'
-                ? '批量操作'
-                : 'lot operation'
+              configProvider && configProvider.locale && configProvider.locale.name == 'en'
+                ? 'lot operation'
+                : '批量操作'
             "
             :size="size || (injectProps && injectProps.size) || 'small'"
           >

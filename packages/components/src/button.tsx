@@ -59,6 +59,18 @@ const Button = defineComponent({
       </el-button>
     )
 
+    // 提示
+    const tipRender = (item: BtnDataType) => (
+      <el-tooltip
+        popper-class={item.isTooltip ? '' : 'no-tooltip'}
+        effect="dark"
+        content={item.tip}
+        placement="top"
+      >
+        {btn(item)}
+      </el-tooltip>
+    )
+
     return () => (
       <>
         <div class="btnType" style={{display: 'flex', alignItems: 'center', width: '100%', flexWrap: 'wrap', justifyContent: justifyFun(props.aligning)}}>
@@ -72,16 +84,11 @@ const Button = defineComponent({
               ? (<el-dropdown class="el-dropdown-more" v-slots={{
                   dropdown: () => (
                     <el-dropdown-menu>
-                      {item.filter(each => !each.isMore).map(each => (<el-dropdown-item key={each.label}>
-                        <el-tooltip
-                          popper-class={item.isTooltip ? '' : 'no-tooltip'}
-                          effect="dark"
-                          content={each.tip}
-                          placement="top"
-                        >
-                          {btn(each)}
-                        </el-tooltip>
-                      </el-dropdown-item>))}
+                      {(item as BtnDataType[]).filter(each => !each.isMore).map((each, index) => (
+                        <el-dropdown-item key={index}>
+                          {tipRender(each)}
+                        </el-dropdown-item>
+                      ))}
                     </el-dropdown-menu>
                   )
                 }}>
@@ -97,14 +104,7 @@ const Button = defineComponent({
                     }
                   </div>
                 </el-dropdown>)
-              : (<el-tooltip
-                  popper-class={item.isTooltip ? '' : 'no-tooltip'}
-                  effect="dark"
-                  content={item.tip}
-                  placement="top"
-                >
-                  {btn(item)}
-                </el-tooltip>)
+              : tipRender(item)
             })
           }
         </div>
