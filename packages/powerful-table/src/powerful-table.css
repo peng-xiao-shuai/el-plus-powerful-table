@@ -44,10 +44,12 @@
   transform: rotate(180deg);
 }
 
-/* 操作按钮和dropdown */
-.pt .el-button + .el-dropdown-more,
-.pt .el-dropdown-more + .el-button {
-  margin-left: 10px;
+/* 操作按钮 */
+.pt .cell .el-button + .el-button {
+  margin-left: 0;
+}
+.pt .cell .el-button {
+  margin: 5px;
 }
 
 .pt .content {
