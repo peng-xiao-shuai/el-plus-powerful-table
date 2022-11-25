@@ -15,6 +15,11 @@
   - `ci` 持续集成
   - `types` 类型定义文件更改
   - `wip` 开发中
+  ## 2.1.0 202201023
+- 使用`vite`进行构建
+- - 构建库模式优化，生成`es、cjs`两种模式
+- `element-plus` 版本更新到 `2.0+`
+- 优化 `button` 在表格中样式
   ## 2.0.7 20220328
 - **新增props `property`**
 - - [**ElTable属性**](https://element-plus.gitee.io/zh-CN/component/table.html#table-attributes)
@@ -625,7 +630,7 @@ const data = [{
 
 | 参数  | 说明           | 类型   | 可选值 | 默认值 |
 | ----- | -------------- | ------ | ------ | ------ |
-| class | 样式类         | array  | -      | -      |
+| class | 样式类         |  string / array  | -      | -      |
 | style | 图标自定义样式 | object | -      | -      |
 
 ```js

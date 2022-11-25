@@ -122,6 +122,7 @@ let header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: "开关", //显示的标题
+    width: '200',
     overflowTooltip: false,
     filters: true,
     props: [
@@ -152,7 +153,7 @@ let header: PowerfulTableHeader<Lists>[] = [
         type: "iconfont",
         text: '图标：',
         data: {
-          class: 'aaa',
+          class: 'viteIcon',
           style: {
             fontSize: '20px'
           }
@@ -216,7 +217,7 @@ let header: PowerfulTableHeader<Lists>[] = [
         prop: "rate",
         data: {
           // allowHalf: true,
-          showText: true,
+          // showText: true,
           max: 6,
           colors: ['red', 'yellow', 'green'],
           //   // showScore: true
@@ -333,7 +334,7 @@ let lists: Lists[] = [
   {
     id: 2,
     name: "蓝猫",
-    icon: 'el-icon-hot-water',
+    icon: 'vitezujian',
     gender: 1,
     createTime: null,
     price: "",
@@ -349,7 +350,7 @@ let lists: Lists[] = [
     children: [{
       id: 4,
       name: "蓝猫",
-      icon: 'el-icon-hot-water',
+      icon: 'vitezujian',
       gender: 4,
       createTime: null,
       price: "",
@@ -366,7 +367,7 @@ let lists: Lists[] = [
   {
     id: 1,
     name: "蓝猫",
-    icon: 'el-icon-hot-water',
+    icon: 'vitezujian',
     gender: 2,
     createTime: null,
     price: "",

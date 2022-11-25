@@ -176,3 +176,7 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+@import url('https://at.alicdn.com/t/font_2351447_a0951v7l8p.css');
+</style>

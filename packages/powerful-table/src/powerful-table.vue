@@ -63,7 +63,7 @@
           :key="item.label + index"
           :fixed="item.fixed || false"
           :sortable="item.sortable || false"
-          :header-align="item.headerAlign || 'center'"
+          :header-align="item.headerAlign || 'left'"
           :align="item.headerAlign || 'center'"
           :show-overflow-tooltip="item.overflowTooltip || false"
           :prop="Array.isArray(item.props) ? item.props[0].prop : item.props.prop"
@@ -79,7 +79,7 @@
           </template>
 
           <!-- 内置自定义表头 -->
-          <template v-if="item.filters && (item.isShowOrFilterColumn == undefined || item.isShowOrFilterColumn === 'filter') && !item.headerSlotName" #header>
+          <!-- <template v-if="item.filters && (item.isShowOrFilterColumn == undefined || item.isShowOrFilterColumn === 'filter') && !item.headerSlotName" #header>
             <PTFSelect
               v-if="
                 getPropObj(item).filter ||
@@ -104,7 +104,7 @@
               :list="list"
               @headerFilterChange="headerFilterChange"
             ></PTFInput>
-          </template>
+          </template> -->
 
           <template #default="scope">
             <div
