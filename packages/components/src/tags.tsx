@@ -1,6 +1,6 @@
 import { defineComponent, PropType, App, inject } from "vue";
 import type { PowerfulTableHeaderProps, TagDataType, PowerfulTableFilter, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { filterFun } from './filter'
 
 const Tags = defineComponent({

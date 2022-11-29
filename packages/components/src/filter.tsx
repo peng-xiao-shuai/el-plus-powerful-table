@@ -1,6 +1,6 @@
 import { defineComponent, PropType, App } from "vue";
 import type { PowerfulTableHeaderProps, TextDataType, PowerfulTableFilter, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 
 export const filterFun = (s: string | number, filter: PowerfulTableFilter[]) => {
   const current = filter.find((item) => item.key == s)

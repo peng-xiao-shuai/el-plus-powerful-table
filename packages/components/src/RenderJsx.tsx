@@ -1,6 +1,6 @@
 import { defineComponent, PropType, h, inject, App } from "vue";
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 
 const RenderJsx = defineComponent({
   name: 'PTRenderJsx',

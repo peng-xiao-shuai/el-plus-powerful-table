@@ -231,7 +231,7 @@ import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
 } from '../../../typings'
-import { powerfulTableProps, powerfulTableEmits, usePowerfulTableState, useFunction } from './powerful-table';
+import { powerfulTableProps, powerfulTableEmits, usePowerfulTableState, useFunction } from './powerful-table-data';
 // import en from "element-plus/lib/locale/lang/en";
 
 /**
@@ -301,12 +301,23 @@ export default defineComponent({
       powerfulTableData.listLoading = false;
 
       // 为表格添加选中
-      if (state.tableLists.length && powerfulTableData.currentSelect.length == 0) {
+      // if (state.tableLists.length && powerfulTableData.currentSelect.length == 0) {
+      //   nextTick(() => {
+      //     getSelect();
+      //   })
+      // }
+    });
+
+    watch(() => state.tableLists, (val) => {
+      if (val.length && powerfulTableData.currentSelect.length == 0) {
         nextTick(() => {
           getSelect();
         })
       }
-    });
+    }, {
+      immediate: true,
+      deep: true
+    })
 
     // 过滤被隐藏的列
     const headerLists = computed(() => {

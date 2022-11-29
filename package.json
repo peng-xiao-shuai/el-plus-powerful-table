@@ -1,14 +1,14 @@
 {
   "name": "el-plus-powerful-table-ts",
   "version": "2.1.0",
-  "type": "module",
   "author": "peng-xiao-shuai",
-  "main": "lib/cjs/packages/index",
-  "module": "lib/es/packages/index",
+  "main": "lib/cjs/packages/index.js",
+  "module": "lib/es/packages/index.mjs",
   "style": "lib/es/style.css",
-  "typings": "lib/es/typings/index.d.ts",
   "private": false,
   "license": "MIT",
+  "type": "module",
+  "types": "lib/es/typings/index.d.ts",
   "scripts": {
     "dev": "vite",
     "tsc": "vue-tsc --noEmit",
@@ -16,17 +16,15 @@
   },
   "exports": {
     ".": {
-      "import": "./lib/es/packages/index",
+      "require": "./lib/cjs/packages/index.js",
+      "import": "./lib/es/packages/index.mjs",
       "types": "./lib/es/typings/index.d.ts"
     },
     "./lib/*": "./lib/*",
-    "./typings/*": "./lib/es/typings/*",
     "./global": "./lib/es/global.d.ts"
   },
   "files": [
-    "lib",
-    "typings",
-    "global.d.ts"
+    "lib"
   ],
   "keywords": [
     "element-plus",

@@ -1,6 +1,6 @@
 import { App, defineComponent, PropType, getCurrentInstance, inject } from "vue";
 import type { PowerfulTableHeaderProps, BtnDataType, Size, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 
 const Button = defineComponent({
   name: 'PTButton',

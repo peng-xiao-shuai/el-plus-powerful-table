@@ -1,6 +1,6 @@
 import { defineComponent, PropType, inject, App } from "vue";
 import type { PowerfulTableHeaderProps, InputDataType, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 
 const Input = defineComponent({
   name: 'PTInput',

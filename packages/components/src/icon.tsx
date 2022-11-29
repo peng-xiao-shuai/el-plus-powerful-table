@@ -1,6 +1,6 @@
 import { defineComponent, PropType, inject, App } from "vue";
 import type { PowerfulTableHeaderProps, IconFontDataType, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 
 const Icon = defineComponent({
   name: 'PTIcon',

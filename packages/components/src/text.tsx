@@ -1,6 +1,6 @@
 import { defineComponent, PropType, inject, App, ref } from "vue";
 import type { PowerfulTableHeaderProps, TextDataType, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table'
+import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue';
 
 const Text = defineComponent({

@@ -143,7 +143,7 @@ export const usePowerfulTableState = (props: any): {
   injectProps: InjectProps | undefined
 } => {
   // 全局此组件注入的数据
-  const injectProps = inject<InjectProps>("powerfulTable");
+  const injectProps = inject<InjectProps>("powerfulTable") || {};
 
   /* ----- 组件实例 ----- */
   const multipleTable = ref();
