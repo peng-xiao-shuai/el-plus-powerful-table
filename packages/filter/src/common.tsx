@@ -5,6 +5,7 @@ import { PowerfulTableHeader, PowerfulTableFilter } from '../../../typings'
 export type State<T = string | (string | number)[]> = {
   value: T,
   options?: PowerfulTableFilter[],
+  selectVisible?: boolean,
   visible: boolean
 }
 
@@ -34,7 +35,7 @@ export const slots = <T extends State>(state: T, text: string) => {
       return (
         <span
           class="el-popover-center"
-          style={state.value.length ? { color: 'var(--el-color-primary)'} : {}}
+          style={state.value.length ? { color: 'var(--el-color-primary)' } : {}}
           onClick={() => { state.visible = !state.visible }}
         >
           {text}

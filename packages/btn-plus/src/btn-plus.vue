@@ -7,8 +7,12 @@
       state.isPC ? 'cl-btn-plus' : 'cl-btn-plus-mobile',
     ]"
   >
-    <slot name="btn-left"
-      v-if="injectProps && ['all', 'left'].includes(injectProps.btnSlot || '') || ['all', 'left'].includes(btnConfig.btnSlot || '')"
+    <slot
+      name="btn-left"
+      v-if="
+        (injectProps && ['all', 'left'].includes(injectProps.btnSlot || '')) ||
+        ['all', 'left'].includes(btnConfig.btnSlot || '')
+      "
     >
       <!-- 左侧操作按钮 -->
       <el-button-group
@@ -22,18 +26,27 @@
             :icon="item.icon"
             :style="item.style || {}"
             :disabled="item.disabled || btnDisabled(item.operateType)"
-            v-if="typeof item.showBtn === 'function' ? item.showBtn() : (item.showBtn === undefined ? true : item.showBtn)"
+            v-if="
+              typeof item.showBtn === 'function'
+                ? item.showBtn()
+                : item.showBtn === undefined
+                ? true
+                : item.showBtn
+            "
             @click="batchOperate('left', item)"
           >
             {{ item.text }}
           </el-button>
         </template>
-
       </el-button-group>
     </slot>
 
-    <slot name="btn-right"
-      v-if="injectProps && ['all', 'right'].includes(injectProps.btnSlot || '') || ['all', 'right'].includes(btnConfig.btnSlot || '')"
+    <slot
+      name="btn-right"
+      v-if="
+        (injectProps && ['all', 'right'].includes(injectProps.btnSlot || '')) ||
+        ['all', 'right'].includes(btnConfig.btnSlot || '')
+      "
     >
       <!-- 右侧操作按钮 -->
       <el-button-group
@@ -78,7 +91,11 @@
             <el-dropdown-menu>
               <div class="dropdown-table" style="padding: 10px">
                 <el-table
-                  :data="state.headerData.filter(item => item.isShowOrFilterColumn !== false)"
+                  :data="
+                    state.headerData.filter(
+                      (item) => item.isShowOrFilterColumn !== false
+                    )
+                  "
                   height="350"
                   border
                   highlight-current-row
@@ -100,7 +117,10 @@
                   >
                     <template #default="scope">
                       <el-switch
-                        v-if="scope.row.isShowOrFilterColumn === 'show' || scope.row.isShowOrFilterColumn === undefined"
+                        v-if="
+                          scope.row.isShowOrFilterColumn === 'show' ||
+                          scope.row.isShowOrFilterColumn === undefined
+                        "
                         v-model="scope.row.hidden"
                         :active-value="false"
                         :inactive-value="true"
@@ -115,9 +135,13 @@
                     show-overflow-tooltip
                   >
                     <template #default="scope">
+                      {{ scope.row.filters }}
                       <el-switch
                         v-model="scope.row.filters"
-                        v-if="scope.row.isShowOrFilterColumn === 'filter' || scope.row.isShowOrFilterColumn === undefined"
+                        v-if="
+                          scope.row.isShowOrFilterColumn === 'filter' ||
+                          scope.row.isShowOrFilterColumn === undefined
+                        "
                         @change="functionBtnChange($event, scope.row)"
                       ></el-switch>
                     </template>
@@ -133,99 +157,110 @@
 </template>
 
 <script setup lang='ts'>
-  import {
-    ref,
-    reactive,
-    onMounted,
-    watch,
-    inject,
-    PropType,
-    getCurrentInstance,
-    Component
-  } from "vue";
-  import { PowerfulTableHeader, BtnConfig, Size, ThemeType, InjectProps } from '../../../typings';
-  import { Grid, Refresh } from '@element-plus/icons-vue';
+import {
+  ref,
+  reactive,
+  onMounted,
+  watch,
+  inject,
+  PropType,
+  getCurrentInstance,
+  Component,
+} from "vue";
+import {
+  PowerfulTableHeader,
+  BtnConfig,
+  Size,
+  ThemeType,
+  InjectProps,
+} from "../../../typings";
+import { Grid, Refresh } from "@element-plus/icons-vue";
 
-  type Props = {
-    // 按钮的配置数据
-    btnConfig: BtnConfig.Config
-    // 表格的配置数据
-    headerList: PowerfulTableHeader[]
-    // 表格当前选择的数据集合
-    multipleSelection: any[]
-    // 判断是否为移动端
-    isTable: Boolean
-  }
+type Props = {
+  // 按钮的配置数据
+  btnConfig: BtnConfig.Config;
+  // 表格的配置数据
+  headerList: PowerfulTableHeader[];
+  // 表格当前选择的数据集合
+  multipleSelection: any[];
+  // 判断是否为移动端
+  isTable: Boolean;
+};
 
-  const props = defineProps<Props>()
-  const emit = defineEmits(["update:isTable", "btnChange"])
+const props = defineProps<Props>();
+const emit = defineEmits(["update:isTable", "btnChange"]);
 
-  const size = inject('size') as Size
-  const injectProps = inject<InjectProps>("powerfulTable");
+const size = inject("size") as Size;
+const injectProps = inject<InjectProps>("powerfulTable");
 
-  const { proxy } = getCurrentInstance() as any;
-  /* ------ 实例 ------ */
-  const clBtnPlus = ref();
-  // const store = useStore();
-  type State = {
-    btnHeight: number;
-    headerData: PowerfulTableHeader[];
-    functionBtnList: {
-        size?: Size,
-        effect?: string;
-        tip: string;
-        type?: ThemeType;
-        icon?: PropType<string | Component>;
-        showTip?: Boolean;
-        tipContent?: string;
-    }[];
-    isPC: boolean;
-  }
-  const state = reactive<State>({
-    btnHeight: 0,
-    headerData: [],
-    functionBtnList: [
-      {
-        effect: "refresh",
-        tip: "刷新",
-        type: "info",
-        icon: Refresh,
-      },
-      // {
-      //   effect: "switch",
-      //   tip: "切换",
-      //   type: "info",
-      //   icon: "el-icon-tickets",
-      // },
-    ],
-    // isPC: store.state.isPC.isPC,
-    isPC: true,
-  });
-  
-  // 实例
-  const dropdown = ref()
-  /**
-   * 判断左侧操作按钮是否禁用
-   * @param item 当前按钮数据
-   * item.operateType 操作类型：none(默认) => 不需要选择数据；single => 有且只能操作一条数据；batch => 批量操作数据(至少选择一条数据以上)
-   */
-  const btnDisabled = (operateType?: 'none'|'single'|'batch'): boolean => {
-    // 默认不需要操作数据
-    if (operateType === "single" && props.multipleSelection.length !== 1) return true;
-    if (operateType === "batch" && props.multipleSelection.length < 1) return true;
-    return false;
-  };
+const { proxy } = getCurrentInstance() as any;
+/* ------ 实例 ------ */
+const clBtnPlus = ref();
+// const store = useStore();
+type State = {
+  btnHeight: number;
+  headerData: PowerfulTableHeader[];
+  functionBtnList: {
+    size?: Size;
+    effect?: string;
+    tip: string;
+    type?: ThemeType;
+    icon?: PropType<string | Component>;
+    showTip?: Boolean;
+    tipContent?: string;
+  }[];
+  isPC: boolean;
+};
+const state = reactive<State>({
+  btnHeight: 0,
+  headerData: [],
+  functionBtnList: [
+    {
+      effect: "refresh",
+      tip: "刷新",
+      type: "info",
+      icon: Refresh,
+    },
+    // {
+    //   effect: "switch",
+    //   tip: "切换",
+    //   type: "info",
+    //   icon: "el-icon-tickets",
+    // },
+  ],
+  // isPC: store.state.isPC.isPC,
+  isPC: true,
+});
 
-  const functionBtnChange = (value: any, row: object) => {
-    proxy.$parent.anewRender()
-  };
-  const batchOperate = (type: string, item: unknown) => {
-    if (type === "left") {
-      const btnItem = item as BtnConfig.BtnList
-      // 是否显示提示
-      if (btnItem.showTip) {
-        let content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`;
-        proxy.$confirm(content, "提示", {
+// 实例
+const dropdown = ref();
+/**
+ * 判断左侧操作按钮是否禁用
+ * @param item 当前按钮数据
+ * item.operateType 操作类型：none(默认) => 不需要选择数据；single => 有且只能操作一条数据；batch => 批量操作数据(至少选择一条数据以上)
+ */
+const btnDisabled = (operateType?: "none" | "single" | "batch"): boolean => {
+  // 默认不需要操作数据
+  if (operateType === "single" && props.multipleSelection.length !== 1)
+    return true;
+  if (operateType === "batch" && props.multipleSelection.length < 1)
+    return true;
+  return false;
+};
+
+const functionBtnChange = (value: any, row: object) => {
+  console.log(proxy.$parent);
+
+  proxy.$parent.anewRender();
+};
+const batchOperate = (type: string, item: unknown) => {
+  if (type === "left") {
+    const btnItem = item as BtnConfig.BtnList;
+    // 是否显示提示
+    if (btnItem.showTip) {
+      let content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`;
+      proxy
+        .$confirm(content, "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
@@ -234,47 +269,47 @@
           proxy.$parent.returnEmit("btnChange", {
             effect: btnItem.effect,
             list: props.multipleSelection,
-          })
-        })
+          });
+        });
 
-        return false
-      }
-      // 直接抛出
-      proxy.$parent.returnEmit("btnChange", {
-        effect: btnItem.effect,
-        list: props.multipleSelection,
-      })
+      return false;
+    }
+    // 直接抛出
+    proxy.$parent.returnEmit("btnChange", {
+      effect: btnItem.effect,
+      list: props.multipleSelection,
+    });
 
-      return false
-    }
-    const functionBtnItem = item as typeof state.functionBtnList[0]
-    switch (functionBtnItem.effect) {
-      case 'refresh':
-        proxy.$parent.returnEmit("refresh", {})
-        break;
-      case 'switch':
-        emit("update:isTable", !props.isTable);
-        break;
-      case 'columns':
-        break;
-    }
-  };
-  onMounted(() => {
-    state.btnHeight = clBtnPlus.value.offsetHeight;
-  });
-  watch(
-    () => [props.headerList],
-    ([newHeaderList]: any) => {
-      state.headerData = newHeaderList;
-    },
-    { immediate: true, deep: true }
-  );
+    return false;
+  }
+  const functionBtnItem = item as typeof state.functionBtnList[0];
+  switch (functionBtnItem.effect) {
+    case "refresh":
+      proxy.$parent.returnEmit("refresh", {});
+      break;
+    case "switch":
+      emit("update:isTable", !props.isTable);
+      break;
+    case "columns":
+      break;
+  }
+};
+onMounted(() => {
+  state.btnHeight = clBtnPlus.value.offsetHeight;
+});
+watch(
+  () => [props.headerList],
+  ([newHeaderList]: any) => {
+    state.headerData = newHeaderList;
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <script lang='ts'>
-  export default {
-    name: 'PTBtnPlus'
-  }
+export default {
+  name: "PTBtnPlus",
+};
 </script>
 
 <style scoped>

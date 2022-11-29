@@ -14,7 +14,7 @@
   justify-content: flex-end;
 }
 
-.pt .cell > .el-table__expand-icon + div{
+.pt .cell > .el-table__expand-icon + div {
   width: auto;
 }
 
@@ -37,7 +37,7 @@
   align-items: center;
 }
 .pt .powerful-table .el-icon {
-  transition: all .3s;
+  transition: all 0.3s;
   margin-left: 5px;
 }
 .pt .powerful-table .el-icon.el-icon-arrow-down {

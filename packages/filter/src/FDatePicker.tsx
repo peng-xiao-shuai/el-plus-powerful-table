@@ -35,15 +35,12 @@ const FDatePicker = defineComponent({
 
     return () => (
       <span
-        style={state.value.length ? { color: 'var(--el-color-primary)'} : {}}
+        style={state.value ? { color: 'var(--el-color-primary)' } : {}}
         onClick={async () => {
           state.visible = !state.visible
-          
           if (!state.visible) return
           await nextTick()
           datePickerRef.value.focus()
-          console.log(datePickerRef.value);
-          
         }}
       >
         {props.headerData.label}

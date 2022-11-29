@@ -46,6 +46,23 @@ let header: PowerfulTableHeader<Lists>[] = [
     ],
   },
   {
+    label: "超链接", //显示的标题
+    width: '200',
+    headerSlotName: 'Link',
+    props: [
+      {
+        type: "href",
+        prop: "href",
+        data: {
+          text: (e: any) => e.name,
+        },
+        render: (h, row, index) => {
+          return h('b', {}, row.gender)
+        }
+      },
+    ],
+  },
+  {
     label: "名称/性别", //显示的名称
     overflowTooltip: true,
     headerAlign: 'left',
@@ -226,24 +243,8 @@ let header: PowerfulTableHeader<Lists>[] = [
     ],
   },
   {
-    label: "超链接", //显示的标题
-    width: '200',
-    headerSlotName: 'Link',
-    props: [
-      {
-        type: "href",
-        prop: "href",
-        data: {
-          text: (e: any) => e.name,
-        },
-        render: (h, row, index) => {
-          return h('b', {}, row.gender)
-        }
-      },
-    ],
-  },
-  {
     label: "内容", //显示的标题
+    filters: true,
     props: [
       {
         prop: "content",
@@ -283,7 +284,7 @@ let header: PowerfulTableHeader<Lists>[] = [
             isMore: true,
             type: "success",
             icon: markRaw(Edit),
-          },{
+          }, {
             tip: "编辑",
             type: "text",
             icon: markRaw(Edit),
@@ -351,7 +352,7 @@ let lists: Lists[] = [
       id: 4,
       name: "蓝猫",
       icon: 'vitezujian',
-      gender: 4,
+      gender: 2,
       createTime: null,
       price: "",
       switchVal: 1,

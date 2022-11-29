@@ -14,22 +14,22 @@ const FInput = defineComponent({
     })
 
     const inputChange = () => {
-      state.visible = false
+      // state.visible = false
       emit('headerFilterChange', state.value, props.headerData)
     }
 
-    watchEffect(() => {
-      if (props.list.length && state.value.length) {
-        inputChange()
-      }
-    })
+    // watchEffect(() => {
+    //   if (props.list.length && state.value.length) {
+    //     inputChange()
+    //   }
+    // })
 
     return () => (
       <el-popover
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
         width={state.value.length < 10 ? 200 : state.value.length * 20 > 400 ? 400 : state.value.length * 20}
-        trigger="click"
+        trigger="contextmenu"
         v-slots={slots(state, props.headerData.label)}
       >
         <el-input
@@ -37,6 +37,7 @@ const FInput = defineComponent({
           v-model={state.value}
           size={size || 'small'}
           clearable
+          teleported={false}
           class="input-with-select"
           v-slots={btnSlots(inputChange)}
         >

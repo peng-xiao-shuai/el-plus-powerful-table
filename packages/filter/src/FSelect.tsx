@@ -21,25 +21,35 @@ const FSelect = defineComponent({
       },
     }
   },
-  emits: ['headerFSelectChange'],
+  emits: ['headerFilterChange'],
   setup(props, { emit }) {
     const size = inject('size') as Size
-    const locale = (inject('locale') as {name: string})?.name
+    const locale = (inject('locale') as { name: string })?.name
 
     const state = reactive<State<(string | number)[]>>({
       value: [],
       options: [],
+      selectVisible: false,
       visible: false
     })
 
+    const selectVisibleChange = (e: boolean) => {
+      if (!e) {
+        state.visible = false
+      } else {
+        state.selectVisible = e
+      }
+    }
+
     const selectChange = (val: (number | string)[]) => {
+      console.log(val);
       if (!val.length) val = []
-      emit('headerFSelectChange', val, props.headerData)
+      emit('headerFilterChange', val, props.headerData, props.propData)
     }
 
     // watch([() => props.list, () => state.value], ([lv, sv]) => {
     //   console.log(sv);
-      
+
     //   if (lv.length && sv.length) {
     //     selectChange(sv)
     //   }
@@ -73,7 +83,8 @@ const FSelect = defineComponent({
       <el-popover
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
-        trigger="manual"
+        trigger="contextmenu"
+        width="{400}"
         v-slots={slots(state, props.headerData.label)}
       >
         <el-select
@@ -82,7 +93,9 @@ const FSelect = defineComponent({
           collapse-tags
           clearable
           placeholder="请选择"
+          teleported={false}
           size={size || 'small'}
+          onVisibleChange={selectVisibleChange}
           onVisible-change={(val: boolean) => {
             if (!val) state.visible = false
           }}
