@@ -101,7 +101,7 @@ const FSelect = defineComponent({
           }}
           onChange={selectChange}
         >
-          {state.options?.map((item: any, index: number) => {
+          {state.options?.map((item, index) => {
             return (
               <el-option
                 key={index}

@@ -66,9 +66,7 @@
           :header-align="item.headerAlign || 'left'"
           :align="item.headerAlign || 'center'"
           :show-overflow-tooltip="item.overflowTooltip || false"
-          :prop="
-            Array.isArray(item.props) ? item.props[0].prop : item.props.prop
-          "
+          :prop="Array.isArray(item.props) ? item.props[0].prop : item.props.prop"
           :label="item.label"
           :min-width="item.minWidth || 140"
           :width="item.width || ''"
@@ -118,9 +116,7 @@
 
           <template #default="scope">
             <div
-              v-for="(prop, idx) in Array.isArray(item.props)
-                ? item.props
-                : [item.props]"
+              v-for="(prop, idx) in Array.isArray(item.props) ? item.props : [item.props]"
               :key="'props' + idx"
               :style="{
                 display: index == 0 ? 'inline-block' : 'block',
@@ -155,9 +151,7 @@
               </div>
               <!-- 筛选 -->
               <PTFilter
-                v-else-if="
-                  prop.filter && (prop.type == 'text' || prop.type == undefined)
-                "
+                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)"
                 v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 动态组件 -->
@@ -192,9 +186,7 @@
         </el-table-column>
       </el-table>
 
-      <div
-        style="display: flex; justify-content: space-between; margin-top: 20px"
-      >
+      <div style="display: flex; justify-content: space-between; margin-top: 20px">
         <!-- 批量操作 -->
         <div
           class="pagination left"
@@ -235,11 +227,7 @@
         <!-- 分页操作 -->
         <div class="pagination" v-if="isPagination">
           <el-pagination
-            :small="
-              (size || (injectProps && injectProps.size) || 'small') === 'small'
-                ? true
-                : false
-            "
+            :small="(size || (injectProps && injectProps.size) || 'small') === 'small' ? true : false"
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
             :page-sizes="pageSizes"
@@ -289,14 +277,15 @@ export default defineComponent({
   props: powerfulTableProps,
   emits: powerfulTableEmits,
   setup(props, { emit }) {
+    type Row = typeof props.list[number]
     /* ------ data数据 ------ */
     const {
       multipleTable,
       configProvider,
       powerfulTableData,
       injectProps,
-      state,
-    } = usePowerfulTableState(props);
+      state
+    } = usePowerfulTableState<Row>(props)
 
     /* ------ 注入数据 ------ */
     // 语言
@@ -306,6 +295,10 @@ export default defineComponent({
     // 单元格内布局
     provide("justifyFun", justifyFun);
 
+    
+    // 局部过滤hook
+    const { headerFilterChange, getPropObj } = useFilters<Row>(state, props);
+
     /* ------  操作方法  ------ */
     const {
       handleSelectionChange,
@@ -314,8 +307,8 @@ export default defineComponent({
       sortChange,
       batchOperate,
       get,
-      matchComponents,
-    } = useFunction(emit, powerfulTableData);
+      matchComponents
+    } = useFunction<Row>(emit, powerfulTableData)
 
     watchEffect(() => {
       Object.assign(powerfulTableData.operate, props.operateData);
@@ -350,29 +343,25 @@ export default defineComponent({
 
     // 过滤被隐藏的列
     const headerLists = computed(() => {
-      return props.header.filter((column) => !column.hidden);
+      return props.header.filter(column => !column.hidden)
     });
 
     /* --- 按钮组件参数及方法begin --- */
     // 为表格数据重新赋值
-    watch(
-      () => props.list,
-      (newList: any, oldList: any) => {
-        if (
-          !state.tableLists.length ||
-          (state.tableLists.length && state.tableLists.length == oldList.length)
-        ) {
-          state.tableLists = newList;
+    watch(() => (props.list as Row[]),
+      (newList, oldList) => {
+        if (!state.tableLists.length || (state.tableLists.length && state.tableLists.length == oldList?.length)) {
+          state.tableLists = newList
         }
       },
       { immediate: true, deep: true }
     );
     watch(
-      () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
-      ([newPage, newSize]: any) => {
-        get();
+      ()=> [powerfulTableData.currentPage, powerfulTableData.pageSize],
+      ([newPage, newSize]) => {
+        get()
       }
-    );
+    )
 
     // 重新渲染表格
     const anewRender = () => {
@@ -381,14 +370,8 @@ export default defineComponent({
       });
     };
 
-    // 局部过滤hook
-    const { headerFilterChange, getPropObj } = useFilters(state, props);
-
     /* ------ 获取选中 ------ */
-    const getSelect = (
-      arr: any[] = props.selectData,
-      list = state.tableLists
-    ) => {
+    const getSelect = (arr = props.selectData, list = state.tableLists) => {
       if (!props.isSelect) return;
 
       // 1.获取当前页
@@ -400,16 +383,15 @@ export default defineComponent({
       // 获取 其他页选中
       let other: any[] = [];
 
+      let selectCompare = [props.selectCompare ? props.selectCompare[0] : 'id', props.selectCompare ? props.selectCompare[1] : 'id']
+
       // 获取当前页
       if (arr.length != 0) {
         // console.log('所有选中', arr);
         // 获取当前页
         arr.forEach((item) => {
           let itm = list.filter((each: typeof list[0]) => {
-            return (
-              item[props.selectCompare[0]] ==
-              (each as any)[props.selectCompare[1]]
-            );
+            return item[selectCompare[0]] == each[selectCompare[1]]
           });
 
           if (itm.length > 0) current.push(itm[0]);
@@ -420,9 +402,7 @@ export default defineComponent({
           other = JSON.parse(JSON.stringify(arr));
           for (let j in other) {
             current.forEach((item) => {
-              if (
-                item[props.selectCompare[1]] == other[j][props.selectCompare[0]]
-              ) {
+              if (item[selectCompare[1]] == other[j][selectCompare[0]]) {
                 other.splice(Number(j), 1);
               }
             });
@@ -461,9 +441,9 @@ export default defineComponent({
 
       rowClick,
       bindAttr: function <D>(
-        prop: PowerfulTableHeaderProps<any, D>,
-        scope: typeof props.list[0],
-        item: PowerfulTableHeader<typeof scope>
+        prop: PowerfulTableHeaderProps<Row, D>,
+        scope: {'$index': number, row: Row},
+        item: PowerfulTableHeader<Row>
       ) {
         return {
           row: scope.row,
@@ -478,7 +458,7 @@ export default defineComponent({
       batchOperate,
       handleSelectionChange,
       getSelect,
-      matchComponents,
+      matchComponents
     };
   },
 });

@@ -124,7 +124,7 @@
                         v-model="scope.row.hidden"
                         :active-value="false"
                         :inactive-value="true"
-                        @change="functionBtnChange($event, scope.row)"
+                        @change="functionBtnChange()"
                       ></el-switch>
                     </template>
                   </el-table-column>
@@ -142,7 +142,7 @@
                           scope.row.isShowOrFilterColumn === 'filter' ||
                           scope.row.isShowOrFilterColumn === undefined
                         "
-                        @change="functionBtnChange($event, scope.row)"
+                        @change="functionBtnChange()"
                       ></el-switch>
                     </template>
                   </el-table-column>
@@ -191,7 +191,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["update:isTable", "btnChange"]);
 
 const size = inject("size") as Size;
-const injectProps = inject<InjectProps>("powerfulTable");
+const injectProps = inject<InjectProps>("powerfulTable") || {};
 
 const { proxy } = getCurrentInstance() as any;
 /* ------ 实例 ------ */
@@ -248,9 +248,7 @@ const btnDisabled = (operateType?: "none" | "single" | "batch"): boolean => {
   return false;
 };
 
-const functionBtnChange = (value: any, row: object) => {
-  console.log(proxy.$parent);
-
+const functionBtnChange = () => {
   proxy.$parent.anewRender();
 };
 const batchOperate = (type: string, item: unknown) => {

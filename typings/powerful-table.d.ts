@@ -37,6 +37,7 @@ export interface PowerfulTableOperateData {
   value?: number | '';
   type?: ThemeType;
   disabled?: boolean;
+  prop?: string;
   icon?: string | Component;
   style?: {};
   operates: PowerfulTableLabelValue[]

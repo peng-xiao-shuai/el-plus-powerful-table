@@ -16,6 +16,7 @@
     "allowJs": true,
     "noImplicitAny": true,
     "pretty": true,
+    "skipLibCheck": true,
     "paths": {
       "~/*": ["./packages/*"],
     },
