@@ -3,7 +3,7 @@
  * @Author: chenle 
  * @Date: 2021-09-22 16:31:33 
  * @Last Modified by: 彭小黑
- * @Last Modified time: 2022-11-30 11:06:16
+ * @Last Modified time: 2022-11-30 16:50:05
  */
 
 import type {
@@ -69,7 +69,6 @@ export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>) {
       });
     }
   };
-
 
   /**
    * 获取需要过滤的prop

@@ -135,7 +135,6 @@
                     show-overflow-tooltip
                   >
                     <template #default="scope">
-                      {{ scope.row.filters }}
                       <el-switch
                         v-model="scope.row.filters"
                         v-if="

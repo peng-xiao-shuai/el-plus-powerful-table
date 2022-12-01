@@ -85,7 +85,7 @@ const FSelect = defineComponent({
         placement="bottom-start"
         trigger="contextmenu"
         width="{400}"
-        v-slots={slots(state, props.headerData.label)}
+        v-slots={slots(state, props.headerData)}
       >
         <el-select
           v-model={state.value}

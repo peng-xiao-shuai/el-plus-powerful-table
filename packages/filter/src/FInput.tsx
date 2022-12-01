@@ -30,7 +30,7 @@ const FInput = defineComponent({
         placement="bottom-start"
         width={state.value.length < 10 ? 200 : state.value.length * 20 > 400 ? 400 : state.value.length * 20}
         trigger="contextmenu"
-        v-slots={slots(state, props.headerData.label)}
+        v-slots={slots(state, props.headerData)}
       >
         <el-input
           placeholder="请输入内容"

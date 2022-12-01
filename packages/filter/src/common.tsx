@@ -29,17 +29,21 @@ export const btnSlots = (fun: Function) => {
 };
 
 // 弹窗插槽
-export const slots = <T extends State>(state: T, text: string) => {
+export const slots = (state: State, header: PowerfulTableHeader) => {
   return {
     reference: () => {
       return (
         <span
           class="el-popover-center"
           style={state.value.length ? { color: 'var(--el-color-primary)' } : {}}
-          onClick={() => { state.visible = !state.visible }}
+          onClick={(e: Event) => { 
+            if (!header.filters) return
+            e.stopPropagation()
+            state.visible = !state.visible
+          }}
         >
-          {text}
-          <el-icon class={state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'}>
+          {header.label}
+          <el-icon style="margin-left: 5px" v-show={header.filters} class={state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'}>
             <ArrowUp />
           </el-icon>
         </span>
