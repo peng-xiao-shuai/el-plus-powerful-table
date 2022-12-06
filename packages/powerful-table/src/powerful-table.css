@@ -7,6 +7,9 @@
 .pt .cell > div {
   width: 100%;
 }
+.pt .cell > .el-table__indent + .el-table__placeholder + div {
+  width: auto;
+}
 .pt .center .cell {
   justify-content: center;
 }
@@ -36,10 +39,10 @@
   display: inline-flex;
   align-items: center;
 }
-.pt .powerful-table .el-icon {
+/* .pt .powerful-table .el-icon {
   transition: all 0.3s;
   margin-left: 5px;
-}
+} */
 .pt .powerful-table .el-icon.el-icon-arrow-down {
   transform: rotate(180deg);
 }
