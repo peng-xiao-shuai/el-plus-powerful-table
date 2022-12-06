@@ -81,7 +81,6 @@
           <!-- 内置自定义表头 -->
           <template
             v-if="
-              item.filters &&
               (item.isShowOrFilterColumn == undefined ||
                 item.isShowOrFilterColumn === 'filter') &&
               !item.headerSlotName

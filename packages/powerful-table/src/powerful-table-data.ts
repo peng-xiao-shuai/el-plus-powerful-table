@@ -71,7 +71,7 @@ export const powerfulTableProps = {
   },
   selectable: {
     type: Function as PropType<PowerFulTableProps<DefaultRow>['selectable']>,
-    default: () => undefined,
+    default: undefined,
   },
   selectCompare: {
     type: Array as PropType<PowerFulTableProps<DefaultRow>['selectCompare']>,
