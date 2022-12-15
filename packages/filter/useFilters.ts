@@ -11,11 +11,11 @@ import type {
   PowerfulTableHeaderProps,
 } from "../../typings";
 import type { PowerFulTableProps, State } from '../powerful-table/src/powerful-table-data';
-import { computed } from "vue";
-export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>) {
+import { computed, unref } from "vue";
+export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>, Table: any) {
   /**
-     * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
-     */
+   * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
+   */
   const headerFilterChange = (
     value: (number | string)[],
     column: PowerfulTableHeader<L>
@@ -36,37 +36,46 @@ export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>) {
       propObj.filtersType === "select" ||
       propObj.type === "switch"
     ) {
-      state.tableLists = tableLists.filter(item => {
-        let isShow = value.some((prop) => {
-          switch (propObj.type) {
-            // tag类型单独判断
-            case "tag":
-              const tagVal: string[] = (
-                typeof item[propObj.prop] == "string"
-                  ? item[propObj.prop].split(",")
-                  : item[propObj.prop]
-              ).map((num: string | number) => String(num));
-              return tagVal.indexOf(String(prop)) != -1;
-            default:
-              return item[propObj.prop] == prop;
-          }
-        });
-        return isShow;
-      });
+      recursionFilterFun<L>(
+        unref(Table).treeProps,
+        JSON.parse(JSON.stringify(tableLists)),
+        (data: typeof tableLists[number]): Boolean => {
+          let isShow = value.some((prop) => {
+            switch (propObj.type) {
+              // tag类型单独判断
+              case "tag":
+                const tagVal: string[] = (
+                  typeof data[propObj.prop] == "string"
+                    ? data[propObj.prop].split(",")
+                    : data[propObj.prop]
+                ).map((num: string | number) => String(num));
+                return tagVal.indexOf(String(prop)) != -1;
+              default:
+                return data[propObj.prop] == prop;
+            }
+          });
+          return isShow;
+        },
+        state.tableLists = []
+      )
       // TODO 暂时无法并列过滤数据
       // state.tableLists = [...state.tableLists, ...tableData];
     } else if (propObj.filtersType === "date") {
       const valueAs = value as string[]
-      state.tableLists = tableLists.filter(item => {
-        return compare(item[propObj.prop], valueAs[0], valueAs[1]);
-      });
+
+      recursionFilterFun<L>(
+        unref(Table).treeProps,
+        JSON.parse(JSON.stringify(tableLists)),
+        (data: typeof tableLists[number]): Boolean => compare(data[propObj.prop], valueAs[0], valueAs[1]),
+        state.tableLists = []
+      )
     } else {
-      state.tableLists = tableLists.filter(item => {
-        return (
-          item[propObj.prop] &&
-          String(item[propObj.prop]).indexOf(String(value)) != -1
-        );
-      });
+      recursionFilterFun<L>(
+        unref(Table).treeProps,
+        JSON.parse(JSON.stringify(tableLists)),
+        (data: typeof tableLists[number]): Boolean => data[propObj.prop] && String(data[propObj.prop]).indexOf(String(value)) != -1,
+        state.tableLists = []
+      )
     }
   };
 
@@ -80,6 +89,35 @@ export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>) {
   return {
     headerFilterChange,
     getPropObj
+  }
+}
+
+/**
+ * 递归过滤
+ * @param {object} propValue el-table treeProps属性
+ * @param {array} data tableLists 数据集
+ * @param {function} callback 自定义过滤逻辑
+ * @param {array} lists 过滤接受的数组
+ * @date 
+ */
+ const recursionFilterFun = <L>(propValue: {children: string, hasChildren: string}, data: L[], callback: Function, lists: any[]) => {
+  if (data && data.length) {
+    data.forEach((item: L) => {
+      const D = JSON.parse(JSON.stringify(item))
+      if (D[propValue.children] && D[propValue.children].length) {
+          // 清除子集，避免添加的数据中不符合过滤的子集仍然存在
+          D[propValue.children] = []
+          callback(item) ? lists.push(D) : ''
+
+          recursionFilterFun<L>(
+            propValue,
+            (item as L & {[s: string]: any})[propValue.children],
+            callback,
+            callback(item) ? lists[lists.length - 1][propValue.children] : lists)
+      } else {
+        callback(D) ? lists.push(D) : ''
+      }
+    })
   }
 }
 
