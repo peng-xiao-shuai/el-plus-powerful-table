@@ -12,7 +12,9 @@
   "scripts": {
     "dev": "vite",
     "tsc": "vue-tsc --noEmit",
-    "lib": "rimraf ./lib && vite build && esno script/copy.js"
+    "lib": "rimraf ./lib && vite build && esno script/copy.js",
+    "gitBuild": "vite build --base=/el-plus-powerful-table/"
+
   },
   "exports": {
     ".": {
