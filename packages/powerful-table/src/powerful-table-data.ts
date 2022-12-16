@@ -14,6 +14,7 @@ import type {
   BtnConfig,
   Size
 } from '../../../typings'
+import { deepClone } from '../../index';
 
 type DefaultRow = any
 type TranslatePair = {
@@ -303,7 +304,7 @@ export const useFunction = <L>(emit: Function, powerfulTableData: PowerfulTableD
    */
   const handleSelectionChange = (e: L[]) => {
     // console.log('选中', e)
-    powerfulTableData.currentSelect = JSON.parse(JSON.stringify(e));
+    powerfulTableData.currentSelect = deepClone(e);
   };
 
   /**

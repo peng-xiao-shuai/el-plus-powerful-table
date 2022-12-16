@@ -11,6 +11,7 @@ import type {
   PowerfulTableHeaderProps,
 } from "../../typings";
 import type { PowerFulTableProps, State } from '../powerful-table/src/powerful-table-data';
+import { deepClone } from '../index';
 import { computed, unref } from "vue";
 export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>, Table: any) {
   /**
@@ -38,7 +39,7 @@ export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>, Ta
     ) {
       recursionFilterFun<L>(
         unref(Table).treeProps,
-        JSON.parse(JSON.stringify(tableLists)),
+        deepClone(tableLists),
         (data: typeof tableLists[number]): Boolean => {
           let isShow = value.some((prop) => {
             switch (propObj.type) {
@@ -65,14 +66,14 @@ export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>, Ta
 
       recursionFilterFun<L>(
         unref(Table).treeProps,
-        JSON.parse(JSON.stringify(tableLists)),
+        deepClone(tableLists),
         (data: typeof tableLists[number]): Boolean => compare(data[propObj.prop], valueAs[0], valueAs[1]),
         state.tableLists = []
       )
     } else {
       recursionFilterFun<L>(
         unref(Table).treeProps,
-        JSON.parse(JSON.stringify(tableLists)),
+        deepClone(tableLists),
         (data: typeof tableLists[number]): Boolean => data[propObj.prop] && String(data[propObj.prop]).indexOf(String(value)) != -1,
         state.tableLists = []
       )
@@ -103,7 +104,8 @@ export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>, Ta
  const recursionFilterFun = <L>(propValue: {children: string, hasChildren: string}, data: L[], callback: Function, lists: any[]) => {
   if (data && data.length) {
     data.forEach((item: L) => {
-      const D = JSON.parse(JSON.stringify(item))
+      // TODO 深度克隆
+      const D = deepClone(item) as {[s: string]: any}
       if (D[propValue.children] && D[propValue.children].length) {
           // 清除子集，避免添加的数据中不符合过滤的子集仍然存在
           D[propValue.children] = []

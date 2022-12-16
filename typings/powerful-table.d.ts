@@ -16,6 +16,7 @@ export interface PowerfulTableData<L> {
   operateData?: PowerfulTableOperateData;
   isPagination?: boolean;
   tree?: PowerfulTableTree;
+  property?: any;
 }
 
 /* ------ tree 树结构数据 ------ */
@@ -58,6 +59,7 @@ export interface PowerfulTableHeader<L = any> {
   headerAlign?: 'left' | 'center' | 'right';
   headerSlotName?: string;
   props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>;
+  property?: any;
 }
 // props 单元格数据
 export interface PowerfulTableHeaderProps<L = any, D = any> {
@@ -71,7 +73,8 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   reserve?: string | HTMLElement;
   style?: {};
   filterItem?: boolean; // 指定过滤项
-  filtersType?: 'select' | 'date'
+  filtersType?: 'select' | 'date',
+  property?: any;
 }
 
 export type Type = 'image' | 'text' | 'switch' | 'btn' | 'video' | 'input' | 'iconfont' | 'tag' | 'rate' | 'href' | 'slot' | 'textarea'

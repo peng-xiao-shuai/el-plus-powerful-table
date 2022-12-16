@@ -34,22 +34,31 @@ let header: PowerfulTableHeader<Lists>[] = [
   {
     label: "编号", //显示的标题
     minWidth: "100px", //对应列的最小宽度
+    headerAlign: 'center',
     filters: true,
     sortable: true, //排序
-    props: [
-      {
+    props: {
         prop: "id",
         // data: {
         //   develop: false
         // }
-      },
-    ],
+    }
   },
   {
     label: "超链接", //显示的标题
     width: '200',
     headerSlotName: 'Link',
+    property: {
+      align: 'left'
+    },
     props: [
+      {
+        type: "href",
+        prop: "href",
+        data: {
+          text: (e: any) => e.name,
+        }
+      },
       {
         type: "href",
         prop: "href",
@@ -57,7 +66,7 @@ let header: PowerfulTableHeader<Lists>[] = [
           text: (e: any) => e.name,
         },
         render: (h, row, index) => {
-          return h('b', {}, row.gender)
+          return h('b', {}, row.name)
         }
       },
     ],
@@ -328,12 +337,12 @@ interface Lists {
   videoUrl: string;
   imageUrl: string;
   href?: string;
-  children?: Lists[];
+  cd?: Lists[];
   data: Date
 }
 let lists: Lists[] = [
   {
-    id: 2,
+    id: 111,
     name: "蓝猫",
     icon: 'vitezujian',
     gender: 1,
@@ -348,7 +357,7 @@ let lists: Lists[] = [
     imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     href: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
     data: new Date(),
-    children: [{
+    cd: [{
       id: 4,
       name: "蓝猫",
       icon: 'vitezujian',
@@ -362,7 +371,86 @@ let lists: Lists[] = [
       videoUrl:
         "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
       imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
-      data: new Date()
+      data: new Date(),
+      cd: [{
+        id: 41,
+        name: "蓝猫",
+        icon: 'vitezujian',
+        gender: 2,
+        createTime: null,
+        price: "",
+        switchVal: 1,
+        tag: [1, 2, 3],
+        rate: 4,
+        content: '22222444444444444444444444444444444444444444444444444444444444444444444444',
+        videoUrl:
+          "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+        imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+        data: new Date(),
+        cd: [{
+          id: 411,
+          name: "蓝猫",
+          icon: 'vitezujian',
+          gender: 2,
+          createTime: null,
+          price: "",
+          switchVal: 1,
+          tag: [1, 2, 3],
+          rate: 4,
+          content: '22222444444444444444444444444444444444444444444444444444444444444444444444',
+          videoUrl:
+            "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+          imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+          data: new Date(),
+          cd: [{
+            id: 2222,
+            name: "蓝猫",
+            icon: 'vitezujian',
+            gender: 2,
+            createTime: null,
+            price: "",
+            switchVal: 1,
+            tag: [1, 2, 3],
+            rate: 4,
+            content: '22222444444444444444444444444444444444444444444444444444444444444444444444',
+            videoUrl:
+              "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+            imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+            data: new Date()
+          }]
+        }, {
+          id: 211,
+          name: "蓝猫",
+          icon: 'vitezujian',
+          gender: 2,
+          createTime: null,
+          price: "",
+          switchVal: 1,
+          tag: [1, 2, 3],
+          rate: 4,
+          content: '22222444444444444444444444444444444444444444444444444444444444444444444444',
+          videoUrl:
+            "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+          imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+          data: new Date(),
+          cd: [{
+            id: 22222,
+            name: "蓝猫",
+            icon: 'vitezujian',
+            gender: 2,
+            createTime: null,
+            price: "",
+            switchVal: 1,
+            tag: [1, 2, 3],
+            rate: 4,
+            content: '22222444444444444444444444444444444444444444444444444444444444444444444444',
+            videoUrl:
+              "https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4",
+            imageUrl: "https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg",
+            data: new Date()
+          }]
+        }]
+      }]
     }]
   },
   {

@@ -5,7 +5,7 @@
     <PowerfulTable
       ref='powerfulTable'
       :list="list"
-      isSelect
+      :isSelect="true"
       :btnConfig="btnConfigs"
       :selectData="selectData"
       :selectCompare="selectCompare"
@@ -13,12 +13,17 @@
       :operateData="operateData"
       :total="total"
       :pageSizes="[2, 5, 7]"
+      :tree="{props: {hasChildren: 'hasChildren', children: 'cd'}}"
+      :property="{
+        'row-class-name': ({index}: any) => 'powerful-table-plus-row'
+      }"
       @batchOperate="batchOperate"
       @switchChange="switchChange"
       @btnClick="handlerUpdate"
       @sizeChange="getList"
       @btnChange="btnChange"
       @refresh="handleRefresh"
+      @rowClick="handleClick"
     >
       <!-- <template #btn-left>
         <div>
@@ -43,7 +48,7 @@
 
       <template #A="{ row }">
         <div>
-          {{row.data}}
+          {{row.data?.getDate() + '日'}}
         </div>
       </template>
     </PowerfulTable>
@@ -57,7 +62,6 @@ import { reactive, ref, onMounted, defineComponent, markRaw } from "vue"
 import type { PowerfulTableOperateData } from '../typings'
 import { Search } from "@element-plus/icons-vue"
 // import { PTButton, PTBtnPlus } from '../lib/index.js';
-// import { powerfulTable} from './powerfulTable/index';
 
 export default defineComponent({
   components: {
@@ -128,6 +132,10 @@ export default defineComponent({
       ElMessage.success('按钮删除操作，参数详情，查看控制台')
       console.log("删除", e, e.index)
     }
+    function handleClick (e: any) {
+      ElMessage.success('行点击事件，参数详情，查看控制台')
+      console.log("行点击", e, e.index)
+    }
     // 左侧按钮回调
     function btnChange (e: any) {
       if (e.effect === 'add') {
@@ -171,7 +179,8 @@ export default defineComponent({
       handlerUpdate,
       handlerRemove,
       btnChange,
-      handleRefresh
+      handleRefresh,
+      handleClick
     }
   },
 })

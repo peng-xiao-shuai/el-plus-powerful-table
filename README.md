@@ -20,6 +20,7 @@
 - - 构建库模式优化，生成`es、cjs`两种模式
 - `element-plus` 版本更新到 `2.0+`
 - 优化 `button` 在表格中样式
+- 修改 `selectable` 默认不允许勾选问题
   ## 2.0.7 20220328
 - **新增props `property`**
 - - [**ElTable属性**](https://element-plus.gitee.io/zh-CN/component/table.html#table-attributes)
@@ -205,7 +206,7 @@ app.mount("#app");
 | isPagination  | 是否显示分页器                                                  | boolean | false/true                                                                    | false                           |
 | operateData   | 批量操作                                                        | object  | -                                                                             | {}                              |
 | btnConfig   | 表格顶部按钮配置                                                        | object  | -                                                                             | {}                              |
-| property   | 属性扩展字段                                                        | object  | -                                                                             | {}                              |
+| property   | 表格属性扩展字段                                                        | object  | -                                                                             | {}                              |
 
 ---
 
@@ -220,6 +221,7 @@ app.mount("#app");
 | disabled | 禁用               | boolean       | true / false                                       | false   |
 | icon     | 按钮上图标         | Component / string        | -                                                  | -       |
 | style    | 按钮样式           | object        | -                                                  | -       |
+| prop    | 点击确认按钮后，`batchOperate` 返回的 `ids` 中的数据是根据你指定的 `prop` 返回数组           | string        | -                                                  | `id`      |
 | operates | 批量操作下拉框数据 | array[object] | -                                                  | -       |
 
 #### <font color='#50BEFF'>operates 批量操作下拉框数据</font>
@@ -312,6 +314,7 @@ const btnConfig = {
 | headerSlotName  | 列头插槽           | string           | -   | - |
 | isShowOrFilterColumn  | 右侧按钮选择列时是否显示（隐藏和筛选开关组件）           | string / boolean           | false / 'show' / 'filter'   | - |
 | props           | 单元格数据             | array[object]    | -                       | -      |
+| property   | 表格属性扩展字段              | object  | -          | {}             |
 
 #### <font color='#50BEFF'>props 单元格数据</font>
 
@@ -330,6 +333,7 @@ const btnConfig = {
 | render  | [渲染函数](https://v3.cn.vuejs.org/guide/render-function.html#h-%E5%8F%82%E6%95%B0)       | function(h,row,index)        | -                                           | -      |
 | style  | 包裹组件外面那一层 div 样式                                                   | object        | -                                           | -      |
 | slotName | 插槽名称 | string | -      | 'default' |
+| property   | 表格属性扩展字段              | object  | -          | {}             |
 
 ```js
 

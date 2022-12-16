@@ -23,25 +23,27 @@
       <el-table
         class="powerful-table"
         v-loading="listLoading"
-        :data="tableLists"
         ref="multipleTable"
-        element-loading-text="Loading"
-        border
-        fit
-        row-key="id"
-        highlight-current-row
+        :data="tableLists"
         @selection-change="handleSelectionChange"
         @sort-change="sortChange"
         @row-click="rowClick"
-        :lazy="(tree && tree.lazy) || false"
-        :load="tree && tree.load"
-        :tree-props="
-          (tree && tree.props) || {
-            children: 'children',
-            hasChildren: 'hasChildren',
-          }
-        "
-        v-bind="{ ...property }"
+        v-bind="{ 
+          'element-loading-text': 'Loading',
+          border: true,
+          fit: true,
+          'row-key': 'id',
+          'highlight-current-row': true,
+          lazy: (tree && tree.lazy) || false,
+          load: tree && tree.load,
+          'tree-props': 
+            (tree && tree.props) || {
+              children: 'children',
+              hasChildren: 'hasChildren',
+            }
+          ,
+          ...property
+        }"
       >
         <template #empty>
           <slot name="empty">
@@ -61,16 +63,19 @@
         <el-table-column
           v-for="(item, index) in headerLists"
           :key="item.label + index"
-          :fixed="item.fixed || false"
-          :sortable="item.sortable || false"
-          :header-align="item.headerAlign || 'left'"
-          :align="item.headerAlign || 'center'"
-          :show-overflow-tooltip="item.overflowTooltip || false"
-          :prop="Array.isArray(item.props) ? item.props[0].prop : item.props.prop"
-          :label="item.label"
-          :min-width="item.minWidth || 140"
-          :width="item.width || ''"
-          :class-name="item.headerAlign || 'center'"
+          v-bind="{
+            fixed: item.fixed || false,
+            sortable: item.sortable || false,
+            'header-align': item.headerAlign || 'left',
+            'show-overflow-tooltip': item.overflowTooltip || false,
+            prop: Array.isArray(item.props) ? item.props[0].prop : item.props.prop,
+            label: item.label,
+            'min-width': item.minWidth || 140,
+            width: item.width || '',
+            align: item.headerAlign || 'center',
+            'class-name': item.headerAlign || 'center',
+            ...item.property,
+          }"
         >
           <!-- 用户自定义表头 -->
           <template #header v-if="item.headerSlotName">
@@ -127,6 +132,7 @@
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
+                :aligning="(item.property?.align || item.headerAlign)"
               />
               <!-- 插槽 -->
               <slot
@@ -260,6 +266,7 @@ import {
   usePowerfulTableState,
   useFunction,
 } from "./powerful-table-data";
+import { deepClone } from '../../index';
 // import en from "element-plus/lib/locale/lang/en";
 import { useFilters } from "../../filter/useFilters";
 
@@ -296,7 +303,7 @@ export default defineComponent({
 
     
     // 局部过滤hook
-    const { headerFilterChange, getPropObj } = useFilters<Row>(state, props);
+    const { headerFilterChange, getPropObj } = useFilters<Row>(state, props, multipleTable);
 
     /* ------  操作方法  ------ */
     const {
@@ -316,13 +323,6 @@ export default defineComponent({
       // 更具当前list 数据 添加develop
       powerfulTableData.develop = Array(state.tableLists.length).fill(false);
       powerfulTableData.listLoading = false;
-
-      // 为表格添加选中
-      // if (state.tableLists.length && powerfulTableData.currentSelect.length == 0) {
-      //   nextTick(() => {
-      //     getSelect();
-      //   })
-      // }
     });
 
     watch(
@@ -398,7 +398,7 @@ export default defineComponent({
 
         // 获取其他页
         if (current.length > 0) {
-          other = JSON.parse(JSON.stringify(arr));
+          other = deepClone(arr);
           for (let j in other) {
             current.forEach((item) => {
               if (item[selectCompare[1]] == other[j][selectCompare[0]]) {
@@ -407,7 +407,7 @@ export default defineComponent({
             });
           }
         } else {
-          other = JSON.parse(JSON.stringify(arr));
+          other = deepClone(arr);
         }
 
         powerfulTableData.otherSelect = other;
@@ -448,7 +448,7 @@ export default defineComponent({
           row: scope.row,
           index: scope.$index,
           prop,
-          aligning: item.headerAlign || "center",
+          aligning: item.property?.align || item.headerAlign || "center",
         };
       },
       anewRender,
