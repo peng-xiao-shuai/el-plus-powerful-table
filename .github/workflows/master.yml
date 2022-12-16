@@ -13,7 +13,7 @@ jobs:
           persist-credentials: false
        # 生成静态文件
       - name: Build
-        run: pnpm install && pnpm gitBuild
+        run: yarn install && yarn gitBuild
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
