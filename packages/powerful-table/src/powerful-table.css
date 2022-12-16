@@ -21,6 +21,12 @@
   width: auto;
 }
 
+/* 修改输入框插槽内边距 */
+.pt .cell .el-input-group__append,
+.pt .cell .el-input-group__prepend {
+  padding: 0;
+}
+
 /* 隐藏按钮提示 */
 .pt .no-tooltip.el-popper.is-dark {
   display: none !important;
