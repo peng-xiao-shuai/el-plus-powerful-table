@@ -89,63 +89,31 @@
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-              <div class="dropdown-table" style="padding: 10px">
-                <el-table
-                  :data="
-                    state.headerData.filter(
-                      (item) => item.isShowOrFilterColumn !== false
-                    )
-                  "
-                  height="350"
-                  border
-                  highlight-current-row
-                  size="small"
-                >
-                  <el-table-column
-                    align="center"
-                    prop="label"
-                    label="列名"
-                    width="100"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="显/隐"
-                    width="80"
-                    show-overflow-tooltip
-                  >
-                    <template #default="scope">
-                      <el-switch
-                        v-if="
-                          scope.row.isShowOrFilterColumn === 'show' ||
-                          scope.row.isShowOrFilterColumn === undefined
-                        "
-                        v-model="scope.row.hidden"
-                        :active-value="false"
-                        :inactive-value="true"
-                        @change="functionBtnChange()"
-                      ></el-switch>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="筛选"
-                    width="80"
-                    show-overflow-tooltip
-                  >
-                    <template #default="scope">
-                      <el-switch
-                        v-model="scope.row.filters"
-                        v-if="
-                          scope.row.isShowOrFilterColumn === 'filter' ||
-                          scope.row.isShowOrFilterColumn === undefined
-                        "
-                        @change="functionBtnChange()"
-                      ></el-switch>
-                    </template>
-                  </el-table-column>
-                </el-table>
+              <div class="dropdown-table">
+                <div class="dropdown-table-row dropdown-table-header">
+                  <div>列名</div>
+                  <div class="checkbox">隐藏</div>
+                  <div class="checkbox">筛选</div>
+                </div>
+                <el-scrollbar style="height: 300px">
+                  <div class="dropdown-table-row" v-for="row in state.headerData.filter(item => (item.isShowOrFilterColumn !== false))">
+                    <div>{{row.label}}</div>
+                    <el-checkbox
+                      class="checkbox"
+                      :disabled="!(row.isShowOrFilterColumn === 'show' || row.isShowOrFilterColumn === undefined)"
+                      v-model="row.hidden"
+                      :size="size || 'small'"
+                      @change="functionBtnChange()"
+                    />
+                    <el-checkbox
+                      class="checkbox"
+                      :disabled="!(row.isShowOrFilterColumn === 'filter' || row.isShowOrFilterColumn === undefined)"
+                      v-model="row.filters"
+                      :size="size || 'small'"
+                      @change="functionBtnChange()"
+                    />
+                  </div>
+                </el-scrollbar>
               </div>
             </el-dropdown-menu>
           </template>
@@ -309,25 +277,65 @@ export default {
 };
 </script>
 
-<style scoped>
-.pt-btn-plus.hidden {
-  display: none !important;
-}
-.pt-btn-plus.cl-btn-plus {
-  /* margin-top: 50px; */
-  padding-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+<style lang="scss">
+.dropdown-table {
+  padding: 10px;
+  width: 250px;
+  box-sizing: border-box;
+  font-size: 14px;
 
-.pt-btn-plus .el-dropdown-menu {
-  padding: 10px 20px !important;
-}
+  &-row {
+    display: flex;
+    border-left: 1px solid var(--el-border-color-lighter);
+    box-sizing: border-box;
+    color: var(--el-text-color-secondary);
 
-/* .cl-btn-plus-mobile {
-		.filter-item {
-			margin-bottom: 10px;
-		}
-	} */
+    & > div,
+    & > .checkbox {
+      width: 60%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      border-right: 1px solid var(--el-border-color-lighter);
+      border-top: 1px solid var(--el-border-color-lighter);
+      box-sizing: border-box;
+      padding: 8px 0;
+    }
+    & > .checkbox {
+      width: 20%;
+    }
+
+    &:last-of-type {
+      border-bottom: 1px solid var(--el-border-color-lighter);
+    }
+  }
+
+  &-header {
+    border-bottom: none;
+    color: var(--el-text-color-regular);;
+
+    & > div {
+      font-weight: bold;
+    }
+  }
+}
+</style>
+
+<style scoped lang="scss">
+.pt-btn-plus {
+  &.hidden {
+    display: none !important;
+  }
+  &.cl-btn-plus {
+    /* margin-top: 50px; */
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  & .el-dropdown-menu {
+    padding: 10px 20px !important;
+  }
+}
 </style>
