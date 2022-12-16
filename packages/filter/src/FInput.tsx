@@ -1,4 +1,4 @@
-import { defineComponent, inject, watchEffect, reactive, App } from "vue";
+import { defineComponent, inject, reactive, App } from "vue";
 import { btnSlots, slots, props } from './common';
 import type { Size, SFCWithInstall } from '../../../typings'
 

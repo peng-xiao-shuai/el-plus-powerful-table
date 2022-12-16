@@ -84,7 +84,7 @@ const FSelect = defineComponent({
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
         trigger="contextmenu"
-        width="{400}"
+        width={200}
         v-slots={slots(state, props.headerData)}
       >
         <el-select
@@ -93,6 +93,7 @@ const FSelect = defineComponent({
           collapse-tags
           clearable
           placeholder="请选择"
+          style="width: 100%"
           teleported={false}
           size={size || 'small'}
           onVisibleChange={selectVisibleChange}

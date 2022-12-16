@@ -36,15 +36,19 @@ const FDatePicker = defineComponent({
     return () => (
       <span
         style={state.value ? { color: 'var(--el-color-primary)' } : {}}
-        onClick={async () => {
+        onClick={async (e) => {
+          e.stopPropagation()
+          console.log(state.visible, '1');
+          
           state.visible = !state.visible
+          console.log(state.visible, '2');
           if (!state.visible) return
           await nextTick()
           datePickerRef.value.focus()
         }}
       >
         {props.headerData.label}
-        <el-icon class={state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'}>
+        <el-icon class={state.visible ? 'arrow-up' : 'arrow-down'}>
           <ArrowUp />
         </el-icon>
         <el-date-picker
@@ -57,7 +61,7 @@ const FDatePicker = defineComponent({
           style="padding: 0; overflow: hidden"
           size={size || 'small'}
           onChange={datePickerChange}
-          onBlur={() => { state.visible = false }}
+          onBlur={() => { setTimeout(() => state.visible = false, 100) }}
         >
         </el-date-picker>
       </span>

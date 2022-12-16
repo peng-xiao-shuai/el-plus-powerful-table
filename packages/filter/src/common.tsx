@@ -1,4 +1,4 @@
-import { Search, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import { Search, ArrowUp } from '@element-plus/icons-vue'
 import { PropType } from 'vue';
 import { PowerfulTableHeader, PowerfulTableFilter } from '../../../typings'
 
@@ -43,7 +43,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
           }}
         >
           {header.label}
-          <el-icon style="margin-left: 5px" v-show={header.filters} class={state.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'}>
+          <el-icon style="margin-left: 5px" v-show={header.filters} class={state.visible ? 'arrow-up' : 'arrow-down'}>
             <ArrowUp />
           </el-icon>
         </span>
