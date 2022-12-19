@@ -1,34 +1,37 @@
-import { defineComponent, inject, reactive, App } from "vue";
-import { btnSlots, slots, props } from './common';
-import type { Size, SFCWithInstall } from '../../../typings'
+import { defineComponent, inject, reactive } from 'vue';
+import { btnSlots, props, slots } from './common';
+import type { App } from 'vue';
+import type { SFCWithInstall, Size } from '../../../typings';
 
 const FInput = defineComponent({
   name: 'PTFInput',
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
-    const size = inject('size') as Size
+    const size = inject('size') as Size;
     const state = reactive<import('./common').State>({
       value: '',
-      visible: false
-    })
+      visible: false,
+    });
 
     const inputChange = () => {
       // state.visible = false
-      emit('headerFilterChange', state.value, props.headerData)
-    }
+      emit('headerFilterChange', state.value, props.headerData);
+    };
 
-    // watchEffect(() => {
-    //   if (props.list.length && state.value.length) {
-    //     inputChange()
-    //   }
-    // })
+    const lengthToWidth = (length: number) => {
+      if (length < 10) {
+        return 200;
+      } else {
+        return state.value.length * 20 > 400 ? 400 : state.value.length * 20;
+      }
+    };
 
     return () => (
       <el-popover
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
-        width={state.value.length < 10 ? 200 : state.value.length * 20 > 400 ? 400 : state.value.length * 20}
+        width={lengthToWidth(state.value.length)}
         trigger="contextmenu"
         v-slots={slots(state, props.headerData)}
       >
@@ -40,18 +43,15 @@ const FInput = defineComponent({
           teleported={false}
           class="input-with-select"
           v-slots={btnSlots(inputChange)}
-        >
-        </el-input>
+        ></el-input>
       </el-popover>
     );
   },
 });
 
-const PTFInput = FInput as SFCWithInstall<typeof FInput>
+const PTFInput = FInput as SFCWithInstall<typeof FInput>;
 PTFInput.install = (app: App) => {
   app.component(FInput.name, FInput);
-}
-export {
-  PTFInput
-}
-export default FInput
+};
+export { PTFInput };
+export default FInput;

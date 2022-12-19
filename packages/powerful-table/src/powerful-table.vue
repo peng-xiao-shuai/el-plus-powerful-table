@@ -6,14 +6,14 @@
       ref="btnPlusRef"
       v-model:isTable="isTable"
       :btn-config="btnConfig"
-      :headerList="header"
+      :header-list="header"
       :multiple-selection="currentSelect"
     >
-      <template #btn-left v-if="$slots['btn-left']">
-        <slot name="btn-left"></slot>
+      <template v-if="$slots['btn-left']" #btn-left>
+        <slot name="btn-left" />
       </template>
-      <template #btn-right v-if="$slots['btn-right']">
-        <slot name="btn-right"></slot>
+      <template v-if="$slots['btn-right']" #btn-right>
+        <slot name="btn-right" />
       </template>
     </PTBtnPlus>
 
@@ -22,14 +22,11 @@
       :locale="locale || (injectProps && injectProps.locale)"
     >
       <el-table
-        class="powerful-table"
-        v-loading="listLoading"
         ref="multipleTable"
+        v-loading="listLoading"
+        class="powerful-table"
         :data="tableLists"
-        @selection-change="handleSelectionChange"
-        @sort-change="sortChange"
-        @row-click="rowClick"
-        v-bind="{ 
+        v-bind="{
           'element-loading-text': 'Loading',
           border: true,
           fit: true,
@@ -37,14 +34,15 @@
           'highlight-current-row': true,
           lazy: (tree && tree.lazy) || false,
           load: tree && tree.load,
-          'tree-props': 
-            (tree && tree.props) || {
-              children: 'children',
-              hasChildren: 'hasChildren',
-            }
-          ,
-          ...property
+          'tree-props': (tree && tree.props) || {
+            children: 'children',
+            hasChildren: 'hasChildren',
+          },
+          ...property,
         }"
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
+        @row-click="rowClick"
       >
         <template #empty>
           <slot name="empty">
@@ -58,8 +56,7 @@
           type="selection"
           width="45"
           :selectable="selectable ? selectable : () => true"
-        >
-        </el-table-column>
+        />
 
         <el-table-column
           v-for="(item, index) in headerLists"
@@ -69,7 +66,9 @@
             sortable: item.sortable || false,
             'header-align': item.headerAlign || 'left',
             'show-overflow-tooltip': item.overflowTooltip || false,
-            prop: Array.isArray(item.props) ? item.props[0].prop : item.props.prop,
+            prop: Array.isArray(item.props)
+              ? item.props[0].prop
+              : item.props.prop,
             label: item.label,
             'min-width': item.minWidth || 140,
             width: item.width || '',
@@ -78,50 +77,57 @@
             ...item.property,
           }"
         >
-          <!-- 用户自定义表头 -->
-          <template #header v-if="item.headerSlotName">
-            <slot :name="item.headerSlotName" :item="item" :index="index">
-            </slot>
-          </template>
-
-          <!-- 内置自定义表头 -->
           <template
             v-if="
-              (item.isShowOrFilterColumn == undefined ||
+              ((item.isShowOrFilterColumn == undefined ||
                 item.isShowOrFilterColumn === 'filter') &&
-              !item.headerSlotName
+                !item.headerSlotName) ||
+              item.headerSlotName
             "
             #header
           >
-            <PTFSelect
-              v-if="
-                getPropObj(item).filter ||
-                getPropObj(item).filtersType === 'select' ||
-                getPropObj(item).type === 'switch' ||
-                getPropObj(item).type === 'tag'
-              "
-              :header-data="item"
-              :list="list"
-              :prop-data="getPropObj(item)"
-              @headerFilterChange="headerFilterChange"
-            ></PTFSelect>
-            <PTFDatePicker
-              v-else-if="getPropObj(item).filtersType === 'date'"
-              :header-data="item"
-              :list="list"
-              @headerFilterChange="headerFilterChange"
-            ></PTFDatePicker>
-            <PTFInput
-              v-else
-              :header-data="item"
-              :list="list"
-              @headerFilterChange="headerFilterChange"
-            ></PTFInput>
+            <!-- 用户自定义表头 -->
+            <slot
+              v-if="item.headerSlotName"
+              :name="item.headerSlotName"
+              :item="item"
+              :index="index"
+            />
+
+            <!-- 内置自定义表头 -->
+            <template v-else>
+              <PTFSelect
+                v-if="
+                  getPropObj(item).filter ||
+                  getPropObj(item).filtersType === 'select' ||
+                  getPropObj(item).type === 'switch' ||
+                  getPropObj(item).type === 'tag'
+                "
+                :header-data="item"
+                :list="list"
+                :prop-data="getPropObj(item)"
+                @header-filter-change="headerFilterChange"
+              />
+              <PTFDatePicker
+                v-else-if="getPropObj(item).filtersType === 'date'"
+                :header-data="item"
+                :list="list"
+                @header-filter-change="headerFilterChange"
+              />
+              <PTFInput
+                v-else
+                :header-data="item"
+                :list="list"
+                @header-filter-change="headerFilterChange"
+              />
+            </template>
           </template>
 
           <template #default="scope">
             <div
-              v-for="(prop, idx) in Array.isArray(item.props) ? item.props : [item.props]"
+              v-for="(prop, idx) in Array.isArray(item.props)
+                ? item.props
+                : [item.props]"
               :key="'props' + idx"
               :style="{
                 display: index == 0 ? 'inline-block' : 'block',
@@ -133,7 +139,7 @@
                 :row="scope.row"
                 :index="scope.$index"
                 :prop="prop"
-                :aligning="(item.property?.align || item.headerAlign)"
+                :aligning="item.property?.align || item.headerAlign"
               />
               <!-- 插槽 -->
               <slot
@@ -141,8 +147,7 @@
                 :name="prop.slotName || 'default'"
                 :row="scope.row"
                 :index="scope.$index"
-              >
-              </slot>
+              />
               <div
                 v-else-if="
                   (scope.row[prop.prop] == undefined ||
@@ -150,23 +155,26 @@
                   prop.type != 'btn'
                 "
               >
-                <div v-if="prop.reserve" v-html="prop.reserve"></div>
+                <div v-if="prop.reserve" v-html="prop.reserve" />
                 <div v-else>
                   <span>暂无数据</span>
                 </div>
               </div>
               <!-- 筛选 -->
               <PTFilter
-                v-else-if="prop.filter && (prop.type == 'text' || prop.type == undefined)"
+                v-else-if="
+                  prop.filter && (prop.type == 'text' || prop.type == undefined)
+                "
                 v-bind="bindAttr(prop, scope, item)"
               />
               <!-- 动态组件 -->
               <component
+                :is="matchComponents(prop.type)"
                 v-else-if="
                   prop.type &&
                   [
                     'image',
-                    'btn',
+                    // 'btn',
                     'switch',
                     'input',
                     'textarea',
@@ -177,26 +185,27 @@
                     'video',
                   ].includes(prop.type)
                 "
-                :is="matchComponents(prop.type)"
-                @returnEmit="returnEmit"
                 v-bind="bindAttr(prop, scope, item)"
+                @returnEmit="returnEmit"
               />
               <!-- 正常 -->
               <PTText
                 v-else-if="scope.row[prop.prop]"
                 v-bind="bindAttr(prop, scope, item)"
-                :listLength="tableLists.length"
+                :list-length="tableLists.length"
               />
             </div>
           </template>
         </el-table-column>
       </el-table>
 
-      <div style="display: flex; justify-content: space-between; margin-top: 20px">
+      <div
+        style="display: flex; justify-content: space-between; margin-top: 20px"
+      >
         <!-- 批量操作 -->
         <div
-          class="pagination left"
           v-if="operate && isSelect && operate.operates"
+          class="pagination left"
         >
           <el-select
             v-model="operate.value"
@@ -218,7 +227,7 @@
             />
           </el-select>
 
-          <el-button
+          <!-- <el-button
             :style="operate.style || { marginLeft: '20px' }"
             :icon="operate.icon || ''"
             :type="operate.type || 'primary'"
@@ -227,85 +236,90 @@
             @click="batchOperate"
           >
             确定
-          </el-button>
+          </el-button> -->
         </div>
 
         <!-- 分页操作 -->
-        <div class="pagination" v-if="isPagination">
+        <div v-if="isPagination" class="pagination">
           <el-pagination
-            :small="(size || (injectProps && injectProps.size) || 'small') === 'small' ? true : false"
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
+            :small="
+              (size || (injectProps && injectProps.size) || 'small') === 'small'
+                ? true
+                : false
+            "
             :page-sizes="pageSizes"
             :layout="layout"
             :total="total"
-          >
-          </el-pagination>
+          />
         </div>
       </div>
     </el-config-provider>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {
+  computed,
   defineComponent,
   nextTick,
-  watchEffect,
   provide,
   toRefs,
-  computed,
   watch,
-  ref
-} from "vue";
+  watchEffect,
+} from 'vue';
+import { deepClone } from '../../index';
+// import en from "element-plus/lib/locale/lang/en";
+import { useFilters } from '../../filter/useFilters';
+import {
+  powerfulTableEmits,
+  powerfulTableProps,
+  useFunction,
+  usePowerfulTableStates,
+} from './powerful-table-data';
 import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
-} from "../../../typings";
-import {
-  powerfulTableProps,
-  powerfulTableEmits,
-  usePowerfulTableStates,
-  useFunction,
-} from "./powerful-table-data";
-import { deepClone } from '../../index';
-// import en from "element-plus/lib/locale/lang/en";
-import { useFilters } from "../../filter/useFilters";
+} from '../../../typings';
 
 // 获取 布局方向
 const justifyFun = (val: string) => {
-  const bol = ["center", "left", "right"].includes(val);
+  const bol = ['center', 'left', 'right'].includes(val);
   return bol
-    ? { center: "center", left: "flex-start", right: "flex-end" }[val]
-    : "center";
+    ? { center: 'center', left: 'flex-start', right: 'flex-end' }[val]
+    : 'center';
 };
 
 export default defineComponent({
-  name: "PowerfulTable",
+  name: 'PowerfulTable',
   props: powerfulTableProps,
   emits: powerfulTableEmits,
   setup(props, { emit }) {
-    type Row = typeof props.list[number]
+    type Row = typeof props.list[number];
     /* ------ data数据 ------ */
     const {
       powerfulTableData,
       multipleTable,
       configProvider,
       injectProps,
-      stateData
-    } = usePowerfulTableStates<Row>(props)
+      stateData,
+    } = usePowerfulTableStates<Row>(props);
 
     /* ------ 注入数据 ------ */
     // 语言
-    provide("locale", props.locale || (injectProps && injectProps.locale));
+    provide('locale', props.locale || (injectProps && injectProps.locale));
     // 组件大小
-    provide("size", props.size || injectProps?.size || "small");
+    provide('size', props.size || injectProps?.size || 'small');
     // 单元格内布局
-    provide("justifyFun", justifyFun);
+    provide('justifyFun', justifyFun);
 
-    
     // 局部过滤hook
-    const { headerFilterChange, getPropObj } = useFilters<Row>(stateData, props, multipleTable);
+    const { headerFilterChange, getPropObj } = useFilters<Row>(
+      stateData,
+      props,
+      multipleTable
+    );
 
     /* ------  操作方法  ------ */
     const {
@@ -315,15 +329,17 @@ export default defineComponent({
       sortChange,
       batchOperate,
       get,
-      matchComponents
-    } = useFunction<Row>(emit, powerfulTableData)
+      matchComponents,
+    } = useFunction<Row>(emit, powerfulTableData);
 
     watchEffect(() => {
       Object.assign(powerfulTableData.operate, props.operateData);
 
       // list数据有的话 关闭加载中...
       // 更具当前list 数据 添加develop
-      powerfulTableData.develop = Array(stateData.tableLists.length).fill(false);
+      powerfulTableData.develop = Array.from<boolean>({
+        length: stateData.tableLists.length,
+      }).fill(false);
       powerfulTableData.listLoading = false;
     });
 
@@ -344,29 +360,35 @@ export default defineComponent({
 
     // 过滤被隐藏的列
     const headerLists = computed(() => {
-      return props.header.filter(column => !column.hidden)
+      return props.header.filter((column) => !column.isShowColumn);
     });
 
     /* --- 按钮组件参数及方法begin --- */
     // 为表格数据重新赋值
-    watch(() => (props.list as Row[]),
+    watch(
+      () => props.list as Row[],
       (newList, oldList) => {
-        if (!stateData.tableLists.length || (stateData.tableLists.length && stateData.tableLists.length == oldList?.length)) {
-          stateData.tableLists = newList
+        if (
+          !stateData.tableLists.length ||
+          (stateData.tableLists.length &&
+            stateData.tableLists.length == oldList?.length)
+        ) {
+          stateData.tableLists = newList;
         }
       },
       { immediate: true, deep: true }
     );
     watch(
-      ()=> [powerfulTableData.currentPage, powerfulTableData.pageSize],
+      () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
       ([newPage, newSize]) => {
-        get()
+        get();
       }
-    )
+    );
 
     // 重新渲染表格
     const anewRender = () => {
       nextTick(() => {
+        console.log(111);
         multipleTable.value?.doLayout();
       });
     };
@@ -380,19 +402,22 @@ export default defineComponent({
       // 3.得到其他页
 
       // 获取当前页选中
-      let current: Row[] = [];
+      const current: Row[] = [];
       // 获取 其他页选中
       let other: Row[] = [];
 
-      let selectCompare = [props.selectCompare ? props.selectCompare[0] : 'id', props.selectCompare ? props.selectCompare[1] : 'id']
+      const selectCompare = [
+        props.selectCompare ? props.selectCompare[0] : 'id',
+        props.selectCompare ? props.selectCompare[1] : 'id',
+      ];
 
       // 获取当前页
       if (arr.length != 0) {
         // console.log('所有选中', arr);
         // 获取当前页
         arr.forEach((item) => {
-          let l = list.filter((each: typeof list[0]) => {
-            return item[selectCompare[0]] == each[selectCompare[1]]
+          const l = list.filter((each: typeof list[0]) => {
+            return item[selectCompare[0]] == each[selectCompare[1]];
           });
 
           if (l.length > 0) current.push(l[0]);
@@ -401,7 +426,7 @@ export default defineComponent({
         // 获取其他页
         if (current.length > 0) {
           other = deepClone(arr);
-          for (let j in other) {
+          for (const j in other) {
             current.forEach((item) => {
               if (item[selectCompare[1]] == other[j][selectCompare[0]]) {
                 other.splice(Number(j), 1);
@@ -441,16 +466,16 @@ export default defineComponent({
       injectProps,
 
       rowClick,
-      bindAttr: function <D>(
+      bindAttr<D>(
         prop: PowerfulTableHeaderProps<Row, D>,
-        scope: {'$index': number, row: Row},
+        scope: { $index: number; row: Row },
         item: PowerfulTableHeader<Row>
       ) {
         return {
           row: scope.row,
           index: scope.$index,
           prop,
-          aligning: item.property?.align || item.headerAlign || "center",
+          aligning: item.property?.align || item.headerAlign || 'center',
         };
       },
       anewRender,
@@ -459,10 +484,10 @@ export default defineComponent({
       batchOperate,
       handleSelectionChange,
       getSelect,
-      matchComponents
+      matchComponents,
     };
   },
 });
 </script>
 
-<style src='./powerful-table.css'></style>
+<style src="./powerful-table.css"></style>

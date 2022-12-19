@@ -1,31 +1,34 @@
-import { Search, ArrowUp } from '@element-plus/icons-vue'
-import { PropType } from 'vue';
-import { PowerfulTableHeader, PowerfulTableFilter } from '../../../typings'
+import { ArrowUp, Search } from '@element-plus/icons-vue';
+import type { PropType } from 'vue';
+import type {
+  PowerfulTableFilter,
+  PowerfulTableHeader,
+} from '../../../typings';
 
 export type State<T = string | (string | number)[]> = {
-  value: T,
-  options?: PowerfulTableFilter[],
-  selectVisible?: boolean,
-  visible: boolean
-}
+  value: T;
+  options?: PowerfulTableFilter[];
+  selectVisible?: boolean;
+  visible: boolean;
+};
 
 export const props = {
   // 表格的配置数据
   headerData: {
     type: Object as PropType<PowerfulTableHeader<any>>,
-    default: () => { },
+    default: () => ({}),
   },
   list: {
     type: Array,
-    default: () => []
-  }
-}
+    default: () => [],
+  },
+};
 
 // 输入框插槽
-export const btnSlots = (fun: Function) => {
+export const btnSlots = (fun: () => void) => {
   return {
-    append: () => (<el-button icon={Search} onClick={fun}></el-button>)
-  }
+    append: () => <el-button icon={Search} onClick={fun}></el-button>,
+  };
 };
 
 // 弹窗插槽
@@ -36,18 +39,22 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
         <span
           class="el-popover-center"
           style={state.value.length ? { color: 'var(--el-color-primary)' } : {}}
-          onClick={(e: Event) => { 
-            if (!header.filters) return
-            e.stopPropagation()
-            state.visible = !state.visible
+          onClick={(e: Event) => {
+            if (!header.isFilterColumn) return;
+            e.stopPropagation();
+            state.visible = !state.visible;
           }}
         >
           {header.label}
-          <el-icon style="margin-left: 5px" v-show={header.filters} class={state.visible ? 'arrow-up' : 'arrow-down'}>
+          <el-icon
+            style="margin-left: 5px"
+            v-show={header.isFilterColumn}
+            class={state.visible ? 'arrow-up' : 'arrow-down'}
+          >
             <ArrowUp />
           </el-icon>
         </span>
       );
-    }
-  }
+    },
+  };
 };
