@@ -1,4 +1,4 @@
-import type { App, Plugin } from 'vue';
+import type { App, Plugin, InjectionKey } from 'vue';
 import components from './components';
 import PowerfulTable from './powerful-table';
 import fComponents from './filter';
@@ -7,7 +7,7 @@ export { default as PTBtnPlus } from './btn-plus';
 export { default as PowerfulTable } from './powerful-table';
 export * from './filter';
 export * from './components';
-
+export const PowerfulTableSymbol = Symbol('powerful-table') as InjectionKey<import('../typings').InjectProps>
 // 获取类型
 const getType = <T>(target: T) => Object.prototype.toString.call(target).slice(8, -1)
 
@@ -34,7 +34,7 @@ const makeInstaller = (components: Plugin[] = []) => {
     components.forEach((c) => {
       app.use(c)
     })
-    app.provide('powerfulTable', options ? options : {})
+    app.provide(PowerfulTableSymbol, options ? options : {})
     app.config.globalProperties.$deepClone = deepClone;
   }
 

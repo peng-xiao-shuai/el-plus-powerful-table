@@ -2,18 +2,18 @@
  * 局部过滤hook
  * @Author: chenle 
  * @Date: 2021-09-22 16:31:33 
- * @Last Modified by: 彭小黑
- * @Last Modified time: 2022-11-30 16:50:05
+ * @Last Modified by: peng-xiao-shuai
+ * @Last Modified time: 2022-12-19 16:02:56
  */
 
 import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
 } from "../../typings";
-import type { PowerFulTableProps, State } from '../powerful-table/src/powerful-table-data';
+import type { PowerFulTableProps, StateData } from '../powerful-table/src/powerful-table-data';
 import { deepClone } from '../index';
 import { computed, unref } from "vue";
-export function useFilters<L> (state: State<L>, props: PowerFulTableProps<L>, Table: any) {
+export function useFilters<L> (state: StateData<L>, props: PowerFulTableProps<L>, Table: any) {
   /**
    * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
    */

@@ -14,7 +14,7 @@ import type {
   BtnConfig,
   Size
 } from '../../../typings'
-import { deepClone } from '../../index';
+import { deepClone, PowerfulTableSymbol } from '../../index';
 
 type DefaultRow = any
 type TranslatePair = {
@@ -141,7 +141,7 @@ export const powerfulTableComponentProp = {
   }
 }
 
-type PowerfulTableData<L = DefaultRow> = {
+interface PowerfulTableData<L = DefaultRow> {
   listLoading: boolean;
   develop: boolean[];
   currentPage: number;
@@ -151,22 +151,22 @@ type PowerfulTableData<L = DefaultRow> = {
   operate: PowerfulTableOperateData;
 }
 
-type State<L = DefaultRow> = {
+interface StateData<L = DefaultRow> {
   tableLists: PowerFulTableProps<L>['list'],
   isPC: boolean
   isTable: boolean
 }
 
-export function usePowerfulTableState<L>(props: PowerFulTableProps<L>){
+export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
   // 全局此组件注入的数据
-  const injectProps = inject<InjectProps>("powerfulTable") || {};
+  const injectProps = inject<InjectProps>(PowerfulTableSymbol, {})
 
   /* ----- 组件实例 ----- */
   const multipleTable = ref<any>(null);
   const configProvider = ref<{locale: PowerFulTableProps<L>['locale']}>();
 
   /* ------  表格数据  ------ */
-  const powerfulTableData = reactive<PowerfulTableData<L>>({
+  const powerfulTableData:PowerfulTableData<L> = reactive({
     listLoading: true, //页面是否加载中
     develop: [],       // 展开
     currentPage: 1,    // 当前页
@@ -184,18 +184,18 @@ export function usePowerfulTableState<L>(props: PowerFulTableProps<L>){
   })
 
   // 组件参数
-  const state = reactive<State<L>>({
+  const stateData:StateData<L> = reactive({
     tableLists: [],
     isPC: true,
     isTable: true,
-  });
+  })
 
   return {
     multipleTable,
     configProvider,
     powerfulTableData,
     injectProps,
-    state
+    stateData
   }
 }
 
@@ -326,7 +326,7 @@ export const useFunction = <L>(emit: Function, powerfulTableData: PowerfulTableD
 }
 
 export type {
-  State,
+  StateData,
   PowerfulTableData,
   PowerFulTableProps,
   TranslatePair

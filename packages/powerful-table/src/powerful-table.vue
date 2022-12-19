@@ -2,6 +2,7 @@
   <div class="pt">
     <!-- 按钮组件 -->
     <PTBtnPlus
+      v-if="btnConfig !== undefined"
       ref="btnPlusRef"
       v-model:isTable="isTable"
       :btn-config="btnConfig"
@@ -255,6 +256,7 @@ import {
   toRefs,
   computed,
   watch,
+  ref
 } from "vue";
 import type {
   PowerfulTableHeader,
@@ -263,7 +265,7 @@ import type {
 import {
   powerfulTableProps,
   powerfulTableEmits,
-  usePowerfulTableState,
+  usePowerfulTableStates,
   useFunction,
 } from "./powerful-table-data";
 import { deepClone } from '../../index';
@@ -286,12 +288,12 @@ export default defineComponent({
     type Row = typeof props.list[number]
     /* ------ data数据 ------ */
     const {
+      powerfulTableData,
       multipleTable,
       configProvider,
-      powerfulTableData,
       injectProps,
-      state
-    } = usePowerfulTableState<Row>(props)
+      stateData
+    } = usePowerfulTableStates<Row>(props)
 
     /* ------ 注入数据 ------ */
     // 语言
@@ -303,7 +305,7 @@ export default defineComponent({
 
     
     // 局部过滤hook
-    const { headerFilterChange, getPropObj } = useFilters<Row>(state, props, multipleTable);
+    const { headerFilterChange, getPropObj } = useFilters<Row>(stateData, props, multipleTable);
 
     /* ------  操作方法  ------ */
     const {
@@ -321,12 +323,12 @@ export default defineComponent({
 
       // list数据有的话 关闭加载中...
       // 更具当前list 数据 添加develop
-      powerfulTableData.develop = Array(state.tableLists.length).fill(false);
+      powerfulTableData.develop = Array(stateData.tableLists.length).fill(false);
       powerfulTableData.listLoading = false;
     });
 
     watch(
-      () => state.tableLists,
+      () => stateData.tableLists,
       (val) => {
         if (val.length && powerfulTableData.currentSelect.length == 0) {
           nextTick(() => {
@@ -349,8 +351,8 @@ export default defineComponent({
     // 为表格数据重新赋值
     watch(() => (props.list as Row[]),
       (newList, oldList) => {
-        if (!state.tableLists.length || (state.tableLists.length && state.tableLists.length == oldList?.length)) {
-          state.tableLists = newList
+        if (!stateData.tableLists.length || (stateData.tableLists.length && stateData.tableLists.length == oldList?.length)) {
+          stateData.tableLists = newList
         }
       },
       { immediate: true, deep: true }
@@ -365,12 +367,12 @@ export default defineComponent({
     // 重新渲染表格
     const anewRender = () => {
       nextTick(() => {
-        multipleTable.value.doLayout();
+        multipleTable.value?.doLayout();
       });
     };
 
     /* ------ 获取选中 ------ */
-    const getSelect = (arr = props.selectData, list = state.tableLists) => {
+    const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
       if (!props.isSelect) return;
 
       // 1.获取当前页
@@ -378,9 +380,9 @@ export default defineComponent({
       // 3.得到其他页
 
       // 获取当前页选中
-      let current: any[] = [];
+      let current: Row[] = [];
       // 获取 其他页选中
-      let other: any[] = [];
+      let other: Row[] = [];
 
       let selectCompare = [props.selectCompare ? props.selectCompare[0] : 'id', props.selectCompare ? props.selectCompare[1] : 'id']
 
@@ -389,11 +391,11 @@ export default defineComponent({
         // console.log('所有选中', arr);
         // 获取当前页
         arr.forEach((item) => {
-          let itm = list.filter((each: typeof list[0]) => {
+          let l = list.filter((each: typeof list[0]) => {
             return item[selectCompare[0]] == each[selectCompare[1]]
           });
 
-          if (itm.length > 0) current.push(itm[0]);
+          if (l.length > 0) current.push(l[0]);
         });
 
         // 获取其他页
@@ -417,19 +419,19 @@ export default defineComponent({
 
         if (current.length != 0) {
           current.forEach((row) => {
-            (multipleTable.value as any).toggleRowSelection(row);
+            multipleTable.value?.toggleRowSelection(row, true);
           });
         } else {
-          (multipleTable.value as any).clearSelection();
+          multipleTable.value?.clearSelection();
         }
       } else {
-        (multipleTable.value as any).clearSelection();
+        multipleTable.value?.clearSelection();
       }
     };
 
     return {
       headerLists,
-      ...toRefs(state),
+      ...toRefs(stateData),
       headerFilterChange,
       getPropObj,
       ...toRefs(powerfulTableData),
