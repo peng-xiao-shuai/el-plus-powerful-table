@@ -1,6 +1,6 @@
-import { getCurrentInstance, inject, reactive, ref } from "vue";
-import { PowerfulTableSymbol, deepClone } from "../../index";
-import type { PropType } from "vue";
+import { getCurrentInstance, inject, reactive, ref } from 'vue';
+import { PowerfulTableSymbol, deepClone } from '../../index';
+import type { PropType } from 'vue';
 import type {
   BtnConfig,
   EmitType,
@@ -9,7 +9,7 @@ import type {
   PowerfulTableOperateData,
   PowerfulTableTree,
   Size,
-} from "../../../typings";
+} from '../../../typings';
 
 type DefaultRow = any;
 type TranslatePair = {
@@ -39,59 +39,59 @@ interface PowerFulTableProps<L> {
 export const powerfulTableProps = {
   // 按钮组件配置数据
   btnConfig: {
-    type: Object as PropType<PowerFulTableProps<DefaultRow>["btnConfig"]>,
+    type: Object as PropType<PowerFulTableProps<DefaultRow>['btnConfig']>,
     default: () => [{}],
   },
-  locale: Object as PropType<PowerFulTableProps<DefaultRow>["locale"]>,
+  locale: Object as PropType<PowerFulTableProps<DefaultRow>['locale']>,
   // 组件大小
   size: {
-    type: String as PropType<PowerFulTableProps<DefaultRow>["size"]>,
-    default: "",
-    validator: (val: string) => ["", "default", "small", "large"].includes(val),
+    type: String as PropType<PowerFulTableProps<DefaultRow>['size']>,
+    default: '',
+    validator: (val: string) => ['', 'default', 'small', 'large'].includes(val),
   },
   // 当前数据
   list: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>["list"]>,
+    type: Array as PropType<PowerFulTableProps<DefaultRow>['list']>,
     default: () => [],
   },
   // 所有选中
   selectData: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>["list"]>,
+    type: Array as PropType<PowerFulTableProps<DefaultRow>['list']>,
     default: () => {
       return () => [];
     },
   },
   isSelect: {
-    type: Boolean as PropType<PowerFulTableProps<DefaultRow>["isSelect"]>,
+    type: Boolean as PropType<PowerFulTableProps<DefaultRow>['isSelect']>,
     default: false,
   },
   selectable: {
-    type: Function as PropType<PowerFulTableProps<DefaultRow>["selectable"]>,
+    type: Function as PropType<PowerFulTableProps<DefaultRow>['selectable']>,
     default: undefined,
   },
   selectCompare: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>["selectCompare"]>,
-    default: () => ["id", "id"],
+    type: Array as PropType<PowerFulTableProps<DefaultRow>['selectCompare']>,
+    default: () => ['id', 'id'],
   },
 
   header: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>["header"]>,
+    type: Array as PropType<PowerFulTableProps<DefaultRow>['header']>,
     default: () => [],
   },
 
   // 分页数据
   layout: {
     type: String,
-    default: "total, sizes, prev, pager, next",
+    default: 'total, sizes, prev, pager, next',
   },
   pageSizes: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>["pageSizes"]>,
+    type: Array as PropType<PowerFulTableProps<DefaultRow>['pageSizes']>,
     default: () => [10, 20, 30],
   },
 
   // 批量操作
   operateData: {
-    type: Object as PropType<PowerFulTableProps<DefaultRow>["operateData"]>,
+    type: Object as PropType<PowerFulTableProps<DefaultRow>['operateData']>,
     default: () => [{}],
   },
   isPagination: {
@@ -103,7 +103,7 @@ export const powerfulTableProps = {
     default: 0,
   },
   tree: {
-    type: Object as PropType<PowerFulTableProps<DefaultRow>["tree"]>,
+    type: Object as PropType<PowerFulTableProps<DefaultRow>['tree']>,
     default: () => ({}),
   },
   property: {
@@ -113,14 +113,14 @@ export const powerfulTableProps = {
 };
 // 主组件emits
 export const powerfulTableEmits = [
-  "btnChange",
-  "sortCustom",
-  "batchOperate",
-  "switchChange",
-  "sizeChange",
-  "btnClick",
-  "row-click",
-  "refresh",
+  'btnChange',
+  'sortCustom',
+  'batchOperate',
+  'switchChange',
+  'sizeChange',
+  'btnClick',
+  'row-click',
+  'refresh',
 ];
 
 export const powerfulTableComponentProp = {
@@ -130,8 +130,8 @@ export const powerfulTableComponentProp = {
   },
   index: Number,
   aligning: {
-    type: String as PropType<"left" | "center" | "right">,
-    default: "center",
+    type: String as PropType<'left' | 'center' | 'right'>,
+    default: 'center',
   },
 };
 
@@ -140,13 +140,13 @@ interface PowerfulTableData<L = DefaultRow> {
   develop: boolean[];
   currentPage: number;
   pageSize: number;
-  currentSelect: PowerFulTableProps<L>["list"];
-  otherSelect: PowerFulTableProps<L>["list"];
+  currentSelect: PowerFulTableProps<L>['list'];
+  otherSelect: PowerFulTableProps<L>['list'];
   operate: PowerfulTableOperateData;
 }
 
 interface StateData<L = DefaultRow> {
-  tableLists: PowerFulTableProps<L>["list"];
+  tableLists: PowerFulTableProps<L>['list'];
   isPC: boolean;
   isTable: boolean;
 }
@@ -157,7 +157,7 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
 
   /* ----- 组件实例 ----- */
   const multipleTable = ref<any>(null);
-  const configProvider = ref<{ locale: PowerFulTableProps<L>["locale"] }>();
+  const configProvider = ref<{ locale: PowerFulTableProps<L>['locale'] }>();
 
   /* ------  表格数据  ------ */
   const powerfulTableData: PowerfulTableData<L> = reactive({
@@ -171,8 +171,8 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
       // 承载props的operateData
       value: undefined,
       disabled: false,
-      icon: "",
-      prop: "id",
+      icon: '',
+      prop: 'id',
       style: undefined,
       operates: [],
     },
@@ -206,8 +206,8 @@ export const useFunction = <L>(
    */
   const sortChange = (obj: { column?: any; prop: string; order: any }) => {
     if (Object.keys(obj.column || {}).length) {
-      if (obj.column.sortable == "custom") {
-        emit("sortCustom", obj);
+      if (obj.column.sortable == 'custom') {
+        emit('sortCustom', obj);
       }
     }
   };
@@ -224,8 +224,8 @@ export const useFunction = <L>(
       powerfulTableData.operate !== 0
     ) {
       proxy.$message({
-        message: "请选择操作类型",
-        type: "warning",
+        message: '请选择操作类型',
+        type: 'warning',
         duration: 1000,
       });
       return;
@@ -233,8 +233,8 @@ export const useFunction = <L>(
 
     if (powerfulTableData.currentSelect.length == 0) {
       proxy.$message({
-        message: "请选择要操作的数据",
-        type: "warning",
+        message: '请选择要操作的数据',
+        type: 'warning',
         duration: 1000,
       });
       return;
@@ -242,11 +242,11 @@ export const useFunction = <L>(
     proxy
       .$confirm(
         `是否要进行批量${powerfulTableData.operate.operates[0].label}操作?`,
-        "提示",
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         }
       )
       .then(() => {
@@ -254,14 +254,14 @@ export const useFunction = <L>(
           .concat(powerfulTableData.currentSelect)
           .map((item) => {
             return (item as { [s: string]: string })[
-              powerfulTableData.operate.prop || "id"
+              powerfulTableData.operate.prop || 'id'
             ];
           });
         const items = powerfulTableData.otherSelect
           .concat(powerfulTableData.currentSelect)
           .map((item) => item);
 
-        emit("batchOperate", {
+        emit('batchOperate', {
           ids,
           item: powerfulTableData.operate.operates[0],
           items,
@@ -288,7 +288,7 @@ export const useFunction = <L>(
    * @param arg
    */
   const rowClick = (...arg: any) => {
-    returnEmit<{ row: L; column: any; event: Event }>("row-click", { ...arg });
+    returnEmit<{ row: L; column: any; event: Event }>('row-click', { ...arg });
   };
 
   /* ------ 回调到组件上 ------ */
@@ -307,7 +307,7 @@ export const useFunction = <L>(
         ),
       });
     } catch {
-      emit("sizeChange", {
+      emit('sizeChange', {
         params,
         select: powerfulTableData.otherSelect.concat(
           powerfulTableData.currentSelect
@@ -332,16 +332,16 @@ export const useFunction = <L>(
    */
   const matchComponents = (type: string) => {
     return {
-      image: "PTImage",
-      btn: "PTButton",
-      switch: "PTSwitch",
-      input: "PTInput",
-      textarea: "PTInput",
-      iconfont: "PTIcon",
-      tag: "PTTags",
-      rate: "PTRate",
-      href: "PTLink",
-      video: "PTVideo",
+      image: 'PTImage',
+      btn: 'PTButton',
+      switch: 'PTSwitch',
+      input: 'PTInput',
+      textarea: 'PTInput',
+      iconfont: 'PTIcon',
+      tag: 'PTTags',
+      rate: 'PTRate',
+      href: 'PTLink',
+      video: 'PTVideo',
     }[type];
   };
 
