@@ -142,23 +142,28 @@ import {
   InjectProps,
 } from "../../../typings";
 import { Grid, Refresh } from "@element-plus/icons-vue";
+import { PowerfulTableSymbol } from '../../index';
 
-type Props = {
+const props = defineProps({
   // 按钮的配置数据
-  btnConfig: BtnConfig.Config;
+  btnConfig: {
+    type: Object as PropType<BtnConfig.Config>,
+    required: true
+  },
   // 表格的配置数据
-  headerList: PowerfulTableHeader[];
+  headerList: Array as PropType<PowerfulTableHeader[]>,
   // 表格当前选择的数据集合
-  multipleSelection: any[];
+  multipleSelection: {
+    type: Array as PropType<any[]>,
+    default: () => ([])
+  },
   // 判断是否为移动端
-  isTable: Boolean;
-};
-
-const props = defineProps<Props>();
+  isTable: Boolean
+});
 const emit = defineEmits(["update:isTable", "btnChange"]);
 
 const size = inject("size") as Size;
-const injectProps = inject<InjectProps>("powerfulTable") || {};
+const injectProps = inject<InjectProps>(PowerfulTableSymbol, {})
 
 const { proxy } = getCurrentInstance() as any;
 /* ------ 实例 ------ */
