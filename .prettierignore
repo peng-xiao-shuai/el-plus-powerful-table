@@ -1,5 +1,6 @@
 dist
 lib
 node_modules
+tsconfig.json
 README.md
 pnpm-lock.yaml

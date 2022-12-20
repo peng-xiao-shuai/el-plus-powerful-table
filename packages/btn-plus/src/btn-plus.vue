@@ -8,11 +8,11 @@
     ]"
   >
     <slot
-      name="btn-left"
       v-if="
         (injectProps && ['all', 'left'].includes(injectProps.btnSlot || '')) ||
         ['all', 'left'].includes(btnConfig.btnSlot || '')
       "
+      name="btn-left"
     >
       <!-- 左侧操作按钮 -->
       <el-button-group
@@ -21,11 +21,6 @@
       >
         <template v-for="item in btnConfig.btnList" :key="item.tip">
           <el-button
-            :size="size || 'small'"
-            :type="item.type"
-            :icon="item.icon"
-            :style="item.style || {}"
-            :disabled="item.disabled || btnDisabled(item.operateType)"
             v-if="
               typeof item.showBtn === 'function'
                 ? item.showBtn()
@@ -33,6 +28,11 @@
                 ? true
                 : item.showBtn
             "
+            :size="size || 'small'"
+            :type="item.type"
+            :icon="item.icon"
+            :style="item.style || {}"
+            :disabled="item.disabled || btnDisabled(item.operateType)"
             @click="batchOperate('left', item)"
           >
             {{ item.text }}
@@ -42,11 +42,11 @@
     </slot>
 
     <slot
-      name="btn-right"
       v-if="
         (injectProps && ['all', 'right'].includes(injectProps.btnSlot || '')) ||
         ['all', 'right'].includes(btnConfig.btnSlot || '')
       "
+      name="btn-right"
     >
       <!-- 右侧操作按钮 -->
       <el-button-group
@@ -96,19 +96,35 @@
                   <div class="checkbox">筛选</div>
                 </div>
                 <el-scrollbar style="height: 300px">
-                  <div class="dropdown-table-row" v-for="row in state.headerData.filter(item => (item.isShowOrFilterColumn !== false))">
-                    <div>{{row.label}}</div>
+                  <div
+                    v-for="(row, index) in state.headerData.filter(
+                      (item) => item.isShowOrFilterColumn !== false
+                    )"
+                    :key="index"
+                    class="dropdown-table-row"
+                  >
+                    <div>{{ row.label }}</div>
                     <el-checkbox
+                      v-model="row.isShowColumn"
                       class="checkbox"
-                      :disabled="!(row.isShowOrFilterColumn === 'show' || row.isShowOrFilterColumn === undefined)"
-                      v-model="row.hidden"
+                      :disabled="
+                        !(
+                          row.isShowOrFilterColumn === 'show' ||
+                          row.isShowOrFilterColumn === undefined
+                        )
+                      "
                       :size="size || 'small'"
                       @change="functionBtnChange()"
                     />
                     <el-checkbox
+                      v-model="row.isFilterColumn"
                       class="checkbox"
-                      :disabled="!(row.isShowOrFilterColumn === 'filter' || row.isShowOrFilterColumn === undefined)"
-                      v-model="row.filters"
+                      :disabled="
+                        !(
+                          row.isShowOrFilterColumn === 'filter' ||
+                          row.isShowOrFilterColumn === undefined
+                        )
+                      "
                       :size="size || 'small'"
                       @change="functionBtnChange()"
                     />
@@ -123,74 +139,72 @@
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import {
-  ref,
-  reactive,
-  onMounted,
-  watch,
-  inject,
-  PropType,
   getCurrentInstance,
-  Component,
-} from "vue";
-import {
-  PowerfulTableHeader,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
+import { Grid, Refresh } from '@element-plus/icons-vue'
+import { PowerfulTableSymbol, SizeSymbol } from '../../keys'
+import type {
   BtnConfig,
+  PowerfulTableHeader,
   Size,
   ThemeType,
-  InjectProps,
-} from "../../../typings";
-import { Grid, Refresh } from "@element-plus/icons-vue";
-import { PowerfulTableSymbol } from '../../index';
+} from '../../../typings'
+import type { Component, PropType } from 'vue'
 
 const props = defineProps({
   // 按钮的配置数据
   btnConfig: {
     type: Object as PropType<BtnConfig.Config>,
-    required: true
+    required: true,
   },
   // 表格的配置数据
   headerList: Array as PropType<PowerfulTableHeader[]>,
   // 表格当前选择的数据集合
   multipleSelection: {
     type: Array as PropType<any[]>,
-    default: () => ([])
+    default: () => [],
   },
   // 判断是否为移动端
-  isTable: Boolean
-});
-const emit = defineEmits(["update:isTable", "btnChange"]);
+  isTable: Boolean,
+})
+const emit = defineEmits(['update:isTable', 'btnChange'])
 
-const size = inject("size") as Size;
-const injectProps = inject<InjectProps>(PowerfulTableSymbol, {})
+const size = inject(SizeSymbol)
+const injectProps = inject(PowerfulTableSymbol, {})
 
-const { proxy } = getCurrentInstance() as any;
+const { proxy } = getCurrentInstance() as any
 /* ------ 实例 ------ */
-const clBtnPlus = ref();
+const clBtnPlus = ref()
 // const store = useStore();
 type State = {
-  btnHeight: number;
-  headerData: PowerfulTableHeader[];
+  btnHeight: number
+  headerData: PowerfulTableHeader[]
   functionBtnList: {
-    size?: Size;
-    effect?: string;
-    tip: string;
-    type?: ThemeType;
-    icon?: PropType<string | Component>;
-    showTip?: Boolean;
-    tipContent?: string;
-  }[];
-  isPC: boolean;
-};
+    size?: Size
+    effect?: string
+    tip: string
+    type?: ThemeType
+    icon?: PropType<string | Component>
+    showTip?: boolean
+    tipContent?: string
+  }[]
+  isPC: boolean
+}
 const state = reactive<State>({
   btnHeight: 0,
   headerData: [],
   functionBtnList: [
     {
-      effect: "refresh",
-      tip: "刷新",
-      type: "info",
+      effect: 'refresh',
+      tip: '刷新',
+      type: 'info',
       icon: Refresh,
     },
     // {
@@ -202,84 +216,83 @@ const state = reactive<State>({
   ],
   // isPC: store.state.isPC.isPC,
   isPC: true,
-});
+})
 
 // 实例
-const dropdown = ref();
+const dropdown = ref()
 /**
  * 判断左侧操作按钮是否禁用
  * @param item 当前按钮数据
  * item.operateType 操作类型：none(默认) => 不需要选择数据；single => 有且只能操作一条数据；batch => 批量操作数据(至少选择一条数据以上)
  */
-const btnDisabled = (operateType?: "none" | "single" | "batch"): boolean => {
+const btnDisabled = (operateType?: 'none' | 'single' | 'batch'): boolean => {
   // 默认不需要操作数据
-  if (operateType === "single" && props.multipleSelection.length !== 1)
-    return true;
-  if (operateType === "batch" && props.multipleSelection.length < 1)
-    return true;
-  return false;
-};
+  if (operateType === 'single' && props.multipleSelection.length !== 1)
+    return true
+  if (operateType === 'batch' && props.multipleSelection.length < 1) return true
+  return false
+}
 
 const functionBtnChange = () => {
-  proxy.$parent.anewRender();
-};
+  proxy.$parent.anewRender()
+}
 const batchOperate = (type: string, item: unknown) => {
-  if (type === "left") {
-    const btnItem = item as BtnConfig.BtnList;
+  if (type === 'left') {
+    const btnItem = item as BtnConfig.BtnList
     // 是否显示提示
     if (btnItem.showTip) {
-      let content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`;
+      const content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`
       proxy
-        .$confirm(content, "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+        .$confirm(content, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         })
         .then(() => {
-          proxy.$parent.returnEmit("btnChange", {
+          proxy.$parent.returnEmit('btnChange', {
             effect: btnItem.effect,
             list: props.multipleSelection,
-          });
-        });
+          })
+        })
 
-      return false;
+      return false
     }
     // 直接抛出
-    proxy.$parent.returnEmit("btnChange", {
+    proxy.$parent.returnEmit('btnChange', {
       effect: btnItem.effect,
       list: props.multipleSelection,
-    });
+    })
 
-    return false;
+    return false
   }
-  const functionBtnItem = item as typeof state.functionBtnList[0];
+  const functionBtnItem = item as typeof state.functionBtnList[0]
   switch (functionBtnItem.effect) {
-    case "refresh":
-      proxy.$parent.returnEmit("refresh", {});
-      break;
-    case "switch":
-      emit("update:isTable", !props.isTable);
-      break;
-    case "columns":
-      break;
+    case 'refresh':
+      proxy.$parent.returnEmit('refresh', {})
+      break
+    case 'switch':
+      emit('update:isTable', !props.isTable)
+      break
+    case 'columns':
+      break
   }
-};
+}
 onMounted(() => {
-  state.btnHeight = clBtnPlus.value.offsetHeight;
-});
+  state.btnHeight = clBtnPlus.value.offsetHeight
+})
 watch(
   () => [props.headerList],
   ([newHeaderList]: any) => {
-    state.headerData = newHeaderList;
+    state.headerData = newHeaderList
   },
   { immediate: true, deep: true }
-);
+)
 </script>
 
-<script lang='ts'>
+<script lang="ts">
 export default {
-  name: "PTBtnPlus",
-};
+  name: 'PTBtnPlus',
+}
 </script>
 
 <style lang="scss">
@@ -318,7 +331,7 @@ export default {
 
   &-header {
     border-bottom: none;
-    color: var(--el-text-color-regular);;
+    color: var(--el-text-color-regular);
 
     & > div {
       font-weight: bold;

@@ -5,22 +5,23 @@ import {
   reactive,
   ref,
   watchEffect,
-} from 'vue';
-import { ArrowUp } from '@element-plus/icons-vue';
-import { props } from './common';
-import type { App } from 'vue';
-import type { SFCWithInstall, Size } from '../../../typings';
+} from 'vue'
+import { ArrowUp } from '@element-plus/icons-vue'
+import { props } from './common'
+import type { App } from 'vue'
+import type { SFCWithInstall } from '../../../typings'
+import { SizeSymbol } from '~/keys'
 
 const FDatePicker = defineComponent({
   name: 'PTFDatePicker',
   props,
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
-    const size = inject('size') as Size;
-    const datePickerRef = ref<any>();
+    const size = inject(SizeSymbol)
+    const datePickerRef = ref<any>()
     const state = reactive<
       import('./common').State & {
-        defaultTime: Date[];
+        defaultTime: Date[]
       }
     >({
       value: '',
@@ -29,28 +30,28 @@ const FDatePicker = defineComponent({
         new Date(2000, 1, 1, 0, 0, 0),
         new Date(2000, 2, 1, 23, 59, 59),
       ],
-    });
+    })
 
     const datePickerChange = (value: any) => {
-      if (!value) state.value = '';
-      emit('headerFilterChange', value, props.headerData);
-    };
+      if (!value) state.value = ''
+      emit('headerFilterChange', value, props.headerData)
+    }
 
     watchEffect(() => {
       if (props.list.length && state.value?.length) {
-        datePickerChange(state.value);
+        datePickerChange(state.value)
       }
-    });
+    })
 
     return () => (
       <span
         style={state.value ? { color: 'var(--el-color-primary)' } : {}}
         onClick={async (e) => {
-          e.stopPropagation();
-          state.visible = !state.visible;
-          if (!state.visible) return;
-          await nextTick();
-          datePickerRef.value.focus();
+          e.stopPropagation()
+          state.visible = !state.visible
+          if (!state.visible) return
+          await nextTick()
+          datePickerRef.value.focus()
         }}
       >
         {props.headerData.label}
@@ -68,17 +69,17 @@ const FDatePicker = defineComponent({
           size={size || 'small'}
           onChange={datePickerChange}
           onBlur={() => {
-            setTimeout(() => (state.visible = false), 100);
+            setTimeout(() => (state.visible = false), 100)
           }}
         ></el-date-picker>
       </span>
-    );
+    )
   },
-});
+})
 
-const PTFDatePicker = FDatePicker as SFCWithInstall<typeof FDatePicker>;
+const PTFDatePicker = FDatePicker as SFCWithInstall<typeof FDatePicker>
 PTFDatePicker.install = (app: App) => {
-  app.component(FDatePicker.name, FDatePicker);
-};
-export { PTFDatePicker };
-export default FDatePicker;
+  app.component(FDatePicker.name, FDatePicker)
+}
+export { PTFDatePicker }
+export default FDatePicker

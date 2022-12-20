@@ -1,16 +1,13 @@
-import { ArrowUp, Search } from '@element-plus/icons-vue';
-import type { PropType } from 'vue';
-import type {
-  PowerfulTableFilter,
-  PowerfulTableHeader,
-} from '../../../typings';
+import { ArrowUp, Search } from '@element-plus/icons-vue'
+import type { PropType } from 'vue'
+import type { PowerfulTableFilter, PowerfulTableHeader } from '../../../typings'
 
 export type State<T = string | (string | number)[]> = {
-  value: T;
-  options?: PowerfulTableFilter[];
-  selectVisible?: boolean;
-  visible: boolean;
-};
+  value: T
+  options?: PowerfulTableFilter[]
+  selectVisible?: boolean
+  visible: boolean
+}
 
 export const props = {
   // 表格的配置数据
@@ -22,14 +19,14 @@ export const props = {
     type: Array,
     default: () => [],
   },
-};
+}
 
 // 输入框插槽
 export const btnSlots = (fun: () => void) => {
   return {
     append: () => <el-button icon={Search} onClick={fun}></el-button>,
-  };
-};
+  }
+}
 
 // 弹窗插槽
 export const slots = (state: State, header: PowerfulTableHeader) => {
@@ -40,9 +37,9 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
           class="el-popover-center"
           style={state.value.length ? { color: 'var(--el-color-primary)' } : {}}
           onClick={(e: Event) => {
-            if (!header.isFilterColumn) return;
-            e.stopPropagation();
-            state.visible = !state.visible;
+            if (!header.isFilterColumn) return
+            e.stopPropagation()
+            state.visible = !state.visible
           }}
         >
           {header.label}
@@ -54,7 +51,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
             <ArrowUp />
           </el-icon>
         </span>
-      );
+      )
     },
-  };
-};
+  }
+}

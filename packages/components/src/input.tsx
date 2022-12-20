@@ -1,6 +1,12 @@
-import { defineComponent, PropType, inject, App } from "vue";
-import type { PowerfulTableHeaderProps, InputDataType, SFCWithInstall } from '../../../typings'
+import { defineComponent, inject } from 'vue'
+import type { App, PropType } from 'vue'
+import type {
+  InputDataType,
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+} from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 
 const Input = defineComponent({
   name: 'PTInput',
@@ -8,26 +14,36 @@ const Input = defineComponent({
     ...powerfulTableComponentProp,
     prop: {
       type: Object as PropType<PowerfulTableHeaderProps<any, InputDataType>>,
-      default: () => {}
-    }
+      default: () => ({}),
+    },
   },
   emits: ['returnEmit'],
   setup(props, { emit }) {
-    const justifyFun = inject('justifyFun') as Function
-    const size = inject('size') as string
+    const justifyFun = inject(JustifyFunSymbol)!
+    const size = inject(SizeSymbol)
 
     return () => (
       <>
-        <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: justifyFun(props.aligning)}}>
-          <span style={{marginRight: props.prop.text ? '10px' : '0px'}}>
-            { props.prop.text || "" }
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            justifyContent: justifyFun(props.aligning),
+          }}
+        >
+          <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
+            {props.prop.text || ''}
           </span>
           <el-input
-            v-slots={
-              {
-                [props.prop.data?.slot as string]: () => <span style={{padding: '0 10px'}}> {props.prop.data?.symbol} </span>
-              }
-            }
+            v-slots={{
+              [props.prop.data?.slot as string]: () => (
+                <span style={{ padding: '0 10px' }}>
+                  {' '}
+                  {props.prop.data?.symbol}{' '}
+                </span>
+              ),
+            }}
             type={props.prop.data?.type || 'text'}
             rows={props.prop.data?.rows || 3}
             style={props.prop.data?.style || {}}
@@ -37,16 +53,15 @@ const Input = defineComponent({
             disabled={props.prop.data?.disabled || false}
             onClick={(e: Event) => e.stopPropagation()}
             {...props.prop.data?.componentProp}
-          >
-          </el-input>
+          ></el-input>
         </div>
       </>
     )
-  }
+  },
 })
 
 Input.install = (app: App) => {
-  app.component(Input.name, Input);
+  app.component(Input.name, Input)
 }
 export const PTInput = Input as SFCWithInstall<typeof Input>
 export default Input

@@ -1,11 +1,13 @@
-import type { App } from 'vue'
 import BtnPlus from './src/btn-plus.vue'
+import type { App } from 'vue'
 
 // 定义 install 方法， App 作为参数
 BtnPlus.install = (app: App): void => {
-    app.component(BtnPlus.name, BtnPlus)
+  app.component(BtnPlus.name, BtnPlus)
 }
 
-export const PTBtnPlus = BtnPlus as import('../../typings').SFCWithInstall<typeof BtnPlus>
+export const PTBtnPlus = BtnPlus as import('../../typings').SFCWithInstall<
+  typeof BtnPlus
+>
 
 export default PTBtnPlus

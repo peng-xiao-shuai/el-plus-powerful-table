@@ -98,7 +98,7 @@
             <template v-else>
               <PTFSelect
                 v-if="
-                  getPropObj(item).filter ||
+                  getPropObj(item).filters ||
                   getPropObj(item).filtersType === 'select' ||
                   getPropObj(item).type === 'switch' ||
                   getPropObj(item).type === 'tag'
@@ -163,7 +163,8 @@
               <!-- 筛选 -->
               <PTFilter
                 v-else-if="
-                  prop.filter && (prop.type == 'text' || prop.type == undefined)
+                  prop.filters &&
+                  (prop.type == 'text' || prop.type == undefined)
                 "
                 v-bind="bindAttr(prop, scope, item)"
               />
@@ -186,7 +187,7 @@
                   ].includes(prop.type)
                 "
                 v-bind="bindAttr(prop, scope, item)"
-                @returnEmit="returnEmit"
+                @return-emit="returnEmit"
               />
               <!-- 正常 -->
               <PTText
@@ -268,35 +269,36 @@ import {
   toRefs,
   watch,
   watchEffect,
-} from 'vue';
-import { deepClone } from '../../index';
+} from 'vue'
+import { deepClone } from '../../index'
+import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
-import { useFilters } from '../../filter/useFilters';
+import { useFilters } from '../../filter/useFilters'
 import {
   powerfulTableEmits,
   powerfulTableProps,
   useFunction,
   usePowerfulTableStates,
-} from './powerful-table-data';
+} from './powerful-table-data'
 import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
-} from '../../../typings';
+} from '../../../typings'
 
 // 获取 布局方向
-const justifyFun = (val: string) => {
-  const bol = ['center', 'left', 'right'].includes(val);
+const justifyFun = (val: string): string => {
+  const bol = ['center', 'left', 'right'].includes(val)
   return bol
-    ? { center: 'center', left: 'flex-start', right: 'flex-end' }[val]
-    : 'center';
-};
+    ? { center: 'center', left: 'flex-start', right: 'flex-end' }[val]!
+    : 'center'
+}
 
 export default defineComponent({
   name: 'PowerfulTable',
   props: powerfulTableProps,
   emits: powerfulTableEmits,
   setup(props, { emit }) {
-    type Row = typeof props.list[number];
+    type Row = typeof props.list[number]
     /* ------ data数据 ------ */
     const {
       powerfulTableData,
@@ -304,22 +306,22 @@ export default defineComponent({
       configProvider,
       injectProps,
       stateData,
-    } = usePowerfulTableStates<Row>(props);
+    } = usePowerfulTableStates<Row>(props)
 
     /* ------ 注入数据 ------ */
     // 语言
-    provide('locale', props.locale || (injectProps && injectProps.locale));
+    provide('locale', props.locale || (injectProps && injectProps.locale))
     // 组件大小
-    provide('size', props.size || injectProps?.size || 'small');
+    provide(SizeSymbol, props.size || injectProps?.size || 'small')
     // 单元格内布局
-    provide('justifyFun', justifyFun);
+    provide(JustifyFunSymbol, justifyFun)
 
     // 局部过滤hook
     const { headerFilterChange, getPropObj } = useFilters<Row>(
       stateData,
       props,
       multipleTable
-    );
+    )
 
     /* ------  操作方法  ------ */
     const {
@@ -330,38 +332,38 @@ export default defineComponent({
       batchOperate,
       get,
       matchComponents,
-    } = useFunction<Row>(emit, powerfulTableData);
+    } = useFunction<Row>(emit, powerfulTableData)
 
     watchEffect(() => {
-      Object.assign(powerfulTableData.operate, props.operateData);
+      Object.assign(powerfulTableData.operate, props.operateData)
 
       // list数据有的话 关闭加载中...
       // 更具当前list 数据 添加develop
       powerfulTableData.develop = Array.from<boolean>({
         length: stateData.tableLists.length,
-      }).fill(false);
-      powerfulTableData.listLoading = false;
-    });
+      }).fill(false)
+      powerfulTableData.listLoading = false
+    })
 
     watch(
       () => stateData.tableLists,
       (val) => {
         if (val.length && powerfulTableData.currentSelect.length == 0) {
           nextTick(() => {
-            getSelect();
-          });
+            getSelect()
+          })
         }
       },
       {
         immediate: true,
         deep: true,
       }
-    );
+    )
 
     // 过滤被隐藏的列
-    const headerLists = computed(() => {
-      return props.header.filter((column) => !column.isShowColumn);
-    });
+    const headerLists = computed(() =>
+      props.header.filter((column) => !column.isShowColumn)
+    )
 
     /* --- 按钮组件参数及方法begin --- */
     // 为表格数据重新赋值
@@ -373,43 +375,43 @@ export default defineComponent({
           (stateData.tableLists.length &&
             stateData.tableLists.length == oldList?.length)
         ) {
-          stateData.tableLists = newList;
+          stateData.tableLists = newList
         }
       },
       { immediate: true, deep: true }
-    );
+    )
     watch(
       () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
       ([newPage, newSize]) => {
-        get();
+        get()
       }
-    );
+    )
 
     // 重新渲染表格
     const anewRender = () => {
-      nextTick(() => {
-        console.log(111);
-        multipleTable.value?.doLayout();
-      });
-    };
+      console.log(111)
+      // nextTick(() => {
+      //   multipleTable.value?.doLayout();
+      // });
+    }
 
     /* ------ 获取选中 ------ */
     const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
-      if (!props.isSelect) return;
+      if (!props.isSelect) return
 
       // 1.获取当前页
       // 2.总选中减去当前页
       // 3.得到其他页
 
       // 获取当前页选中
-      const current: Row[] = [];
+      const current: Row[] = []
       // 获取 其他页选中
-      let other: Row[] = [];
+      let other: Row[] = []
 
       const selectCompare = [
         props.selectCompare ? props.selectCompare[0] : 'id',
         props.selectCompare ? props.selectCompare[1] : 'id',
-      ];
+      ]
 
       // 获取当前页
       if (arr.length != 0) {
@@ -417,42 +419,42 @@ export default defineComponent({
         // 获取当前页
         arr.forEach((item) => {
           const l = list.filter((each: typeof list[0]) => {
-            return item[selectCompare[0]] == each[selectCompare[1]];
-          });
+            return item[selectCompare[0]] == each[selectCompare[1]]
+          })
 
-          if (l.length > 0) current.push(l[0]);
-        });
+          if (l.length > 0) current.push(l[0])
+        })
 
         // 获取其他页
         if (current.length > 0) {
-          other = deepClone(arr);
+          other = deepClone(arr)
           for (const j in other) {
             current.forEach((item) => {
               if (item[selectCompare[1]] == other[j][selectCompare[0]]) {
-                other.splice(Number(j), 1);
+                other.splice(Number(j), 1)
               }
-            });
+            })
           }
         } else {
-          other = deepClone(arr);
+          other = deepClone(arr)
         }
 
-        powerfulTableData.otherSelect = other;
-        powerfulTableData.currentSelect = current;
+        powerfulTableData.otherSelect = other
+        powerfulTableData.currentSelect = current
         // console.log('当前页选中', current)
         // console.log('其他页选中', other);
 
         if (current.length != 0) {
           current.forEach((row) => {
-            multipleTable.value?.toggleRowSelection(row, true);
-          });
+            multipleTable.value?.toggleRowSelection(row, true)
+          })
         } else {
-          multipleTable.value?.clearSelection();
+          multipleTable.value?.clearSelection()
         }
       } else {
-        multipleTable.value?.clearSelection();
+        multipleTable.value?.clearSelection()
       }
-    };
+    }
 
     return {
       headerLists,
@@ -470,13 +472,18 @@ export default defineComponent({
         prop: PowerfulTableHeaderProps<Row, D>,
         scope: { $index: number; row: Row },
         item: PowerfulTableHeader<Row>
-      ) {
+      ): {
+        row: Row
+        index: number
+        prop: PowerfulTableHeaderProps<Row, D>
+        aligning: 'left' | 'center' | 'right'
+      } {
         return {
           row: scope.row,
           index: scope.$index,
           prop,
           aligning: item.property?.align || item.headerAlign || 'center',
-        };
+        }
       },
       anewRender,
       returnEmit,
@@ -485,9 +492,9 @@ export default defineComponent({
       handleSelectionChange,
       getSelect,
       matchComponents,
-    };
+    }
   },
-});
+})
 </script>
 
 <style src="./powerful-table.css"></style>

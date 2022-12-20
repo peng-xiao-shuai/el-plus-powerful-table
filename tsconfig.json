@@ -18,13 +18,21 @@
     "pretty": true,
     "skipLibCheck": true,
     "paths": {
-      "~/*": ["./packages/*"],
+      "~/*": [
+        "./packages/*"
+      ]
     },
     // "typeRoots" :typingspes"],
-    "types": ["vite/client", "element-plus/global", "./lib/es/global"],
+    "types": [
+      "vite/client",
+      "element-plus/global"
+    ],
     // 使用的JSX工厂函数
     //   "jsxFactory": "h",
-    "lib": ["dom", "esnext"]
+    "lib": [
+      "dom",
+      "esnext"
+    ]
   },
   "include": [
     "demo/**/*.vue",
@@ -36,6 +44,6 @@
   "exclude": [
     "node_modules/**",
     "typings/*.ts",
-    "env.d.ts",
+    "env.d.ts"
   ]
 }

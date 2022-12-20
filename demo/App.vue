@@ -3,27 +3,27 @@
     <!-- <PTButton></PTButton> -->
     <!-- <PTFDatePicker></PTFDatePicker> -->
     <PowerfulTable
-      ref='powerfulTable'
+      ref="powerfulTable"
       :list="list"
-      :isSelect="true"
-      :btnConfig="btnConfigs"
-      :selectData="selectData"
-      :selectCompare="selectCompare"
+      :is-select="true"
+      :btn-config="btnConfigs"
+      :select-data="selectData"
+      :select-compare="selectCompare"
       :header="headers"
-      :operateData="operateData"
+      :operate-data="operateData"
       :total="total"
-      :pageSizes="[2, 5, 7]"
-      :tree="{props: {hasChildren: 'hasChildren', children: 'cd'}}"
+      :page-sizes="[2, 5, 7]"
+      :tree="{ props: { hasChildren: 'hasChildren', children: 'cd' } }"
       :property="{
         'row-class-name': ({index}: any) => 'powerful-table-plus-row'
       }"
-      @batchOperate="batchOperate"
-      @switchChange="switchChange"
-      @btnClick="handlerUpdate"
-      @sizeChange="getList"
-      @btnChange="btnChange"
+      @batch-operate="batchOperate"
+      @switch-change="switchChange"
+      @btn-click="handlerUpdate"
+      @size-change="getList"
+      @btn-change="btnChange"
       @refresh="handleRefresh"
-      @rowClick="handleClick"
+      @row-click="handleClick"
     >
       <!-- <template #btn-left>
         <div>
@@ -48,7 +48,7 @@
 
       <template #A="{ row }">
         <div>
-          {{row.data?.getDate() + '日'}}
+          {{ row.data?.getDate() + '日' }}
         </div>
       </template>
     </PowerfulTable>
@@ -56,11 +56,11 @@
 </template>
 
 <script lang="ts">
-import { btnConfig, header, lists } from "./indexData"
+import { defineComponent, markRaw, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { reactive, ref, onMounted, defineComponent, markRaw } from "vue"
+import { Search } from '@element-plus/icons-vue'
+import { btnConfig, header, lists } from './indexData'
 import type { PowerfulTableOperateData } from '../typings'
-import { Search } from "@element-plus/icons-vue"
 // import { PTButton, PTBtnPlus } from '../lib/index.js';
 
 export default defineComponent({
@@ -68,39 +68,39 @@ export default defineComponent({
     // PTButton,
     // PTBtnPlus
   },
-  setup (props, context) {
-    let rowA = reactive({ value: {} })
-    let list = ref<any>([])
+  setup(props, context) {
+    const rowA = reactive({ value: {} })
+    const list = ref<any>([])
     // 所有页面选中数组
-    let selectData = reactive([{ a: 1 }, { a: 2 }, { a: 3 }])
-    let selectCompare = reactive(["a", "id"])
+    const selectData = ref([{ a: 1 }, { a: 2 }, { a: 3 }])
+    const selectCompare = reactive(['a', 'id'])
     // let listLoading= ref(true)
-    let isSelect = ref(true)
-    let headers = reactive(header)
-    let btnConfigs = reactive(btnConfig)
-    let total = ref(lists.length)
+    const isSelect = ref(true)
+    const headers = reactive(header)
+    const btnConfigs = reactive(btnConfig)
+    const total = ref(lists.length)
     const powerfulTable = ref(null)
-    let operateData = reactive<PowerfulTableOperateData>({
-      value: "",
+    const operateData = reactive<PowerfulTableOperateData>({
+      value: '',
       icon: markRaw(Search),
       operates: [
         {
-          label: "删除",
+          label: '删除',
           value: 0,
         },
       ],
     })
     const listQuery = reactive({
       pageNum: 1,
-      pageSize: 2
+      pageSize: 2,
     })
 
-    function handlerSort (e: any) {
-      console.log("远程排序", e)
+    function handlerSort(e: any) {
+      console.log('远程排序', e)
     }
-    function getList (data?: any, selectData?: any) {
+    function getList(data?: any, select?: any) {
       // 切换页面赋值
-      selectData = selectData
+      selectData.value = select
       Object.assign(listQuery, data)
 
       if (data) {
@@ -110,45 +110,49 @@ export default defineComponent({
       // listLoading.value = true
 
       setTimeout(() => {
-        list.value = lists.filter((item, index) => index >= (listQuery.pageNum - 1) * listQuery.pageSize && index < listQuery.pageNum * listQuery.pageSize)
+        list.value = lists.filter(
+          (item, index) =>
+            index >= (listQuery.pageNum - 1) * listQuery.pageSize &&
+            index < listQuery.pageNum * listQuery.pageSize
+        )
       })
     }
 
-    function batchOperate (e: any) {
+    function batchOperate(e: any) {
       ElMessage.success('批量操作，参数详情，查看控制台')
-      console.log("批量操作", e, e.ids)
+      console.log('批量操作', e, e.ids)
     }
 
-    function switchChange (e: any) {
+    function switchChange(e: any) {
       ElMessage.success('开关修改操作，参数详情，查看控制台')
-      console.log("修改", e)
+      console.log('修改', e)
     }
     // 修改
-    function handlerUpdate (e: any) {
+    function handlerUpdate(e: any) {
       ElMessage.success('按钮修改操作，参数详情，查看控制台')
-      console.log("修改", e)
+      console.log('修改', e)
     }
-    function handlerRemove (e: any) {
+    function handlerRemove(e: any) {
       ElMessage.success('按钮删除操作，参数详情，查看控制台')
-      console.log("删除", e, e.index)
+      console.log('删除', e, e.index)
     }
-    function handleClick (e: any) {
+    function handleClick(e: any) {
       ElMessage.success('行点击事件，参数详情，查看控制台')
-      console.log("行点击", e, e.index)
+      console.log('行点击', e, e.index)
     }
     // 左侧按钮回调
-    function btnChange (e: any) {
+    function btnChange(e: any) {
       if (e.effect === 'add') {
         ElMessage.success('新增操作，参数详情，查看控制台')
-        console.log("新增操作", e.effect, e.list)
+        console.log('新增操作', e.effect, e.list)
       } else if (e.effect === 'edit') {
         ElMessage.success('修改操作，参数详情，查看控制台')
-        console.log("修改操作", e.effect, e.list)
+        console.log('修改操作', e.effect, e.list)
       } else if (e.effect === 'remove') {
         ElMessage.success('批量删除操作，参数详情，查看控制台')
-        console.log("批量删除操作", e.effect, e.list)
+        console.log('批量删除操作', e.effect, e.list)
       }
-    };
+    }
 
     const handleRefresh = () => {
       ElMessage.success('刷新')
@@ -180,7 +184,7 @@ export default defineComponent({
       handlerRemove,
       btnChange,
       handleRefresh,
-      handleClick
+      handleClick,
     }
   },
 })

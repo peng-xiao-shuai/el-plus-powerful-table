@@ -1,38 +1,38 @@
-import { getCurrentInstance, inject, reactive, ref } from 'vue';
-import { PowerfulTableSymbol, deepClone } from '../../index';
-import type { PropType } from 'vue';
+import { getCurrentInstance, inject, reactive, ref } from 'vue'
+import { deepClone } from '../../index'
+import { PowerfulTableSymbol } from '../../keys'
+import type { PropType } from 'vue'
 import type {
   BtnConfig,
   EmitType,
-  InjectProps,
   PowerfulTableHeader,
   PowerfulTableOperateData,
   PowerfulTableTree,
   Size,
-} from '../../../typings';
+} from '../../../typings'
 
-type DefaultRow = any;
+type DefaultRow = any
 type TranslatePair = {
-  [key: string]: string | string[] | TranslatePair;
-};
+  [key: string]: string | string[] | TranslatePair
+}
 
 interface PowerFulTableProps<L> {
-  btnConfig?: BtnConfig.Config;
-  locale?: { name: string; el: TranslatePair };
-  size?: Size;
-  list: L[];
-  selectData?: L[];
-  isSelect?: boolean;
-  selectable?: (row: L, index: number) => boolean;
-  selectCompare?: string[];
-  header: PowerfulTableHeader[];
-  layout?: string;
-  pageSizes?: number[];
-  operateData?: PowerfulTableOperateData;
-  isPagination?: boolean;
-  total?: number;
-  tree?: PowerfulTableTree;
-  property?: object;
+  btnConfig?: BtnConfig.Config
+  locale?: { name: string; el: TranslatePair }
+  size?: Size
+  list: L[]
+  selectData?: L[]
+  isSelect?: boolean
+  selectable?: (row: L, index: number) => boolean
+  selectCompare?: string[]
+  header: PowerfulTableHeader[]
+  layout?: string
+  pageSizes?: number[]
+  operateData?: PowerfulTableOperateData
+  isPagination?: boolean
+  total?: number
+  tree?: PowerfulTableTree
+  property?: object
 }
 
 // 主组件props
@@ -58,7 +58,7 @@ export const powerfulTableProps = {
   selectData: {
     type: Array as PropType<PowerFulTableProps<DefaultRow>['list']>,
     default: () => {
-      return () => [];
+      return () => []
     },
   },
   isSelect: {
@@ -110,7 +110,7 @@ export const powerfulTableProps = {
     type: Object,
     default: () => ({}),
   },
-};
+}
 // 主组件emits
 export const powerfulTableEmits = [
   'btnChange',
@@ -121,43 +121,45 @@ export const powerfulTableEmits = [
   'btnClick',
   'row-click',
   'refresh',
-];
+]
 
 export const powerfulTableComponentProp = {
   row: {
     type: Object as PropType<DefaultRow>,
     default: () => [{}],
   },
-  index: Number,
+  index: {
+    type: Number as PropType<number>,
+  },
   aligning: {
     type: String as PropType<'left' | 'center' | 'right'>,
     default: 'center',
   },
-};
+}
 
 interface PowerfulTableData<L = DefaultRow> {
-  listLoading: boolean;
-  develop: boolean[];
-  currentPage: number;
-  pageSize: number;
-  currentSelect: PowerFulTableProps<L>['list'];
-  otherSelect: PowerFulTableProps<L>['list'];
-  operate: PowerfulTableOperateData;
+  listLoading: boolean
+  develop: boolean[]
+  currentPage: number
+  pageSize: number
+  currentSelect: PowerFulTableProps<L>['list']
+  otherSelect: PowerFulTableProps<L>['list']
+  operate: PowerfulTableOperateData
 }
 
 interface StateData<L = DefaultRow> {
-  tableLists: PowerFulTableProps<L>['list'];
-  isPC: boolean;
-  isTable: boolean;
+  tableLists: PowerFulTableProps<L>['list']
+  isPC: boolean
+  isTable: boolean
 }
 
 export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
   // 全局此组件注入的数据
-  const injectProps = inject<InjectProps>(PowerfulTableSymbol, {});
+  const injectProps = inject(PowerfulTableSymbol, {})
 
   /* ----- 组件实例 ----- */
-  const multipleTable = ref<any>(null);
-  const configProvider = ref<{ locale: PowerFulTableProps<L>['locale'] }>();
+  const multipleTable = ref<any>(null)
+  const configProvider = ref<{ locale: PowerFulTableProps<L>['locale'] }>()
 
   /* ------  表格数据  ------ */
   const powerfulTableData: PowerfulTableData<L> = reactive({
@@ -176,14 +178,14 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
       style: undefined,
       operates: [],
     },
-  });
+  })
 
   // 组件参数
   const stateData: StateData<L> = reactive({
     tableLists: [],
     isPC: true,
     isTable: true,
-  });
+  })
 
   return {
     multipleTable,
@@ -191,14 +193,14 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
     powerfulTableData,
     injectProps,
     stateData,
-  };
-};
+  }
+}
 
 export const useFunction = <L>(
   emit: <T>(s: string, obj: T) => any,
   powerfulTableData: PowerfulTableData<L>
 ) => {
-  const { proxy } = getCurrentInstance() as any;
+  const { proxy } = getCurrentInstance() as any
 
   /**
    * 排序方法
@@ -207,10 +209,10 @@ export const useFunction = <L>(
   const sortChange = (obj: { column?: any; prop: string; order: any }) => {
     if (Object.keys(obj.column || {}).length) {
       if (obj.column.sortable == 'custom') {
-        emit('sortCustom', obj);
+        emit('sortCustom', obj)
       }
     }
-  };
+  }
 
   /**
    * 批量按钮
@@ -227,8 +229,8 @@ export const useFunction = <L>(
         message: '请选择操作类型',
         type: 'warning',
         duration: 1000,
-      });
-      return;
+      })
+      return
     }
 
     if (powerfulTableData.currentSelect.length == 0) {
@@ -236,8 +238,8 @@ export const useFunction = <L>(
         message: '请选择要操作的数据',
         type: 'warning',
         duration: 1000,
-      });
-      return;
+      })
+      return
     }
     proxy
       .$confirm(
@@ -255,22 +257,22 @@ export const useFunction = <L>(
           .map((item) => {
             return (item as { [s: string]: string })[
               powerfulTableData.operate.prop || 'id'
-            ];
-          });
+            ]
+          })
         const items = powerfulTableData.otherSelect
           .concat(powerfulTableData.currentSelect)
-          .map((item) => item);
+          .map((item) => item)
 
         emit('batchOperate', {
           ids,
           item: powerfulTableData.operate.operates[0],
           items,
-        });
+        })
       })
       .catch(() => {
         // console.log('取消批量操作')
-      });
-  };
+      })
+  }
 
   /**
    * 当前组件的子组件回调 并在此组件暴露出去
@@ -280,23 +282,23 @@ export const useFunction = <L>(
   const returnEmit = <T>(emitName: EmitType, objVal: T) => {
     // console.log('触发回调', emitName, objVal);
 
-    emit(emitName, objVal);
-  };
+    emit(emitName, objVal)
+  }
 
   /**
    * 行点击操作
    * @param arg
    */
   const rowClick = (...arg: any) => {
-    returnEmit<{ row: L; column: any; event: Event }>('row-click', { ...arg });
-  };
+    returnEmit<{ row: L; column: any; event: Event }>('row-click', { ...arg })
+  }
 
   /* ------ 回调到组件上 ------ */
   const get = () => {
     const params = {
       pageNum: powerfulTableData.currentPage,
       pageSize: powerfulTableData.pageSize,
-    };
+    }
 
     try {
       // 如果父组件是getList方法 无需自定义事件
@@ -305,16 +307,16 @@ export const useFunction = <L>(
         select: powerfulTableData.otherSelect.concat(
           powerfulTableData.currentSelect
         ),
-      });
+      })
     } catch {
       emit('sizeChange', {
         params,
         select: powerfulTableData.otherSelect.concat(
           powerfulTableData.currentSelect
         ),
-      });
+      })
     }
-  };
+  }
 
   /**
    * 添加选中
@@ -322,8 +324,8 @@ export const useFunction = <L>(
    */
   const handleSelectionChange = (e: L[]) => {
     // console.log('选中', e)
-    powerfulTableData.currentSelect = deepClone(e);
-  };
+    powerfulTableData.currentSelect = deepClone(e)
+  }
 
   /**
    * 匹配组件
@@ -342,8 +344,8 @@ export const useFunction = <L>(
       rate: 'PTRate',
       href: 'PTLink',
       video: 'PTVideo',
-    }[type];
-  };
+    }[type]
+  }
 
   return {
     handleSelectionChange,
@@ -353,7 +355,7 @@ export const useFunction = <L>(
     batchOperate,
     get,
     matchComponents,
-  };
-};
+  }
+}
 
-export type { StateData, PowerfulTableData, PowerFulTableProps, TranslatePair };
+export type { StateData, PowerfulTableData, PowerFulTableProps, TranslatePair }

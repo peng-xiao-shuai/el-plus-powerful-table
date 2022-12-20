@@ -1,13 +1,13 @@
-import { createApp } from "vue"
-import App from "./App.vue"
+import { createApp } from 'vue'
 
-import ElementPlus from "element-plus"
-// import PowerfulTable from "../lib/es/packages/index"
-import PowerfulTable from "~/index"
-// import powerfulTable from 'el-plus-powerful-table-ts'
+import ElementPlus from 'element-plus/es'
+// import PowerfulTable from "../lib/es/packages/index.mjs"
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import en from 'element-plus/lib/locale/lang/en'
-import "element-plus/theme-chalk/src/index.scss"
+import App from './App.vue'
+import PowerfulTable from '~/index'
+import 'element-plus/theme-chalk/src/index.scss'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 // import "../lib/es/style.css"
 
 const app = createApp(App)
@@ -16,7 +16,6 @@ app.use(ElementPlus, {
 })
 app.use(PowerfulTable, {
   size: 'default',
-  locale: en
+  locale: en,
 })
-app.mount("#app")
-console.log(app);
+app.mount('#app')
