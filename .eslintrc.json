@@ -1,4 +1,5 @@
 {
   "root": true,
-  "extends": ["@element-plus/eslint-config"]
+  "extends": ["@element-plus/eslint-config"],
+  "allow": ["warn", "error"]
 }
