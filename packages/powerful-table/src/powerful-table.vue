@@ -175,7 +175,7 @@
                   prop.type &&
                   [
                     'image',
-                    // 'btn',
+                    'btn',
                     'switch',
                     'input',
                     'textarea',
