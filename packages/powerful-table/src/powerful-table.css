@@ -48,20 +48,28 @@
 
 /* 表头点击图标 */
 .pt .powerful-table .el-icon.arrow-up {
-  animation: ArrowUp .2s forwards;
+  animation: ArrowUp 0.2s forwards;
 }
 .pt .powerful-table .el-icon.arrow-down {
-  animation: ArrowDown .2s forwards;
+  animation: ArrowDown 0.2s forwards;
 }
 
 @keyframes ArrowUp {
-  from {transform: rotate(0);}
-  to {transform: rotate(180deg);}
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(180deg);
+  }
 }
 
 @keyframes ArrowDown {
-  from {transform: rotate(180deg);}
-  to {transform: rotate(0);}
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(0);
+  }
 }
 
 /* 操作按钮 */
@@ -93,6 +101,8 @@
 .pt .develop span {
   /* position: absolute; */
   bottom: 0;
+  left: 0;
+  width: 100%;
   font-size: 12px;
   cursor: pointer;
 }

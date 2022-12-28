@@ -6,7 +6,6 @@ export interface PowerfulTableData<L> {
   pageSizes: number[]
   total: number
   size?: Size
-  locale?: string
   selectData?: any[]
   isSelect?: boolean
   selectable?: (row: any, index: number) => boolean
@@ -202,9 +201,15 @@ export type TagDataType = {
   componentProp?: object
 }
 
+export interface LangPackages {
+  [s: string]: {
+    [s: string]: string | ((...arg: any) => string)
+  }
+}
 // 组件注入数据
 export type InjectProps = {
   size?: Size
+  locale?: LangPackages
   btnSlot?: 'left' | 'right' | 'none' // 控制所有的组件 显示左侧或右侧操作按钮
 }
 

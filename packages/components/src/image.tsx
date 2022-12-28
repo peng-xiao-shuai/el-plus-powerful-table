@@ -7,6 +7,7 @@ import type {
 } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
+import { LangKey, t } from '~/locale/lang'
 
 const Image = defineComponent({
   name: 'PTImage',
@@ -56,7 +57,7 @@ const Image = defineComponent({
               {props.prop.reserve ? (
                 <div v-html={props.prop.reserve}></div>
               ) : (
-                <b>暂无数据</b>
+                <b>{t(LangKey.NoData)}</b>
               )}{' '}
             </div>
           )}

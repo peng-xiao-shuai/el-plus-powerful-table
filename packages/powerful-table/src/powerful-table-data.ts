@@ -10,6 +10,7 @@ import type {
   PowerfulTableTree,
   Size,
 } from '../../../typings'
+import { LangKey, t } from '~/locale/lang'
 
 type DefaultRow = any
 type TranslatePair = {
@@ -226,7 +227,7 @@ export const useFunction = <L>(
       powerfulTableData.operate !== 0
     ) {
       proxy.$message({
-        message: '请选择操作类型',
+        message: t(LangKey.SelectOperateType),
         type: 'warning',
         duration: 1000,
       })
@@ -235,7 +236,7 @@ export const useFunction = <L>(
 
     if (powerfulTableData.currentSelect.length == 0) {
       proxy.$message({
-        message: '请选择要操作的数据',
+        message: t(LangKey.SelectOperateData),
         type: 'warning',
         duration: 1000,
       })
@@ -243,11 +244,13 @@ export const useFunction = <L>(
     }
     proxy
       .$confirm(
-        `是否要进行批量${powerfulTableData.operate.operates[0].label}操作?`,
-        '提示',
+        t<(s: string) => string>(LangKey.BatchOperate)(
+          powerfulTableData.operate.operates[0].label
+        ),
+        t(LangKey.Hint),
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: t(LangKey.Confirm),
+          cancelButtonText: t(LangKey.Cancel),
           type: 'warning',
         }
       )

@@ -8,6 +8,7 @@ import type {
 } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
+import { LangKey, t } from '~/locale/lang'
 
 const Text = defineComponent({
   name: 'PTText',
@@ -73,7 +74,9 @@ const Text = defineComponent({
                   : 'static',
               }}
             >
-              {develop.value[props.index || 0] ? '收起' : '展开阅读全文'}
+              {develop.value[props.index || 0]
+                ? t(LangKey.PackUp)
+                : t(LangKey.ReadFullText)}
               <el-icon>
                 {develop.value[props.index || 0] ? <ArrowUp /> : <ArrowDown />}
               </el-icon>

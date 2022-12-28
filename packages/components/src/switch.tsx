@@ -7,6 +7,7 @@ import type {
 } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
+import { LangKey, t } from '~/locale/lang'
 
 const Switch = defineComponent({
   name: 'PTSwitch',
@@ -46,11 +47,11 @@ const Switch = defineComponent({
           .$confirm(
             props.prop.data?.confirmTip
               ? props.prop.data?.confirmTip
-              : '是否要进行修改操作, 是否继续?',
-            '提示',
+              : t<(s: any) => string>(LangKey.OperateHint)(t(LangKey.Update)),
+            t(LangKey.Hint),
             {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              confirmButtonText: t(LangKey.Confirm),
+              cancelButtonText: t(LangKey.Cancel),
               type: 'warning',
             }
           )

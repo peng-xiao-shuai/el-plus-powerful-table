@@ -16,6 +16,11 @@
   - `types` 类型定义文件更改
   - `wip` 开发中
 
+  ## 语言
+  对于语言方面组件是默认使用 `英语` 因为 `element-plus` 默认是使用英语，不引用中文包的主要原因是避免增大体积。
+  组件内部语言跟随 `element-plus`。 部分 提示文字 语言，组件内部也支持 `中、英` 文，如果你需要支持更多语言或者更改组件内部
+  的语言，可以在 `use(PowerfulTable, { local: 您的语言变量 })` 替换。也可以参考我们提供的 `demo` 实现。
+
   ## 2.1.0 202201023
 
 - 使用`vite`进行构建
@@ -25,6 +30,8 @@
 - 修改 `selectable` 默认不允许勾选问题
 - `header` 表格头部数据参数中 `filters` 更改为 `isFilterColumn`. `hidden` 更改为 `isShowColumn`
 - `props` 单元格数据 `filter` 更改为 `filters`
+- 删除 组件 `props` 中的 `local`
+- 修改 组件 `InjectProps` 类型中 `local` 的类型。注入的 `local` 参数现在主要是用于 替换或者扩展组件内部提示文字
   ## 2.0.7 20220328
 - **新增 props `property`**
 - - [**ElTable 属性**](https://element-plus.gitee.io/zh-CN/component/table.html#table-attributes)
@@ -203,7 +210,7 @@ app.mount("#app");
 
 | 参数    | 说明                                                                                        | 类型                | 可选值                    | 默认值 |
 | ------- | ------------------------------------------------------------------------------------------- | ------------------- | ------------------------- | ------ |
-| locale  | 组件语言                                                                                    | object&lt;Language> | -                         | zhCn   |
+| locale<font color='red'>已删除</font>  | 组件语言                                                                                    | object&lt;Language> | -                         | zhCn   |
 | size    | 组件大小                                                                                    | string              | medium / small / mini     | small  |
 | btnSlot | 是否启用顶部按钮插槽 `all` => 全部显示；`left` => 只显示左侧按钮；`right` => 只显示右侧按钮 | array               | 'left' / 'right' / 'none' | -      |
 
@@ -213,7 +220,7 @@ app.mount("#app");
 
 | 参数          | 说明                                                            | 类型                 | 可选值                                                                        | 默认值                          |
 | ------------- | --------------------------------------------------------------- | -------------------- | ----------------------------------------------------------------------------- | ------------------------------- |
-| locale        | 组件语言                                                        | object&lt;Language>  | -                                                                             | zhCn                            |
+| locale<font color='red'>已删除</font>| 组件语言                | object&lt;Language>  | -                                                                             | zhCn                            |
 | size          | 组件大小                                                        | string               | medium / small / mini                                                         | small                           |
 | list          | 当前数据                                                        | array                | -                                                                             | -                               |
 | header        | 表格头部数据                                                    | array                | -                                                                             | -                               |

@@ -71,7 +71,12 @@
         <!-- 下拉操作列 -->
         <el-dropdown ref="dropdown" trigger="click" :hide-on-click="false">
           <div>
-            <el-tooltip class="each" effect="dark" content="列" placement="top">
+            <el-tooltip
+              class="each"
+              effect="dark"
+              :content="t(LangKey.Column)"
+              placement="top"
+            >
               <el-button
                 :size="size || 'small'"
                 type="info"
@@ -79,7 +84,6 @@
                 @click="
                   batchOperate('right', {
                     effect: 'columns',
-                    tip: '列',
                     type: 'info',
                     icon: 'el-icon-s-grid',
                   })
@@ -91,9 +95,9 @@
             <el-dropdown-menu>
               <div class="dropdown-table">
                 <div class="dropdown-table-row dropdown-table-header">
-                  <div>列名</div>
-                  <div class="checkbox">隐藏</div>
-                  <div class="checkbox">筛选</div>
+                  <div>{{ t(LangKey.ColumnName) }}</div>
+                  <div class="checkbox">{{ t(LangKey.Hidden) }}</div>
+                  <div class="checkbox">{{ t(LangKey.Filter) }}</div>
                 </div>
                 <el-scrollbar style="height: 300px">
                   <div
@@ -157,6 +161,7 @@ import type {
   ThemeType,
 } from '../../../typings'
 import type { Component, PropType } from 'vue'
+import { LangKey, t } from '~/locale/lang'
 
 const props = defineProps({
   // 按钮的配置数据
@@ -203,7 +208,7 @@ const state = reactive<State>({
   functionBtnList: [
     {
       effect: 'refresh',
-      tip: '刷新',
+      tip: t(LangKey.Refresh),
       type: 'info',
       icon: Refresh,
     },
@@ -236,16 +241,18 @@ const btnDisabled = (operateType?: 'none' | 'single' | 'batch'): boolean => {
 const functionBtnChange = () => {
   proxy.$parent.anewRender()
 }
-const batchOperate = (type: string, item: unknown) => {
+const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
   if (type === 'left') {
-    const btnItem = item as BtnConfig.BtnList
     // 是否显示提示
     if (btnItem.showTip) {
-      const content = btnItem.tipContent || `是否要进行${btnItem.text}操作?`
+      const content =
+        btnItem.tipContent ||
+        t<(s?: string) => string>(LangKey.OperateHint)(btnItem.text)
+
       proxy
-        .$confirm(content, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        .$confirm(content, t(LangKey.Hint), {
+          confirmButtonText: t(LangKey.Confirm),
+          cancelButtonText: t(LangKey.Cancel),
           type: 'warning',
         })
         .then(() => {
@@ -265,8 +272,7 @@ const batchOperate = (type: string, item: unknown) => {
 
     return false
   }
-  const functionBtnItem = item as typeof state.functionBtnList[0]
-  switch (functionBtnItem.effect) {
+  switch (btnItem.effect) {
     case 'refresh':
       proxy.$parent.returnEmit('refresh', {})
       break
@@ -321,7 +327,7 @@ export default {
       padding: 8px 0;
     }
     & > .checkbox {
-      width: 20%;
+      width: 30%;
     }
 
     &:last-of-type {

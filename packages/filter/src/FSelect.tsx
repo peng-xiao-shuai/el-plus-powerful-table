@@ -8,6 +8,7 @@ import type {
   SFCWithInstall,
 } from '../../../typings'
 import { SizeSymbol } from '~/keys'
+import { LangKey, t } from '~/locale/lang'
 
 const FSelect = defineComponent({
   name: 'PTFSelect',
@@ -26,7 +27,6 @@ const FSelect = defineComponent({
   emits: ['headerFilterChange'],
   setup(props, { emit }) {
     const size = inject(SizeSymbol)
-    const locale = (inject('locale') as { name: string })?.name
 
     const state = reactive<State<(string | number)[]>>({
       value: [],
@@ -65,11 +65,11 @@ const FSelect = defineComponent({
           const arr: PowerfulTableFilter[] = []
           arr.push(
             {
-              value: locale == 'zh-cn' ? '开启' : 'open',
+              value: t(LangKey.Open),
               key: newProps.data.activeValue || 1,
             },
             {
-              value: locale == 'zh-cn' ? '关闭' : 'close',
+              value: t(LangKey.Close),
               key: newProps.data.inactiveValue || 0,
             }
           )
@@ -91,7 +91,7 @@ const FSelect = defineComponent({
           multiple
           collapse-tags
           clearable
-          placeholder="请选择"
+          placeholder={t(LangKey.Select)}
           style="width: 100%"
           teleported={false}
           size={size || 'small'}

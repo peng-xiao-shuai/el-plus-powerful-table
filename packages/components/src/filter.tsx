@@ -7,6 +7,7 @@ import type {
   TextDataType,
 } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import { LangKey, t } from '~/locale/lang'
 
 export const filterFun = (
   s: string | number,
@@ -40,7 +41,7 @@ const Filter = defineComponent({
             {props.prop.reserve ? (
               <div v-html={props.prop.reserve}></div>
             ) : (
-              <b>暂无数据</b>
+              <b>{t(LangKey.NoData)}</b>
             )}
           </div>
         )}

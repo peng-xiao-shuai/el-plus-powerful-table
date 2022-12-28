@@ -3,6 +3,7 @@ import { btnSlots, props, slots } from './common'
 import type { App } from 'vue'
 import type { SFCWithInstall } from '../../../typings'
 import { SizeSymbol } from '~/keys'
+import { LangKey, t } from '~/locale/lang'
 
 const FInput = defineComponent({
   name: 'PTFInput',
@@ -37,7 +38,7 @@ const FInput = defineComponent({
         v-slots={slots(state, props.headerData)}
       >
         <el-input
-          placeholder="请输入内容"
+          placeholder={t(LangKey.InputContent)}
           v-model={state.value}
           size={size || 'small'}
           clearable

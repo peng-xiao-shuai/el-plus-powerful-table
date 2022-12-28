@@ -7,6 +7,7 @@ import type {
   SFCWithInstall,
 } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import { LangKey, t } from '~/locale/lang'
 
 const Button = defineComponent({
   name: 'PTButton',
@@ -48,11 +49,11 @@ const Button = defineComponent({
           .$confirm(
             item.confirmTip
               ? item.confirmTip
-              : `是否要进行${item.tip}操作, 是否继续?`,
-            '提示',
+              : t<(s: string) => string>(LangKey.OperateHint)(item.tip),
+            t(LangKey.Hint),
             {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              confirmButtonText: t(LangKey.Confirm),
+              cancelButtonText: t(LangKey.Cancel),
               type: 'warning',
             }
           )
@@ -147,7 +148,7 @@ const Button = defineComponent({
                   <div>
                     {(item.some((each) => each.isMore)
                       ? [item.find((each) => each.isMore)]
-                      : [{ tip: '更多' }]
+                      : [{ tip: t(LangKey.More) }]
                     ).map((each) => (
                       <>{btn(each)}</>
                     ))}

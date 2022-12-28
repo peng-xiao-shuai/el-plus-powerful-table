@@ -42,7 +42,7 @@
     >
       <template #empty>
         <slot name="empty">
-          <span>暂无数据</span>
+          <span>{{ t(LangKey.NoData) }}</span>
         </slot>
       </template>
 
@@ -153,7 +153,7 @@
             >
               <div v-if="prop.reserve" v-html="prop.reserve" />
               <div v-else>
-                <span>暂无数据</span>
+                <span>{{ t(LangKey.NoData) }}</span>
               </div>
             </div>
             <!-- 筛选 -->
@@ -224,7 +224,7 @@
           class="search-button"
           @click="batchOperate"
         >
-          确定
+          {{ t(LangKey.Confirm) }}
         </el-button>
       </div>
 
@@ -271,6 +271,7 @@ import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
 } from '../../../typings'
+import { LangKey, t } from '~/locale/lang'
 
 // 获取 布局方向
 const justifyFun = (val: string): string => {
@@ -376,10 +377,9 @@ export default defineComponent({
 
     // 重新渲染表格
     const anewRender = () => {
-      console.log(111)
-      // nextTick(() => {
-      //   multipleTable.value?.doLayout();
-      // });
+      nextTick(() => {
+        multipleTable.value?.doLayout()
+      })
     }
 
     /* ------ 获取选中 ------ */
@@ -453,6 +453,9 @@ export default defineComponent({
       multipleTable,
       configProvider,
       injectProps,
+
+      LangKey,
+      t,
 
       rowClick,
       bindAttr<D>(
