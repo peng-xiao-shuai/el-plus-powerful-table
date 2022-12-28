@@ -22,6 +22,7 @@ const FDatePicker = defineComponent({
     const state = reactive<
       import('./common').State & {
         defaultTime: Date[]
+        isAutoTrigger: boolean
       }
     >({
       value: '',
@@ -30,6 +31,7 @@ const FDatePicker = defineComponent({
         new Date(2000, 1, 1, 0, 0, 0),
         new Date(2000, 2, 1, 23, 59, 59),
       ],
+      isAutoTrigger: false,
     })
 
     const datePickerChange = (value: any) => {
@@ -48,14 +50,17 @@ const FDatePicker = defineComponent({
         style={state.value ? { color: 'var(--el-color-primary)' } : {}}
         onClick={async (e) => {
           e.stopPropagation()
-          state.visible = !state.visible
-          if (!state.visible) return
-          await nextTick()
-          datePickerRef.value.focus()
+          if (!state.isAutoTrigger) {
+            state.visible = !state.visible
+            if (!state.visible) return
+            await nextTick()
+            datePickerRef.value.focus()
+          }
+          state.isAutoTrigger = false
         }}
       >
         {props.headerData.label}
-        <el-icon class={state.visible ? 'arrow-up' : 'arrow-down'}>
+        <el-icon class={state.visible ? 'arrow-down' : 'arrow-up'}>
           <ArrowUp />
         </el-icon>
         <el-date-picker
@@ -69,7 +74,8 @@ const FDatePicker = defineComponent({
           size={size || 'small'}
           onChange={datePickerChange}
           onBlur={() => {
-            setTimeout(() => (state.visible = false), 100)
+            state.isAutoTrigger = true
+            state.visible = false
           }}
         ></el-date-picker>
       </span>

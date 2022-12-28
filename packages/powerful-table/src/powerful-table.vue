@@ -17,246 +17,233 @@
       </template>
     </PTBtnPlus>
 
-    <el-config-provider
-      ref="configProvider"
-      :locale="locale || (injectProps && injectProps.locale)"
+    <el-table
+      ref="multipleTable"
+      v-loading="listLoading"
+      class="powerful-table"
+      :data="tableLists"
+      v-bind="{
+        'element-loading-text': 'Loading',
+        border: true,
+        fit: true,
+        'row-key': 'id',
+        'highlight-current-row': true,
+        lazy: (tree && tree.lazy) || false,
+        load: tree && tree.load,
+        'tree-props': (tree && tree.props) || {
+          children: 'children',
+          hasChildren: 'hasChildren',
+        },
+        ...property,
+      }"
+      @selection-change="handleSelectionChange"
+      @sort-change="sortChange"
+      @row-click="rowClick"
     >
-      <el-table
-        ref="multipleTable"
-        v-loading="listLoading"
-        class="powerful-table"
-        :data="tableLists"
+      <template #empty>
+        <slot name="empty">
+          <span>暂无数据</span>
+        </slot>
+      </template>
+
+      <el-table-column
+        v-if="isSelect"
+        align="center"
+        type="selection"
+        width="45"
+        :selectable="selectable ? selectable : () => true"
+      />
+
+      <el-table-column
+        v-for="(item, index) in headerLists"
+        :key="item.label + index"
         v-bind="{
-          'element-loading-text': 'Loading',
-          border: true,
-          fit: true,
-          'row-key': 'id',
-          'highlight-current-row': true,
-          lazy: (tree && tree.lazy) || false,
-          load: tree && tree.load,
-          'tree-props': (tree && tree.props) || {
-            children: 'children',
-            hasChildren: 'hasChildren',
-          },
-          ...property,
+          fixed: item.fixed || false,
+          sortable: item.sortable || false,
+          'header-align': item.headerAlign || 'left',
+          'show-overflow-tooltip': item.overflowTooltip || false,
+          prop: Array.isArray(item.props)
+            ? item.props[0].prop
+            : item.props.prop,
+          label: item.label,
+          'min-width': item.minWidth || 140,
+          width: item.width || '',
+          align: item.headerAlign || 'center',
+          'class-name': item.headerAlign || 'center',
+          ...item.property,
         }"
-        @selection-change="handleSelectionChange"
-        @sort-change="sortChange"
-        @row-click="rowClick"
       >
-        <template #empty>
-          <slot name="empty">
-            <span>暂无数据</span>
-          </slot>
+        <template
+          v-if="
+            ((item.isShowOrFilterColumn == undefined ||
+              item.isShowOrFilterColumn === 'filter') &&
+              !item.headerSlotName) ||
+            item.headerSlotName
+          "
+          #header
+        >
+          <!-- 用户自定义表头 -->
+          <slot
+            v-if="item.headerSlotName"
+            :name="item.headerSlotName"
+            :item="item"
+            :index="index"
+          />
+
+          <!-- 内置自定义表头 -->
+          <template v-else>
+            <PTFSelect
+              v-if="
+                getPropObj(item).filters ||
+                getPropObj(item).filtersType === 'select' ||
+                getPropObj(item).type === 'switch' ||
+                getPropObj(item).type === 'tag'
+              "
+              :header-data="item"
+              :list="list"
+              :prop-data="getPropObj(item)"
+              @header-filter-change="headerFilterChange"
+            />
+            <PTFDatePicker
+              v-else-if="getPropObj(item).filtersType === 'date'"
+              :header-data="item"
+              :list="list"
+              @header-filter-change="headerFilterChange"
+            />
+            <PTFInput
+              v-else
+              :header-data="item"
+              :list="list"
+              @header-filter-change="headerFilterChange"
+            />
+          </template>
         </template>
 
-        <el-table-column
-          v-if="isSelect"
-          align="center"
-          type="selection"
-          width="45"
-          :selectable="selectable ? selectable : () => true"
-        />
-
-        <el-table-column
-          v-for="(item, index) in headerLists"
-          :key="item.label + index"
-          v-bind="{
-            fixed: item.fixed || false,
-            sortable: item.sortable || false,
-            'header-align': item.headerAlign || 'left',
-            'show-overflow-tooltip': item.overflowTooltip || false,
-            prop: Array.isArray(item.props)
-              ? item.props[0].prop
-              : item.props.prop,
-            label: item.label,
-            'min-width': item.minWidth || 140,
-            width: item.width || '',
-            align: item.headerAlign || 'center',
-            'class-name': item.headerAlign || 'center',
-            ...item.property,
-          }"
-        >
-          <template
-            v-if="
-              ((item.isShowOrFilterColumn == undefined ||
-                item.isShowOrFilterColumn === 'filter') &&
-                !item.headerSlotName) ||
-              item.headerSlotName
-            "
-            #header
+        <template #default="scope">
+          <div
+            v-for="(prop, idx) in Array.isArray(item.props)
+              ? item.props
+              : [item.props]"
+            :key="'props' + idx"
+            :style="{
+              display: index == 0 ? 'inline-block' : 'block',
+              ...prop.style,
+            }"
           >
-            <!-- 用户自定义表头 -->
+            <PTRenderJsx
+              v-if="typeof prop.render == 'function'"
+              :row="scope.row"
+              :index="scope.$index"
+              :prop="prop"
+              :aligning="item.property?.align || item.headerAlign"
+            />
+            <!-- 插槽 -->
             <slot
-              v-if="item.headerSlotName"
-              :name="item.headerSlotName"
-              :item="item"
-              :index="index"
+              v-else-if="prop.type == 'slot'"
+              :name="prop.slotName || 'default'"
+              :row="scope.row"
+              :index="scope.$index"
             />
-
-            <!-- 内置自定义表头 -->
-            <template v-else>
-              <PTFSelect
-                v-if="
-                  getPropObj(item).filters ||
-                  getPropObj(item).filtersType === 'select' ||
-                  getPropObj(item).type === 'switch' ||
-                  getPropObj(item).type === 'tag'
-                "
-                :header-data="item"
-                :list="list"
-                :prop-data="getPropObj(item)"
-                @header-filter-change="headerFilterChange"
-              />
-              <PTFDatePicker
-                v-else-if="getPropObj(item).filtersType === 'date'"
-                :header-data="item"
-                :list="list"
-                @header-filter-change="headerFilterChange"
-              />
-              <PTFInput
-                v-else
-                :header-data="item"
-                :list="list"
-                @header-filter-change="headerFilterChange"
-              />
-            </template>
-          </template>
-
-          <template #default="scope">
             <div
-              v-for="(prop, idx) in Array.isArray(item.props)
-                ? item.props
-                : [item.props]"
-              :key="'props' + idx"
-              :style="{
-                display: index == 0 ? 'inline-block' : 'block',
-                ...prop.style,
-              }"
+              v-else-if="
+                (scope.row[prop.prop] == undefined ||
+                  scope.row[prop.prop] == null) &&
+                prop.type != 'btn'
+              "
             >
-              <PTRenderJsx
-                v-if="typeof prop.render == 'function'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                :aligning="item.property?.align || item.headerAlign"
-              />
-              <!-- 插槽 -->
-              <slot
-                v-else-if="prop.type == 'slot'"
-                :name="prop.slotName || 'default'"
-                :row="scope.row"
-                :index="scope.$index"
-              />
-              <div
-                v-else-if="
-                  (scope.row[prop.prop] == undefined ||
-                    scope.row[prop.prop] == null) &&
-                  prop.type != 'btn'
-                "
-              >
-                <div v-if="prop.reserve" v-html="prop.reserve" />
-                <div v-else>
-                  <span>暂无数据</span>
-                </div>
+              <div v-if="prop.reserve" v-html="prop.reserve" />
+              <div v-else>
+                <span>暂无数据</span>
               </div>
-              <!-- 筛选 -->
-              <PTFilter
-                v-else-if="
-                  prop.filters &&
-                  (prop.type == 'text' || prop.type == undefined)
-                "
-                v-bind="bindAttr(prop, scope, item)"
-              />
-              <!-- 动态组件 -->
-              <component
-                :is="matchComponents(prop.type)"
-                v-else-if="
-                  prop.type &&
-                  [
-                    'image',
-                    'btn',
-                    'switch',
-                    'input',
-                    'textarea',
-                    'iconfont',
-                    'tag',
-                    'rate',
-                    'href',
-                    'video',
-                  ].includes(prop.type)
-                "
-                v-bind="bindAttr(prop, scope, item)"
-                @return-emit="returnEmit"
-              />
-              <!-- 正常 -->
-              <PTText
-                v-else-if="scope.row[prop.prop]"
-                v-bind="bindAttr(prop, scope, item)"
-                :list-length="tableLists.length"
-              />
             </div>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div
-        style="display: flex; justify-content: space-between; margin-top: 20px"
-      >
-        <!-- 批量操作 -->
-        <div
-          v-if="operate && isSelect && operate.operates"
-          class="pagination left"
-        >
-          <el-select
-            v-model="operate.value"
-            clearable
-            :placeholder="
-              configProvider &&
-              configProvider.locale &&
-              configProvider.locale.name == 'en'
-                ? 'lot operation'
-                : '批量操作'
-            "
-            :size="size || (injectProps && injectProps.size) || 'small'"
-          >
-            <el-option
-              v-for="(item, index) in operate.operates"
-              :key="'operate' + index"
-              :label="item.label"
-              :value="item.value"
+            <!-- 筛选 -->
+            <PTFilter
+              v-else-if="
+                prop.filters && (prop.type == 'text' || prop.type == undefined)
+              "
+              v-bind="bindAttr(prop, scope, item)"
             />
-          </el-select>
+            <!-- 动态组件 -->
+            <component
+              :is="matchComponents(prop.type)"
+              v-else-if="
+                prop.type &&
+                [
+                  'image',
+                  'btn',
+                  'switch',
+                  'input',
+                  'textarea',
+                  'iconfont',
+                  'tag',
+                  'rate',
+                  'href',
+                  'video',
+                ].includes(prop.type)
+              "
+              v-bind="bindAttr(prop, scope, item)"
+              @return-emit="returnEmit"
+            />
+            <!-- 正常 -->
+            <PTText
+              v-else-if="scope.row[prop.prop]"
+              v-bind="bindAttr(prop, scope, item)"
+              :list-length="tableLists.length"
+            />
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
 
-          <!-- <el-button
-            :style="operate.style || { marginLeft: '20px' }"
-            :icon="operate.icon || ''"
-            :type="operate.type || 'primary'"
-            :size="size || (injectProps && injectProps.size) || 'small'"
-            class="search-button"
-            @click="batchOperate"
-          >
-            确定
-          </el-button> -->
-        </div>
-
-        <!-- 分页操作 -->
-        <div v-if="isPagination" class="pagination">
-          <el-pagination
-            v-model:current-page="currentPage"
-            v-model:page-size="pageSize"
-            :small="
-              (size || (injectProps && injectProps.size) || 'small') === 'small'
-                ? true
-                : false
-            "
-            :page-sizes="pageSizes"
-            :layout="layout"
-            :total="total"
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 20px"
+    >
+      <!-- 批量操作 -->
+      <div
+        v-if="operate && isSelect && operate.operates"
+        class="pagination left"
+      >
+        <el-select
+          v-model="operate.value"
+          clearable
+          :size="size || (injectProps && injectProps.size) || 'small'"
+        >
+          <el-option
+            v-for="(item, index) in operate.operates"
+            :key="'operate' + index"
+            :label="item.label"
+            :value="item.value"
           />
-        </div>
+        </el-select>
+
+        <el-button
+          :style="operate.style || { marginLeft: '20px' }"
+          :icon="operate.icon || ''"
+          :type="operate.type || 'primary'"
+          :size="size || (injectProps && injectProps.size) || 'small'"
+          class="search-button"
+          @click="batchOperate"
+        >
+          确定
+        </el-button>
       </div>
-    </el-config-provider>
+
+      <!-- 分页操作 -->
+      <div v-if="isPagination" class="pagination">
+        <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :small="
+            (size || (injectProps && injectProps.size) || 'small') === 'small'
+              ? true
+              : false
+          "
+          :page-sizes="pageSizes"
+          :layout="layout"
+          :total="total"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -310,7 +297,7 @@ export default defineComponent({
 
     /* ------ 注入数据 ------ */
     // 语言
-    provide('locale', props.locale || (injectProps && injectProps.locale))
+    // provide('locale', props.locale || (injectProps && injectProps.locale))
     // 组件大小
     provide(SizeSymbol, props.size || injectProps?.size || 'small')
     // 单元格内布局
@@ -382,7 +369,7 @@ export default defineComponent({
     )
     watch(
       () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
-      ([newPage, newSize]) => {
+      () => {
         get()
       }
     )

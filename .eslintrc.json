@@ -1,5 +1,7 @@
 {
   "root": true,
   "extends": ["@element-plus/eslint-config"],
-  "allow": ["warn", "error"]
+  "rules": {
+    "no-console": "off"
+  }
 }

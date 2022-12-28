@@ -46,7 +46,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
           <el-icon
             style="margin-left: 5px"
             v-show={header.isFilterColumn}
-            class={state.visible ? 'arrow-up' : 'arrow-down'}
+            class={state.visible ? 'arrow-down' : 'arrow-up'}
           >
             <ArrowUp />
           </el-icon>

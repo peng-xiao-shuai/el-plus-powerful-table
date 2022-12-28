@@ -21,8 +21,6 @@ const Rate = defineComponent({
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
-    const locale = ((inject('locale') as { name: string }) || { name: 'en' })
-      .name
 
     return () => (
       <>
@@ -57,12 +55,7 @@ const Rate = defineComponent({
             }
             show-text={props.prop.data?.showText || false}
             show-score={props.prop.data?.showScore || false}
-            texts={
-              props.prop.data?.texts ||
-              (locale == 'zh-cn'
-                ? ['极差', '失望', '一般', '满意', '惊喜']
-                : props.prop.data?.texts)
-            }
+            texts={props.prop.data?.texts || undefined}
             {...props.prop.data?.componentProp}
           />
         </div>

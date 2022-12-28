@@ -206,10 +206,6 @@ export type TagDataType = {
 export type InjectProps = {
   size?: Size
   btnSlot?: 'left' | 'right' | 'none' // 控制所有的组件 显示左侧或右侧操作按钮
-  locale?: {
-    name: string
-    el: any
-  }
 }
 
 // btnPlus组件
