@@ -17,25 +17,7 @@ const banner = `/**
 
 export default defineConfig(({ mode }) => {
   const common = {
-    plugins: [
-      vue(),
-      dts({
-        entryRoot: '.',
-        noEmitOnError: true,
-        skipDiagnostics: false,
-        logDiagnostics: true,
-        outputDir: [
-          resolve(__dirname, './lib/es'),
-          resolve(__dirname, './lib/cjs'),
-        ],
-        //指定使用的tsconfig.json为我们整个项目根目录下掉,如果不配置,你也可以在components下新建tsconfig.json
-        tsConfigFilePath: './tsconfig.json',
-        compilerOptions: {
-          types: [],
-        },
-      }),
-      vueJsx(),
-    ],
+    plugins: [vue(), vueJsx()],
     resolve: {
       alias: {
         '~': path.resolve('./packages'),
@@ -64,6 +46,23 @@ export default defineConfig(({ mode }) => {
     },
   }
   if (mode === 'lib') {
+    // 添加dts 插件
+    common.plugins.push(
+      dts({
+        entryRoot: '.',
+        noEmitOnError: true,
+        skipDiagnostics: false,
+        outputDir: [
+          resolve(__dirname, './lib/es'),
+          resolve(__dirname, './lib/cjs'),
+        ],
+        //指定使用的tsconfig.json为我们整个项目根目录下掉,如果不配置,你也可以在components下新建tsconfig.json
+        tsConfigFilePath: './tsconfig.json',
+        compilerOptions: {
+          types: [],
+        },
+      })
+    )
     return {
       ...common,
       build: {
