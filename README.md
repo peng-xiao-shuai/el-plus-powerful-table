@@ -32,6 +32,9 @@
 - `props` 单元格数据 `filter` 更改为 `filters`
 - 删除 组件 `props` 中的 `local`
 - 修改 组件 `InjectProps` 类型中 `local` 的类型。注入的 `local` 参数现在主要是用于 替换或者扩展组件内部提示文字
+- `componentProps` 参数更改为 `property`
+- `type` 类型为 `video` 新增  `property` 扩展参数
+- `BtnConfig.BtnList` 新增 `property` 扩展参数
   ## 2.0.7 20220328
 - **新增 props `property`**
 - - [**ElTable 属性**](https://element-plus.gitee.io/zh-CN/component/table.html#table-attributes)
@@ -472,7 +475,7 @@ const data = [{
 | zIndex         | 图片预览层级                                                                                        | number  | -                                          | 6000   |
 | style          | 图片自定义样式                                                                                      | object  | -                                          | -      |
 | fit            | 图片如何适应容器框，同原生[object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) | string  | fill / contain / cover / none / scale-down | -      |
-| componentProps | 属性扩展字段                                                                                        | object  | -                                          | {}     |
+| property | 属性扩展字段                                                                                        | object  | -                                          | {}     |
 
 ```js
 //示例
@@ -514,7 +517,7 @@ const data = [{
 | isMore       | 是否更多 当 `data` 是二维数组时有效                     | boolean                       | true / false                                       | false                                 |
 
 | emit <font color='red'>已删除</font> | 自定义方法名 | string | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | - |
-| componentProps | 属性扩展字段 | object | - | {} |
+| property | 属性扩展字段 | object | - | {} |
 
 ```js
 // 参数示例
@@ -583,7 +586,7 @@ const data = [{
 | confirmTip     | 点击后确认操作提示文字                                                                   | string                       | -            | 是否要进行修改操作, 是否继续? |
 | style          | 开关自定义样式                                                                           | object                       | -            | -                             |
 | beforeFunction | 修改前事件,返回 true 时正常执行 false 点击无变化，可以在此函数中自行处理 为 false 时提示 | function(row,value,oldValue) | -            | -                             |
-| componentProps | 属性扩展字段                                                                             | object                       | -            | {}                            |
+| property | 属性扩展字段                                                                             | object                       | -            | {}                            |
 
 ```js
 //示例
@@ -616,7 +619,7 @@ const data = [{
 | slot           | 输入框前置或后置                        | string                  | 'prepend' / 'append' | -      |
 | rows           | 显示的高度 `textarea` 专有              | string / number         | -                    | 3      |
 | symbol         | slot 文字或者符合                       | string                  | -                    | -      |
-| componentProps | 属性扩展字段                            | object                  | -                    | {}     |
+| property | 属性扩展字段                            | object                  | -                    | {}     |
 
 ```js
 //示例
@@ -699,7 +702,7 @@ const data = [{
 | showText       | 是否显示辅助文字，若为真，则会从 texts 数组中选取当前分数对应的文字内容 | boolean | -          | false                                                     |
 | showScore      | 是否显示当前分数，show-score 和 show-text 不能同时为真                  | boolean | true/false | false                                                     |
 | texts          | 辅助文字数组                                                            | array   | -          | ['极差', '失望', '一般', '满意', '惊喜']                  |
-| componentProps | 属性扩展字段                                                            | object  | -          | {}                                                        |
+| property | 属性扩展字段                                                            | object  | -          | {}                                                        |
 
 ```js
 //示例
@@ -784,7 +787,7 @@ const data = [{
 | hit            | 是否描边                       | boolean                     | -                                             | false     |
 | number         | 需要显示前多少个               | number                      | -                                             | 3         |
 | filters<font color='red'>已删除</font>         | <a href='#filters'>查看详情</a> | array / function(row,index) | -                                             | -         |
-| componentProps | 属性扩展字段                   | object                      | -                                             | {}        |
+| property | 属性扩展字段                   | object                      | -                                             | {}        |
 
 ---
 

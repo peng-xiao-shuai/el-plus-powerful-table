@@ -56,7 +56,7 @@ const Rate = defineComponent({
             show-text={props.prop.data?.showText || false}
             show-score={props.prop.data?.showScore || false}
             texts={props.prop.data?.texts || undefined}
-            {...props.prop.data?.componentProp}
+            {...props.prop.data?.property}
           />
         </div>
       </>

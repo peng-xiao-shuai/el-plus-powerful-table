@@ -28,11 +28,14 @@
                 ? true
                 : item.showBtn
             "
-            :size="size || 'small'"
-            :type="item.type"
-            :icon="item.icon"
-            :style="item.style || {}"
-            :disabled="item.disabled || btnDisabled(item.operateType)"
+            v-bind="{
+              size: size || 'small',
+              type: item.type,
+              icon: item.icon,
+              style: item.style || {},
+              disabled: item.disabled || btnDisabled(item.operateType),
+              ...item.property,
+            }"
             @click="batchOperate('left', item)"
           >
             {{ item.text }}

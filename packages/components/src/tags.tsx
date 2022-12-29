@@ -2,7 +2,6 @@ import { defineComponent, inject } from 'vue'
 import { filterFun } from './filter'
 import type { App, PropType } from 'vue'
 import type {
-  PowerfulTableFilter,
   PowerfulTableHeaderProps,
   SFCWithInstall,
   TagDataType,
@@ -68,7 +67,7 @@ const Tags = defineComponent({
                 ''
               }
               hit={props.prop.data?.hit || false}
-              {...props.prop.data?.componentProp}
+              {...props.prop.data?.property}
             >
               {props.prop.filters
                 ? typeof props.prop.filters == 'function'

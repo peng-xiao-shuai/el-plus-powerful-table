@@ -114,7 +114,7 @@ const Switch = defineComponent({
                 props.prop.data?.beforeFunction
               )
             }}
-            {...props.prop.data?.componentProp}
+            {...props.prop.data?.property}
           />
         </div>
       </>

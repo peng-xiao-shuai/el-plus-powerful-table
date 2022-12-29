@@ -46,6 +46,7 @@ const Video = defineComponent({
               loop={props.prop.data?.loop || false}
               class="avatar video-avatar"
               controls={true}
+              {...props.prop.data?.property}
             />
           </div>
         </div>

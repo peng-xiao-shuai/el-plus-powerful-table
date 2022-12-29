@@ -52,7 +52,7 @@ const Input = defineComponent({
             v-model={props.row[props.prop.prop]}
             disabled={props.prop.data?.disabled || false}
             onClick={(e: Event) => e.stopPropagation()}
-            {...props.prop.data?.componentProp}
+            {...props.prop.data?.property}
           ></el-input>
         </div>
       </>

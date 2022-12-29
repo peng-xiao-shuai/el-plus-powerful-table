@@ -86,7 +86,7 @@ const Button = defineComponent({
               item.type || 'primary'
             )
         }}
-        {...item?.componentProp}
+        {...item?.property}
       >
         {typeof item.text != 'string' ? item.tip : item.text}
       </el-button>

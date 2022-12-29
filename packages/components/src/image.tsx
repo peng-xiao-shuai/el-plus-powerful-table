@@ -49,7 +49,7 @@ const Image = defineComponent({
               fit={props.prop.data?.fit || 'cover'}
               preview-teleported={true}
               onClick={(e: Event) => e.stopPropagation()}
-              {...props.prop.data?.componentProp}
+              {...props.prop.data?.property}
             />
           ) : (
             <div>

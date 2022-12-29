@@ -44,7 +44,7 @@ const Link = defineComponent({
             underline={props.prop.data?.underline || false}
             href={props.row[props.prop.prop]}
             style={props.prop.data?.style || {}}
-            {...props.prop.data?.componentProp}
+            {...props.prop.data?.property}
           >
             {typeof props.prop.data?.text == 'function'
               ? props.prop.data?.text(props.row)

@@ -108,7 +108,7 @@ export type ImageDataType = {
   zIndex?: number
   style?: StyleValue
   fit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
-  componentProp?: object
+  property?: object
 }
 
 export type BtnDataType = {
@@ -125,7 +125,7 @@ export type BtnDataType = {
   isConfirmTip?: boolean
   confirmTip?: string
   params?: any
-  componentProp?: object
+  property?: object
 }
 
 export type SwitchDataType = {
@@ -144,7 +144,7 @@ export type SwitchDataType = {
     value: number | string,
     oldValue: number | string
   ) => boolean
-  componentProp?: object
+  property?: object
 }
 
 export type InputDataType = {
@@ -155,13 +155,14 @@ export type InputDataType = {
   disabled?: boolean
   style?: StyleValue
   slot?: 'prepend' | 'append'
-  componentProp?: object
+  property?: object
 }
 
 export type VideoDataType = {
   poster?: ((row: any, index?: number) => string) | string
   loop?: boolean
   style?: StyleValue
+  property?: object
 }
 
 export type IconFontDataType = {
@@ -178,7 +179,7 @@ export type RateDataType = {
   showText?: boolean
   showScore?: boolean
   texts?: string[]
-  componentProp?: object
+  property?: object
 }
 
 export type LinkDataType = {
@@ -188,7 +189,7 @@ export type LinkDataType = {
   icon?: Component
   underline?: boolean
   text?: string | ((row: any) => string)
-  componentProp?: object
+  property?: object
 }
 
 export type TagDataType = {
@@ -198,7 +199,7 @@ export type TagDataType = {
   color?: (row: any, tag: string) => string
   hit?: boolean
   number?: number
-  componentProp?: object
+  property?: object
 }
 
 export interface LangPackages {
@@ -226,6 +227,7 @@ export namespace BtnConfig {
     effect?: string
     showBtn?: (() => boolean) | boolean
     tipContent?: string
+    property?: object
   }
   export type Config = {
     hidden?: 'left' | 'right' | 'none'
