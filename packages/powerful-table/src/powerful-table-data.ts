@@ -1,4 +1,5 @@
 import { getCurrentInstance, inject, reactive, ref } from 'vue'
+import { configProviderContextKey } from 'element-plus'
 import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
 import type { PropType } from 'vue'
@@ -189,6 +190,8 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
   })
 
   return {
+    Size:
+      props.size || inject(configProviderContextKey)?.value?.size || 'small',
     multipleTable,
     configProvider,
     powerfulTableData,

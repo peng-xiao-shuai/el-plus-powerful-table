@@ -115,7 +115,6 @@ export default defineComponent({
         console.log('page', listQuery, '选中数组', selectData)
       }
       // listLoading.value = true
-
       setTimeout(() => {
         currentList.value = lists.filter((item, index) => {
           return (

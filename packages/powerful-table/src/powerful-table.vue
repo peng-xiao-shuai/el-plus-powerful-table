@@ -34,6 +34,7 @@
           children: 'children',
           hasChildren: 'hasChildren',
         },
+        size: Size,
         ...property,
       }"
       @selection-change="handleSelectionChange"
@@ -203,11 +204,7 @@
         v-if="operate && isSelect && operate.operates"
         class="pagination left"
       >
-        <el-select
-          v-model="operate.value"
-          clearable
-          :size="size || (injectProps && injectProps.size) || 'small'"
-        >
+        <el-select v-model="operate.value" clearable :size="Size">
           <el-option
             v-for="(item, index) in operate.operates"
             :key="'operate' + index"
@@ -220,7 +217,7 @@
           :style="operate.style || { marginLeft: '20px' }"
           :icon="operate.icon || ''"
           :type="operate.type || 'primary'"
-          :size="size || (injectProps && injectProps.size) || 'small'"
+          :size="Size"
           class="search-button"
           @click="batchOperate"
         >
@@ -229,15 +226,12 @@
       </div>
 
       <!-- 分页操作 -->
+      <!-- TODO 扩展参数 -->
       <div v-if="isPagination" class="pagination">
         <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
-          :small="
-            (size || (injectProps && injectProps.size) || 'small') === 'small'
-              ? true
-              : false
-          "
+          :small="Size === 'small' ? true : false"
           :page-sizes="pageSizes"
           :layout="layout"
           :total="total"
@@ -292,15 +286,13 @@ export default defineComponent({
       powerfulTableData,
       multipleTable,
       configProvider,
-      injectProps,
       stateData,
+      Size,
     } = usePowerfulTableStates<Row>(props)
 
     /* ------ 注入数据 ------ */
-    // 语言
-    // provide('locale', props.locale || (injectProps && injectProps.locale))
     // 组件大小
-    provide(SizeSymbol, props.size || injectProps?.size || 'small')
+    provide(SizeSymbol, Size)
     // 单元格内布局
     provide(JustifyFunSymbol, justifyFun)
 
@@ -441,6 +433,7 @@ export default defineComponent({
     }
 
     return {
+      Size,
       headerLists,
       ...toRefs(stateData),
       headerFilterChange,
@@ -449,7 +442,6 @@ export default defineComponent({
 
       multipleTable,
       configProvider,
-      injectProps,
 
       LangKey,
       t,

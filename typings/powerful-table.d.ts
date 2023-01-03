@@ -66,7 +66,9 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   data?: D
   type?: Type
   // eslint-disable-next-line prettier/prettier
-  filters?: PowerfulTableFilter[] | ((row: L, index?: number) => string | number);
+  filters?:
+    | PowerfulTableFilter[]
+    | ((row: L, index?: number) => string | number)
   text?: string
   slotName?: string
   render?: (h: h, row: L, index: number) => VNode | string | number
@@ -209,7 +211,6 @@ export interface LangPackages {
 }
 // 组件注入数据
 export type InjectProps = {
-  size?: Size
   locale?: LangPackages
   btnSlot?: 'left' | 'right' | 'none' // 控制所有的组件 显示左侧或右侧操作按钮
 }
