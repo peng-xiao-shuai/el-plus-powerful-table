@@ -1,4 +1,4 @@
-import type { Component, Plugin, VNode, h } from 'vue'
+import type { CSSProperties, Component, Plugin, VNode, h } from 'vue'
 
 /* ------ props ------ */
 export interface PowerfulTableData<L> {
@@ -39,7 +39,7 @@ export interface PowerfulTableOperateData {
   disabled?: boolean
   prop?: string
   icon?: string | Component
-  style?: StyleValue
+  style?: CSSProperties
   operates: PowerfulTableLabelValue[]
 }
 
@@ -71,7 +71,7 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   slotName?: string
   render?: (h: h, row: L, index: number) => VNode | string | number
   reserve?: string | HTMLElement
-  style?: StyleValue
+  style?: CSSProperties
   filterItem?: boolean // 指定过滤项
   filtersType?: 'select' | 'date'
   property?: any
@@ -106,7 +106,7 @@ export type ImageDataType = {
   preview?: boolean
   lazy?: boolean
   zIndex?: number
-  style?: StyleValue
+  style?: CSSProperties
   fit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
   property?: object
 }
@@ -117,7 +117,7 @@ export type BtnDataType = {
   disabled?: boolean
   text?: string
   isMore?: boolean
-  style?: StyleValue
+  style?: CSSProperties
   type?: ThemeType
   showBtn?: ((row: any, index?: number) => boolean) | boolean
   emit?: EmitType
@@ -136,7 +136,7 @@ export type SwitchDataType = {
   activeValue?: number | string
   inactiveValue?: number | string
   disabled?: boolean | ((row: any) => boolean)
-  style?: StyleValue
+  style?: CSSProperties
   isConfirmTip?: boolean
   confirmTip?: string
   beforeFunction?: (
@@ -153,7 +153,7 @@ export type InputDataType = {
   placeholder?: string
   rows?: string | number
   disabled?: boolean
-  style?: StyleValue
+  style?: CSSProperties
   slot?: 'prepend' | 'append'
   property?: object
 }
@@ -161,18 +161,18 @@ export type InputDataType = {
 export type VideoDataType = {
   poster?: ((row: any, index?: number) => string) | string
   loop?: boolean
-  style?: StyleValue
+  style?: CSSProperties
   property?: object
 }
 
 export type IconFontDataType = {
   class?: string[] | string
-  style?: StyleValue
+  style?: CSSProperties
 }
 
 export type RateDataType = {
   max?: number
-  style?: StyleValue
+  style?: CSSProperties
   colors?: string[]
   iconClass?: string[]
   allowHalf?: boolean
@@ -184,7 +184,7 @@ export type RateDataType = {
 
 export type LinkDataType = {
   target?: '_self' | '_blank' | '_parent' | '_top'
-  style?: StyleValue
+  style?: CSSProperties
   type?: ThemeType
   icon?: Component
   underline?: boolean
@@ -194,7 +194,7 @@ export type LinkDataType = {
 
 export type TagDataType = {
   type?: ThemeType
-  style?: StyleValue
+  style?: CSSProperties
   effect?: 'dark' | 'light' | 'plain'
   color?: (row: any, tag: string) => string
   hit?: boolean
@@ -219,7 +219,7 @@ export namespace BtnConfig {
   export type BtnList = {
     type?: ThemeType
     icon?: string | Component
-    style?: StyleValue
+    style?: CSSProperties
     disabled?: boolean
     operateType?: 'none' | 'single' | 'batch'
     text?: string
