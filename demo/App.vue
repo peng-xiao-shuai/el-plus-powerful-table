@@ -38,17 +38,22 @@
         </div>
       </template> -->
       <template #empty>
-        <div>23131</div>
+        <div>暂无车型数据</div>
       </template>
       <template #Link>
         <div>
-          <el-input size="small" placeholder="输入关键字搜索" />
+          <el-input
+            v-model="engineName"
+            size="small"
+            placeholder="输入发动机名称"
+            @input="(e) => e.length ? (list = currentList.filter((item: any) => item.engine.indexOf(e) != -1)) : list = currentList"
+          />
         </div>
       </template>
 
-      <template #A="{ row }">
+      <template #date="{ row }">
         <div>
-          {{ row.data?.getDate() + '日' }}
+          {{ row.data }}
         </div>
       </template>
     </PowerfulTable>
@@ -71,8 +76,9 @@ export default defineComponent({
   setup(props, context) {
     const rowA = reactive({ value: {} })
     const list = ref<any>([])
+    const currentList = ref<any>([])
     // 所有页面选中数组
-    const selectData = ref([{ a: 1 }, { a: 2 }, { a: 3 }])
+    const selectData = ref([{ a: 1 }, { a: 3 }])
     const selectCompare = reactive(['a', 'id'])
     // let listLoading= ref(true)
     const isSelect = ref(true)
@@ -94,27 +100,30 @@ export default defineComponent({
       pageNum: 1,
       pageSize: 2,
     })
+    const engineName = ref('')
 
     function handlerSort(e: any) {
       console.log('远程排序', e)
     }
-    function getList(data?: any, select?: any) {
+    function getList(e?: { params: any; select: any }) {
       // 切换页面赋值
-      selectData.value = select
-      Object.assign(listQuery, data)
+      // if (e?.select) selectData.value = e?.select
+      Object.assign(listQuery, e?.params)
 
-      if (data) {
+      if (e?.params) {
         ElMessage.success('切换页面操作，参数详情，查看控制台')
         console.log('page', listQuery, '选中数组', selectData)
       }
       // listLoading.value = true
 
       setTimeout(() => {
-        list.value = lists.filter(
-          (item, index) =>
+        currentList.value = lists.filter((item, index) => {
+          return (
             index >= (listQuery.pageNum - 1) * listQuery.pageSize &&
             index < listQuery.pageNum * listQuery.pageSize
-        )
+          )
+        })
+        list.value = currentList.value
       })
     }
 
@@ -170,6 +179,8 @@ export default defineComponent({
       selectData,
       selectCompare,
       powerfulTable,
+      engineName,
+      currentList,
       // listLoading,
       isSelect,
       headers,
@@ -191,5 +202,5 @@ export default defineComponent({
 </script>
 
 <style>
-@import url('https://at.alicdn.com/t/font_2351447_a0951v7l8p.css');
+@import url('https://at.alicdn.com/t/c/font_2351447_xw9ezbg0kb.css');
 </style>

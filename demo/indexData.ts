@@ -1,12 +1,20 @@
 import { markRaw } from 'vue'
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
-import type { BtnConfig, PowerfulTableHeader } from '../typings/powerful-table'
+import type {
+  BtnConfig,
+  LangPackages,
+  PowerfulTableHeader,
+} from '../typings/powerful-table'
+import { LangKey } from '~/locale/lang'
 
 type Lists = {
   id?: number
   name?: string
+  engine?: string
+  manufacturer?: string
+  manufacturerHref?: string
   icon?: string
-  gender?: string | number
+  brand?: string
   createTime?: null | string
   price?: string | number
   switchVal?: number
@@ -17,7 +25,7 @@ type Lists = {
   imageUrl?: string
   href?: string
   cd?: Lists[]
-  data?: Date
+  data?: string
 }
 
 const btnConfig: BtnConfig.Config = {
@@ -57,7 +65,7 @@ const header: PowerfulTableHeader<any>[] = [
     label: '编号', //显示的标题
     minWidth: '100px', //对应列的最小宽度
     headerAlign: 'center',
-    isFilterColumn: true,
+    // isFilterColumn: true,
     sortable: true, //排序
     props: {
       prop: 'id',
@@ -67,153 +75,182 @@ const header: PowerfulTableHeader<any>[] = [
     },
   },
   {
-    label: '超链接', //显示的标题
-    width: '200',
+    label: '制作厂', //显示的名称
+    width: 200,
+    overflowTooltip: true,
+    isFilterColumn: true,
+    headerAlign: 'left',
+    props: [
+      {
+        type: 'href',
+        prop: 'manufacturerHref',
+        text: '厂商：',
+        data: {
+          text: (row: any) => row.manufacturer,
+        },
+      },
+      {
+        prop: 'icon',
+        type: 'iconfont',
+        text: '车标：',
+        data: {
+          class: 'viteIcon',
+          style: {
+            height: '40px',
+            lineHeight: '40px',
+            fontSize: '40px',
+          },
+        },
+      },
+    ],
+  },
+  {
+    label: '名称', //显示的名称
+    width: 220,
+    overflowTooltip: true,
+    isFilterColumn: true,
+    headerAlign: 'left',
+    props: [
+      {
+        text: '品牌：',
+        prop: 'brand',
+        filterItem: true,
+        filtersType: 'select',
+        filters: [
+          { key: 1, value: '奥迪' },
+          { key: 2, value: '宝马' },
+          { key: 3, value: '奔驰' },
+        ],
+        render: (h, row) => h('b', row.brand),
+      },
+      {
+        type: 'href',
+        prop: 'href',
+        text: '型号：',
+        data: {
+          text: (row: any) => row.name,
+        },
+      },
+    ],
+  },
+  {
+    label: '图片', //显示的标题
+    props: [
+      {
+        type: 'image',
+        prop: 'imageUrl',
+        data: {
+          style: {
+            width: '117px',
+            height: '117px',
+            borderRadius: '5px',
+          },
+          lazy: true,
+          preview: true,
+          componentProp: {
+            src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
+          },
+        },
+      },
+    ],
+  },
+  {
+    label: '售价', //显示的标题
+    isShowOrFilterColumn: 'filter',
+    headerAlign: 'left',
+    props: [
+      {
+        text: '收藏：',
+        prop: 'switchVal',
+        type: 'switch',
+        data: {
+          // isConfirmTip: true, // 开启提示
+          // confirmTip: '确认修改', // 提示语
+          disabled: (value: any) => false,
+          beforeFunction(row: any, val: any, old: any) {
+            return true
+          },
+          // inactiveText: '关闭',
+          // activeText: '开启',
+          inactiveValue: 0,
+          activeValue: 1,
+        },
+      },
+      {
+        prop: 'price',
+        type: 'input',
+        data: {
+          slot: 'suffix',
+          symbol: '万',
+          style: { width: '100%' },
+        },
+      },
+    ],
+  },
+  {
+    label: '发动机名称', // 此标题不会显示，因为配置了 自定义表头 headerSlotName
+    width: '220',
+    isFilterColumn: true, // 自定义头部，过滤无效
     headerSlotName: 'Link',
     property: {
       align: 'left',
     },
     props: [
       {
-        type: 'href',
-        prop: 'href',
-        data: {
-          text: (e: any) => e.name,
-        },
+        type: 'text',
+        prop: 'engine',
+        text: '发动机：',
+        render: (h, row) => h('b', row.engine),
       },
       {
-        type: 'href',
-        prop: 'href',
+        type: 'rate',
+        prop: 'rate',
+        text: '评 分：',
         data: {
-          text: (e: any) => e.name,
-        },
-        render: (h, row, index) => {
-          return h('b', {}, row.name)
+          // allowHalf: true,
+          // showText: true,
+          max: 5,
+          // colors: ['red', 'yellow', 'red'],
+          //   // showScore: true
         },
       },
+      // {
+      //   type: 'href',
+      //   prop: 'href',
+      //   data: {
+      //     text: (e: any) => e.name,
+      //   },
+      //   render: (h, row, index) => {
+      //     return h('b', {}, row.name)
+      //   },
+      // },
     ],
   },
   {
-    label: '名称/性别', //显示的名称
-    overflowTooltip: true,
-    headerAlign: 'left',
-    isFilterColumn: true,
-    props: [
-      {
-        type: 'href',
-        prop: 'name',
-        data: {
-          text: (row: any) => row.name,
-        },
-      },
-      {
-        prop: 'gender',
-        // customFilterFun(row){
-        //   return '公'
-        // },
-        filterItem: true,
-        filtersType: 'select',
-        filters: [
-          { key: 1, value: '公' },
-          { key: 2, value: '母' },
-          { key: 3, value: '未知' },
-        ],
-        // filter: (row: any) => {
-        //   return ({ 1: '公', 2: '母', 3: '未知' } as any)[row.gender]
-        // }, //过滤
-      },
-    ],
-  },
-  {
-    label: 'slot（插槽）', //显示的标题
-    isFilterColumn: true,
-    // hidden: true,
-    props: [
-      {
-        prop: 'data',
-        filtersType: 'date',
-        type: 'slot',
-        slotName: 'A',
-      },
-    ],
-  },
-  {
-    label: '价格', //显示的标题
-    isShowOrFilterColumn: 'filter',
-    props: {
-      prop: 'price',
-      type: 'input',
-      data: {
-        slot: 'prepend',
-        symbol: '￥',
-        style: { width: '100%' },
-      },
-    },
-  },
-  {
-    label: '视频', //显示的标题
+    label: '宣传视频', //显示的标题
     width: 200,
     isFilterColumn: true,
     props: {
       prop: 'videoUrl',
       type: 'video',
-      text: '1',
       data: {
         loop: true,
         poster: (e: any) => e.imageUrl,
         style: {
           width: '100%',
-          height: '80px',
+          height: '117px',
           borderRadius: '10px',
           overflow: 'hidden',
           border: '1px solid #ccc',
+        },
+        property: {
+          controls: true,
         },
       },
     },
   },
   {
-    label: '开关', //显示的标题
-    width: '200',
-    overflowTooltip: false,
-    isFilterColumn: true,
-    props: [
-      {
-        prop: 'switchVal',
-        type: 'switch',
-        data: {
-          isConfirmTip: true,
-          disabled: (e: any) => false,
-          beforeFunction(row: any, val: any, old: any) {
-            return true
-          },
-          inactiveText: '关闭',
-          activeText: '开启',
-          inactiveValue: '0',
-          activeValue: '1',
-        },
-      },
-    ],
-  },
-  {
-    label: '图标', //显示的标题
-    headerAlign: 'center',
-    props: [
-      {
-        prop: 'icon',
-        filterItem: true,
-        type: 'iconfont',
-        text: '图标：',
-        data: {
-          class: 'viteIcon',
-          style: {
-            fontSize: '20px',
-          },
-        },
-      },
-    ],
-  },
-  {
-    label: '标签(只显示两个)', //显示的标题
+    label: '外观颜色(只显示两个)', //显示的标题
     width: 200,
     overflowTooltip: false,
     isFilterColumn: true,
@@ -226,58 +263,39 @@ const header: PowerfulTableHeader<any>[] = [
           number: 2,
           type: 'success',
           color: (r: any, tag: string | number) => {
-            return tag == 1 ? '#409EFF' : '#F56C6C'
+            return (
+              { red: '#BD3145', blue: '#008DAF', white: '#eee' }[tag] || tag
+            )
           },
         },
         filters: [
-          { key: 1, value: '男' },
-          { key: 2, value: '女' },
-          { key: 3, value: '未知' },
+          { key: 'red', value: '红色' },
+          { key: 'black', value: '黑色' },
+          { key: 'blue', value: '蓝色' },
+          { key: 'gray', value: '灰色' },
+          { key: 'white', value: '白色' },
         ],
         reserve: '<i><b>VNode</b></i>',
       },
     ],
   },
   {
-    label: '图片', //显示的标题
+    label: '发售日期（插槽）', //显示的标题
+    isFilterColumn: true,
+    width: '180px',
+    // hidden: true,
     props: [
       {
-        type: 'image',
-        prop: 'imageUrl',
-        text: '图片：',
-        data: {
-          style: {
-            width: '40px',
-            height: '40px',
-          },
-          lazy: true,
-          preview: true,
-          componentProp: {
-            src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
-          },
-        },
+        prop: 'data',
+        filtersType: 'date',
+        type: 'slot',
+        slotName: 'date',
       },
     ],
   },
   {
-    label: '评分', //显示的标题
-    width: '200',
-    props: [
-      {
-        type: 'rate',
-        prop: 'rate',
-        data: {
-          // allowHalf: true,
-          // showText: true,
-          max: 6,
-          colors: ['red', 'yellow', 'green'],
-          //   // showScore: true
-        },
-      },
-    ],
-  },
-  {
-    label: '内容', //显示的标题
+    label: '简介', //显示的标题
+    width: '300px',
     isFilterColumn: true,
     props: [
       {
@@ -312,20 +330,23 @@ const header: PowerfulTableHeader<any>[] = [
             params: {
               emit: 'update',
             },
+            componentProp: {
+              type: 'success',
+            },
           },
           [
             {
               tip: '更多',
               isMore: true,
-              type: 'success',
+              type: 'primary',
               icon: markRaw(Edit),
             },
-            {
-              tip: '编辑',
-              type: 'text',
-              icon: markRaw(Edit),
-              params: 'update',
-            },
+            // {
+            //   tip: '编辑',
+            //   type: 'text',
+            //   icon: markRaw(Edit),
+            //   params: 'update',
+            // },
             {
               tip: '删除',
               type: 'text',
@@ -334,17 +355,17 @@ const header: PowerfulTableHeader<any>[] = [
               params: 'remove',
             },
           ],
-          {
-            tip: '删除',
-            type: 'danger',
-            icon: markRaw(Edit),
-            showBtn: (e: any) => {
-              return true
-            },
-            params: {
-              emit: 'remove',
-            },
-          },
+          // {
+          //   tip: '删除',
+          //   type: 'danger',
+          //   icon: markRaw(Edit),
+          //   showBtn: (e: any) => {
+          //     return true
+          //   },
+          //   params: {
+          //     emit: 'remove',
+          //   },
+          // },
         ],
       },
     ],
@@ -353,175 +374,113 @@ const header: PowerfulTableHeader<any>[] = [
 
 const lists: Lists[] = [
   {
-    id: 111,
-    name: '蓝猫',
-    icon: 'vitezujian',
-    gender: 1,
-    createTime: null,
-    price: '',
-    switchVal: 0,
-    tag: [1, 3, 3],
+    id: 1,
+    brand: 'Audi (奥迪)',
+    engine: '4.0T 600马力 V8',
+    manufacturer: 'Audi Sport',
+    manufacturerHref: 'https://www.audi.com.hk/hk/web/tc.html',
+    name: 'RS 7 Sportback',
+    href: 'https://www.audi.com.hk/hk/web/tc/models/a7/rs-7-sportback-2021.html',
+    icon: 'viteaodi',
+    price: 146.48,
+    switchVal: 1,
+    tag: ['red', 'gray'],
     rate: 4.5,
     content:
-      '11111444444444444444444444444444444444444444444444444444444444444444444444',
+      '奥迪RS7概念车是由一位来自奥地利的设计者设计出来的，该车的车身外观融合了奥迪旗下多款车型的风格。 其侧面车身以及车位的设计与奥迪R8的设计十分相似，而汽车门则采用了兰博基尼经典的剪刀门设计方式。 2013北美（底特律）国际车展于14日开幕，奥迪全新RS7在车展上正式亮相并发布。',
     videoUrl:
-      'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-    imageUrl: 'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-    href: 'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-    data: new Date(),
-    cd: [
-      {
-        id: 4,
-        name: '蓝猫',
-        icon: 'vitezujian',
-        gender: 2,
-        createTime: null,
-        price: '',
-        switchVal: 1,
-        tag: [1, 2, 3],
-        rate: 4,
-        content:
-          '22222444444444444444444444444444444444444444444444444444444444444444444444',
-        videoUrl:
-          'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-        imageUrl: 'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-        data: new Date(),
-        cd: [
-          {
-            id: 41,
-            name: '蓝猫',
-            icon: 'vitezujian',
-            gender: 2,
-            createTime: null,
-            price: '',
-            switchVal: 1,
-            tag: [1, 2, 3],
-            rate: 4,
-            content:
-              '22222444444444444444444444444444444444444444444444444444444444444444444444',
-            videoUrl:
-              'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-            imageUrl:
-              'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-            data: new Date(),
-            cd: [
-              {
-                id: 411,
-                name: '蓝猫',
-                icon: 'vitezujian',
-                gender: 2,
-                createTime: null,
-                price: '',
-                switchVal: 1,
-                tag: [1, 2, 3],
-                rate: 4,
-                content:
-                  '22222444444444444444444444444444444444444444444444444444444444444444444444',
-                videoUrl:
-                  'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-                imageUrl:
-                  'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-                data: new Date(),
-                cd: [
-                  {
-                    id: 2222,
-                    name: '蓝猫',
-                    icon: 'vitezujian',
-                    gender: 2,
-                    createTime: null,
-                    price: '',
-                    switchVal: 1,
-                    tag: [1, 2, 3],
-                    rate: 4,
-                    content:
-                      '22222444444444444444444444444444444444444444444444444444444444444444444444',
-                    videoUrl:
-                      'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-                    imageUrl:
-                      'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-                    data: new Date(),
-                  },
-                ],
-              },
-              {
-                id: 211,
-                name: '蓝猫',
-                icon: 'vitezujian',
-                gender: 2,
-                createTime: null,
-                price: '',
-                switchVal: 1,
-                tag: [1, 2, 3],
-                rate: 4,
-                content:
-                  '22222444444444444444444444444444444444444444444444444444444444444444444444',
-                videoUrl:
-                  'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-                imageUrl:
-                  'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-                data: new Date(),
-                cd: [
-                  {
-                    id: 22222,
-                    name: '蓝猫',
-                    icon: 'vitezujian',
-                    gender: 2,
-                    createTime: null,
-                    price: '',
-                    switchVal: 1,
-                    tag: [1, 2, 3],
-                    rate: 4,
-                    content:
-                      '22222444444444444444444444444444444444444444444444444444444444444444444444',
-                    videoUrl:
-                      'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-                    imageUrl:
-                      'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-                    data: new Date(),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+      'http://tbvideo.ixiaochuan.cn/zyvd/264/89/61/84ca-3e46-11ed-87e3-00163e0e67b8',
+    imageUrl: 'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b',
+    data: '2021-12-xx',
   },
   {
-    id: 1,
-    name: '蓝猫',
-    icon: 'vitezujian',
-    gender: 2,
-    createTime: null,
-    price: '',
-    switchVal: 1,
-    tag: '1,2',
+    id: 2,
+    brand: 'BMW (宝马)',
+    engine: '4.4T 625马力 V8',
+    manufacturer: 'BMW',
+    manufacturerHref: 'https://www.bmw.com/en/index.html',
+    name: 'BMW 8 Series',
+    href: 'https://offers.bmwhk.com/the8/en/?utm_medium=website&utm_source=bmwhk_modelshowroom&utm_campaign=468_Jan2021&utm_content=launch',
+    icon: 'vitebaoma',
+    price: 196.8,
+    switchVal: 0,
+    tag: ['white', 'red'],
     rate: 4.5,
     content:
-      '3333444444444444444444444444444444444444444444444444444444444444444444444',
-    videoUrl:
-      'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-    href: 'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-    imageUrl: 'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-    data: new Date('2021/12/31'),
+      '宝马M8（BMW M8)是宝马旗下的顶级跑车，采用M部门为其量身打造的4.4T V8双涡轮增压引擎，最大功率可达625马力，峰值扭矩750牛米。这台引擎可以让1.9吨的大家伙在3.2秒内完成0-100加速。M，在宝马车系中代表顶级性能版。',
+    imageUrl: 'https://images.unsplash.com/photo-1630037937485-e2da57394d88',
+    data: '2022-01-xx',
   },
   {
     id: 3,
-    name: '蓝猫',
-    icon: 'el-icon-hot-water',
-    gender: 3,
-    createTime: null,
-    price: '',
+    brand: 'Audi (奥迪)',
+    engine: '5.2L 620马力 V10',
+    manufacturer: 'Audi Sport',
+    manufacturerHref: 'https://www.audi.com.hk/hk/web/tc.html',
+    name: 'R8 V10 performance',
+    href: 'https://www.audi.com.hk/hk/web/tc/models/r8/r8-coupe-v10-performance-quattro.html',
+    icon: 'viteaodi',
+    price: 232.36,
     switchVal: 1,
-    tag: [1, 2, 3],
-    rate: 4,
+    tag: ['blue'],
+    rate: 5,
     content:
-      '44444444444444444444444444444444444444444444444444444444444444444444444444',
-    videoUrl:
-      'https://video.699pic.com/videos/38/43/68/b_NP9VbhF5xkJN1587384368_10s.mp4',
-    imageUrl: 'https://seopic.699pic.com/photo/50102/4339.jpg_wh1200.jpg',
-    data: new Date('2021/12/31'),
+      '奥迪R8（Audi R8）是一款中置引擎双座跑车，由德国汽车制造商奥迪于2006年推出，极速达316km/h。奥迪R8是奥迪量产的首款中置引擎超级跑车，基于兰博基尼Gallardo的开发平台，融合了奥迪在多个运动赛事中取胜的经验，技术以及突破传统观念的完美设计。强劲的V8和V10发动机、全时四轮驱动系统和奥迪全铝车身空间框架结构，赋予了奥迪R8出众的动力性能，以及在赛道和公路上的卓越表现。',
+    imageUrl: 'https://images.unsplash.com/photo-1614026480418-bd11fdb9fa06',
+    data: '2021-12-xx',
   },
 ]
+
+export const langPackages: LangPackages = {
+  en: {
+    [LangKey.Confirm]: 'Confirm',
+    [LangKey.Column]: 'Column',
+    [LangKey.ColumnName]: 'Column name',
+    [LangKey.Hidden]: 'Hidden',
+    [LangKey.Filter]: 'Filter',
+    [LangKey.Refresh]: 'Refresh',
+    [LangKey.Cancel]: 'Cancel',
+    [LangKey.Hint]: 'Hint',
+    [LangKey.OperateHint]: (s) => `Whether to carry out ${s} operate?`,
+    [LangKey.More]: 'More',
+    [LangKey.NoData]: 'NO DATA',
+    [LangKey.Update]: 'Update',
+    [LangKey.Edit]: 'Edit',
+    [LangKey.PackUp]: 'Pack up',
+    [LangKey.ReadFullText]: 'Read full text',
+    [LangKey.InputContent]: 'Input content',
+    [LangKey.Select]: 'Select',
+    [LangKey.Open]: 'Open',
+    [LangKey.Close]: 'Close',
+    [LangKey.SelectOperateType]: 'Please select an operation type',
+    [LangKey.SelectOperateData]:
+      'Please select the data you want to manipulate',
+    [LangKey.BatchOperate]: (s) => `Whether to batch ${s} the data?`,
+  },
+  'zh-cn': {
+    [LangKey.Confirm]: '确认',
+    [LangKey.Column]: '列',
+    [LangKey.ColumnName]: '列名',
+    [LangKey.Hidden]: '隐藏',
+    [LangKey.Filter]: '过滤',
+    [LangKey.Refresh]: '刷新',
+    [LangKey.Cancel]: '取消',
+    [LangKey.Hint]: '提示',
+    [LangKey.OperateHint]: (s) => `是否要进行 ${s} 操作?`,
+    [LangKey.More]: '更多',
+    [LangKey.NoData]: '暂无数据',
+    [LangKey.Update]: '修改',
+    [LangKey.Edit]: '编辑',
+    [LangKey.PackUp]: '收起',
+    [LangKey.ReadFullText]: '展开阅读全文',
+    [LangKey.InputContent]: '请输入内容',
+    [LangKey.Select]: '请选择',
+    [LangKey.Open]: '开启',
+    [LangKey.Close]: '关闭',
+    [LangKey.SelectOperateType]: '请选择操作类型',
+    [LangKey.SelectOperateData]: '请选择要操作的数据',
+    [LangKey.BatchOperate]: (s) => `是否要进行批量 ${s} 操作?`,
+  },
+}
 
 export { btnConfig, header, lists }
