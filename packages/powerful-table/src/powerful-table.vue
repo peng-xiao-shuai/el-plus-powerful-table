@@ -333,14 +333,11 @@ export default defineComponent({
       powerfulTableData.listLoading = false
     })
 
+    // 判断列表是否存在数据，存在则查询选中
     watch(
       () => stateData.tableLists,
       (val) => {
-        if (val.length && powerfulTableData.currentSelect.length == 0) {
-          nextTick(() => {
-            getSelect()
-          })
-        }
+        if (val.length) nextTick(() => getSelect())
       },
       {
         immediate: true,
