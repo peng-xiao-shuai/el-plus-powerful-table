@@ -36,6 +36,9 @@ const Text = defineComponent({
           justifyContent: justifyFun(props.aligning),
         }}
       >
+        <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
+          {props.prop.text || ''}
+        </span>
         <div class={{ content: develop.value[props.index || 0] }}>
           {/* <!-- 主体内容 --> */}
           <div
