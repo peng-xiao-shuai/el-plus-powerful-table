@@ -25,7 +25,7 @@ const FSelect = defineComponent({
     },
   },
   emits: ['headerFilterChange'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const size = inject(SizeSymbol)
 
     const state = reactive<State<(string | number)[]>>({
@@ -78,6 +78,12 @@ const FSelect = defineComponent({
       },
       { immediate: true, deep: true }
     )
+
+    // 暴露状态
+    expose({
+      state,
+    })
+
     return () => (
       <el-popover
         v-model={[state.visible, 'visible']}

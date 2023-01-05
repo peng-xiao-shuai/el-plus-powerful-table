@@ -16,7 +16,7 @@ const FDatePicker = defineComponent({
   name: 'PTFDatePicker',
   props,
   emits: ['headerFilterChange'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const size = inject(SizeSymbol)
     const datePickerRef = ref<any>()
     const state = reactive<
@@ -43,6 +43,11 @@ const FDatePicker = defineComponent({
       if (props.list.length && state.value?.length) {
         datePickerChange(state.value)
       }
+    })
+
+    // 暴露状态
+    expose({
+      state,
     })
 
     return () => (

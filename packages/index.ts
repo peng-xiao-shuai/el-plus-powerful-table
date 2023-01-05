@@ -5,7 +5,6 @@ import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
 import type { App, Plugin } from 'vue'
 export { default as PTBtnPlus } from './btn-plus'
-export { default as PowerfulTable } from './powerful-table'
 export * from './filter'
 export * from './components'
 // 获取类型

@@ -100,6 +100,7 @@
                 getPropObj(item).type === 'switch' ||
                 getPropObj(item).type === 'tag'
               "
+              ref="filterComponents"
               :header-data="item"
               :list="list"
               :prop-data="getPropObj(item)"
@@ -107,12 +108,14 @@
             />
             <PTFDatePicker
               v-else-if="getPropObj(item).filtersType === 'date'"
+              ref="filterComponents"
               :header-data="item"
               :list="list"
               @header-filter-change="headerFilterChange"
             />
             <PTFInput
               v-else
+              ref="filterComponents"
               :header-data="item"
               :list="list"
               @header-filter-change="headerFilterChange"
@@ -285,7 +288,7 @@ export default defineComponent({
     const {
       powerfulTableData,
       multipleTable,
-      configProvider,
+      filterComponents,
       stateData,
       Size,
     } = usePowerfulTableStates<Row>(props)
@@ -337,31 +340,36 @@ export default defineComponent({
       }
     )
 
-    // 过滤被隐藏的列
-    const headerLists = computed(() =>
-      props.header.filter((column) => !column.isShowColumn)
-    )
-
     /* --- 按钮组件参数及方法begin --- */
     // 为表格数据重新赋值
     watch(
       () => props.list as Row[],
-      (newList, oldList) => {
-        if (
-          !stateData.tableLists.length ||
-          (stateData.tableLists.length &&
-            stateData.tableLists.length == oldList?.length)
-        ) {
-          stateData.tableLists = newList
-        }
+      (newList) => {
+        stateData.tableLists = newList || []
       },
       { immediate: true, deep: true }
     )
     watch(
       () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
       () => {
+        // 切换页面清除表头选中
+        if (Array.isArray(filterComponents.value)) {
+          filterComponents.value.forEach((item: any) => {
+            item.state.value = ''
+          })
+        } else {
+          // filterComponents.value.forEach((item: any) => {
+          // item.state.value = ''
+          // })
+        }
+
         get()
       }
+    )
+
+    // 过滤被隐藏的列
+    const headerLists = computed(() =>
+      props.header.filter((column) => !column.isShowColumn)
     )
 
     // 重新渲染表格
@@ -440,8 +448,8 @@ export default defineComponent({
       getPropObj,
       ...toRefs(powerfulTableData),
 
+      filterComponents,
       multipleTable,
-      configProvider,
 
       LangKey,
       t,

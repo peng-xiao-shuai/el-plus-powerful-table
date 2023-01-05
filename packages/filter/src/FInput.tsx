@@ -9,7 +9,7 @@ const FInput = defineComponent({
   name: 'PTFInput',
   props,
   emits: ['headerFilterChange'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const size = inject(SizeSymbol)
     const state = reactive<import('./common').State>({
       value: '',
@@ -28,6 +28,11 @@ const FInput = defineComponent({
         return state.value.length * 20 > 400 ? 400 : state.value.length * 20
       }
     }
+
+    // 暴露状态
+    expose({
+      state,
+    })
 
     return () => (
       <el-popover

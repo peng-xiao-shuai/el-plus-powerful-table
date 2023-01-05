@@ -161,7 +161,7 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
 
   /* ----- 组件实例 ----- */
   const multipleTable = ref<any>(null)
-  const configProvider = ref<{ locale: PowerFulTableProps<L>['locale'] }>()
+  const filterComponents = ref<any>(null)
 
   /* ------  表格数据  ------ */
   const powerfulTableData: PowerfulTableData<L> = reactive({
@@ -193,7 +193,7 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
     Size:
       props.size || inject(configProviderContextKey)?.value?.size || 'small',
     multipleTable,
-    configProvider,
+    filterComponents,
     powerfulTableData,
     injectProps,
     stateData,
