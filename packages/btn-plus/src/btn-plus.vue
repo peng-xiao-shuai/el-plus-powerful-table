@@ -182,7 +182,9 @@ const props = defineProps({
   // 判断是否为移动端
   isTable: Boolean,
 })
-const emit = defineEmits(['update:isTable', 'btnChange'])
+const emit = defineEmits<{
+  (e: 'update:isTable', isTable: boolean): void
+}>()
 
 const size = inject(SizeSymbol)
 const injectProps = inject(PowerfulTableSymbol, {})
