@@ -35,32 +35,21 @@ const Image = defineComponent({
           <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
             {props.prop.text || ''}
           </span>
-          {props.row[props.prop.prop] !== 'undefined' ? (
-            <el-image
-              src={props.row[props.prop.prop]}
-              preview-src-list={
-                props.prop.data?.preview === false
-                  ? []
-                  : [props.row[props.prop.prop]]
-              }
-              lazy={props.prop.data?.lazy === false ? false : true}
-              z-index={props.prop.data?.zIndex}
-              style={props.prop.data?.style || {}}
-              fit={props.prop.data?.fit || 'cover'}
-              preview-teleported={true}
-              onClick={(e: Event) => e.stopPropagation()}
-              {...props.prop.data?.property}
-            />
-          ) : (
-            <div>
-              {' '}
-              {props.prop.reserve ? (
-                <div v-html={props.prop.reserve}></div>
-              ) : (
-                <b>{t(LangKey.NoData)}</b>
-              )}{' '}
-            </div>
-          )}
+          <el-image
+            src={props.row[props.prop.prop]}
+            preview-src-list={
+              props.prop.data?.preview === false
+                ? []
+                : [props.row[props.prop.prop]]
+            }
+            lazy={props.prop.data?.lazy === false ? false : true}
+            z-index={props.prop.data?.zIndex}
+            style={props.prop.data?.style || {}}
+            fit={props.prop.data?.fit || 'cover'}
+            preview-teleported={true}
+            onClick={(e: Event) => e.stopPropagation()}
+            {...props.prop.data?.property}
+          />
         </div>
       </>
     )

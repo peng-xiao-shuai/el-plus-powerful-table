@@ -39,8 +39,7 @@ const Input = defineComponent({
             v-slots={{
               [props.prop.data?.slot as string]: () => (
                 <span style={{ padding: '0 10px' }}>
-                  {' '}
-                  {props.prop.data?.symbol}{' '}
+                  {props.prop.data?.symbol}
                 </span>
               ),
             }}

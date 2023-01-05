@@ -117,11 +117,16 @@ const header: PowerfulTableHeader<any>[] = [
         filterItem: true,
         filtersType: 'select',
         filters: [
-          { key: 1, value: '奥迪' },
-          { key: 2, value: '宝马' },
-          { key: 3, value: '奔驰' },
+          { key: 'Audi', value: '奥迪' },
+          { key: 'BMW', value: '宝马' },
         ],
-        render: (h, row) => h('b', row.brand),
+        render: (h, row) =>
+          h(
+            'b',
+            `${row.brand}（${
+              ({ Audi: '奥迪', BMW: '宝马' } as any)[row.brand]
+            })`
+          ),
       },
       {
         type: 'href',
@@ -156,7 +161,9 @@ const header: PowerfulTableHeader<any>[] = [
   },
   {
     label: '售价', //显示的标题
-    isShowOrFilterColumn: 'filter',
+    // isShowOrFilterColumn: 'filter',
+    // 如果要使用过滤功能 isFilterColumn 参数是必须的
+    isFilterColumn: true,
     headerAlign: 'left',
     props: [
       {
@@ -229,7 +236,7 @@ const header: PowerfulTableHeader<any>[] = [
   {
     label: '宣传视频', //显示的标题
     width: 200,
-    isFilterColumn: true,
+    // isFilterColumn: true,
     props: {
       prop: 'videoUrl',
       type: 'video',
@@ -375,7 +382,7 @@ const header: PowerfulTableHeader<any>[] = [
 const lists: Lists[] = [
   {
     id: 1,
-    brand: 'Audi (奥迪)',
+    brand: 'Audi',
     engine: '4.0T 600马力 V8',
     manufacturer: 'Audi Sport',
     manufacturerHref: 'https://www.audi.com.hk/hk/web/tc.html',
@@ -395,7 +402,7 @@ const lists: Lists[] = [
   },
   {
     id: 2,
-    brand: 'BMW (宝马)',
+    brand: 'BMW',
     engine: '4.4T 625马力 V8',
     manufacturer: 'BMW',
     manufacturerHref: 'https://www.bmw.com/en/index.html',
@@ -413,7 +420,7 @@ const lists: Lists[] = [
   },
   {
     id: 3,
-    brand: 'Audi (奥迪)',
+    brand: 'Audi',
     engine: '5.2L 620马力 V10',
     manufacturer: 'Audi Sport',
     manufacturerHref: 'https://www.audi.com.hk/hk/web/tc.html',
@@ -428,6 +435,9 @@ const lists: Lists[] = [
       '奥迪R8（Audi R8）是一款中置引擎双座跑车，由德国汽车制造商奥迪于2006年推出，极速达316km/h。奥迪R8是奥迪量产的首款中置引擎超级跑车，基于兰博基尼Gallardo的开发平台，融合了奥迪在多个运动赛事中取胜的经验，技术以及突破传统观念的完美设计。强劲的V8和V10发动机、全时四轮驱动系统和奥迪全铝车身空间框架结构，赋予了奥迪R8出众的动力性能，以及在赛道和公路上的卓越表现。',
     imageUrl: 'https://images.unsplash.com/photo-1614026480418-bd11fdb9fa06',
     data: '2021-12-xx',
+  },
+  {
+    id: 4,
   },
 ]
 
