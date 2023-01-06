@@ -19,12 +19,10 @@ const FDatePicker = defineComponent({
   setup(props, { emit, expose }) {
     const size = inject(SizeSymbol)
     const datePickerRef = ref<any>()
-    const state = reactive<
-      import('./common').State & {
-        defaultTime: Date[]
-        isAutoTrigger: boolean
-      }
-    >({
+    const state: import('./common').State & {
+      defaultTime: Date[]
+      isAutoTrigger: boolean
+    } = reactive({
       value: '',
       visible: false,
       defaultTime: [

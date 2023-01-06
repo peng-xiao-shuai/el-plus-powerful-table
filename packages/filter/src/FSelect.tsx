@@ -29,7 +29,7 @@ const FSelect = defineComponent({
   setup(props, { emit, expose }) {
     const size = inject(SizeSymbol)
 
-    const state = reactive<State<(string | number)[]>>({
+    const state: State<(string | number)[]> = reactive({
       value: [],
       options: [],
       selectVisible: false,

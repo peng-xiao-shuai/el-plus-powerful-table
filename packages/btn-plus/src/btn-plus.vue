@@ -209,7 +209,7 @@ type State = {
   }[]
   isPC: boolean
 }
-const state = reactive<State>({
+const state: State = reactive({
   btnHeight: 0,
   headerData: [],
   functionBtnList: [

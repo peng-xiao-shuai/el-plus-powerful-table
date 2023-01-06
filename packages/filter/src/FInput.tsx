@@ -11,7 +11,7 @@ const FInput = defineComponent({
   emits: ['headerFilterChange'],
   setup(props, { emit, expose }) {
     const size = inject(SizeSymbol)
-    const state = reactive<import('./common').State>({
+    const state: import('./common').State = reactive({
       value: '',
       visible: false,
     })
