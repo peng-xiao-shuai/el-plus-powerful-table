@@ -3,7 +3,7 @@
  * @Author: chenle
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2022-12-20 17:54:21
+ * @Last Modified time: 2023-01-06 17:25:18
  */
 
 import { computed, unref } from 'vue'
@@ -36,7 +36,7 @@ export function useFilters<L>(
       return false
     }
 
-    const propObj: PowerfulTableHeaderProps<L> = propObjs(column)
+    const propObj: PowerfulTableHeaderProps<null, L> = propObjs(column)
 
     // 判断监听类型
     if (
@@ -102,7 +102,7 @@ export function useFilters<L>(
    */
   const getPropObj = computed(
     () =>
-      (column: PowerfulTableHeader): PowerfulTableHeaderProps<L> => {
+      (column: PowerfulTableHeader): PowerfulTableHeaderProps<null, L> => {
         return propObjs<L>(column)
       }
   )
@@ -150,9 +150,9 @@ const recursionFilterFun = <L>(
 
 const propObjs = <L>(
   column: PowerfulTableHeader
-): PowerfulTableHeaderProps<L> => {
+): PowerfulTableHeaderProps<null, L> => {
   // 获取过滤项
-  let propObj: PowerfulTableHeaderProps<L> = { prop: '' }
+  let propObj: PowerfulTableHeaderProps<null, L> = { prop: '' }
   // 判断是否数组
   if (!Array.isArray(column.props)) {
     propObj = column.props
