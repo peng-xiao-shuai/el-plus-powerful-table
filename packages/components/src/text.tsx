@@ -19,6 +19,7 @@ const Text = defineComponent({
       default: 0,
     },
   },
+  emits: ['return-emit'],
   setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
     const develop = ref(Array.from({ length: props.listLength }).fill(false))

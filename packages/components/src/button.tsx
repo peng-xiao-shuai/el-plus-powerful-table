@@ -18,7 +18,7 @@ const Button = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['btn-click'],
+  emits: ['return-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
@@ -56,13 +56,13 @@ const Button = defineComponent({
             }
           )
           .then(() => {
-            emit('btn-click', { params, row, index })
+            emit('return-emit', 'btn-click', { params, row, index })
           })
           .catch(() => {
             // console.log('取消删除')
           })
       } else {
-        emit('btn-click', { params, row, index })
+        emit('return-emit', 'btn-click', { params, row, index })
       }
     }
 

@@ -13,7 +13,7 @@ const Video = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
+  emits: ['return-emit'],
   setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
 

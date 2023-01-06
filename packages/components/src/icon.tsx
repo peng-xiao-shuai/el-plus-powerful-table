@@ -13,6 +13,7 @@ const Icon = defineComponent({
       default: () => ({}),
     },
   },
+  emits: ['return-emit'],
   setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
 

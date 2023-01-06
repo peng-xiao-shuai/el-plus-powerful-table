@@ -6,6 +6,7 @@ import type { PropType } from 'vue'
 import type {
   BtnConfig,
   EmitEventType,
+  EmitType,
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
   PowerfulTableOperateData,
@@ -296,6 +297,20 @@ export const useFunction = <L>(
       })
   }
 
+  const returnEmit = (
+    emitName: Extract<EmitType, 'btn-click' | 'switch-change'>,
+    arg: any
+  ) => {
+    switch (emitName) {
+      case 'btn-click':
+        emit('btn-click', arg)
+        break
+      case 'switch-change':
+        emit('switch-change', arg)
+        break
+    }
+  }
+
   /**
    * 将附属组件（components/src 目录下的文件）中el的事件抛出
    */
@@ -366,6 +381,7 @@ export const useFunction = <L>(
   return {
     handleSelectionChange,
     rowClick,
+    returnEmit,
     componentEmit,
     sortChange,
     batchOperate,

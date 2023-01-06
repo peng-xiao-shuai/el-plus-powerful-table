@@ -17,7 +17,7 @@ const Input = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
+  emits: ['return-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)

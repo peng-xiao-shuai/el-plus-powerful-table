@@ -188,8 +188,7 @@
                 ].includes(prop.type)
               "
               v-bind="bindAttr(prop, scope, item)"
-              @btn-click="(payload: any) => emit('btn-click', payload)"
-              @switch-change="(row: any) => emit('switch-change', row)"
+              @return-emit="returnEmit"
             />
             <!-- @component-emit="componentEmit" -->
             <!-- 正常 -->
@@ -324,6 +323,7 @@ const { headerFilterChange, getPropObj } = useFilters<Row>(
 const {
   handleSelectionChange,
   rowClick,
+  returnEmit,
   componentEmit,
   sortChange,
   batchOperate,

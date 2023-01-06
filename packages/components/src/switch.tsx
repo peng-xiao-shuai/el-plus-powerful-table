@@ -14,7 +14,7 @@ const Switch = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['returnEmit', 'switch-change'],
+  emits: ['return-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
@@ -52,13 +52,13 @@ const Switch = defineComponent({
             }
           )
           .then(() => {
-            emit('switch-change', row)
+            emit('return-emit', 'switch-change', row)
           })
           .catch(() => {
             row[prop] = value as L[keyof L]
           })
       } else {
-        emit('switch-change', row)
+        emit('return-emit', 'switch-change', row)
       }
     }
 
