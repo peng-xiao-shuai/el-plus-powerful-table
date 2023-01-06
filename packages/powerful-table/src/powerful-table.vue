@@ -8,6 +8,8 @@
       :btn-config="btnConfig"
       :header-list="header"
       :multiple-selection="currentSelect"
+      @change="(...arg) => emit('btn-plus-change', ...arg)"
+      @refresh="emit('btn-plus-refresh')"
     >
       <template v-if="$slots['btn-left']" #btn-left>
         <slot name="btn-left" />
@@ -186,8 +188,10 @@
                 ].includes(prop.type)
               "
               v-bind="bindAttr(prop, scope, item)"
-              @return-emit="returnEmit"
+              @btn-click="(payload: any) => emit('btn-click', payload)"
+              @switch-change="(row: any) => emit('switch-change', row)"
             />
+            <!-- @component-emit="componentEmit" -->
             <!-- 正常 -->
             <PTText
               v-else-if="scope.row[prop.prop]"
@@ -244,32 +248,56 @@
   </div>
 </template>
 
-<script lang="ts">
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  provide,
-  toRefs,
-  watch,
-  watchEffect,
-} from 'vue'
+<script setup lang="ts">
+import { computed, nextTick, provide, toRefs, watch, watchEffect } from 'vue'
 import { deepClone } from '../../index'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
 import { useFilters } from '../../filter/useFilters'
 import {
-  powerfulTableEmits,
   powerfulTableProps,
   useFunction,
   usePowerfulTableStates,
 } from './powerful-table-data'
+import type { ComponentEvent } from './powerful-table-data'
 import type {
-  PowerfulTableHeader,
-  PowerfulTableHeaderProps,
+  BtnConfig,
+  BtnDataType,
+  PowerfulTableLabelValue,
 } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
-
+type Row = typeof props.list[number]
+// 自定义事件类型
+type EmitEventType = {
+  (
+    e: 'btn-plus-change',
+    payload: { effect: BtnConfig.BtnList['effect']; list: any[] }
+  ): void
+  (e: 'btn-plus-refresh'): void
+  (
+    e: 'btn-click',
+    payload: { params: BtnDataType['params']; row: Row; index: number }
+  ): void
+  (e: 'switch-change', row: Row): void
+  (
+    e: 'size-change',
+    payload: {
+      params: { pageNum: number; pageSize: number }
+      select: Row[]
+    }
+  ): void
+  (e: 'component-emit', componentEvent: ComponentEvent, ...args: any): void
+  (e: 'sort-custom', payload: { column?: any; prop: string; order: any }): void
+  (
+    e: 'batch-operate',
+    payload: {
+      ids: (string | number)[]
+      item: PowerfulTableLabelValue
+      items: Row[]
+    }
+  ): void
+  (e: 'row-click', ...args: any): void
+}
 // 获取 布局方向
 const justifyFun = (val: string): string => {
   const bol = ['center', 'left', 'right'].includes(val)
@@ -278,210 +306,169 @@ const justifyFun = (val: string): string => {
     : 'center'
 }
 
-export default defineComponent({
-  name: 'PowerfulTable',
-  props: powerfulTableProps,
-  emits: powerfulTableEmits,
-  setup(props, { emit }) {
-    type Row = typeof props.list[number]
-    /* ------ data数据 ------ */
-    const {
-      powerfulTableData,
-      multipleTable,
-      filterComponents,
-      stateData,
-      Size,
-    } = usePowerfulTableStates<Row>(props)
+const props = defineProps(powerfulTableProps)
+const emit = defineEmits<EmitEventType>()
+/* ------ data数据 ------ */
+const { powerfulTableData, multipleTable, filterComponents, stateData, Size } =
+  usePowerfulTableStates<Row>(props)
 
-    /* ------ 注入数据 ------ */
-    // 组件大小
-    provide(SizeSymbol, Size)
-    // 单元格内布局
-    provide(JustifyFunSymbol, justifyFun)
+// 局部过滤hook
+const { headerFilterChange, getPropObj } = useFilters<Row>(
+  stateData,
+  props,
+  multipleTable
+)
 
-    // 局部过滤hook
-    const { headerFilterChange, getPropObj } = useFilters<Row>(
-      stateData,
-      props,
-      multipleTable
-    )
+/* ------  操作方法  ------ */
+const {
+  handleSelectionChange,
+  rowClick,
+  componentEmit,
+  sortChange,
+  batchOperate,
+  get,
+  matchComponents,
+  bindAttr,
+} = useFunction<Row>(emit, powerfulTableData)
 
-    /* ------  操作方法  ------ */
-    const {
-      handleSelectionChange,
-      rowClick,
-      returnEmit,
-      sortChange,
-      batchOperate,
-      get,
-      matchComponents,
-    } = useFunction<Row>(emit, powerfulTableData)
+const { tableLists, isTable } = toRefs(stateData)
+const { listLoading, currentPage, pageSize, currentSelect, operate } =
+  toRefs(powerfulTableData)
 
-    watchEffect(() => {
-      Object.assign(powerfulTableData.operate, props.operateData)
+/* ------ 注入数据 ------ */
+// 组件大小
+provide(SizeSymbol, Size)
+// 单元格内布局
+provide(JustifyFunSymbol, justifyFun)
 
-      // list数据有的话 关闭加载中...
-      // 更具当前list 数据 添加develop
-      powerfulTableData.develop = Array.from<boolean>({
-        length: stateData.tableLists.length,
-      }).fill(false)
-      powerfulTableData.listLoading = false
+watchEffect(() => {
+  Object.assign(powerfulTableData.operate, props.operateData)
+
+  // list数据有的话 关闭加载中...
+  // 更具当前list 数据 添加develop
+  powerfulTableData.develop = Array.from<boolean>({
+    length: stateData.tableLists.length,
+  }).fill(false)
+  powerfulTableData.listLoading = false
+})
+
+// 判断列表是否存在数据，存在则查询选中
+watch(
+  () => stateData.tableLists,
+  (val) => {
+    if (val.length) nextTick(() => getSelect())
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+)
+
+/* --- 按钮组件参数及方法begin --- */
+// 为表格数据重新赋值
+watch(
+  () => props.list as Row[],
+  (newList) => {
+    stateData.tableLists = newList || []
+  },
+  { immediate: true, deep: true }
+)
+watch(
+  () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
+  () => {
+    // 切换页面清除表头选中
+    if (Array.isArray(filterComponents.value)) {
+      filterComponents.value.forEach((item: any) => {
+        item.state.value = ''
+      })
+    } else {
+      // filterComponents.value.forEach((item: any) => {
+      // item.state.value = ''
+      // })
+    }
+
+    get()
+  }
+)
+
+// 过滤被隐藏的列
+const headerLists = computed(() =>
+  props.header.filter((column) => !column.isShowColumn)
+)
+
+// 重新渲染表格
+const anewRender = () => {
+  nextTick(() => {
+    multipleTable.value?.doLayout()
+  })
+}
+
+/* ------ 获取选中 ------ */
+const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
+  if (!props.isSelect) return
+
+  // 1.获取当前页
+  // 2.总选中减去当前页
+  // 3.得到其他页
+
+  // 获取当前页选中
+  const current: Row[] = []
+  // 获取 其他页选中
+  let other: Row[] = []
+
+  const selectCompare = [
+    props.selectCompare ? props.selectCompare[0] : 'id',
+    props.selectCompare ? props.selectCompare[1] : 'id',
+  ]
+
+  // 获取当前页
+  if (arr.length != 0) {
+    // console.log('所有选中', arr);
+    // 获取当前页
+    arr.forEach((item) => {
+      const l = list.filter((each: typeof list[0]) => {
+        return item[selectCompare[0]] == each[selectCompare[1]]
+      })
+
+      if (l.length > 0) current.push(l[0])
     })
 
-    // 判断列表是否存在数据，存在则查询选中
-    watch(
-      () => stateData.tableLists,
-      (val) => {
-        if (val.length) nextTick(() => getSelect())
-      },
-      {
-        immediate: true,
-        deep: true,
-      }
-    )
-
-    /* --- 按钮组件参数及方法begin --- */
-    // 为表格数据重新赋值
-    watch(
-      () => props.list as Row[],
-      (newList) => {
-        stateData.tableLists = newList || []
-      },
-      { immediate: true, deep: true }
-    )
-    watch(
-      () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
-      () => {
-        // 切换页面清除表头选中
-        if (Array.isArray(filterComponents.value)) {
-          filterComponents.value.forEach((item: any) => {
-            item.state.value = ''
-          })
-        } else {
-          // filterComponents.value.forEach((item: any) => {
-          // item.state.value = ''
-          // })
-        }
-
-        get()
-      }
-    )
-
-    // 过滤被隐藏的列
-    const headerLists = computed(() =>
-      props.header.filter((column) => !column.isShowColumn)
-    )
-
-    // 重新渲染表格
-    const anewRender = () => {
-      nextTick(() => {
-        multipleTable.value?.doLayout()
-      })
-    }
-
-    /* ------ 获取选中 ------ */
-    const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
-      if (!props.isSelect) return
-
-      // 1.获取当前页
-      // 2.总选中减去当前页
-      // 3.得到其他页
-
-      // 获取当前页选中
-      const current: Row[] = []
-      // 获取 其他页选中
-      let other: Row[] = []
-
-      const selectCompare = [
-        props.selectCompare ? props.selectCompare[0] : 'id',
-        props.selectCompare ? props.selectCompare[1] : 'id',
-      ]
-
-      // 获取当前页
-      if (arr.length != 0) {
-        // console.log('所有选中', arr);
-        // 获取当前页
-        arr.forEach((item) => {
-          const l = list.filter((each: typeof list[0]) => {
-            return item[selectCompare[0]] == each[selectCompare[1]]
-          })
-
-          if (l.length > 0) current.push(l[0])
-        })
-
-        // 获取其他页
-        if (current.length > 0) {
-          other = deepClone(arr)
-          for (const j in other) {
-            current.forEach((item) => {
-              if (item[selectCompare[1]] == other[j][selectCompare[0]]) {
-                other.splice(Number(j), 1)
-              }
-            })
+    // 获取其他页
+    if (current.length > 0) {
+      other = deepClone(arr)
+      for (const j in other) {
+        current.forEach((item) => {
+          if (item[selectCompare[1]] == other[j][selectCompare[0]]) {
+            other.splice(Number(j), 1)
           }
-        } else {
-          other = deepClone(arr)
-        }
-
-        powerfulTableData.otherSelect = other
-        powerfulTableData.currentSelect = current
-        // console.log('当前页选中', current)
-        // console.log('其他页选中', other);
-
-        if (current.length != 0) {
-          current.forEach((row) => {
-            multipleTable.value?.toggleRowSelection(row, true)
-          })
-        } else {
-          multipleTable.value?.clearSelection()
-        }
-      } else {
-        multipleTable.value?.clearSelection()
+        })
       }
+    } else {
+      other = deepClone(arr)
     }
 
-    return {
-      Size,
-      headerLists,
-      ...toRefs(stateData),
-      headerFilterChange,
-      getPropObj,
-      ...toRefs(powerfulTableData),
+    powerfulTableData.otherSelect = other
+    powerfulTableData.currentSelect = current
+    // console.log('当前页选中', current)
+    // console.log('其他页选中', other);
 
-      filterComponents,
-      multipleTable,
-
-      LangKey,
-      t,
-
-      rowClick,
-      bindAttr<D>(
-        prop: PowerfulTableHeaderProps<Row, D>,
-        scope: { $index: number; row: Row },
-        item: PowerfulTableHeader<Row>
-      ): {
-        row: Row
-        index: number
-        prop: PowerfulTableHeaderProps<Row, D>
-        aligning: 'left' | 'center' | 'right'
-      } {
-        return {
-          row: scope.row,
-          index: scope.$index,
-          prop,
-          aligning: item.property?.align || item.headerAlign || 'center',
-        }
-      },
-      anewRender,
-      returnEmit,
-      sortChange,
-      batchOperate,
-      handleSelectionChange,
-      getSelect,
-      matchComponents,
+    if (current.length != 0) {
+      current.forEach((row) => {
+        multipleTable.value?.toggleRowSelection(row, true)
+      })
+    } else {
+      multipleTable.value?.clearSelection()
     }
-  },
-})
+  } else {
+    multipleTable.value?.clearSelection()
+  }
+}
+</script>
+
+<script lang="ts">
+export default {
+  name: 'PowerfulTable',
+}
 </script>
 
 <style src="./powerful-table.css"></style>

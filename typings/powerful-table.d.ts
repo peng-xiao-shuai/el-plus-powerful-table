@@ -60,11 +60,18 @@ export interface PowerfulTableHeader<L = any> {
   props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>
   property?: any
 }
+
+export type SetDataType<T extends keyof _TYPE> = {
+  [key in keyof _TYPE[T]]: _TYPE[T][key]
+}
 // props 单元格数据
-export interface PowerfulTableHeaderProps<L = any, D = any> {
+export interface PowerfulTableHeaderProps<
+  T extends keyof _TYPE | null | '' | undefined,
+  L = any
+> {
   prop: string
-  data?: D
-  type?: Type
+  data?: SetDataType<T>
+  type?: keyof _TYPE
   // eslint-disable-next-line prettier/prettier
   filters?:
     | PowerfulTableFilter[]
@@ -79,19 +86,20 @@ export interface PowerfulTableHeaderProps<L = any, D = any> {
   property?: any
 }
 
-export type Type =
-  | 'image'
-  | 'text'
-  | 'switch'
-  | 'btn'
-  | 'video'
-  | 'input'
-  | 'iconfont'
-  | 'tag'
-  | 'rate'
-  | 'href'
-  | 'slot'
-  | 'textarea'
+export type _TYPE = {
+  image: ImageDataType
+  text: TextDataType
+  switch: SwitchDataType
+  btn: BtnDataType[] | BtnDataType[][]
+  video: VideoDataType
+  input: InputDataType
+  iconfont: IconFontDataType
+  tag: TagDataType
+  rate: RateDataType
+  href: LinkDataType
+  slot: null
+  textarea: InputDataType
+}
 
 export type PowerfulTableFilter = {
   key: string | number
@@ -241,12 +249,44 @@ export type SFCWithInstall<T> = T & Plugin
 
 export type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 export type Size = '' | 'large' | 'default' | 'small'
+// 自定义事件类型
+export type EmitEventType<Row> = {
+  (
+    e: 'btn-plus-change',
+    payload: { effect: BtnConfig.BtnList['effect']; list: any[] }
+  ): void
+  (e: 'btn-plus-refresh'): void
+  (
+    e: 'btn-click',
+    payload: { params: BtnDataType['params']; row: Row; index: number }
+  ): void
+  (e: 'switch-change', row: Row): void
+  (
+    e: 'size-change',
+    payload: {
+      params: { pageNum: number; pageSize: number }
+      select: Row[]
+    }
+  ): void
+  (e: 'component-emit', componentEvent: ComponentEvent, ...args: any): void
+  (e: 'sort-custom', payload: { column?: any; prop: string; order: any }): void
+  (
+    e: 'batch-operate',
+    payload: {
+      ids: (string | number)[]
+      item: PowerfulTableLabelValue
+      items: Row[]
+    }
+  ): void
+  (e: 'row-click', ...args: any): void
+}
 export type EmitType =
-  | 'query'
-  | 'success'
-  | 'add'
-  | 'update'
-  | 'remove'
-  | 'occupyOne'
-  | 'occupyTwo'
+  | 'btn-plus-change'
+  | 'refresh'
+  | 'btn-click'
+  | 'switch-change'
+  | 'size-change'
+  | 'component-emit'
+  | 'sort-custom'
+  | 'batch-operate'
   | 'row-click'

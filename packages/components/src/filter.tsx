@@ -4,7 +4,6 @@ import type {
   PowerfulTableFilter,
   PowerfulTableHeaderProps,
   SFCWithInstall,
-  TextDataType,
 } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { LangKey, t } from '~/locale/lang'
@@ -22,7 +21,7 @@ const Filter = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, TextDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'text'>>,
       default: () => ({}),
     },
   },

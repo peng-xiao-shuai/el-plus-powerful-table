@@ -9,12 +9,11 @@ const RenderJsx = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any>>,
+      type: Object as PropType<PowerfulTableHeaderProps<null>>,
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
-  setup(props, { emit }) {
+  setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
 
     return () => (

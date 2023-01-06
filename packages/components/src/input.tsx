@@ -13,7 +13,7 @@ const Input = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, InputDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'input'>>,
       default: () => ({}),
     },
   },

@@ -1,10 +1,6 @@
 import { defineComponent, getCurrentInstance, inject } from 'vue'
 import type { App, PropType } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-  SwitchDataType,
-} from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
@@ -14,11 +10,11 @@ const Switch = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, SwitchDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'switch'>>,
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
+  emits: ['returnEmit', 'switch-change'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
@@ -56,13 +52,13 @@ const Switch = defineComponent({
             }
           )
           .then(() => {
-            emit('returnEmit', 'switchChange', row)
+            emit('switch-change', row)
           })
           .catch(() => {
             row[prop] = value as L[keyof L]
           })
       } else {
-        emit('returnEmit', 'switchChange', row)
+        emit('switch-change', row)
       }
     }
 

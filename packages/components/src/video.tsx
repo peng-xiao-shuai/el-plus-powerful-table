@@ -1,10 +1,6 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-  VideoDataType,
-} from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 
@@ -13,7 +9,7 @@ const Video = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, VideoDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'video'>>,
       default: () => ({}),
     },
   },

@@ -5,17 +5,23 @@ import { PowerfulTableSymbol } from '../../keys'
 import type { PropType } from 'vue'
 import type {
   BtnConfig,
-  EmitType,
+  EmitEventType,
   PowerfulTableHeader,
+  PowerfulTableHeaderProps,
   PowerfulTableOperateData,
   PowerfulTableTree,
   Size,
+  _TYPE,
 } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
 
 type DefaultRow = any
 type TranslatePair = {
   [key: string]: string | string[] | TranslatePair
+}
+export type ComponentEvent = {
+  componentName: keyof _TYPE
+  eventType: string
 }
 
 interface PowerFulTableProps<L> {
@@ -113,17 +119,6 @@ export const powerfulTableProps = {
     default: () => ({}),
   },
 }
-// 主组件emits
-export const powerfulTableEmits = [
-  'btnChange',
-  'sortCustom',
-  'batchOperate',
-  'switchChange',
-  'sizeChange',
-  'btnClick',
-  'row-click',
-  'refresh',
-]
 
 export const powerfulTableComponentProp = {
   row: {
@@ -137,6 +132,27 @@ export const powerfulTableComponentProp = {
     type: String as PropType<'left' | 'center' | 'right'>,
     default: 'center',
   },
+}
+
+// 附属组件自定义事件抛出
+export const useREmit = (
+  emit: (s: 'componentEmit', event: ComponentEvent, ...arg: any) => void,
+  componentName: keyof _TYPE
+) => {
+  const REmit = (eventType: string, ...arg: any) => {
+    emit(
+      'componentEmit',
+      {
+        componentName,
+        eventType,
+      },
+      ...arg
+    )
+  }
+
+  return {
+    REmit,
+  }
 }
 
 interface PowerfulTableData<L = DefaultRow> {
@@ -201,7 +217,7 @@ export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
 }
 
 export const useFunction = <L>(
-  emit: <T>(s: string, obj: T) => any,
+  emit: EmitEventType<L>,
   powerfulTableData: PowerfulTableData<L>
 ) => {
   const { proxy } = getCurrentInstance() as any
@@ -213,7 +229,7 @@ export const useFunction = <L>(
   const sortChange = (obj: { column?: any; prop: string; order: any }) => {
     if (Object.keys(obj.column || {}).length) {
       if (obj.column.sortable == 'custom') {
-        emit('sortCustom', obj)
+        emit('sort-custom', obj)
       }
     }
   }
@@ -269,7 +285,7 @@ export const useFunction = <L>(
           .concat(powerfulTableData.currentSelect)
           .map((item) => item)
 
-        emit('batchOperate', {
+        emit('batch-operate', {
           ids,
           item: powerfulTableData.operate.operates[0],
           items,
@@ -281,22 +297,16 @@ export const useFunction = <L>(
   }
 
   /**
-   * 当前组件的子组件回调 并在此组件暴露出去
-   * @param {EmitType} emitName
-   * @param objVal
+   * 将附属组件（components/src 目录下的文件）中el的事件抛出
    */
-  const returnEmit = <T>(emitName: EmitType, objVal: T) => {
-    // console.log('触发回调', emitName, objVal);
-
-    emit(emitName, objVal)
-  }
+  const componentEmit = (e: ComponentEvent, ...arg: any) => ({})
 
   /**
    * 行点击操作
    * @param arg
    */
   const rowClick = (...arg: any) => {
-    returnEmit<{ row: L; column: any; event: Event }>('row-click', { ...arg })
+    emit('row-click', ...arg)
   }
 
   /* ------ 回调到组件上 ------ */
@@ -315,7 +325,7 @@ export const useFunction = <L>(
         ),
       })
     } catch {
-      emit('sizeChange', {
+      emit('size-change', {
         params,
         select: powerfulTableData.otherSelect.concat(
           powerfulTableData.currentSelect
@@ -356,11 +366,28 @@ export const useFunction = <L>(
   return {
     handleSelectionChange,
     rowClick,
-    returnEmit,
+    componentEmit,
     sortChange,
     batchOperate,
     get,
     matchComponents,
+    bindAttr(
+      prop: PowerfulTableHeaderProps<null, L>,
+      scope: { $index: number; row: L },
+      item: PowerfulTableHeader<L>
+    ): {
+      row: L
+      index: number
+      prop: PowerfulTableHeaderProps<null, L>
+      aligning: 'left' | 'center' | 'right'
+    } {
+      return {
+        row: scope.row,
+        index: scope.$index,
+        prop,
+        aligning: item.property?.align || item.headerAlign || 'center',
+      }
+    },
   }
 }
 

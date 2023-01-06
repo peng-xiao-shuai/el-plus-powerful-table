@@ -1,10 +1,6 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  RateDataType,
-  SFCWithInstall,
-} from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 
@@ -13,7 +9,7 @@ const Rate = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, RateDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'rate'>>,
       default: () => ({}),
     },
   },

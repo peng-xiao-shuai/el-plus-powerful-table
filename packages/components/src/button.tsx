@@ -14,13 +14,11 @@ const Button = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<
-        PowerfulTableHeaderProps<any, BtnDataType[] | BtnDataType[][]>
-      >,
+      type: Object as PropType<PowerfulTableHeaderProps<'btn'>>,
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
+  emits: ['btn-click'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
@@ -58,13 +56,13 @@ const Button = defineComponent({
             }
           )
           .then(() => {
-            emit('returnEmit', 'btnClick', { params, row, index })
+            emit('btn-click', { params, row, index })
           })
           .catch(() => {
             // console.log('取消删除')
           })
       } else {
-        emit('returnEmit', 'btnClick', { params, row, index })
+        emit('btn-click', { params, row, index })
       }
     }
 

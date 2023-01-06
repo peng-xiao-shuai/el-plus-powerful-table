@@ -184,6 +184,8 @@ const props = defineProps({
 })
 const emit = defineEmits<{
   (e: 'update:isTable', isTable: boolean): void
+  (e: 'refresh'): void
+  (e: 'change', arg: { effect: BtnConfig.BtnList['effect']; list: any[] }): void
 }>()
 
 const size = inject(SizeSymbol)
@@ -261,7 +263,7 @@ const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
           type: 'warning',
         })
         .then(() => {
-          proxy.$parent.returnEmit('btnChange', {
+          emit('change', {
             effect: btnItem.effect,
             list: props.multipleSelection,
           })
@@ -270,7 +272,7 @@ const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
       return false
     }
     // 直接抛出
-    proxy.$parent.returnEmit('btnChange', {
+    emit('change', {
       effect: btnItem.effect,
       list: props.multipleSelection,
     })
@@ -279,7 +281,7 @@ const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
   }
   switch (btnItem.effect) {
     case 'refresh':
-      proxy.$parent.returnEmit('refresh', {})
+      emit('refresh')
       break
     case 'switch':
       emit('update:isTable', !props.isTable)

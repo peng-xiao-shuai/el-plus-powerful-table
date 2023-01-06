@@ -6,6 +6,7 @@ import type {
   PowerfulTableFilter,
   PowerfulTableHeaderProps,
   SFCWithInstall,
+  SetDataType,
 } from '../../../typings'
 import { SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
@@ -16,7 +17,7 @@ const FSelect = defineComponent({
     ...props,
     // 过滤的配置数据
     propData: {
-      type: Object as PropType<PowerfulTableHeaderProps<any>>,
+      type: Object as PropType<PowerfulTableHeaderProps<null>>,
       default: () => {
         return {
           prop: '',
@@ -66,11 +67,11 @@ const FSelect = defineComponent({
           arr.push(
             {
               value: t(LangKey.Open),
-              key: newProps.data.activeValue || 1,
+              key: (newProps.data as SetDataType<'switch'>).activeValue || 1,
             },
             {
               value: t(LangKey.Close),
-              key: newProps.data.inactiveValue || 0,
+              key: (newProps.data as SetDataType<'switch'>).inactiveValue || 0,
             }
           )
           state.options = arr

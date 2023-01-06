@@ -1,24 +1,18 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
-import type {
-  ImageDataType,
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-} from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
-import { LangKey, t } from '~/locale/lang'
 
 const Image = defineComponent({
   name: 'PTImage',
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, ImageDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'image'>>,
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
   setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
 

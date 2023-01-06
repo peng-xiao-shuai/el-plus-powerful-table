@@ -1,10 +1,6 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
-import type {
-  IconFontDataType,
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-} from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 
@@ -13,11 +9,10 @@ const Icon = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, IconFontDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'iconfont'>>,
       default: () => ({}),
     },
   },
-  emits: ['returnEmit'],
   setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
 

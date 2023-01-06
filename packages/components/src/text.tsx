@@ -1,11 +1,7 @@
 import { defineComponent, inject, ref } from 'vue'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import type { App, PropType } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-  TextDataType,
-} from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
@@ -15,7 +11,7 @@ const Text = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<any, TextDataType>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'text'>>,
       default: () => ({}),
     },
     listLength: {
@@ -23,8 +19,7 @@ const Text = defineComponent({
       default: 0,
     },
   },
-  emits: ['returnEmit'],
-  setup(props, { emit }) {
+  setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
     const develop = ref(Array.from({ length: props.listLength }).fill(false))
     return () => (
