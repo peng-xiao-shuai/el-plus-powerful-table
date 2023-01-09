@@ -1,7 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 
 const Video = defineComponent({
@@ -13,9 +16,13 @@ const Video = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
-  setup(props) {
+  emits: ['return-emit', 'component-emit'],
+  setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'video'
+    )
 
     return () => (
       <>
@@ -42,6 +49,22 @@ const Video = defineComponent({
               loop={props.prop.data?.loop || false}
               class="avatar video-avatar"
               controls={true}
+              onPlay={(event: Event) => {
+                REmit('play', {
+                  row: props.row,
+                  index: props.index,
+                  prop: props.prop.prop,
+                  event,
+                })
+              }}
+              onPause={(event: Event) => {
+                REmit('pause', {
+                  row: props.row,
+                  index: props.index,
+                  prop: props.prop.prop,
+                  event,
+                })
+              }}
               {...props.prop.data?.property}
             />
           </div>

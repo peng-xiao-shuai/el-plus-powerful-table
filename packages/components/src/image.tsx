@@ -1,7 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 
 const Image = defineComponent({
@@ -13,9 +16,13 @@ const Image = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
-  setup(props) {
+  emits: ['return-emit', 'component-emit'],
+  setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'image'
+    )
 
     return () => (
       <>
@@ -43,6 +50,10 @@ const Image = defineComponent({
             fit={props.prop.data?.fit || 'cover'}
             preview-teleported={true}
             onClick={(e: Event) => e.stopPropagation()}
+            onLoad={(...arg: any) => REmit('load', ...arg)}
+            onError={(...arg: any) => REmit('error', ...arg)}
+            onSwitch={(...arg: any) => REmit('switch', ...arg)}
+            onClose={(...arg: any) => REmit('close', ...arg)}
             {...props.prop.data?.property}
           />
         </div>

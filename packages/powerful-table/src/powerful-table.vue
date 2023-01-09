@@ -168,6 +168,7 @@
                 prop.filters && (prop.type == 'text' || prop.type == undefined)
               "
               v-bind="bindAttr(prop, scope, item)"
+              @component-emit="componentEmit"
             />
             <!-- 动态组件 -->
             <component
@@ -189,13 +190,14 @@
               "
               v-bind="bindAttr(prop, scope, item)"
               @return-emit="returnEmit"
+              @component-emit="componentEmit"
             />
-            <!-- @component-emit="componentEmit" -->
             <!-- 正常 -->
             <PTText
               v-else-if="scope.row[prop.prop]"
               v-bind="bindAttr(prop, scope, item)"
               :list-length="tableLists.length"
+              @component-emit="componentEmit"
             />
           </div>
         </template>
@@ -272,7 +274,7 @@ type Row = any
 type EmitEventType = {
   (
     e: 'btn-plus-change',
-    payload: { effect: BtnConfig.BtnList['effect']; list: any[] }
+    payload: { effect: BtnConfig.BtnList['effect']; rows: any[] }
   ): void
   (e: 'btn-plus-refresh'): void
   (
@@ -287,7 +289,7 @@ type EmitEventType = {
       select: Row[]
     }
   ): void
-  (e: 'component-emit', componentEvent: ComponentEvent, ...args: any): void
+  (e: 'component-event', componentEvent: ComponentEvent, ...args: any): void
   (e: 'sort-custom', payload: { column?: any; prop: string; order: any }): void
   (
     e: 'batch-operate',

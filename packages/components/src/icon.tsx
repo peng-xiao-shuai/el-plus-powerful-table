@@ -1,7 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 
 const Icon = defineComponent({
@@ -13,9 +16,13 @@ const Icon = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
-  setup(props) {
+  emits: ['return-emit', 'component-emit'],
+  setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'iconfont'
+    )
 
     return () => (
       <>
@@ -25,6 +32,15 @@ const Icon = defineComponent({
             alignItems: 'center',
             width: '100%',
             justifyContent: justifyFun(props.aligning),
+          }}
+          onClick={(event: Event) => {
+            event.stopPropagation()
+            REmit('click', {
+              row: props.row,
+              index: props.index,
+              prop: props.prop.prop,
+              event,
+            })
           }}
         >
           <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>

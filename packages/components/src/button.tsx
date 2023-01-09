@@ -18,7 +18,7 @@ const Button = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
+  emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)

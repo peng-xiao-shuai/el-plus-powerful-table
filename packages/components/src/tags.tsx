@@ -2,7 +2,10 @@ import { defineComponent, inject } from 'vue'
 import { filterFun } from './filter'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 
 const Tags = defineComponent({
@@ -14,10 +17,14 @@ const Tags = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
+  emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'tag'
+    )
 
     /* ------ 标签string转array ------ */
     const tagToArray = (val: string | [], i: number) => {
@@ -63,6 +70,16 @@ const Tags = defineComponent({
                 ''
               }
               hit={props.prop.data?.hit || false}
+              onClick={(event: Event) => {
+                event.stopPropagation()
+                REmit('click', {
+                  row: props.row,
+                  index: props.index,
+                  prop: props.prop.prop,
+                  event,
+                })
+              }}
+              onChange={(...arg: any) => REmit('change', ...arg)}
               {...props.prop.data?.property}
             >
               {props.prop.filters

@@ -253,7 +253,7 @@ export type Size = '' | 'large' | 'default' | 'small'
 export type EmitEventType<Row> = {
   (
     e: 'btn-plus-change',
-    payload: { effect: BtnConfig.BtnList['effect']; list: any[] }
+    payload: { effect: BtnConfig.BtnList['effect']; rows: any[] }
   ): void
   (e: 'btn-plus-refresh'): void
   (
@@ -268,7 +268,7 @@ export type EmitEventType<Row> = {
       select: Row[]
     }
   ): void
-  (e: 'component-emit', componentEvent: ComponentEvent, ...args: any): void
+  (e: 'component-event', componentEvent: ComponentEvent, ...args: any): void
   (e: 'sort-custom', payload: { column?: any; prop: string; order: any }): void
   (
     e: 'batch-operate',
@@ -282,7 +282,7 @@ export type EmitEventType<Row> = {
 }
 export type EmitType =
   | 'btn-plus-change'
-  | 'refresh'
+  | 'btn-plus-refresh'
   | 'btn-click'
   | 'switch-change'
   | 'size-change'

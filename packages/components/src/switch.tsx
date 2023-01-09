@@ -1,7 +1,10 @@
 import { defineComponent, getCurrentInstance, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
 
@@ -14,10 +17,14 @@ const Switch = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
+  emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'switch'
+    )
 
     const { proxy } = getCurrentInstance() as any
     /* ------ 开关回调 ------ */
@@ -94,6 +101,7 @@ const Switch = defineComponent({
                 : 1
             }
             inactive-value={props.prop.data?.inactiveValue || 0}
+            onChange={(...arg: any) => REmit('change', ...arg)}
             onClick={(e: Event) => {
               e.stopPropagation()
               if (

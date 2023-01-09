@@ -1,11 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
-import type {
-  InputDataType,
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-} from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 
 const Input = defineComponent({
@@ -17,10 +16,14 @@ const Input = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
+  emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'input'
+    )
 
     return () => (
       <>
@@ -50,7 +53,20 @@ const Input = defineComponent({
             placeholder={props.prop.data?.placeholder || ''}
             v-model={props.row[props.prop.prop]}
             disabled={props.prop.data?.disabled || false}
-            onClick={(e: Event) => e.stopPropagation()}
+            onClick={(event: Event) => {
+              event.stopPropagation()
+              REmit('click', {
+                row: props.row,
+                index: props.index,
+                prop: props.prop.prop,
+                event,
+              })
+            }}
+            onBlur={(...arg: any) => REmit('blur', ...arg)}
+            onFocus={(...arg: any) => REmit('focus', ...arg)}
+            onChange={(...arg: any) => REmit('change', ...arg)}
+            onInput={(...arg: any) => REmit('input', ...arg)}
+            onClear={(...arg: any) => REmit('clear', ...arg)}
             {...props.prop.data?.property}
           ></el-input>
         </div>

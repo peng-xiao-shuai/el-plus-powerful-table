@@ -185,7 +185,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'update:isTable', isTable: boolean): void
   (e: 'refresh'): void
-  (e: 'change', arg: { effect: BtnConfig.BtnList['effect']; list: any[] }): void
+  (e: 'change', arg: { effect: BtnConfig.BtnList['effect']; rows: any[] }): void
 }>()
 
 const size = inject(SizeSymbol)
@@ -265,7 +265,7 @@ const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
         .then(() => {
           emit('change', {
             effect: btnItem.effect,
-            list: props.multipleSelection,
+            rows: props.multipleSelection,
           })
         })
 
@@ -274,7 +274,7 @@ const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
     // 直接抛出
     emit('change', {
       effect: btnItem.effect,
-      list: props.multipleSelection,
+      rows: props.multipleSelection,
     })
 
     return false

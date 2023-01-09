@@ -35,6 +35,8 @@
 - `componentProps` 参数更改为 `property`
 - `type` 类型为 `video` 新增  `property` 扩展参数
 - `BtnConfig.BtnList` 新增 `property` 扩展参数
+- 内部组件新增自定义事件，详情看 `type == 'XX'`（XX 为某个类型）, 内部组件传递到 `powerful-table` 组件由 `component-event` 抛出
+
   ## 2.0.7 20220328
 - **新增 props `property`**
 - - [**ElTable 属性**](https://element-plus.gitee.io/zh-CN/component/table.html#table-attributes)
@@ -452,6 +454,10 @@ const data = [{
 | develop         | 是否显示 “展开/收起 操作按钮”    | boolean             | false/true | false  |
 | customFilterFun | 自定义当前单元格数据文本 (row)。 | function(row,index) | -          | -      |
 
+#### Emit
+| 方法名       | 说明   | 参数      |
+| click       | 点击事件   | {row, index, prop, event}      |
+
 ```js
 {
     label: "类型", //显示的标题
@@ -810,15 +816,17 @@ const data = [{
 
 ## Event
 
-| 方法名       | 说明                 | 参数                                                  |
+| 方法名       | 说明                 | 参数      |
 | ------------ | -------------------- | ----------------------------------------------------- |
-| sizeChange   | 分页器切换           | { pageNum , pageSize }，selectArr(所有页中选中的数据) |
-| sortCustom   | 远程排序             | column                                                |
-| batchOperate | 批量操作             | {ids , selection , rows}                              |
-| btnClick     | 表格操作按钮         | {row , index, params }                                |
-| btnChange    | 表格顶部左侧操作按钮 | {rows , effect } 返回所有选中的行                     |
-| switchChange | 开关组件操作         | row                                                   |
+| size-change   | 分页器切换           | { pageNum , pageSize }，selectArr(所有页中选中的数据) |
+| sort-custom   | 远程排序             | column                                                |
+| batch-operate | 批量操作             | {ids , selection , rows}                              |
+| btn-click     | 表格操作按钮         | {row , index, params }  |
+| btn-plus-change    | 表格顶部左侧操作按钮 | {rows , effect } 返回所有选中的行                     |
+| btn-plus-refresh    | 表格顶部刷新按钮 | -                     |
+| switch-change | 开关组件操作         | row                                                   |
 | row-click    | 行点击事件           | {row, column, event}                                  |
+| component-event | 内部组件事件           | {row, column, event}                                  |
 
 ## Slot
 

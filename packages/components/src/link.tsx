@@ -13,8 +13,8 @@ const Link = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
-  setup(props, { emit }) {
+  emits: ['return-emit', 'component-emit'],
+  setup(props) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
 

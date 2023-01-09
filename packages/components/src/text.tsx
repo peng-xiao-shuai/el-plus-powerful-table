@@ -2,7 +2,10 @@ import { defineComponent, inject, ref } from 'vue'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
 
@@ -19,9 +22,10 @@ const Text = defineComponent({
       default: 0,
     },
   },
-  emits: ['return-emit'],
-  setup(props) {
+  emits: ['component-emit'],
+  setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
+    const { REmit } = useREmit(emit, 'text')
     const develop = ref(Array.from({ length: props.listLength }).fill(false))
     return () => (
       <div
@@ -38,6 +42,15 @@ const Text = defineComponent({
         <div class={{ content: develop.value[props.index || 0] }}>
           {/* <!-- 主体内容 --> */}
           <div
+            onClick={(event: Event) => {
+              event.stopPropagation()
+              REmit('click', {
+                row: props.row,
+                index: props.index,
+                prop: props.prop.prop,
+                event,
+              })
+            }}
             style={
               props.prop.data && props.prop.data.develop
                 ? {
@@ -61,8 +74,8 @@ const Text = defineComponent({
           <div
             v-show={props.prop.data && props.prop.data.develop}
             class="develop"
-            onClick={(e: Event) => {
-              e.stopPropagation()
+            onClick={(event: Event) => {
+              event.stopPropagation()
               develop.value[props.index || 0] = !develop.value[props.index || 0]
             }}
           >

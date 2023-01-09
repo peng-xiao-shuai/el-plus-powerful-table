@@ -1,7 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  powerfulTableComponentProp,
+  useREmit,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 
 const Rate = defineComponent({
@@ -13,10 +16,14 @@ const Rate = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['return-emit'],
+  emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
+    const { REmit } = useREmit(
+      emit as (event: 'component-emit', ...args: any[]) => void,
+      'rate'
+    )
 
     return () => (
       <>
@@ -52,6 +59,16 @@ const Rate = defineComponent({
             show-text={props.prop.data?.showText || false}
             show-score={props.prop.data?.showScore || false}
             texts={props.prop.data?.texts || undefined}
+            onClick={(event: Event) => {
+              event.stopPropagation()
+              REmit('click', {
+                row: props.row,
+                index: props.index,
+                prop: props.prop.prop,
+                event,
+              })
+            }}
+            onChange={(...arg: any) => REmit('change', ...arg)}
             {...props.prop.data?.property}
           />
         </div>

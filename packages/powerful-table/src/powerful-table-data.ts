@@ -21,7 +21,7 @@ type TranslatePair = {
   [key: string]: string | string[] | TranslatePair
 }
 export type ComponentEvent = {
-  componentName: keyof _TYPE
+  componentName: keyof _TYPE | 'filter'
   eventType: string
 }
 
@@ -137,12 +137,12 @@ export const powerfulTableComponentProp = {
 
 // 附属组件自定义事件抛出
 export const useREmit = (
-  emit: (s: 'componentEmit', event: ComponentEvent, ...arg: any) => void,
-  componentName: keyof _TYPE
+  emit: (s: 'component-emit', event: ComponentEvent, ...arg: any) => void,
+  componentName: keyof _TYPE | 'filter'
 ) => {
   const REmit = (eventType: string, ...arg: any) => {
     emit(
-      'componentEmit',
+      'component-emit',
       {
         componentName,
         eventType,
@@ -314,7 +314,9 @@ export const useFunction = <L>(
   /**
    * 将附属组件（components/src 目录下的文件）中el的事件抛出
    */
-  const componentEmit = (e: ComponentEvent, ...arg: any) => ({})
+  const componentEmit = (e: ComponentEvent, ...arg: any) => {
+    emit('component-event', e, ...arg)
+  }
 
   /**
    * 行点击操作
