@@ -37,7 +37,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
           class="el-popover-center"
           style={state.value.length ? { color: 'var(--el-color-primary)' } : {}}
           onClick={(e: Event) => {
-            if (!header.isFilterColumn) return
+            if (!header.defaultFilter) return
             e.stopPropagation()
             state.visible = !state.visible
           }}
@@ -45,7 +45,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
           {header.label}
           <el-icon
             style="margin-left: 5px"
-            v-show={header.isFilterColumn}
+            v-show={header.defaultFilter}
             class={state.visible ? 'arrow-down' : 'arrow-up'}
           >
             <ArrowUp />

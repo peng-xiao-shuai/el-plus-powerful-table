@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="clBtnPlus"
     :class="[
       'pt-btn-plus',
       btnConfig.hidden === 'none' ? 'hidden' : '',
@@ -112,7 +111,7 @@
                   >
                     <div>{{ row.label }}</div>
                     <el-checkbox
-                      v-model="row.isShowColumn"
+                      v-model="row.defaultShow"
                       class="checkbox"
                       :disabled="
                         !(
@@ -124,7 +123,7 @@
                       @change="functionBtnChange()"
                     />
                     <el-checkbox
-                      v-model="row.isFilterColumn"
+                      v-model="row.defaultFilter"
                       class="checkbox"
                       :disabled="
                         !(
@@ -147,14 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  getCurrentInstance,
-  inject,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from 'vue'
+import { getCurrentInstance, inject, reactive, ref, watch } from 'vue'
 import { Grid, Refresh } from '@element-plus/icons-vue'
 import { PowerfulTableSymbol, SizeSymbol } from '../../keys'
 import type {
@@ -192,11 +184,8 @@ const size = inject(SizeSymbol)
 const injectProps = inject(PowerfulTableSymbol, {})
 
 const { proxy } = getCurrentInstance() as any
-/* ------ 实例 ------ */
-const clBtnPlus = ref()
 // const store = useStore();
 type State = {
-  btnHeight: number
   headerData: PowerfulTableHeader[]
   functionBtnList: {
     size?: Size
@@ -210,7 +199,6 @@ type State = {
   isPC: boolean
 }
 const state: State = reactive({
-  btnHeight: 0,
   headerData: [],
   functionBtnList: [
     {
@@ -290,9 +278,6 @@ const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
       break
   }
 }
-onMounted(() => {
-  state.btnHeight = clBtnPlus.value.offsetHeight
-})
 watch(
   () => [props.headerList],
   ([newHeaderList]: any) => {

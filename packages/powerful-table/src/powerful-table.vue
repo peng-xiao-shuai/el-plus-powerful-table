@@ -162,14 +162,6 @@
                 <span>{{ t(LangKey.NoData) }}</span>
               </div>
             </div>
-            <!-- 筛选 -->
-            <PTFilter
-              v-else-if="
-                prop.filters && (prop.type == 'text' || prop.type == undefined)
-              "
-              v-bind="bindAttr(prop, scope, item)"
-              @component-emit="componentEmit"
-            />
             <!-- 动态组件 -->
             <component
               :is="matchComponents(prop.type)"
@@ -197,6 +189,14 @@
               v-else-if="scope.row[prop.prop]"
               v-bind="bindAttr(prop, scope, item)"
               :list-length="tableLists.length"
+              @component-emit="componentEmit"
+            />
+            <!-- 筛选 -->
+            <PTFilter
+              v-else-if="
+                prop.filters && (prop.type == 'text' || prop.type == undefined)
+              "
+              v-bind="bindAttr(prop, scope, item)"
               @component-emit="componentEmit"
             />
           </div>
@@ -250,7 +250,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, provide, toRefs, watch, watchEffect } from 'vue'
+import {
+  computed,
+  nextTick,
+  provide,
+  toRefs,
+  useAttrs,
+  useSlots,
+  watch,
+  watchEffect,
+} from 'vue'
 import { deepClone } from '../../index'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
@@ -395,9 +404,11 @@ watch(
 )
 
 // 过滤被隐藏的列
-const headerLists = computed(() =>
-  props.header.filter((column) => !column.isShowColumn)
-)
+const headerLists = computed(() => {
+  return props.header.filter((column) =>
+    typeof column.defaultShow == 'boolean' ? column.defaultShow : true
+  )
+})
 
 // 重新渲染表格
 const anewRender = () => {
@@ -466,6 +477,20 @@ const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
     multipleTable.value?.clearSelection()
   }
 }
+
+defineExpose({
+  $slots: useSlots(),
+  $attrs: useAttrs(),
+  $refs: {
+    multipleTable,
+    filterComponents,
+  },
+  headerLists,
+  powerfulTableData,
+  stateData,
+  handleSelectionChange,
+  anewRender,
+})
 </script>
 
 <script lang="ts">

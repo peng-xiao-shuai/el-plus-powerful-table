@@ -48,8 +48,8 @@ export interface PowerfulTableOperateData {
 export interface PowerfulTableHeader<L = any> {
   overflowTooltip?: boolean
   label: string
-  isShowColumn?: boolean // 当前列是否可以操作列显示隐藏
-  isFilterColumn?: boolean // 当前列是否在表头显示过滤按钮
+  defaultShow?: boolean // 当前列是否可以操作列显示隐藏
+  defaultFilter?: boolean // 当前列是否在表头显示过滤按钮
   minWidth?: string | number
   width?: string | number
   isShowOrFilterColumn?: false | 'show' | 'filter'
@@ -109,7 +109,15 @@ export type PowerfulTableFilter = {
 export type TextDataType = {
   line?: number
   develop?: boolean
-  customFilterFun?: (row: any, index?: number) => string | number
+  customFilterFun?: ({
+    row,
+    index,
+    props,
+  }: {
+    row: any
+    index?: number
+    props: PowerfulTableHeaderProps<'text'>
+  }) => string | number
 }
 
 export type ImageDataType = {
