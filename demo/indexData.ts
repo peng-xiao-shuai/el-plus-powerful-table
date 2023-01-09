@@ -26,6 +26,8 @@ type Lists = {
   href?: string
   cd?: Lists[]
   data?: string
+  driveType?: string
+  engineLocation?: string
 }
 
 const btnConfig: BtnConfig.Config = {
@@ -65,7 +67,6 @@ const header: PowerfulTableHeader<any>[] = [
     label: '编号', //显示的标题
     minWidth: '100px', //对应列的最小宽度
     headerAlign: 'center',
-    // isFilterColumn: true,
     sortable: true, //排序
     props: {
       prop: 'id',
@@ -73,12 +74,13 @@ const header: PowerfulTableHeader<any>[] = [
       //   develop: false
       // }
     },
+    defaultShow: false,
   },
   {
     label: '制作厂', //显示的名称
     width: 200,
     overflowTooltip: true,
-    isFilterColumn: true,
+    isShowOrFilterColumn: 'filter',
     headerAlign: 'left',
     props: [
       {
@@ -108,7 +110,7 @@ const header: PowerfulTableHeader<any>[] = [
     label: '名称', //显示的名称
     width: 220,
     overflowTooltip: true,
-    isFilterColumn: true,
+    isShowOrFilterColumn: 'filter',
     headerAlign: 'left',
     props: [
       {
@@ -140,6 +142,7 @@ const header: PowerfulTableHeader<any>[] = [
   },
   {
     label: '图片', //显示的标题
+    isShowOrFilterColumn: 'show',
     props: [
       {
         type: 'image',
@@ -161,9 +164,8 @@ const header: PowerfulTableHeader<any>[] = [
   },
   {
     label: '售价', //显示的标题
-    // isShowOrFilterColumn: 'filter',
+    isShowOrFilterColumn: 'filter',
     // 如果要使用过滤功能 isFilterColumn 参数是必须的
-    isFilterColumn: true,
     headerAlign: 'left',
     props: [
       {
@@ -197,17 +199,17 @@ const header: PowerfulTableHeader<any>[] = [
   {
     label: '发动机名称', // 此标题不会显示，因为配置了 自定义表头 headerSlotName
     width: '220',
-    isFilterColumn: true, // 自定义头部，过滤无效
+    isShowOrFilterColumn: 'filter',
     headerSlotName: 'Link',
-    property: {
-      align: 'left',
-    },
+    // property: {
+    //   align: 'left',
+    // },
     props: [
       {
         type: 'text',
         prop: 'engine',
         text: '发动机：',
-        render: (h, row) => h('b', row.engine),
+        filters: (row) => row.engine,
       },
       {
         type: 'rate',
@@ -219,6 +221,9 @@ const header: PowerfulTableHeader<any>[] = [
           max: 5,
           // colors: ['red', 'yellow', 'red'],
           //   // showScore: true
+          property: {
+            disabled: false,
+          },
         },
       },
       // {
@@ -232,6 +237,31 @@ const header: PowerfulTableHeader<any>[] = [
       //   },
       // },
     ],
+  },
+  {
+    label: '驱动方式',
+    props: {
+      prop: 'driveType',
+      filters: [
+        {
+          key: 'q',
+          value: '前驱',
+        },
+        {
+          key: 'h',
+          value: '后驱',
+        },
+        {
+          key: '4',
+          value: '四驱',
+        },
+      ],
+      data: {
+        customFilterFun: ({ row, props }: any) =>
+          row.engineLocation +
+          props.filters.find((item: any) => item.key == row.driveType).value,
+      },
+    },
   },
   {
     label: '宣传视频', //显示的标题
@@ -260,7 +290,7 @@ const header: PowerfulTableHeader<any>[] = [
     label: '外观颜色(只显示两个)', //显示的标题
     width: 200,
     overflowTooltip: false,
-    isFilterColumn: true,
+    isShowOrFilterColumn: 'filter',
     props: [
       {
         prop: 'tag',
@@ -288,7 +318,7 @@ const header: PowerfulTableHeader<any>[] = [
   },
   {
     label: '发售日期（插槽）', //显示的标题
-    isFilterColumn: true,
+    isShowOrFilterColumn: false,
     width: '180px',
     // hidden: true,
     props: [
@@ -303,7 +333,7 @@ const header: PowerfulTableHeader<any>[] = [
   {
     label: '简介', //显示的标题
     width: '300px',
-    isFilterColumn: true,
+    isShowOrFilterColumn: 'filter',
     props: [
       {
         prop: 'content',
@@ -399,6 +429,8 @@ const lists: Lists[] = [
       'http://tbvideo.ixiaochuan.cn/zyvd/264/89/61/84ca-3e46-11ed-87e3-00163e0e67b8',
     imageUrl: 'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b',
     data: '2021-12-xx',
+    driveType: '4',
+    engineLocation: '前置',
   },
   {
     id: 2,
@@ -417,6 +449,8 @@ const lists: Lists[] = [
       '宝马M8（BMW M8)是宝马旗下的顶级跑车，采用M部门为其量身打造的4.4T V8双涡轮增压引擎，最大功率可达625马力，峰值扭矩750牛米。这台引擎可以让1.9吨的大家伙在3.2秒内完成0-100加速。M，在宝马车系中代表顶级性能版。',
     imageUrl: 'https://images.unsplash.com/photo-1630037937485-e2da57394d88',
     data: '2022-01-xx',
+    driveType: '4',
+    engineLocation: '前置',
   },
   {
     id: 3,
@@ -435,6 +469,8 @@ const lists: Lists[] = [
       '奥迪R8（Audi R8）是一款中置引擎双座跑车，由德国汽车制造商奥迪于2006年推出，极速达316km/h。奥迪R8是奥迪量产的首款中置引擎超级跑车，基于兰博基尼Gallardo的开发平台，融合了奥迪在多个运动赛事中取胜的经验，技术以及突破传统观念的完美设计。强劲的V8和V10发动机、全时四轮驱动系统和奥迪全铝车身空间框架结构，赋予了奥迪R8出众的动力性能，以及在赛道和公路上的卓越表现。',
     imageUrl: 'https://images.unsplash.com/photo-1614026480418-bd11fdb9fa06',
     data: '2021-12-xx',
+    driveType: '4',
+    engineLocation: '前置',
   },
   {
     id: 4,

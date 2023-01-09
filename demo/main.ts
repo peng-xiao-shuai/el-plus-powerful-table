@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus/es'
-// import PowerfulTable from "../lib/es/packages/index.mjs"
 import en from 'element-plus/lib/locale/lang/en'
+// import PowerfulTable from '../lib/es/packages/index.mjs'
 import App from './App.vue'
 import { langPackages } from './indexData'
 import PowerfulTable from '~/index'

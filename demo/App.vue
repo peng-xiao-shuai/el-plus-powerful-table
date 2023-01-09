@@ -18,12 +18,13 @@
         'row-class-name': ({index}: any) => 'powerful-table-plus-row'
       }"
       @batch-operate="batchOperate"
-      @switch-change="switchChange"
+      @switch-change="handleSwitchChange"
       @btn-click="handlerUpdate"
       @size-change="getList"
       @btn-change="btnChange"
       @refresh="handleRefresh"
       @row-click="handleClick"
+      @component-event="handleComponentEvent"
     >
       <!-- <template #btn-left>
         <div>
@@ -66,11 +67,9 @@ import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { btnConfig, header, lists } from './indexData'
 import type { PowerfulTableOperateData } from '../typings'
-// import { PTButton, PTBtnPlus } from '../lib/index.js';
 
 export default defineComponent({
   components: {
-    // PTButton,
     // PTBtnPlus
   },
   setup(props, context) {
@@ -86,6 +85,9 @@ export default defineComponent({
     const btnConfigs = reactive(btnConfig)
     const total = ref(lists.length)
     const powerfulTable = ref(null)
+    setTimeout(() => {
+      console.log(powerfulTable.value)
+    }, 1000)
     const operateData = reactive<PowerfulTableOperateData>({
       value: '',
       icon: markRaw(Search),
@@ -101,6 +103,10 @@ export default defineComponent({
       pageSize: 2,
     })
     const engineName = ref('')
+
+    const handleComponentEvent = (e: any) => {
+      console.log(`接受到${e.componentName}组件返回的${e.eventType}事件`)
+    }
 
     function handlerSort(e: any) {
       console.log('远程排序', e)
@@ -131,7 +137,7 @@ export default defineComponent({
       console.log('批量操作', e, e.ids)
     }
 
-    function switchChange(e: any) {
+    function handleSwitchChange(e: any) {
       ElMessage.success('开关修改操作，参数详情，查看控制台')
       console.log('修改', e)
     }
@@ -187,9 +193,10 @@ export default defineComponent({
       operateData,
       // 方法
       handlerSort,
+      handleComponentEvent,
       getList,
       batchOperate,
-      switchChange,
+      handleSwitchChange,
       handlerUpdate,
       handlerRemove,
       btnChange,
