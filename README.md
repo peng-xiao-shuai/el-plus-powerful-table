@@ -354,8 +354,8 @@ const btnConfig = {
 | fixed                | 固定列                                         | string / boolean | true / left / right       | false  |
 | headerAlign          | 表头对齐方式                                   | string           | left / center / right     | center |
 | headerSlotName       | 列头插槽                                       | string           | -                         | -      |
-| isShowColumn         | 当前列是否可以操作列显示隐藏                   | boolean          | -                         | -      |
-| isFilterColumn       | 当前列是否在表头显示过滤按钮                   | boolean          | -                         | -      |
+| defaultShow         | 当前列默认显示或隐藏      | boolean          | -     | true      |
+| defaultFilter       | 当前列默认是否过滤 （isShowOrFilterColumn == 'filter' 时默认 true）        | boolean          | -     | false      |
 | isShowOrFilterColumn | 右侧按钮选择列时是否显示（隐藏和筛选开关组件） | string / boolean | false / 'show' / 'filter' | -      |
 | props                | 单元格数据                                     | array[object]    | -                         | -      |
 | property             | 表格属性扩展字段                               | object           | -                         | {}     |

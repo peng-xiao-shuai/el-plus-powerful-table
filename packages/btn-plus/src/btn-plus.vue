@@ -282,6 +282,12 @@ watch(
   () => [props.headerList],
   ([newHeaderList]: any) => {
     state.headerData = newHeaderList
+    state.headerData.forEach((item) => {
+      item.defaultFilter =
+        typeof item.defaultFilter == 'boolean'
+          ? item.defaultFilter
+          : item.isShowOrFilterColumn == 'filter'
+    })
   },
   { immediate: true, deep: true }
 )
