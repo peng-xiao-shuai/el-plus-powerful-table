@@ -511,13 +511,13 @@ const data = [{
 | 参数         | 说明                                                    | 类型                          | 可选值                                             | 默认值                                |
 | ------------ | ------------------------------------------------------- | ----------------------------- | -------------------------------------------------- | ------------------------------------- |
 | tip          | 提示文字                                                | string                        | -                                                  | -                                     |
-| text         | 按钮文字，不传默认提示文字                              | string                        | -                                                  | tip                                   |
+| text         | 按钮文字                              | string                        | -                                                  | tip                                   |
 | style        | 按钮样式                                                | object                        | -                                                  | -                                     |
 | icon         | 按钮上图标 使用`markRaw`将`Component`转为原始对象       | Component / string            | -                                                  | -                                     |
 | disabled     | 按钮是否禁用                                            | boolean                       | true/false                                         | false                                 |
 | type         | 按钮类型                                                | string                        | primary / success / warning / danger / info / text | primary                               |
 | showBtn      | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean     | function(row,index) / boolean | -                                                  | -                                     |
-| isTooltip    | 是否启用按钮上方提示                                    | boolean                       | true / false                                       | false                                 |
+| isTooltip<font color='red'>已删除</font>    | 是否启用按钮上方提示, tip存在值时显示                                    | boolean                       | true / false                                       | false                                 |
 | isConfirmTip | 是否启用点击后确认操作提示 `可以使用 confirmTip 自定义` | boolean                       | true / false                                       | false                                 |
 | confirmTip   | 点击后确认操作提示文字                                  | string                        | -                                                  | 是否要进行`[item.tip]`操作, 是否继续? |
 | params       | 自定义数据                                              | -                             | -                                                  | {}                                    |

@@ -1,14 +1,14 @@
 import type { CSSProperties, Component, Plugin, VNode, h } from 'vue'
 
 /* ------ props ------ */
-export interface PowerfulTableData<L> {
+export interface PowerfulTableData<L = any> {
   list: L[]
   pageSizes: number[]
   total: number
   size?: Size
   selectData?: any[]
   isSelect?: boolean
-  selectable?: (row: any, index: number) => boolean
+  selectable?: (row: L, index: number) => boolean
   selectCompare?: string[]
   header: PowerfulTableHeader<L>[]
   layout?: string
@@ -57,20 +57,20 @@ export interface PowerfulTableHeader<L = any> {
   fixed?: boolean | 'left' | 'right'
   headerAlign?: 'left' | 'center' | 'right'
   headerSlotName?: string
-  props: PowerfulTableHeaderProps<L>[] | PowerfulTableHeaderProps<L>
+  props: PowerfulTableHeaderProps<null, L>[] | PowerfulTableHeaderProps<null, L>
   property?: any
 }
 
-export type SetDataType<T extends keyof _TYPE> = {
-  [key in keyof _TYPE[T]]: _TYPE[T][key]
+export type SetDataType<T extends keyof _TYPE, L = any> = {
+  [key in keyof _TYPE<L>[T]]: _TYPE<L>[T][key]
 }
 // props 单元格数据
 export interface PowerfulTableHeaderProps<
-  T extends keyof _TYPE | null | '' | undefined,
+  T extends keyof _TYPE | null | undefined,
   L = any
 > {
   prop: string
-  data?: SetDataType<T>
+  data?: SetDataType<T, L>
   type?: keyof _TYPE
   // eslint-disable-next-line prettier/prettier
   filters?:
@@ -86,17 +86,17 @@ export interface PowerfulTableHeaderProps<
   property?: any
 }
 
-export type _TYPE = {
+export type _TYPE<L = any> = {
   image: ImageDataType
-  text: TextDataType
-  switch: SwitchDataType
-  btn: BtnDataType[] | BtnDataType[][]
-  video: VideoDataType
+  text: TextDataType<L>
+  switch: SwitchDataType<L>
+  btn: BtnDataType<L>[] | (BtnDataType<L>[] | BtnDataType<L>)[]
+  video: VideoDataType<L>
   input: InputDataType
   iconfont: IconFontDataType
-  tag: TagDataType
+  tag: TagDataType<L>
   rate: RateDataType
-  href: LinkDataType
+  href: LinkDataType<L>
   slot: null
   textarea: InputDataType
 }
@@ -106,7 +106,7 @@ export type PowerfulTableFilter = {
   value: string
 }
 
-export type TextDataType = {
+export type TextDataType<L = any> = {
   line?: number
   develop?: boolean
   customFilterFun?: ({
@@ -114,7 +114,7 @@ export type TextDataType = {
     index,
     props,
   }: {
-    row: any
+    row: L
     index?: number
     props: PowerfulTableHeaderProps<'text'>
   }) => string | number
@@ -129,15 +129,15 @@ export type ImageDataType = {
   property?: object
 }
 
-export type BtnDataType = {
-  tip: string
+export type BtnDataType<L = any> = {
+  tip?: string
   icon?: string | Component
   disabled?: boolean
-  text?: string
+  text: string
   isMore?: boolean
   style?: CSSProperties
   type?: ThemeType
-  showBtn?: ((row: any, index?: number) => boolean) | boolean
+  showBtn?: ((row: L, index?: number) => boolean) | boolean
   emit?: EmitType
   isTooltip?: boolean
   isConfirmTip?: boolean
@@ -146,19 +146,19 @@ export type BtnDataType = {
   property?: object
 }
 
-export type SwitchDataType = {
+export type SwitchDataType<L = any> = {
   activeColor?: string
   inactiveColor?: string
   inactiveText?: string
   activeText?: string
   activeValue?: number | string
   inactiveValue?: number | string
-  disabled?: boolean | ((row: any) => boolean)
+  disabled?: boolean | ((row: L) => boolean)
   style?: CSSProperties
   isConfirmTip?: boolean
   confirmTip?: string
   beforeFunction?: (
-    row: any,
+    row: L,
     value: number | string,
     oldValue: number | string
   ) => boolean
@@ -172,12 +172,12 @@ export type InputDataType = {
   rows?: string | number
   disabled?: boolean
   style?: CSSProperties
-  slot?: 'prepend' | 'append'
+  slot?: 'prepend' | 'append' | 'prefix' | 'suffix'
   property?: object
 }
 
-export type VideoDataType = {
-  poster?: ((row: any, index?: number) => string) | string
+export type VideoDataType<L = any> = {
+  poster?: ((row: L, index?: number) => string) | string
   loop?: boolean
   style?: CSSProperties
   property?: object
@@ -200,21 +200,21 @@ export type RateDataType = {
   property?: object
 }
 
-export type LinkDataType = {
+export type LinkDataType<L = any> = {
   target?: '_self' | '_blank' | '_parent' | '_top'
   style?: CSSProperties
   type?: ThemeType
   icon?: Component
   underline?: boolean
-  text?: string | ((row: any) => string)
+  text?: string | ((row: L) => string)
   property?: object
 }
 
-export type TagDataType = {
+export type TagDataType<L = any> = {
   type?: ThemeType
   style?: CSSProperties
   effect?: 'dark' | 'light' | 'plain'
-  color?: (row: any, tag: string) => string
+  color?: (row: L, tag: string) => string
   hit?: boolean
   number?: number
   property?: object
