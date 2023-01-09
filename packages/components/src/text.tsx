@@ -66,7 +66,11 @@ const Text = defineComponent({
           >
             {props.prop.data &&
             typeof props.prop.data.customFilterFun == 'function'
-              ? props.prop.data.customFilterFun(props.row, props.index)
+              ? props.prop.data.customFilterFun({
+                  row: props.row,
+                  index: props.index,
+                  props: props.prop,
+                })
               : props.row[props.prop.prop]}
           </div>
 
