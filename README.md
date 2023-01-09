@@ -28,7 +28,7 @@
 - `element-plus` 版本更新到 `2.0+`
 - 优化 `button` 在表格中样式
 - 修改 `selectable` 默认不允许勾选问题
-- `header` 表格头部数据参数中 `filters` 更改为 `isFilterColumn`. `hidden` 更改为 `isShowColumn`
+- `header` 表格头部数据参数中 `filters` 更改为 `defaultFilter`. `hidden` 更改为 `defaultShow`
 - `props` 单元格数据 `filter` 更改为 `filters`
 - 删除 组件 `props` 中的 `local`
 - 修改 组件 `InjectProps` 类型中 `local` 的类型。注入的 `local` 参数现在主要是用于 替换或者扩展组件内部提示文字
@@ -36,6 +36,7 @@
 - `type` 类型为 `video` 新增  `property` 扩展参数
 - `BtnConfig.BtnList` 新增 `property` 扩展参数
 - 内部组件新增自定义事件，详情看 `type == 'XX'`（XX 为某个类型）, 内部组件传递到 `powerful-table` 组件由 `component-event` 抛出
+- `type = 'text'` `data` 中的 `customFilterFun` 参数值更改
 
   ## 2.0.7 20220328
 - **新增 props `property`**
@@ -396,7 +397,7 @@ const data = [{
     prop: 'my',
     // child: 'name',
     reserve: '<b>我只有在数据空时显示</b>',
-    customFilterFun: (row, index) => {
+    customFilterFun: ({row, index, props}) => {
       return row.my.name
     }
     filters:[{
@@ -452,7 +453,7 @@ const data = [{
 | --------------- | -------------------------------- | ------------------- | ---------- | ------ |
 | line            | 超出多少的行数使用...代替        | number              | -          | 3      |
 | develop         | 是否显示 “展开/收起 操作按钮”    | boolean             | false/true | false  |
-| customFilterFun | 自定义当前单元格数据文本 (row)。 | function(row,index) | -          | -      |
+| customFilterFun | 自定义当前单元格数据文本 (row)。props 为header 配置的 当前 props 值 | function({row,index, props}) | -          | -      |
 
 #### Emit
 | 方法名       | 说明   | 参数      |
