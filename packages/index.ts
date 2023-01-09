@@ -3,6 +3,7 @@ import PowerfulTable from './powerful-table'
 import fComponents from './filter'
 import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
+import type { _TYPE } from '../typings'
 import type { App, Plugin } from 'vue'
 export { default as PTBtnPlus } from './btn-plus'
 export * from './filter'
@@ -28,6 +29,11 @@ export const deepClone = <T>(target: T) => {
   }
   return result
 }
+
+// 不同类型的data数据类型提示
+export const setData = <T extends keyof _TYPE<L>, L = any>(
+  data: _TYPE<L>[T]
+): _TYPE<L>[T] => data
 
 const makeInstaller = (components: Plugin[] = []) => {
   const install = (app: App, options?: import('../typings').InjectProps) => {

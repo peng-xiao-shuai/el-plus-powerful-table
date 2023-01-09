@@ -47,7 +47,9 @@ const Button = defineComponent({
           .$confirm(
             item.confirmTip
               ? item.confirmTip
-              : t<(s: string) => string>(LangKey.OperateHint)(item.tip),
+              : t<(s: string) => string>(LangKey.OperateHint)(
+                  item.tip || item.text
+                ),
             t(LangKey.Hint),
             {
               confirmButtonText: t(LangKey.Confirm),
@@ -86,14 +88,14 @@ const Button = defineComponent({
         }}
         {...item?.property}
       >
-        {typeof item.text != 'string' ? item.tip : item.text}
+        {item.text}
       </el-button>
     )
 
     // 提示
     const tipRender = (item: BtnDataType) => (
       <el-tooltip
-        popper-class={item.isTooltip ? '' : 'no-tooltip'}
+        popper-class={item.tip ? '' : 'no-tooltip'}
         effect="dark"
         content={item.tip}
         placement="top"
