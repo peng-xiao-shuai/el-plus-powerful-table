@@ -1,8 +1,10 @@
 import { markRaw } from 'vue'
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
+import { setData } from '../packages/index'
 import type {
   BtnConfig,
   LangPackages,
+  PowerfulTableFilter,
   PowerfulTableHeader,
 } from '../typings/powerful-table'
 import { LangKey } from '~/locale/lang'
@@ -62,7 +64,7 @@ const btnConfig: BtnConfig.Config = {
   ],
 }
 
-const header: PowerfulTableHeader<any>[] = [
+const header: PowerfulTableHeader<Lists>[] = [
   {
     label: '编号', //显示的标题
     minWidth: '100px', //对应列的最小宽度
@@ -71,8 +73,8 @@ const header: PowerfulTableHeader<any>[] = [
     props: {
       prop: 'id',
       // data: {
-      //   develop: false
-      // }
+      //   develop: false,
+      // },
     },
     defaultShow: false,
   },
@@ -81,28 +83,29 @@ const header: PowerfulTableHeader<any>[] = [
     width: 200,
     overflowTooltip: true,
     isShowOrFilterColumn: 'filter',
+    defaultFilter: false,
     headerAlign: 'left',
     props: [
       {
         type: 'href',
         prop: 'manufacturerHref',
         text: '厂商：',
-        data: {
+        data: setData<'href', Lists>({
           text: (row: any) => row.manufacturer,
-        },
+        }),
       },
       {
         prop: 'icon',
         type: 'iconfont',
         text: '车标：',
-        data: {
+        data: setData<'iconfont', Lists>({
           class: 'viteIcon',
           style: {
             height: '40px',
             lineHeight: '40px',
             fontSize: '40px',
           },
-        },
+        }),
       },
     ],
   },
@@ -123,20 +126,15 @@ const header: PowerfulTableHeader<any>[] = [
           { key: 'BMW', value: '宝马' },
         ],
         render: (h, row) =>
-          h(
-            'b',
-            `${row.brand}（${
-              ({ Audi: '奥迪', BMW: '宝马' } as any)[row.brand]
-            })`
-          ),
+          h('b', `${row.brand}（${{ Audi: '奥迪', BMW: '宝马' }[row.brand!]})`),
       },
       {
         type: 'href',
         prop: 'href',
         text: '型号：',
-        data: {
-          text: (row: any) => row.name,
-        },
+        data: setData<'href', Lists>({
+          text: (row) => row.name!,
+        }),
       },
     ],
   },
@@ -147,7 +145,7 @@ const header: PowerfulTableHeader<any>[] = [
       {
         type: 'image',
         prop: 'imageUrl',
-        data: {
+        data: setData<'image', Lists>({
           style: {
             width: '117px',
             height: '117px',
@@ -155,10 +153,10 @@ const header: PowerfulTableHeader<any>[] = [
           },
           lazy: true,
           preview: true,
-          componentProp: {
+          property: {
             src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
           },
-        },
+        }),
       },
     ],
   },
@@ -172,27 +170,27 @@ const header: PowerfulTableHeader<any>[] = [
         text: '收藏：',
         prop: 'switchVal',
         type: 'switch',
-        data: {
+        data: setData<'switch', Lists>({
           // isConfirmTip: true, // 开启提示
           // confirmTip: '确认修改', // 提示语
-          disabled: (value: any) => false,
-          beforeFunction(row: any, val: any, old: any) {
+          disabled: (value) => false,
+          beforeFunction(row, val, old) {
             return true
           },
           // inactiveText: '关闭',
           // activeText: '开启',
           inactiveValue: 0,
           activeValue: 1,
-        },
+        }),
       },
       {
         prop: 'price',
         type: 'input',
-        data: {
-          slot: 'suffix',
+        data: setData<'input', Lists>({
+          slot: 'append',
           symbol: '万',
           style: { width: '100%' },
-        },
+        }),
       },
     ],
   },
@@ -209,13 +207,13 @@ const header: PowerfulTableHeader<any>[] = [
         type: 'text',
         prop: 'engine',
         text: '发动机：',
-        filters: (row) => row.engine,
+        filters: (row) => row.engine!,
       },
       {
         type: 'rate',
         prop: 'rate',
         text: '评 分：',
-        data: {
+        data: setData<'rate', Lists>({
           // allowHalf: true,
           // showText: true,
           max: 5,
@@ -224,7 +222,7 @@ const header: PowerfulTableHeader<any>[] = [
           property: {
             disabled: false,
           },
-        },
+        }),
       },
       // {
       //   type: 'href',
@@ -256,11 +254,13 @@ const header: PowerfulTableHeader<any>[] = [
           value: '四驱',
         },
       ],
-      data: {
-        customFilterFun: ({ row, props }: any) =>
-          row.engineLocation +
-          props.filters.find((item: any) => item.key == row.driveType).value,
-      },
+      data: setData<'text', Lists>({
+        customFilterFun: ({ row, props }) =>
+          row.engineLocation! +
+          (props.filters as PowerfulTableFilter[]).find(
+            (item) => item.key == row.driveType
+          )?.value,
+      }),
     },
   },
   {
@@ -270,7 +270,7 @@ const header: PowerfulTableHeader<any>[] = [
     props: {
       prop: 'videoUrl',
       type: 'video',
-      data: {
+      data: setData<'video', Lists>({
         loop: true,
         poster: (e: any) => e.imageUrl,
         style: {
@@ -283,7 +283,7 @@ const header: PowerfulTableHeader<any>[] = [
         property: {
           controls: true,
         },
-      },
+      }),
     },
   },
   {
@@ -295,16 +295,16 @@ const header: PowerfulTableHeader<any>[] = [
       {
         prop: 'tag',
         type: 'tag',
-        data: {
+        data: setData<'tag', Lists>({
           effect: 'dark',
           number: 2,
           type: 'success',
-          color: (r: any, tag: string | number) => {
+          color: (r, tag) => {
             return (
               { red: '#BD3145', blue: '#008DAF', white: '#eee' }[tag] || tag
             )
           },
-        },
+        }),
         filters: [
           { key: 'red', value: '红色' },
           { key: 'black', value: '黑色' },
@@ -338,10 +338,10 @@ const header: PowerfulTableHeader<any>[] = [
       {
         prop: 'content',
         type: 'text',
-        data: {
+        data: setData<'text', Lists>({
           develop: true,
           line: 2,
-        },
+        }),
       },
     ],
   },
@@ -354,12 +354,11 @@ const header: PowerfulTableHeader<any>[] = [
       {
         type: 'btn',
         prop: 'btn',
-        data: [
+        data: setData<'btn', Lists>([
           {
-            tip: '编辑',
+            text: '编辑',
             type: 'info',
             icon: markRaw(Edit),
-            text: '编辑',
             // showBtn: false,
             // isTooltip: true,
             confirmTip: '正在进行修改操作，确认要修改？',
@@ -367,13 +366,13 @@ const header: PowerfulTableHeader<any>[] = [
             params: {
               emit: 'update',
             },
-            componentProp: {
+            property: {
               type: 'success',
             },
           },
           [
             {
-              tip: '更多',
+              text: '更多',
               isMore: true,
               type: 'primary',
               icon: markRaw(Edit),
@@ -385,11 +384,14 @@ const header: PowerfulTableHeader<any>[] = [
             //   params: 'update',
             // },
             {
-              tip: '删除',
-              type: 'text',
+              text: '删除',
+              type: 'danger',
               isConfirmTip: true,
               icon: markRaw(Delete),
               params: 'remove',
+              property: {
+                text: true,
+              },
             },
           ],
           // {
@@ -403,7 +405,7 @@ const header: PowerfulTableHeader<any>[] = [
           //     emit: 'remove',
           //   },
           // },
-        ],
+        ]),
       },
     ],
   },
