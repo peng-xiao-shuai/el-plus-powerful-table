@@ -26,49 +26,6 @@ const Switch = defineComponent({
       'switch'
     )
 
-    const { proxy } = getCurrentInstance() as any
-    /* ------ 开关回调 ------ */
-    const switchChange = <L,>(
-      row: L,
-      prop: keyof L,
-      val: string | number = 1,
-      val2: string | number = 0,
-      beforeFunction:
-        | ((row: L, prop: L[keyof L], value: string | number) => boolean)
-        | undefined
-    ) => {
-      const value = row[prop] == val ? val2 : val
-      if (
-        typeof beforeFunction == 'function' &&
-        !beforeFunction(row, row[prop], value)
-      ) {
-        row[prop] = value as L[keyof L]
-        return false
-      }
-      if (props.prop.data?.isConfirmTip) {
-        proxy
-          .$confirm(
-            props.prop.data?.confirmTip
-              ? props.prop.data?.confirmTip
-              : t<(s: any) => string>(LangKey.OperateHint)(t(LangKey.Update)),
-            t(LangKey.Hint),
-            {
-              confirmButtonText: t(LangKey.Confirm),
-              cancelButtonText: t(LangKey.Cancel),
-              type: 'warning',
-            }
-          )
-          .then(() => {
-            emit('return-emit', 'switch-change', row)
-          })
-          .catch(() => {
-            row[prop] = value as L[keyof L]
-          })
-      } else {
-        emit('return-emit', 'switch-change', row)
-      }
-    }
-
     return () => (
       <>
         <div
@@ -101,22 +58,10 @@ const Switch = defineComponent({
                 : 1
             }
             inactive-value={props.prop.data?.inactiveValue || 0}
+            before-change={props.prop.data?.beforeFunction}
             onChange={(...arg: any) => REmit('change', ...arg)}
             onClick={(e: Event) => {
               e.stopPropagation()
-              if (
-                typeof props.prop.data?.disabled === 'function'
-                  ? props.prop.data?.disabled(props.row)
-                  : props.prop.data?.disabled || false
-              )
-                return
-              switchChange<typeof props.row>(
-                props.row,
-                props.prop.prop,
-                props.prop.data?.activeValue,
-                props.prop.data?.inactiveValue,
-                props.prop.data?.beforeFunction
-              )
             }}
             {...props.prop.data?.property}
           />
