@@ -276,8 +276,6 @@ import type {
   PowerfulTableLabelValue,
 } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
-const props = defineProps(powerfulTableProps)
-const emit = defineEmits<EmitEventType>()
 type Row = any
 // 自定义事件类型
 type EmitEventType = {
@@ -310,6 +308,8 @@ type EmitEventType = {
   ): void
   (e: 'row-click', ...args: any): void
 }
+const emit = defineEmits<EmitEventType>()
+const props = defineProps(powerfulTableProps)
 
 // 获取 布局方向
 const justifyFun = (val: string): string => {
