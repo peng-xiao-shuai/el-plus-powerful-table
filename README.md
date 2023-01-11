@@ -21,6 +21,9 @@
   组件内部语言跟随 `element-plus`。 部分 提示文字 语言，组件内部也支持 `中、英` 文，如果你需要支持更多语言或者更改组件内部
   的语言，可以在 `use(PowerfulTable, { local: 您的语言变量 })` 替换。也可以参考我们提供的 `demo` 实现。
 
+  ## 简要
+  - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
+
   ## 2.1.0 202201023
 
 - 使用`vite`进行构建
@@ -37,6 +40,16 @@
 - `BtnConfig.BtnList` 新增 `property` 扩展参数
 - 内部组件新增自定义事件，详情看 `type == 'XX'`（XX 为某个类型）, 内部组件传递到 `powerful-table` 组件由 `component-event` 抛出
 - `type = 'text'` `data` 中的 `customFilterFun` 参数值更改
+- 内部组件 `property` 支持函数类型
+- 删除 内部组件 `data` 部分参数（由于提供的参数不完整和 `element-plus` 存在差异，全部提供则感觉有点冗余，推荐使用 `property` 参数。内部组件只会保存部分默认值，但是可以通过 `property` 传参替换）
+- - `image` 删除 `lazy zIndex style fit `。保留部分默认值 `fit = 'cover'`，`lazy, preview-teleported = true`（`el-image` 中 `lazy preview-teleported` 默认 `false`）
+- - `input` 删除 `type placeholder disabled rows`。保留部分默认值 `rows = 3`
+- - `href` 删除 `type placeholder rows disabled`。 保留部分默认值 `type = 'primary'`，`underline = false`
+- - `rate` 删除 `max colors iconClass allowHalf showText showScore texts property`。 保留部分默认值 `disabled = false`
+- - `switch` 删除 `activeColor inactiveColor inactiveText activeText activeValue inactiveValue disabled isConfirmTip confirmTip beforeFunction` 保留部分默认值 `inactiveValue = '0'`，`activeValue = '1'`
+- - `tag` 删除 `closable type effect hit` 保留部分默认值 `type = ''`
+- - `video` 删除 `poster loop` 保留部分默认值 `controls = true`，`loop = false`
+- - `button` 删除 `icon disabled type emit isTooltip isConfirmTip confirmTip` 保留部分默认值 `type = 'primary'`。添加 `beforeClick tipProperty` 参数
 
   ## 2.0.7 20220328
 - **新增 props `property`**
@@ -513,18 +526,13 @@ const data = [{
 | tip          | 提示文字                                                | string                        | -                                                  | -                                     |
 | text         | 按钮文字                              | string                        | -                                                  | tip                                   |
 | style        | 按钮样式                                                | object                        | -                                                  | -                                     |
-| icon         | 按钮上图标 使用`markRaw`将`Component`转为原始对象       | Component / string            | -                                                  | -                                     |
-| disabled     | 按钮是否禁用                                            | boolean                       | true/false                                         | false                                 |
-| type         | 按钮类型                                                | string                        | primary / success / warning / danger / info / text | primary                               |
 | showBtn      | 控制按钮显示隐藏 返回当前行数据 (row)，返回 boolean     | function(row,index) / boolean | -                                                  | -                                     |
-| isTooltip<font color='red'>已删除</font>    | 是否启用按钮上方提示, tip存在值时显示                                    | boolean                       | true / false                                       | false                                 |
-| isConfirmTip | 是否启用点击后确认操作提示 `可以使用 confirmTip 自定义` | boolean                       | true / false                                       | false                                 |
-| confirmTip   | 点击后确认操作提示文字                                  | string                        | -                                                  | 是否要进行`[item.tip]`操作, 是否继续? |
+| beforeClick      | 点击前事件, row(行数据) index(行下标) props(当前配置的props) btnIndex(按钮下标) resolve(回调函数，传递boolean) | function({row,index, props, btnIndex, params}, resolve) | `({ e: { row: L | any index: number btnIndex: number[] props: PowerfulTableHeaderProps params: any }, resolve: (value: unknown) => void ) => void` | -                                     |
 | params       | 自定义数据                                              | -                             | -                                                  | {}                                    |
 | isMore       | 是否更多 当 `data` 是二维数组时有效                     | boolean                       | true / false                                       | false                                 |
 
-| emit <font color='red'>已删除</font> | 自定义方法名 | string | 'query', 'success', 'add', 'update', 'remove', 'occupyOne', 'occupyTwo' | - |
 | property | 属性扩展字段 | object | - | {} |
+| tipProperty | 属性扩展字段 | object | - | {} |
 
 ```js
 // 参数示例
