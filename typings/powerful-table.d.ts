@@ -1,4 +1,21 @@
-import type { CSSProperties, Component, Plugin, VNode, h } from 'vue'
+import type {
+  CSSProperties,
+  Component,
+  Plugin,
+  VNode,
+  VideoHTMLAttributes,
+  h,
+} from 'vue'
+import type {
+  ButtonProps,
+  ElTooltipProps,
+  ImageProps,
+  InputProps,
+  LinkProps,
+  RateProps,
+  SwitchProps,
+  TagProps,
+} from 'element-plus/es'
 
 /* ------ props ------ */
 export interface PowerfulTableData<L = any> {
@@ -87,24 +104,36 @@ export interface PowerfulTableHeaderProps<
 }
 
 export type _TYPE<L = any> = {
-  image: ImageDataType
+  image: ImageDataType<L>
   text: TextDataType<L>
   switch: SwitchDataType<L>
   btn: BtnDataType<L>[] | (BtnDataType<L>[] | BtnDataType<L>)[]
   video: VideoDataType<L>
-  input: InputDataType
+  input: InputDataType<L>
   iconfont: IconFontDataType
   tag: TagDataType<L>
-  rate: RateDataType
+  rate: RateDataType<L>
   href: LinkDataType<L>
   slot: null
-  textarea: InputDataType
+  textarea: InputDataType<L>
 }
 
 export type PowerfulTableFilter = {
   key: string | number
   value: string
 }
+
+type ElComponentProp<T extends keyof _TYPE, P = any, L = any> =
+  | Partial<P>
+  | (({
+      row,
+      index,
+      props,
+    }: {
+      row: L
+      index: number
+      props: PowerfulPTableHeaderProps<T, L>
+    }) => Partial<P>)
 
 export type TextDataType<L = any> = {
   line?: number
@@ -120,67 +149,53 @@ export type TextDataType<L = any> = {
   }) => string | number
 }
 
-export type ImageDataType = {
-  preview?: boolean
-  lazy?: boolean
-  zIndex?: number
-  style?: CSSProperties
-  fit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
-  property?: object
+export type ImageDataType<L = any> = {
+  style: CSSProperties
+  property?: ElComponentProp<'image', ImageProps, L>
 }
 
 export type BtnDataType<L = any> = {
   tip?: string
-  icon?: string | Component
-  disabled?: boolean
   text: string
+  beforeClick?: (
+    {
+      row,
+      index,
+      btnIndex,
+      props,
+      params,
+    }: {
+      row: L
+      index: number
+      btnIndex: number[]
+      props: PowerfulTableHeaderProps
+      params: any
+    },
+    resolve: (value: unknown) => void
+  ) => void
   isMore?: boolean
   style?: CSSProperties
-  type?: ThemeType
-  showBtn?: ((row: L, index?: number) => boolean) | boolean
-  emit?: EmitType
-  isTooltip?: boolean
-  isConfirmTip?: boolean
-  confirmTip?: string
+  showBtn?: ((row: L, index: number) => boolean) | boolean
   params?: any
-  property?: object
+  tipProperty?: Partial<ElTooltipProps>
+  property?: ElComponentProp<'btn', ButtonProps, L>
 }
 
 export type SwitchDataType<L = any> = {
-  activeColor?: string
-  inactiveColor?: string
-  inactiveText?: string
-  activeText?: string
-  activeValue?: number | string
-  inactiveValue?: number | string
-  disabled?: boolean | ((row: L) => boolean)
   style?: CSSProperties
-  isConfirmTip?: boolean
-  confirmTip?: string
-  beforeFunction?: (
-    row: L,
-    value: number | string,
-    oldValue: number | string
-  ) => boolean
-  property?: object
+  property?: ElComponentProp<'switch', SwitchProps, L>
 }
 
-export type InputDataType = {
-  type?: string
+export type InputDataType<L = any> = {
   symbol?: string
-  placeholder?: string
-  rows?: string | number
-  disabled?: boolean
   style?: CSSProperties
   slot?: 'prepend' | 'append' | 'prefix' | 'suffix'
-  property?: object
+  property?: ElComponentProp<'input', InputProps, L>
 }
 
 export type VideoDataType<L = any> = {
-  poster?: ((row: L, index?: number) => string) | string
-  loop?: boolean
   style?: CSSProperties
-  property?: object
+  property?: ElComponentProp<'video', VideoHTMLAttributes, L>
 }
 
 export type IconFontDataType = {
@@ -188,36 +203,23 @@ export type IconFontDataType = {
   style?: CSSProperties
 }
 
-export type RateDataType = {
-  max?: number
+export type RateDataType<L = any> = {
   style?: CSSProperties
-  colors?: string[]
-  iconClass?: string[]
-  allowHalf?: boolean
-  showText?: boolean
-  showScore?: boolean
-  texts?: string[]
-  property?: object
+  property?: ElComponentProp<'rate', RateProps, L>
 }
 
 export type LinkDataType<L = any> = {
   target?: '_self' | '_blank' | '_parent' | '_top'
   style?: CSSProperties
-  type?: ThemeType
-  icon?: Component
-  underline?: boolean
   text?: string | ((row: L) => string)
-  property?: object
+  property?: ElComponentProp<'href', LinkProps, L>
 }
 
 export type TagDataType<L = any> = {
-  type?: ThemeType
   style?: CSSProperties
-  effect?: 'dark' | 'light' | 'plain'
   color?: (row: L, tag: string) => string
-  hit?: boolean
   number?: number
-  property?: object
+  property?: ElComponentProp<'tag', TagProps, L>
 }
 
 export interface LangPackages {

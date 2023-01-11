@@ -1,7 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  isProperty,
+  powerfulTableComponentProp,
+} from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
 
 const Link = defineComponent({
@@ -36,17 +39,17 @@ const Link = defineComponent({
             size={size}
             target={props.prop.data?.target || '_blank'}
             type={'primary'}
-            icon={props.prop.data?.icon}
-            underline={props.prop.data?.underline || false}
+            underline={false}
             href={props.row[props.prop.prop]}
             style={props.prop.data?.style || {}}
-            {...props.prop.data?.property}
+            {...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            )}
           >
             {typeof props.prop.data?.text == 'function'
               ? props.prop.data?.text(props.row)
-              : props.prop.data?.text
-              ? props.prop.data?.text
-              : props.prop}
+              : props.prop.data?.text}
           </el-link>
         </div>
       </>

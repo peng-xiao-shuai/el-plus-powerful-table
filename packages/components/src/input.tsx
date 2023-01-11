@@ -2,6 +2,7 @@ import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
+  isProperty,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -46,13 +47,10 @@ const Input = defineComponent({
                 </span>
               ),
             }}
-            type={props.prop.data?.type || 'text'}
-            rows={props.prop.data?.rows || 3}
+            rows={3}
             style={props.prop.data?.style || {}}
-            size={size || 'small'}
-            placeholder={props.prop.data?.placeholder || ''}
+            size={size}
             v-model={props.row[props.prop.prop]}
-            disabled={props.prop.data?.disabled || false}
             onClick={(event: Event) => {
               event.stopPropagation()
               REmit('click', {
@@ -67,7 +65,10 @@ const Input = defineComponent({
             onChange={(...arg: any) => REmit('change', ...arg)}
             onInput={(...arg: any) => REmit('input', ...arg)}
             onClear={(...arg: any) => REmit('clear', ...arg)}
-            {...props.prop.data?.property}
+            {...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            )}
           ></el-input>
         </div>
       </>

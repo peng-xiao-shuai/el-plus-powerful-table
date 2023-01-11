@@ -2,6 +2,7 @@ import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
+  isProperty,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -42,23 +43,8 @@ const Rate = defineComponent({
           <el-rate
             size={size}
             v-model={props.row[props.prop.prop]}
-            colors={
-              props.prop.data?.colors || ['#F7BA2A', '#F7BA2A', '#F7BA2A']
-            }
-            max={props.prop.data?.max || 5}
             disabled={true}
             style={props.prop.data?.style || {}}
-            allow-half={props.prop.data?.allowHalf || false}
-            icon-classes={
-              props.prop.data?.iconClass || [
-                'el-icon-star-on',
-                'el-icon-star-on',
-                'el-icon-star-on',
-              ]
-            }
-            show-text={props.prop.data?.showText || false}
-            show-score={props.prop.data?.showScore || false}
-            texts={props.prop.data?.texts || undefined}
             onClick={(event: Event) => {
               event.stopPropagation()
               REmit('click', {
@@ -69,7 +55,10 @@ const Rate = defineComponent({
               })
             }}
             onChange={(...arg: any) => REmit('change', ...arg)}
-            {...props.prop.data?.property}
+            {...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            )}
           />
         </div>
       </>

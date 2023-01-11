@@ -1,12 +1,12 @@
-import { defineComponent, getCurrentInstance, inject } from 'vue'
+import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
+  isProperty,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
 import { JustifyFunSymbol, SizeSymbol } from '~/keys'
-import { LangKey, t } from '~/locale/lang'
 
 const Switch = defineComponent({
   name: 'PTSwitch',
@@ -42,28 +42,17 @@ const Switch = defineComponent({
           <el-switch
             size={size}
             style={props.prop.data?.style || {}}
-            inactive-text={props.prop.data?.inactiveText || ''}
-            active-text={props.prop.data?.activeText || ''}
             v-model={props.row[props.prop.prop]}
-            disabled={
-              typeof props.prop.data?.disabled === 'function'
-                ? props.prop.data?.disabled(props.row)
-                : props.prop.data?.disabled || false
-            }
-            active-color={props.prop.data?.activeColor}
-            inactive-color={props.prop.data?.inactiveColor}
-            active-value={
-              props.prop.data?.activeValue || props.prop.data?.activeValue === 0
-                ? props.prop.data?.activeValue
-                : 1
-            }
-            inactive-value={props.prop.data?.inactiveValue || 0}
-            before-change={props.prop.data?.beforeFunction}
+            active-value={'1'}
+            inactive-value={'0'}
             onChange={(...arg: any) => REmit('change', ...arg)}
             onClick={(e: Event) => {
               e.stopPropagation()
             }}
-            {...props.prop.data?.property}
+            {...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            )}
           />
         </div>
       </>

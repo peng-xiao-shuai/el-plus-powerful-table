@@ -3,6 +3,7 @@ import { filterFun } from './filter'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
+  isProperty,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -61,15 +62,12 @@ const Tags = defineComponent({
               }}
               size={size}
               key={tag}
-              closable={false}
-              type={props.prop.data?.type || 'primary'}
-              effect={props.prop.data?.effect || 'light'}
+              type={''}
               color={
                 (typeof props.prop.data?.color == 'function' &&
                   props.prop.data?.color(props.row, tag)) ||
                 ''
               }
-              hit={props.prop.data?.hit || false}
               onClick={(event: Event) => {
                 event.stopPropagation()
                 REmit('click', {
@@ -80,7 +78,10 @@ const Tags = defineComponent({
                 })
               }}
               onChange={(...arg: any) => REmit('change', ...arg)}
-              {...props.prop.data?.property}
+              {...isProperty(
+                { row: props.row, index: props.index!, props: props.prop },
+                props.prop.data?.property
+              )}
             >
               {props.prop.filters
                 ? typeof props.prop.filters == 'function'

@@ -1,4 +1,4 @@
-import { defineComponent, getCurrentInstance, inject } from 'vue'
+import { defineComponent, inject } from 'vue'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 import type { App, PropType } from 'vue'
 import type {
@@ -6,7 +6,10 @@ import type {
   PowerfulTableHeaderProps,
   SFCWithInstall,
 } from '../../../typings'
-import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
+import {
+  isProperty,
+  powerfulTableComponentProp,
+} from '~/powerful-table/src/powerful-table-data'
 import { LangKey, t } from '~/locale/lang'
 
 const Button = defineComponent({
@@ -23,85 +26,75 @@ const Button = defineComponent({
     const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
 
-    const { proxy } = getCurrentInstance() as any
-    /* ------ 按钮回调 ------ */
-    const btnChange = (
-      item: BtnDataType,
-      row: any,
-      index: number,
-      type: string
-    ) => {
-      // params 赋值
-      let params = {}
-      if (typeof item.params === 'object') {
-        params = Object.assign({ type }, item.params)
-      } else {
-        params = Object.assign(
-          { type },
-          item.params === undefined ? {} : { params: item.params }
-        )
-      }
-
-      if (item.isConfirmTip) {
-        proxy
-          .$confirm(
-            item.confirmTip
-              ? item.confirmTip
-              : t<(s: string) => string>(LangKey.OperateHint)(
-                  item.tip || item.text
-                ),
-            t(LangKey.Hint),
-            {
-              confirmButtonText: t(LangKey.Confirm),
-              cancelButtonText: t(LangKey.Cancel),
-              type: 'warning',
-            }
-          )
-          .then(() => {
-            emit('return-emit', 'btn-click', { params, row, index })
-          })
-          .catch(() => {
-            // console.log('取消删除')
-          })
-      } else {
-        emit('return-emit', 'btn-click', { params, row, index })
-      }
-    }
-
-    const btn = (item: BtnDataType) => (
+    const btn = (item: BtnDataType, btnIndex: number[]) => (
       <el-button
         class={item.text == '' ? 'notSpan' : ''}
         size={size}
-        icon={item.icon || ''}
         style={item.style || {}}
-        disabled={item.disabled || false}
-        type={item.type || 'primary'}
+        type={'primary'}
         onClick={(e: Event) => {
           e.stopPropagation()
-          !item.isMore &&
-            btnChange(
-              item,
-              props.row,
-              props.index as number,
-              item.type || 'primary'
-            )
+          if (!item.isMore) {
+            if (typeof item.beforeClick === 'function') {
+              new Promise((resolve) => {
+                item.beforeClick!(
+                  {
+                    row: props.row,
+                    index: props.index!,
+                    btnIndex,
+                    props: props.prop,
+                    params: item.params,
+                  },
+                  resolve
+                )
+              }).then((res) => {
+                if (res) {
+                  emit('return-emit', 'btn-click', {
+                    props: props.prop,
+                    params: item.params,
+                    row: props.row,
+                    index: props.index,
+                    btnIndex,
+                  })
+                }
+              })
+            } else {
+              emit('return-emit', 'btn-click', {
+                props: props.prop,
+                params: item.params,
+                row: props.row,
+                index: props.index,
+                btnIndex,
+              })
+            }
+          }
         }}
-        {...item?.property}
+        {...isProperty(
+          { row: props.row, index: props.index!, props: props.prop },
+          item?.property
+        )}
       >
         {item.text}
       </el-button>
     )
 
     // 提示
-    const tipRender = (item: BtnDataType) => (
-      <el-tooltip
-        popper-class={item.tip ? '' : 'no-tooltip'}
-        effect="dark"
-        content={item.tip}
-        placement="top"
-      >
-        {btn(item)}
-      </el-tooltip>
+    const tipRender = (item: BtnDataType, index: number[]) => (
+      <>
+        {item.tip ? (
+          <el-tooltip
+            popper-class={item.tip ? '' : 'no-tooltip'}
+            effect="dark"
+            content={item.tip}
+            placement="top"
+            {...item.tipProperty}
+          >
+            {btn(item, index)}
+          </el-tooltip>
+        ) : (
+          <>{btn(item, index)}</>
+        )}
+      </>
     )
 
     return () => (
@@ -116,18 +109,18 @@ const Button = defineComponent({
             justifyContent: justifyFun(props.aligning),
           }}
         >
-          <span style={{ marginRight: props.prop?.text ? '10px' : '0px' }}>
-            {props.prop?.text || ''}
+          <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
+            {props.prop.text || ''}
           </span>
           {(props.prop.data as BtnDataType[])
             ?.filter((item) => {
               if (typeof item.showBtn === 'function') {
-                return item.showBtn(props.row, props.index)
+                return item.showBtn(props.row, props.index!)
               } else {
                 return item.showBtn === undefined ? true : item.showBtn
               }
             })
-            .map((item) => {
+            .map((item, index) => {
               return Array.isArray(item) ? (
                 <el-dropdown
                   class="el-dropdown-more"
@@ -136,9 +129,9 @@ const Button = defineComponent({
                       <el-dropdown-menu>
                         {(item as BtnDataType[])
                           .filter((each) => !each.isMore)
-                          .map((each, index) => (
+                          .map((each, i) => (
                             <el-dropdown-item key={index}>
-                              {tipRender(each)}
+                              {tipRender(each, [index, i])}
                             </el-dropdown-item>
                           ))}
                       </el-dropdown-menu>
@@ -150,12 +143,12 @@ const Button = defineComponent({
                       ? [item.find((each) => each.isMore)]
                       : [{ tip: t(LangKey.More) }]
                     ).map((each) => (
-                      <>{btn(each)}</>
+                      <>{btn(each, [index])}</>
                     ))}
                   </div>
                 </el-dropdown>
               ) : (
-                tipRender(item)
+                tipRender(item, [index])
               )
             })}
         </div>

@@ -156,6 +156,15 @@ export const useREmit = (
   }
 }
 
+// 对部分支持函数的 property 参数进行判断返回
+export const isProperty = <T, R>(e: T, property?: R | ((e: T) => R)) => {
+  const isFish = (pet: typeof property): pet is R => {
+    return typeof (<R>pet) != 'function'
+  }
+
+  return isFish(property) ? property : property!(e)
+}
+
 interface PowerfulTableData<L = DefaultRow> {
   listLoading: boolean
   develop: boolean[]

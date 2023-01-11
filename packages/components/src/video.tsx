@@ -2,6 +2,7 @@ import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
+  isProperty,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -41,12 +42,7 @@ const Video = defineComponent({
             <video
               style="width:100%;height: 100%"
               src={props.row[props.prop.prop]}
-              poster={
-                typeof props.prop.data?.poster == 'function'
-                  ? props.prop.data?.poster(props.row, props.index)
-                  : props.prop.data?.poster || ''
-              }
-              loop={props.prop.data?.loop || false}
+              loop={false}
               class="avatar video-avatar"
               controls={true}
               onPlay={(event: Event) => {
@@ -65,7 +61,10 @@ const Video = defineComponent({
                   event,
                 })
               }}
-              {...props.prop.data?.property}
+              {...isProperty(
+                { row: props.row, index: props.index!, props: props.prop },
+                props.prop.data?.property
+              )}
             />
           </div>
         </div>

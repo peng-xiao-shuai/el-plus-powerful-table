@@ -2,6 +2,7 @@ import { defineComponent, inject } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
+  isProperty,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -39,23 +40,21 @@ const Image = defineComponent({
           </span>
           <el-image
             src={props.row[props.prop.prop]}
-            preview-src-list={
-              props.prop.data?.preview === false
-                ? []
-                : [props.row[props.prop.prop]]
-            }
-            lazy={props.prop.data?.lazy === false ? false : true}
-            z-index={props.prop.data?.zIndex}
-            style={props.prop.data?.style || {}}
-            fit={props.prop.data?.fit || 'cover'}
+            preview-src-list={[props.row[props.prop.prop]]}
+            lazy={true}
+            fit={'cover'}
             preview-teleported={true}
+            style={props.prop.data?.style}
             onClick={(e: Event) => e.stopPropagation()}
             onLoad={(...arg: any) => REmit('load', ...arg)}
             onError={(...arg: any) => REmit('error', ...arg)}
             onSwitch={(...arg: any) => REmit('switch', ...arg)}
             onClose={(...arg: any) => REmit('close', ...arg)}
-            {...props.prop.data?.property}
-          />
+            {...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            )}
+          ></el-image>
         </div>
       </>
     )
