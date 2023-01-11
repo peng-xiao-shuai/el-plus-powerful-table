@@ -85,9 +85,6 @@ export default defineComponent({
     const btnConfigs = reactive(btnConfig)
     const total = ref(lists.length)
     const powerfulTable = ref(null)
-    setTimeout(() => {
-      console.log(powerfulTable.value)
-    }, 1000)
     const operateData = reactive<PowerfulTableOperateData>({
       value: '',
       icon: markRaw(Search),
@@ -105,7 +102,7 @@ export default defineComponent({
     const engineName = ref('')
 
     const handleComponentEvent = (e: any) => {
-      console.log(`接受到${e.componentName}组件返回的${e.eventType}事件`)
+      console.log(`接受到${e.componentName}组件返回的${e.eventType}事件`, e)
     }
 
     function handlerSort(e: any) {

@@ -1,4 +1,5 @@
 import { markRaw } from 'vue'
+import { ElMessageBox } from 'element-plus/es'
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 import { setData } from '../packages/index'
 import type {
@@ -30,6 +31,7 @@ type Lists = {
   data?: string
   driveType?: string
   engineLocation?: string
+  [s: string]: any
 }
 
 const btnConfig: BtnConfig.Config = {
@@ -92,6 +94,9 @@ const header: PowerfulTableHeader<Lists>[] = [
         text: '厂商：',
         data: setData<'href', Lists>({
           text: (row: any) => row.manufacturer,
+          property: {
+            underline: true,
+          },
         }),
       },
       {
@@ -147,14 +152,13 @@ const header: PowerfulTableHeader<Lists>[] = [
         prop: 'imageUrl',
         data: setData<'image', Lists>({
           style: {
-            width: '117px',
-            height: '117px',
-            borderRadius: '5px',
+            borderRadius: '10px',
           },
-          lazy: true,
-          preview: true,
-          property: {
-            src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
+          property: ({ row, index, props }) => {
+            // console.log(row, index, props)
+            return {
+              // src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
+            }
           },
         }),
       },
@@ -173,14 +177,12 @@ const header: PowerfulTableHeader<Lists>[] = [
         data: setData<'switch', Lists>({
           // isConfirmTip: true, // 开启提示
           // confirmTip: '确认修改', // 提示语
-          disabled: (value) => false,
-          beforeFunction(row, val, old) {
-            return true
-          },
           // inactiveText: '关闭',
           // activeText: '开启',
-          inactiveValue: 0,
-          activeValue: 1,
+          property: {
+            inactiveValue: 0,
+            activeValue: 1,
+          },
         }),
       },
       {
@@ -190,6 +192,11 @@ const header: PowerfulTableHeader<Lists>[] = [
           slot: 'append',
           symbol: '万',
           style: { width: '100%' },
+          property({ row, index, props }) {
+            return {
+              placeholder: '售价',
+            }
+          },
         }),
       },
     ],
@@ -214,11 +221,6 @@ const header: PowerfulTableHeader<Lists>[] = [
         prop: 'rate',
         text: '评 分：',
         data: setData<'rate', Lists>({
-          // allowHalf: true,
-          // showText: true,
-          max: 5,
-          // colors: ['red', 'yellow', 'red'],
-          //   // showScore: true
           property: {
             disabled: false,
           },
@@ -271,8 +273,6 @@ const header: PowerfulTableHeader<Lists>[] = [
       prop: 'videoUrl',
       type: 'video',
       data: setData<'video', Lists>({
-        loop: true,
-        poster: (e: any) => e.imageUrl,
         style: {
           width: '100%',
           height: '117px',
@@ -280,9 +280,10 @@ const header: PowerfulTableHeader<Lists>[] = [
           overflow: 'hidden',
           border: '1px solid #ccc',
         },
-        property: {
+        property: ({ row }) => ({
+          poster: row.imageUrl,
           controls: true,
-        },
+        }),
       }),
     },
   },
@@ -296,9 +297,10 @@ const header: PowerfulTableHeader<Lists>[] = [
         prop: 'tag',
         type: 'tag',
         data: setData<'tag', Lists>({
-          effect: 'dark',
           number: 2,
-          type: 'success',
+          style: {
+            color: 'white',
+          },
           color: (r, tag) => {
             return (
               { red: '#BD3145', blue: '#008DAF', white: '#eee' }[tag] || tag
@@ -357,25 +359,33 @@ const header: PowerfulTableHeader<Lists>[] = [
         data: setData<'btn', Lists>([
           {
             text: '编辑',
-            type: 'info',
-            icon: markRaw(Edit),
+            tip: '编辑按钮',
             // showBtn: false,
             // isTooltip: true,
-            confirmTip: '正在进行修改操作，确认要修改？',
-            isConfirmTip: true,
             params: {
               emit: 'update',
             },
+            beforeClick({ row, index, btnIndex, props, params }, resolve) {
+              ElMessageBox.confirm('正在进行修改操作，确认要修改？', '提示', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning',
+              }).then(() => {
+                resolve(true)
+              })
+            },
             property: {
-              type: 'success',
+              type: 'info',
+              icon: markRaw(Edit),
             },
           },
           [
             {
               text: '更多',
               isMore: true,
-              type: 'primary',
-              icon: markRaw(Edit),
+              property: {
+                icon: markRaw(Edit),
+              },
             },
             // {
             //   tip: '编辑',
@@ -385,12 +395,10 @@ const header: PowerfulTableHeader<Lists>[] = [
             // },
             {
               text: '删除',
-              type: 'danger',
-              isConfirmTip: true,
-              icon: markRaw(Delete),
               params: 'remove',
               property: {
-                text: true,
+                type: 'danger',
+                icon: markRaw(Edit),
               },
             },
           ],
