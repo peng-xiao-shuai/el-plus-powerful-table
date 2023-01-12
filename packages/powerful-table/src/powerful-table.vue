@@ -63,7 +63,7 @@
         v-bind="{
           fixed: item.fixed || false,
           sortable: item.sortable || false,
-          'header-align': item.headerAlign || 'left',
+          'header-align': item.headerAlign || 'center',
           'show-overflow-tooltip': item.overflowTooltip || false,
           prop: Array.isArray(item.props)
             ? item.props[0].prop
@@ -141,7 +141,7 @@
               :row="scope.row"
               :index="scope.$index"
               :prop="prop"
-              :aligning="item.property?.align || item.headerAlign"
+              :aligning="(item.property?.align as any) || item.headerAlign"
             />
             <!-- 插槽 -->
             <slot
@@ -297,7 +297,10 @@ type EmitEventType = {
     }
   ): void
   (e: 'component-event', componentEvent: ComponentEvent, ...args: any): void
-  (e: 'sort-custom', payload: { column?: any; prop: string; order: any }): void
+  (
+    e: 'sort-custom',
+    payload: { column: any; prop: string; order: string }
+  ): void
   (
     e: 'batch-operate',
     payload: {

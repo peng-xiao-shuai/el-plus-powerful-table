@@ -213,7 +213,7 @@ export const useFunction = <L>(
    * 排序方法
    * @param obj https://element-plus.gitee.io/zh-CN/component/table.html#table-%E4%BA%8B%E4%BB%B6 sort-change事件
    */
-  const sortChange = (obj: { column?: any; prop: string; order: any }) => {
+  const sortChange = (obj: { column: any; prop: string; order: any }) => {
     if (Object.keys(obj.column || {}).length) {
       if (obj.column.sortable == 'custom') {
         emit('sort-custom', obj)
@@ -283,16 +283,10 @@ export const useFunction = <L>(
       })
   }
 
-  const returnEmit = (
-    emitName: Extract<EmitType, 'btn-click' | 'switch-change'>,
-    arg: any
-  ) => {
+  const returnEmit = (emitName: Extract<EmitType, 'btn-click'>, arg: any) => {
     switch (emitName) {
       case 'btn-click':
         emit('btn-click', arg)
-        break
-      case 'switch-change':
-        emit('switch-change', arg)
         break
     }
   }
@@ -389,7 +383,10 @@ export const useFunction = <L>(
         row: scope.row,
         index: scope.$index,
         prop,
-        aligning: item.property?.align || item.headerAlign || 'center',
+        aligning:
+          (item.property?.align as 'left' | 'right' | 'center') ||
+          item.headerAlign ||
+          'center',
       }
     },
   }
