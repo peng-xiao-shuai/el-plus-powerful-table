@@ -42,25 +42,40 @@ const btnConfig: BtnConfig.Config = {
       text: '新增',
       effect: 'add',
       showBtn: true,
-      icon: markRaw(Plus),
+      property: {
+        icon: markRaw(Plus),
+        type: 'primary',
+      },
     },
     {
       text: '修改',
       operateType: 'single',
       effect: 'edit',
-      type: 'primary',
       showBtn: () => false,
-      icon: markRaw(Edit),
-      // icon: Edit
+      property: {
+        icon: markRaw(Edit),
+        type: 'primary',
+      },
     },
     {
       text: '批量删除',
       operateType: 'batch',
       effect: 'remove',
-      type: 'danger',
-      icon: markRaw(Delete),
-      // icon: Delete,
-      showTip: true,
+      beforeClick({ btnItem }, resolve) {
+        console.log(btnItem)
+
+        ElMessageBox.confirm('是否确认批量删除', '提示', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(() => {
+          resolve(true)
+        })
+      },
+      property: {
+        icon: markRaw(Delete),
+        type: 'danger',
+      },
       // tipContent: '立即执行批量删除'
     },
   ],

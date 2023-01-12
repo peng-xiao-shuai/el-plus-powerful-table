@@ -15,13 +15,13 @@
       :page-sizes="[2, 5, 7]"
       :tree="{ props: { hasChildren: 'hasChildren', children: 'cd' } }"
       :property="{
-        'row-class-name': ({index}: any) => 'powerful-table-plus-row'
+        rowClassName: ({index}: any) => 'powerful-table-plus-row'
       }"
       @batch-operate="batchOperate"
       @switch-change="handleSwitchChange"
       @btn-click="handlerUpdate"
       @size-change="getList"
-      @btn-change="btnChange"
+      @btn-plus-change="btnChange"
       @refresh="handleRefresh"
       @row-click="handleClick"
       @component-event="handleComponentEvent"
@@ -62,9 +62,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, markRaw, onMounted, reactive, ref } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
 import { btnConfig, header, lists } from './indexData'
 import type { PowerfulTableOperateData } from '../typings'
 
@@ -87,7 +86,6 @@ export default defineComponent({
     const powerfulTable = ref(null)
     const operateData = reactive<PowerfulTableOperateData>({
       value: '',
-      icon: markRaw(Search),
       operates: [
         {
           label: '删除',
@@ -101,8 +99,12 @@ export default defineComponent({
     })
     const engineName = ref('')
 
-    const handleComponentEvent = (e: any) => {
-      console.log(`接受到${e.componentName}组件返回的${e.eventType}事件`, e)
+    const handleComponentEvent = (e: any, ...arg: any) => {
+      console.log(
+        `接受到${e.componentName}组件返回的${e.eventType}事件`,
+        e,
+        arg
+      )
     }
 
     function handlerSort(e: any) {
