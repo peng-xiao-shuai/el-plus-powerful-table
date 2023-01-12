@@ -14,14 +14,16 @@ import type {
   LinkProps,
   RateProps,
   SwitchProps,
+  TableProps,
   TagProps,
 } from 'element-plus/es'
 
 /* ------ props ------ */
-export interface PowerfulTableData<L = any> {
+export interface PowerfulTableProps<L = any> {
   list: L[]
-  pageSizes: number[]
-  total: number
+  pageSizes?: number[]
+  total?: number
+  btnConfig?: BtnConfig.Config
   size?: Size
   selectData?: any[]
   isSelect?: boolean
@@ -32,7 +34,7 @@ export interface PowerfulTableData<L = any> {
   operateData?: PowerfulTableOperateData
   isPagination?: boolean
   tree?: PowerfulTableTree
-  property?: any
+  property?: Partial<TableProps<L>>
 }
 
 /* ------ tree 树结构数据 ------ */
@@ -249,7 +251,6 @@ export namespace BtnConfig {
     property?: object
   }
   export type Config = {
-    hidden?: 'left' | 'right' | 'none'
     btnSlot?: 'left' | 'right' | 'all'
     btnList: BtnList[]
   }

@@ -4,14 +4,12 @@ import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
 import type { PropType } from 'vue'
 import type {
-  BtnConfig,
   EmitEventType,
   EmitType,
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
   PowerfulTableOperateData,
-  PowerfulTableTree,
-  Size,
+  PowerfulTableProps,
   _TYPE,
 } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
@@ -25,66 +23,46 @@ export type ComponentEvent = {
   eventType: string
 }
 
-interface PowerFulTableProps<L> {
-  btnConfig?: BtnConfig.Config
-  locale?: { name: string; el: TranslatePair }
-  size?: Size
-  list: L[]
-  selectData?: L[]
-  isSelect?: boolean
-  selectable?: (row: L, index: number) => boolean
-  selectCompare?: string[]
-  header: PowerfulTableHeader[]
-  layout?: string
-  pageSizes?: number[]
-  operateData?: PowerfulTableOperateData
-  isPagination?: boolean
-  total?: number
-  tree?: PowerfulTableTree
-  property?: object
-}
-
 // 主组件props
 export const powerfulTableProps = {
   // 按钮组件配置数据
   btnConfig: {
-    type: Object as PropType<PowerFulTableProps<DefaultRow>['btnConfig']>,
+    type: Object as PropType<PowerfulTableProps<DefaultRow>['btnConfig']>,
     default: () => [{}],
   },
-  locale: Object as PropType<PowerFulTableProps<DefaultRow>['locale']>,
   // 组件大小
   size: {
-    type: String as PropType<PowerFulTableProps<DefaultRow>['size']>,
+    type: String as PropType<PowerfulTableProps<DefaultRow>['size']>,
     default: '',
     validator: (val: string) => ['', 'default', 'small', 'large'].includes(val),
   },
   // 当前数据
   list: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>['list']>,
+    type: Array as PropType<PowerfulTableProps<DefaultRow>['list']>,
     default: () => [],
   },
   // 所有选中
   selectData: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>['list']>,
+    type: Array as PropType<PowerfulTableProps<DefaultRow>['list']>,
     default: () => {
       return () => []
     },
   },
   isSelect: {
-    type: Boolean as PropType<PowerFulTableProps<DefaultRow>['isSelect']>,
+    type: Boolean as PropType<PowerfulTableProps<DefaultRow>['isSelect']>,
     default: false,
   },
   selectable: {
-    type: Function as PropType<PowerFulTableProps<DefaultRow>['selectable']>,
+    type: Function as PropType<PowerfulTableProps<DefaultRow>['selectable']>,
     default: undefined,
   },
   selectCompare: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>['selectCompare']>,
+    type: Array as PropType<PowerfulTableProps<DefaultRow>['selectCompare']>,
     default: () => ['id', 'id'],
   },
 
   header: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>['header']>,
+    type: Array as PropType<PowerfulTableProps<DefaultRow>['header']>,
     default: () => [],
   },
 
@@ -94,13 +72,13 @@ export const powerfulTableProps = {
     default: 'total, sizes, prev, pager, next',
   },
   pageSizes: {
-    type: Array as PropType<PowerFulTableProps<DefaultRow>['pageSizes']>,
+    type: Array as PropType<PowerfulTableProps<DefaultRow>['pageSizes']>,
     default: () => [10, 20, 30],
   },
 
   // 批量操作
   operateData: {
-    type: Object as PropType<PowerFulTableProps<DefaultRow>['operateData']>,
+    type: Object as PropType<PowerfulTableProps<DefaultRow>['operateData']>,
     default: () => [{}],
   },
   isPagination: {
@@ -112,11 +90,11 @@ export const powerfulTableProps = {
     default: 0,
   },
   tree: {
-    type: Object as PropType<PowerFulTableProps<DefaultRow>['tree']>,
+    type: Object as PropType<PowerfulTableProps<DefaultRow>['tree']>,
     default: () => ({}),
   },
   property: {
-    type: Object,
+    type: Object as PropType<PowerfulTableProps<DefaultRow>['property']>,
     default: () => ({}),
   },
 }
@@ -170,18 +148,18 @@ interface PowerfulTableData<L = DefaultRow> {
   develop: boolean[]
   currentPage: number
   pageSize: number
-  currentSelect: PowerFulTableProps<L>['list']
-  otherSelect: PowerFulTableProps<L>['list']
+  currentSelect: PowerfulTableProps<L>['list']
+  otherSelect: PowerfulTableProps<L>['list']
   operate: PowerfulTableOperateData
 }
 
 interface StateData<L = DefaultRow> {
-  tableLists: PowerFulTableProps<L>['list']
+  tableLists: PowerfulTableProps<L>['list']
   isPC: boolean
   isTable: boolean
 }
 
-export const usePowerfulTableStates = <L>(props: PowerFulTableProps<L>) => {
+export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
   // 全局此组件注入的数据
   const injectProps = inject(PowerfulTableSymbol, {})
 
@@ -417,4 +395,4 @@ export const useFunction = <L>(
   }
 }
 
-export type { StateData, PowerfulTableData, PowerFulTableProps, TranslatePair }
+export type { StateData, PowerfulTableData, PowerfulTableProps, TranslatePair }
