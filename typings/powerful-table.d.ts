@@ -14,27 +14,28 @@ import type {
   LinkProps,
   RateProps,
   SwitchProps,
+  TableColumnCtx,
   TableProps,
   TagProps,
 } from 'element-plus/es'
 
 /* ------ props ------ */
-export interface PowerfulTableProps<L = any> {
-  list: L[]
+export interface PowerfulTableProps<Row = any> {
+  list: Row[]
   pageSizes?: number[]
   total?: number
   btnConfig?: BtnConfig.Config
   size?: Size
   selectData?: any[]
   isSelect?: boolean
-  selectable?: (row: L, index: number) => boolean
+  selectable?: (row: Row, index: number) => boolean
   selectCompare?: string[]
-  header: PowerfulTableHeader<L>[]
+  header: PowerfulTableHeader<Row>[]
   layout?: string
   operateData?: PowerfulTableOperateData
   isPagination?: boolean
   tree?: PowerfulTableTree
-  property?: Partial<TableProps<L>>
+  property?: Partial<TableProps<Row>>
 }
 
 /* ------ tree 树结构数据 ------ */
@@ -64,7 +65,7 @@ export interface PowerfulTableOperateData {
 
 /* ------ header 表格头部数据 ------ */
 // header 表格头部数据
-export interface PowerfulTableHeader<L = any> {
+export interface PowerfulTableHeader<Row = any> {
   overflowTooltip?: boolean
   label: string
   defaultShow?: boolean // 当前列是否可以操作列显示隐藏
@@ -76,48 +77,49 @@ export interface PowerfulTableHeader<L = any> {
   fixed?: boolean | 'left' | 'right'
   headerAlign?: 'left' | 'center' | 'right'
   headerSlotName?: string
-  props: PowerfulTableHeaderProps<null, L>[] | PowerfulTableHeaderProps<null, L>
-  property?: any
+  props:
+    | PowerfulTableHeaderProps<null, Row>[]
+    | PowerfulTableHeaderProps<null, Row>
+  property?: Partial<TableColumnCtx<Row>>
 }
 
-export type SetDataType<T extends keyof _TYPE, L = any> = {
-  [key in keyof _TYPE<L>[T]]: _TYPE<L>[T][key]
+export type SetDataType<T extends keyof _TYPE, Row = any> = {
+  [key in keyof _TYPE<Row>[T]]: _TYPE<Row>[T][key]
 }
 // props 单元格数据
 export interface PowerfulTableHeaderProps<
   T extends keyof _TYPE | null | undefined,
-  L = any
+  Row = any
 > {
   prop: string
-  data?: SetDataType<T, L>
+  data?: SetDataType<T, Row>
   type?: keyof _TYPE
   // eslint-disable-next-line prettier/prettier
   filters?:
     | PowerfulTableFilter[]
-    | ((row: L, index?: number) => string | number)
+    | ((row: Row, index?: number) => string | number)
   text?: string
   slotName?: string
-  render?: (h: h, row: L, index: number) => VNode | string | number
+  render?: (h: h, row: Row, index: number) => VNode | string | number
   reserve?: string | HTMLElement
   style?: CSSProperties
   filterItem?: boolean // 指定过滤项
-  filtersType?: 'select' | 'date'
-  property?: any
+  filtersType?: 'select' | 'date' | 'input'
 }
 
-export type _TYPE<L = any> = {
-  image: ImageDataType<L>
-  text: TextDataType<L>
-  switch: SwitchDataType<L>
-  btn: BtnDataType<L>[] | (BtnDataType<L>[] | BtnDataType<L>)[]
-  video: VideoDataType<L>
-  input: InputDataType<L>
+export type _TYPE<Row = any> = {
+  image: ImageDataType<Row>
+  text: TextDataType<Row>
+  switch: SwitchDataType<Row>
+  btn: BtnDataType<Row>[] | (BtnDataType<Row>[] | BtnDataType<Row>)[]
+  video: VideoDataType<Row>
+  input: InputDataType<Row>
   iconfont: IconFontDataType
-  tag: TagDataType<L>
-  rate: RateDataType<L>
-  href: LinkDataType<L>
+  tag: TagDataType<Row>
+  rate: RateDataType<Row>
+  href: LinkDataType<Row>
   slot: null
-  textarea: InputDataType<L>
+  textarea: InputDataType<Row>
 }
 
 export type PowerfulTableFilter = {
@@ -125,19 +127,19 @@ export type PowerfulTableFilter = {
   value: string
 }
 
-type ElComponentProp<T extends keyof _TYPE, P = any, L = any> =
+type ElComponentProp<T extends keyof _TYPE, P = any, Row = any> =
   | Partial<P>
   | (({
       row,
       index,
       props,
     }: {
-      row: L
+      row: Row
       index: number
-      props: PowerfulPTableHeaderProps<T, L>
+      props: PowerfulTableHeaderProps<T, Row>
     }) => Partial<P>)
 
-export type TextDataType<L = any> = {
+export type TextDataType<Row = any> = {
   line?: number
   develop?: boolean
   customFilterFun?: ({
@@ -145,18 +147,18 @@ export type TextDataType<L = any> = {
     index,
     props,
   }: {
-    row: L
+    row: Row
     index?: number
     props: PowerfulTableHeaderProps<'text'>
   }) => string | number
 }
 
-export type ImageDataType<L = any> = {
+export type ImageDataType<Row = any> = {
   style: CSSProperties
-  property?: ElComponentProp<'image', ImageProps, L>
+  property?: ElComponentProp<'image', ImageProps, Row>
 }
 
-export type BtnDataType<L = any> = {
+export type BtnDataType<Row = any> = {
   tip?: string
   text: string
   beforeClick?: (
@@ -167,7 +169,7 @@ export type BtnDataType<L = any> = {
       props,
       params,
     }: {
-      row: L
+      row: Row
       index: number
       btnIndex: number[]
       props: PowerfulTableHeaderProps
@@ -177,27 +179,27 @@ export type BtnDataType<L = any> = {
   ) => void
   isMore?: boolean
   style?: CSSProperties
-  showBtn?: ((row: L, index: number) => boolean) | boolean
+  showBtn?: ((row: Row, index: number) => boolean) | boolean
   params?: any
   tipProperty?: Partial<ElTooltipProps>
-  property?: ElComponentProp<'btn', ButtonProps, L>
+  property?: ElComponentProp<'btn', ButtonProps, Row>
 }
 
-export type SwitchDataType<L = any> = {
+export type SwitchDataType<Row = any> = {
   style?: CSSProperties
-  property?: ElComponentProp<'switch', SwitchProps, L>
+  property?: ElComponentProp<'switch', SwitchProps, Row>
 }
 
-export type InputDataType<L = any> = {
+export type InputDataType<Row = any> = {
   symbol?: string
   style?: CSSProperties
   slot?: 'prepend' | 'append' | 'prefix' | 'suffix'
-  property?: ElComponentProp<'input', InputProps, L>
+  property?: ElComponentProp<'input', InputProps, Row>
 }
 
-export type VideoDataType<L = any> = {
+export type VideoDataType<Row = any> = {
   style?: CSSProperties
-  property?: ElComponentProp<'video', VideoHTMLAttributes, L>
+  property?: ElComponentProp<'video', VideoHTMLAttributes, Row>
 }
 
 export type IconFontDataType = {
@@ -205,23 +207,23 @@ export type IconFontDataType = {
   style?: CSSProperties
 }
 
-export type RateDataType<L = any> = {
+export type RateDataType<Row = any> = {
   style?: CSSProperties
-  property?: ElComponentProp<'rate', RateProps, L>
+  property?: ElComponentProp<'rate', RateProps, Row>
 }
 
-export type LinkDataType<L = any> = {
+export type LinkDataType<Row = any> = {
   target?: '_self' | '_blank' | '_parent' | '_top'
   style?: CSSProperties
-  text?: string | ((row: L) => string)
-  property?: ElComponentProp<'href', LinkProps, L>
+  text?: string | ((row: Row) => string)
+  property?: ElComponentProp<'href', LinkProps, Row>
 }
 
-export type TagDataType<L = any> = {
+export type TagDataType<Row = any> = {
   style?: CSSProperties
-  color?: (row: L, tag: string) => string
+  color?: (row: Row, tag: string) => string
   number?: number
-  property?: ElComponentProp<'tag', TagProps, L>
+  property?: ElComponentProp<'tag', TagProps, Row>
 }
 
 export interface LangPackages {
@@ -242,7 +244,7 @@ export namespace BtnConfig {
     disabled?: boolean
     operateType?: 'none' | 'single' | 'batch'
     text?: string
-    effect?: string
+    effect?: any
     showBtn?: (() => boolean) | boolean
     beforeClick?: (
       {
@@ -250,7 +252,7 @@ export namespace BtnConfig {
         rows,
       }: {
         btnItem: BtnList
-        rows: L
+        rows: Row
       },
       resolve: (value: unknown) => void
     ) => void
@@ -270,14 +272,13 @@ export type Size = '' | 'large' | 'default' | 'small'
 export type EmitEventType<Row> = {
   (
     e: 'btn-plus-change',
-    payload: { effect: BtnConfig.BtnList['effect']; rows: any[] }
+    payload: { effect: BtnConfig.BtnList['effect']; rows: Row[] }
   ): void
   (e: 'btn-plus-refresh'): void
   (
     e: 'btn-click',
     payload: { params: BtnDataType['params']; row: Row; index: number }
   ): void
-  (e: 'switch-change', row: Row): void
   (
     e: 'size-change',
     payload: {
@@ -286,7 +287,10 @@ export type EmitEventType<Row> = {
     }
   ): void
   (e: 'component-event', componentEvent: ComponentEvent, ...args: any): void
-  (e: 'sort-custom', payload: { column?: any; prop: string; order: any }): void
+  (
+    e: 'sort-custom',
+    payload: { column: any; prop: string; order: string }
+  ): void
   (
     e: 'batch-operate',
     payload: {
