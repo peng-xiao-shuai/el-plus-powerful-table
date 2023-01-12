@@ -287,6 +287,8 @@ watch(
         typeof item.defaultFilter == 'boolean'
           ? item.defaultFilter
           : item.isShowOrFilterColumn == 'filter'
+      item.defaultShow =
+        typeof item.defaultShow == 'undefined' ? true : item.defaultShow
     })
   },
   { immediate: true, deep: true }
