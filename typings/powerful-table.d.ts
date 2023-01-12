@@ -1,17 +1,11 @@
-import type {
-  CSSProperties,
-  Component,
-  Plugin,
-  VNode,
-  VideoHTMLAttributes,
-  h,
-} from 'vue'
+import type { CSSProperties, Plugin, VNode, VideoHTMLAttributes, h } from 'vue'
 import type {
   ButtonProps,
   ElTooltipProps,
   ImageProps,
   InputProps,
   LinkProps,
+  PaginationProps,
   RateProps,
   SwitchProps,
   TableColumnCtx,
@@ -22,8 +16,6 @@ import type {
 /* ------ props ------ */
 export interface PowerfulTableProps<Row = any> {
   list: Row[]
-  pageSizes?: number[]
-  total?: number
   btnConfig?: BtnConfig.Config
   size?: Size
   selectData?: any[]
@@ -31,10 +23,10 @@ export interface PowerfulTableProps<Row = any> {
   selectable?: (row: Row, index: number) => boolean
   selectCompare?: string[]
   header: PowerfulTableHeader<Row>[]
-  layout?: string
   operateData?: PowerfulTableOperateData
   isPagination?: boolean
   tree?: PowerfulTableTree
+  paginationProperty?: Partial<PaginationProps>
   property?: Partial<TableProps<Row>>
 }
 
@@ -55,11 +47,12 @@ export type PowerfulTableLabelValue = {
 // operateData 批量操作
 export interface PowerfulTableOperateData {
   value?: number | ''
-  type?: ThemeType
-  disabled?: boolean
   prop?: string
-  icon?: string | Component
   style?: CSSProperties
+  selectProperty?: InstanceType<
+    typeof import('element-plus')['ElSelect']
+  >['$props']
+  btnProperty?: Partial<ButtonProps>
   operates: PowerfulTableLabelValue[]
 }
 
@@ -296,7 +289,7 @@ export type EmitEventType<Row> = {
     payload: {
       ids: (string | number)[]
       item: PowerfulTableLabelValue
-      items: Row[]
+      rows: Row[]
     }
   ): void
   (e: 'row-click', ...args: any): void

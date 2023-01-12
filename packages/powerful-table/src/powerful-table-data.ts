@@ -10,6 +10,7 @@ import type {
   PowerfulTableHeaderProps,
   PowerfulTableOperateData,
   PowerfulTableProps,
+  Size,
   _TYPE,
 } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
@@ -66,14 +67,11 @@ export const powerfulTableProps = {
     default: () => [],
   },
 
-  // 分页数据
-  layout: {
-    type: String,
-    default: 'total, sizes, prev, pager, next',
-  },
-  pageSizes: {
-    type: Array as PropType<PowerfulTableProps<DefaultRow>['pageSizes']>,
-    default: () => [10, 20, 30],
+  paginationProperty: {
+    type: Array as PropType<
+      PowerfulTableProps<DefaultRow>['paginationProperty']
+    >,
+    default: () => ({}),
   },
 
   // 批量操作
@@ -172,7 +170,9 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
     listLoading: true, //页面是否加载中
     develop: [], // 展开
     currentPage: 1, // 当前页
-    pageSize: props.pageSizes ? props.pageSizes[0] : 10, //一页多少条
+    pageSize: props.paginationProperty?.pageSizes
+      ? props.paginationProperty?.pageSizes[0]
+      : 10, //一页多少条
     currentSelect: [], // 当前页选中
     otherSelect: [], // 其他页选中
     operate: {
@@ -213,7 +213,7 @@ export const useFunction = <L>(
    * 排序方法
    * @param obj https://element-plus.gitee.io/zh-CN/component/table.html#table-%E4%BA%8B%E4%BB%B6 sort-change事件
    */
-  const sortChange = (obj: { column: any; prop: string; order: any }) => {
+  const sortChange = (obj: { column: any; prop: string; order: string }) => {
     if (Object.keys(obj.column || {}).length) {
       if (obj.column.sortable == 'custom') {
         emit('sort-custom', obj)
@@ -268,14 +268,14 @@ export const useFunction = <L>(
               powerfulTableData.operate.prop || 'id'
             ]
           })
-        const items = powerfulTableData.otherSelect
+        const rows = powerfulTableData.otherSelect
           .concat(powerfulTableData.currentSelect)
           .map((item) => item)
 
         emit('batch-operate', {
           ids,
           item: powerfulTableData.operate.operates[0],
-          items,
+          rows,
         })
       })
       .catch(() => {

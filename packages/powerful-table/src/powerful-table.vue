@@ -212,7 +212,14 @@
         v-if="operate && isSelect && operate.operates"
         class="pagination left"
       >
-        <el-select v-model="operate.value" clearable :size="Size">
+        <el-select
+          v-model="operate.value"
+          v-bind="{
+            clearable: true,
+            size: Size,
+            ...(operate.selectProperty || {}),
+          }"
+        >
           <el-option
             v-for="(item, index) in operate.operates"
             :key="'operate' + index"
@@ -222,11 +229,13 @@
         </el-select>
 
         <el-button
-          :style="operate.style || { marginLeft: '20px' }"
-          :icon="operate.icon || ''"
-          :type="operate.type || 'primary'"
-          :size="Size"
           class="search-button"
+          v-bind="{
+            style: { marginLeft: '20px' },
+            type: 'primary',
+            size: Size,
+            ...(operate.btnProperty || {}),
+          }"
           @click="batchOperate"
         >
           {{ t(LangKey.Confirm) }}
@@ -234,15 +243,16 @@
       </div>
 
       <!-- 分页操作 -->
-      <!-- TODO 扩展参数 -->
       <div v-if="isPagination" class="pagination">
         <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
           :small="Size === 'small' ? true : false"
-          :page-sizes="pageSizes"
-          :layout="layout"
-          :total="total"
+          v-bind="{
+            pageSizes: [10, 20, 30],
+            layout: 'total, sizes, prev, pager, next',
+            ...(paginationProperty || {}),
+          }"
         />
       </div>
     </div>
@@ -281,7 +291,7 @@ type Row = any
 type EmitEventType = {
   (
     e: 'btn-plus-change',
-    payload: { effect: BtnConfig.BtnList['effect']; rows: any[] }
+    payload: { effect: BtnConfig.BtnList['effect']; rows: Row[] }
   ): void
   (e: 'btn-plus-refresh'): void
   (
@@ -306,7 +316,7 @@ type EmitEventType = {
     payload: {
       ids: (string | number)[]
       item: PowerfulTableLabelValue
-      items: Row[]
+      rows: Row[]
     }
   ): void
   (e: 'row-click', ...args: any): void
