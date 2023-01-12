@@ -1,22 +1,22 @@
 <template>
   <div
-    :class="[
-      'pt-btn-plus',
-      btnConfig.hidden === 'none' ? 'hidden' : '',
-      state.isPC ? 'cl-btn-plus' : 'cl-btn-plus-mobile',
-    ]"
+    :class="['pt-btn-plus', state.isPC ? 'cl-btn-plus' : 'cl-btn-plus-mobile']"
   >
-    <slot
+    <!-- 占位 -->
+    <div
       v-if="
-        (injectProps && ['all', 'left'].includes(injectProps.btnSlot || '')) ||
-        ['all', 'left'].includes(btnConfig.btnSlot || '')
+        injectProps && !['all', 'left', ''].includes(injectProps.btnSlot || '')
       "
-      name="btn-left"
-    >
+    />
+    <slot v-else name="btn-left">
       <!-- 左侧操作按钮 -->
       <el-button-group
-        class="filter-item"
-        :class="btnConfig.hidden === 'left' ? 'hidden' : ''"
+        :class="[
+          'filter-item',
+          ['all', 'left', ''].includes(injectProps.btnSlot || '')
+            ? 'btn-plus-left'
+            : '',
+        ]"
       >
         <template v-for="item in btnConfig.btnList" :key="item.tip">
           <el-button
@@ -45,15 +45,18 @@
 
     <slot
       v-if="
-        (injectProps && ['all', 'right'].includes(injectProps.btnSlot || '')) ||
-        ['all', 'right'].includes(btnConfig.btnSlot || '')
+        injectProps && ['all', 'right', ''].includes(injectProps.btnSlot || '')
       "
       name="btn-right"
     >
       <!-- 右侧操作按钮 -->
       <el-button-group
-        class="filter-item"
-        :class="btnConfig.hidden === 'right' ? 'hidden' : ''"
+        :class="[
+          'filter-item',
+          ['all', 'right', ''].includes(injectProps.btnSlot || '')
+            ? 'btn-plus-right'
+            : '',
+        ]"
       >
         <template v-for="item in state.functionBtnList" :key="item.tip">
           <el-tooltip
@@ -356,7 +359,10 @@ export default {
     padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-content: center;
+    .filter-item {
+      align-self: end;
+    }
   }
   & .el-dropdown-menu {
     padding: 10px 20px !important;
