@@ -238,16 +238,22 @@ export type InjectProps = {
 // btnPlus组件
 export namespace BtnConfig {
   export type BtnList = {
-    type?: ThemeType
-    icon?: string | Component
     style?: CSSProperties
     disabled?: boolean
     operateType?: 'none' | 'single' | 'batch'
     text?: string
-    showTip?: boolean
     effect?: string
     showBtn?: (() => boolean) | boolean
-    tipContent?: string
+    beforeClick?: (
+      {
+        btnItem,
+        rows,
+      }: {
+        btnItem: BtnList
+        rows: L
+      },
+      resolve: (value: unknown) => void
+    ) => void
     property?: object
   }
   export type Config = {

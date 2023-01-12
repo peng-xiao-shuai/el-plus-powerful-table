@@ -440,7 +440,7 @@ const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
     // console.log('所有选中', arr);
     // 获取当前页
     arr.forEach((item) => {
-      const l = list.filter((each: typeof list[0]) => {
+      const l = list.filter((each: (typeof list)[0]) => {
         return item[selectCompare[0]] == each[selectCompare[1]]
       })
 

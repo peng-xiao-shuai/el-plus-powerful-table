@@ -28,9 +28,7 @@
                 : item.showBtn
             "
             v-bind="{
-              size: size || 'small',
-              type: item.type,
-              icon: item.icon,
+              size: size,
               style: item.style || {},
               disabled: item.disabled || btnDisabled(item.operateType),
               ...item.property,
@@ -89,8 +87,6 @@
                 @click="
                   batchOperate('right', {
                     effect: 'columns',
-                    type: 'info',
-                    icon: 'el-icon-s-grid',
                   })
                 "
               />
@@ -240,46 +236,43 @@ const functionBtnChange = () => {
   proxy.$parent.anewRender()
 }
 const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
-  if (type === 'left') {
-    // 是否显示提示
-    if (btnItem.showTip) {
-      const content =
-        btnItem.tipContent ||
-        t<(s?: string) => string>(LangKey.OperateHint)(btnItem.text)
-
-      proxy
-        .$confirm(content, t(LangKey.Hint), {
-          confirmButtonText: t(LangKey.Confirm),
-          cancelButtonText: t(LangKey.Cancel),
-          type: 'warning',
-        })
-        .then(() => {
-          emit('change', {
-            effect: btnItem.effect,
-            rows: props.multipleSelection,
-          })
-        })
-
-      return false
+  const cb = () => {
+    if (type === 'left') {
+      emit('change', {
+        effect: btnItem.effect,
+        rows: props.multipleSelection,
+      })
+    } else {
+      switch (btnItem.effect) {
+        case 'refresh':
+          emit('refresh')
+          break
+        case 'switch':
+          emit('update:isTable', !props.isTable)
+          break
+        case 'columns':
+          break
+      }
     }
-    // 直接抛出
-    emit('change', {
-      effect: btnItem.effect,
-      rows: props.multipleSelection,
-    })
+  }
 
+  if (typeof btnItem.beforeClick !== 'function') {
+    cb()
     return false
   }
-  switch (btnItem.effect) {
-    case 'refresh':
-      emit('refresh')
-      break
-    case 'switch':
-      emit('update:isTable', !props.isTable)
-      break
-    case 'columns':
-      break
-  }
+  // 是否显示提示
+  new Promise((resolve) => {
+    btnItem.beforeClick!(
+      {
+        btnItem,
+        rows: props.multipleSelection,
+      },
+      resolve
+    )
+  }).then((res) => {
+    if (!res) return false
+    cb()
+  })
 }
 watch(
   () => [props.headerList],
