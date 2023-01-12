@@ -77,7 +77,7 @@ const Tags = defineComponent({
                   event,
                 })
               }}
-              onChange={(...arg: any) => REmit('change', ...arg)}
+              onClose={(...arg: any) => REmit('close', ...arg)}
               {...isProperty(
                 { row: props.row, index: props.index!, props: props.prop },
                 props.prop.data?.property
