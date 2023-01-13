@@ -1,8 +1,7 @@
-import { defineComponent, h, inject } from 'vue'
+import { defineComponent, h } from 'vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
-import { JustifyFunSymbol } from '~/keys'
 
 const RenderJsx = defineComponent({
   name: 'PTRenderJsx',
@@ -14,25 +13,7 @@ const RenderJsx = defineComponent({
     },
   },
   setup(props) {
-    const justifyFun = inject(JustifyFunSymbol)!
-
-    return () => (
-      <>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            justifyContent: justifyFun(props.aligning),
-          }}
-        >
-          <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
-            {props.prop.text || ''}
-          </span>
-          {props.prop.render?.(h, props.row, props.index as number)}
-        </div>
-      </>
-    )
+    return () => <>{props.prop.render?.(h, props.row, props.index as number)}</>
   },
 })
 

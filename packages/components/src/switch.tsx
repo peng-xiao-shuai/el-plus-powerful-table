@@ -6,7 +6,7 @@ import {
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
-import { JustifyFunSymbol, SizeSymbol } from '~/keys'
+import { SizeSymbol } from '~/keys'
 
 const Switch = defineComponent({
   name: 'PTSwitch',
@@ -19,7 +19,6 @@ const Switch = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
     const { REmit } = useREmit(
       emit as (event: 'component-emit', ...args: any[]) => void,
@@ -28,33 +27,21 @@ const Switch = defineComponent({
 
     return () => (
       <>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            justifyContent: justifyFun(props.aligning),
+        <el-switch
+          size={size}
+          style={props.prop.data?.style || {}}
+          v-model={props.row[props.prop.prop]}
+          active-value={'1'}
+          inactive-value={'0'}
+          onChange={(...arg: any) => REmit('change', ...arg)}
+          onClick={(e: Event) => {
+            e.stopPropagation()
           }}
-        >
-          <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
-            {props.prop.text || ''}
-          </span>
-          <el-switch
-            size={size}
-            style={props.prop.data?.style || {}}
-            v-model={props.row[props.prop.prop]}
-            active-value={'1'}
-            inactive-value={'0'}
-            onChange={(...arg: any) => REmit('change', ...arg)}
-            onClick={(e: Event) => {
-              e.stopPropagation()
-            }}
-            {...isProperty(
-              { row: props.row, index: props.index!, props: props.prop },
-              props.prop.data?.property
-            )}
-          />
-        </div>
+          {...isProperty(
+            { row: props.row, index: props.index!, props: props.prop },
+            props.prop.data?.property
+          )}
+        />
       </>
     )
   },

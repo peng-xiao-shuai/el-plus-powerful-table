@@ -23,35 +23,22 @@ const Link = defineComponent({
 
     return () => (
       <>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            justifyContent: justifyFun(props.aligning),
-          }}
+        <el-link
+          size={size}
+          target={props.prop.data?.target || '_blank'}
+          type={'primary'}
+          underline={false}
+          href={props.row[props.prop.prop]}
+          style={props.prop.data?.style || {}}
+          {...isProperty(
+            { row: props.row, index: props.index!, props: props.prop },
+            props.prop.data?.property
+          )}
         >
-          <span style={{ marginRight: props.prop.text ? '10px' : '0px' }}>
-            {props.prop.text || ''}
-          </span>
-
-          <el-link
-            size={size}
-            target={props.prop.data?.target || '_blank'}
-            type={'primary'}
-            underline={false}
-            href={props.row[props.prop.prop]}
-            style={props.prop.data?.style || {}}
-            {...isProperty(
-              { row: props.row, index: props.index!, props: props.prop },
-              props.prop.data?.property
-            )}
-          >
-            {typeof props.prop.data?.text == 'function'
-              ? props.prop.data?.text(props.row)
-              : props.prop.data?.text}
-          </el-link>
-        </div>
+          {typeof props.prop.data?.text == 'function'
+            ? props.prop.data?.text(props.row)
+            : props.prop.data?.text}
+        </el-link>
       </>
     )
   },
