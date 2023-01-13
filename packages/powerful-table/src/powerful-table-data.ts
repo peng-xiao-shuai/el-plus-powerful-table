@@ -10,10 +10,36 @@ import type {
   PowerfulTableHeaderProps,
   PowerfulTableOperateData,
   PowerfulTableProps,
-  Size,
   _TYPE,
 } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
+
+export enum EmitEnum {
+  BtnPlusChange = 'btn-plus-change',
+  BtnPlusRefresh = 'btn-plus-refresh',
+  BtnClick = 'btn-click',
+  SizeChange = 'size-change',
+  ComponentEvent = 'component-event',
+  SortCustom = 'sort-custom',
+  BatchOperate = 'batch-operate',
+  Select = 'select',
+  SelectionChange = 'selection-change',
+  SelectAll = 'select-all',
+  CellMouseEnter = 'cell-mouse-enter',
+  CellMouseLeave = 'cell-mouse-leave',
+  CellClick = 'cell-click',
+  CellDblclick = 'cell-dblclick',
+  CellContextmenu = 'cell-contextmenu',
+  RowClick = 'row-click',
+  RowContextmenu = 'row-contextmenu',
+  RowDblclick = 'row-dblclick',
+  HeaderClick = 'header-click',
+  HeaderContextmenu = 'header-contextmenu',
+  FilterChange = 'filter-change',
+  CurrentChange = 'current-change',
+  HeaderDragend = 'header-dragend',
+  ExpandChange = 'expand-change',
+}
 
 type DefaultRow = any
 type TranslatePair = {
@@ -68,7 +94,7 @@ export const powerfulTableProps = {
   },
 
   paginationProperty: {
-    type: Array as PropType<
+    type: Object as PropType<
       PowerfulTableProps<DefaultRow>['paginationProperty']
     >,
     default: () => ({}),
@@ -82,10 +108,6 @@ export const powerfulTableProps = {
   isPagination: {
     type: Boolean,
     default: true,
-  },
-  total: {
-    type: Number,
-    default: 0,
   },
   tree: {
     type: Object as PropType<PowerfulTableProps<DefaultRow>['tree']>,
@@ -216,7 +238,7 @@ export const useFunction = <L>(
   const sortChange = (obj: { column: any; prop: string; order: string }) => {
     if (Object.keys(obj.column || {}).length) {
       if (obj.column.sortable == 'custom') {
-        emit('sort-custom', obj)
+        emit(EmitEnum.SortCustom, obj)
       }
     }
   }
@@ -272,7 +294,7 @@ export const useFunction = <L>(
           .concat(powerfulTableData.currentSelect)
           .map((item) => item)
 
-        emit('batch-operate', {
+        emit(EmitEnum.BatchOperate, {
           ids,
           item: powerfulTableData.operate.operates[0],
           rows,
@@ -286,7 +308,7 @@ export const useFunction = <L>(
   const returnEmit = (emitName: Extract<EmitType, 'btn-click'>, arg: any) => {
     switch (emitName) {
       case 'btn-click':
-        emit('btn-click', arg)
+        emit(EmitEnum.BtnClick, arg)
         break
     }
   }
@@ -295,15 +317,7 @@ export const useFunction = <L>(
    * 将附属组件（components/src 目录下的文件）中el的事件抛出
    */
   const componentEmit = (e: ComponentEvent, ...arg: any) => {
-    emit('component-event', e, ...arg)
-  }
-
-  /**
-   * 行点击操作
-   * @param arg
-   */
-  const rowClick = (...arg: any) => {
-    emit('row-click', ...arg)
+    emit(EmitEnum.ComponentEvent, e, ...arg)
   }
 
   /* ------ 回调到组件上 ------ */
@@ -322,7 +336,7 @@ export const useFunction = <L>(
         ),
       })
     } catch {
-      emit('size-change', {
+      emit(EmitEnum.SizeChange, {
         params,
         select: powerfulTableData.otherSelect.concat(
           powerfulTableData.currentSelect
@@ -336,8 +350,8 @@ export const useFunction = <L>(
    * @param e
    */
   const handleSelectionChange = (e: L[]) => {
-    // console.log('选中', e)
     powerfulTableData.currentSelect = deepClone(e)
+    emit(EmitEnum.SelectionChange, e)
   }
 
   /**
@@ -362,7 +376,6 @@ export const useFunction = <L>(
 
   return {
     handleSelectionChange,
-    rowClick,
     returnEmit,
     componentEmit,
     sortChange,

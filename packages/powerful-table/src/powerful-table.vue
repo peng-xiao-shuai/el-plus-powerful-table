@@ -8,8 +8,8 @@
       :btn-config="btnConfig"
       :header-list="header"
       :multiple-selection="currentSelect"
-      @change="(...arg) => emit('btn-plus-change', ...arg)"
-      @refresh="emit('btn-plus-refresh')"
+      @change="(...arg) => emit(EmitEnum.BtnPlusChange, ...arg)"
+      @refresh="emit(EmitEnum.BtnPlusRefresh)"
     >
       <template v-if="$slots['btn-left']" #btn-left>
         <slot name="btn-left" />
@@ -41,7 +41,22 @@
       }"
       @selection-change="handleSelectionChange"
       @sort-change="sortChange"
-      @row-click="rowClick"
+      @select="(...arg) => emit(EmitEnum.Select, ...arg)"
+      @select-all="(...arg) => emit(EmitEnum.SelectAll, ...arg)"
+      @cell-mouse-enter="(...arg) => emit(EmitEnum.CellMouseEnter, ...arg)"
+      @cell-mouse-leave="(...arg) => emit(EmitEnum.CellMouseLeave, ...arg)"
+      @cell-click="(...arg) => emit(EmitEnum.CellClick, ...arg)"
+      @cell-dblclick="(...arg) => emit(EmitEnum.CellDblclick, ...arg)"
+      @cell-contextmenu="(...arg) => emit(EmitEnum.CellContextmenu, ...arg)"
+      @row-click="(...arg) => emit(EmitEnum.RowClick, ...arg)"
+      @row-contextmenu="(...arg) => emit(EmitEnum.RowContextmenu, ...arg)"
+      @row-dblclick="(...arg) => emit(EmitEnum.RowDblclick, ...arg)"
+      @header-click="(...arg) => emit(EmitEnum.HeaderClick, ...arg)"
+      @header-contextmenu="(...arg) => emit(EmitEnum.HeaderContextmenu, ...arg)"
+      @filter-change="(...arg) => emit(EmitEnum.FilterChange, ...arg)"
+      @current-change="(...arg) => emit(EmitEnum.CurrentChange, ...arg)"
+      @header-dragend="(...arg) => emit(EmitEnum.HeaderDragend, ...arg)"
+      @expand-change="(...arg) => emit(EmitEnum.ExpandChange, ...arg)"
     >
       <template #empty>
         <slot name="empty">
@@ -251,7 +266,7 @@
           v-bind="{
             pageSizes: [10, 20, 30],
             layout: 'total, sizes, prev, pager, next',
-            ...(paginationProperty || {}),
+            // ...(paginationProperty || {}),
           }"
         />
       </div>
@@ -275,6 +290,7 @@ import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
 import { useFilters } from '../../filter/useFilters'
 import {
+  EmitEnum,
   powerfulTableProps,
   useFunction,
   usePowerfulTableStates,
@@ -288,38 +304,57 @@ import type {
 import { LangKey, t } from '~/locale/lang'
 type Row = any
 // 自定义事件类型
-type EmitEventType = {
+type EmitEventType<Row = any> = {
   (
-    e: 'btn-plus-change',
+    e: EmitEnum.BtnPlusChange,
     payload: { effect: BtnConfig.BtnList['effect']; rows: Row[] }
   ): void
-  (e: 'btn-plus-refresh'): void
+  (e: EmitEnum.BtnPlusRefresh): void
   (
-    e: 'btn-click',
+    e: EmitEnum.BtnClick,
     payload: { params: BtnDataType['params']; row: Row; index: number }
   ): void
-  (e: 'switch-change', row: Row): void
   (
-    e: 'size-change',
+    e: EmitEnum.SizeChange,
     payload: {
       params: { pageNum: number; pageSize: number }
       select: Row[]
     }
   ): void
-  (e: 'component-event', componentEvent: ComponentEvent, ...args: any): void
   (
-    e: 'sort-custom',
+    e: EmitEnum.ComponentEvent,
+    componentEvent: ComponentEvent,
+    ...args: any
+  ): void
+  (
+    e: EmitEnum.SortCustom,
     payload: { column: any; prop: string; order: string }
   ): void
   (
-    e: 'batch-operate',
+    e: EmitEnum.BatchOperate,
     payload: {
       ids: (string | number)[]
       item: PowerfulTableLabelValue
       rows: Row[]
     }
   ): void
-  (e: 'row-click', ...args: any): void
+  (e: EmitEnum.Select, ...args: any): void
+  (e: EmitEnum.SelectionChange, ...args: any): void
+  (e: EmitEnum.SelectAll, ...args: any): void
+  (e: EmitEnum.CellMouseEnter, ...args: any): void
+  (e: EmitEnum.CellMouseLeave, ...args: any): void
+  (e: EmitEnum.CellClick, ...args: any): void
+  (e: EmitEnum.CellDblclick, ...args: any): void
+  (e: EmitEnum.CellContextmenu, ...args: any): void
+  (e: EmitEnum.RowClick, ...args: any): void
+  (e: EmitEnum.RowContextmenu, ...args: any): void
+  (e: EmitEnum.RowDblclick, ...args: any): void
+  (e: EmitEnum.HeaderClick, ...args: any): void
+  (e: EmitEnum.HeaderContextmenu, ...args: any): void
+  (e: EmitEnum.FilterChange, ...args: any): void
+  (e: EmitEnum.CurrentChange, ...args: any): void
+  (e: EmitEnum.HeaderDragend, ...args: any): void
+  (e: EmitEnum.ExpandChange, ...args: any): void
 }
 const emit = defineEmits<EmitEventType>()
 const props = defineProps(powerfulTableProps)
@@ -346,7 +381,6 @@ const { headerFilterChange, getPropObj } = useFilters<Row>(
 /* ------  操作方法  ------ */
 const {
   handleSelectionChange,
-  rowClick,
   returnEmit,
   componentEmit,
   sortChange,

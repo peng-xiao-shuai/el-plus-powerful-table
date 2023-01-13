@@ -1,3 +1,4 @@
+import type { EmitEnum } from '../packages/powerful-table/src/powerful-table-data'
 import type { CSSProperties, Plugin, VNode, VideoHTMLAttributes, h } from 'vue'
 import type {
   ButtonProps,
@@ -11,8 +12,7 @@ import type {
   TableColumnCtx,
   TableProps,
   TagProps,
-} from 'element-plus/es'
-
+} from 'element-plus'
 /* ------ props ------ */
 export interface PowerfulTableProps<Row = any> {
   list: Row[]
@@ -26,8 +26,8 @@ export interface PowerfulTableProps<Row = any> {
   operateData?: PowerfulTableOperateData
   isPagination?: boolean
   tree?: PowerfulTableTree
-  paginationProperty?: Partial<PaginationProps>
-  property?: Partial<TableProps<Row>>
+  paginationProperty?: any
+  property?: Partial<TableProps>
 }
 
 /* ------ tree 树结构数据 ------ */
@@ -261,46 +261,58 @@ export type SFCWithInstall<T> = T & Plugin
 
 export type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 export type Size = '' | 'large' | 'default' | 'small'
+
+export type EmitType = `${EmitEnum}`
 // 自定义事件类型
 export type EmitEventType<Row> = {
   (
-    e: 'btn-plus-change',
+    e: EmitEnum.BtnPlusChange,
     payload: { effect: BtnConfig.BtnList['effect']; rows: Row[] }
   ): void
-  (e: 'btn-plus-refresh'): void
+  (e: EmitEnum.BtnPlusRefresh): void
   (
-    e: 'btn-click',
+    e: EmitEnum.BtnClick,
     payload: { params: BtnDataType['params']; row: Row; index: number }
   ): void
   (
-    e: 'size-change',
+    e: EmitEnum.SizeChange,
     payload: {
       params: { pageNum: number; pageSize: number }
       select: Row[]
     }
   ): void
-  (e: 'component-event', componentEvent: ComponentEvent, ...args: any): void
   (
-    e: 'sort-custom',
-    payload: { column: any; prop: string; order: string }
+    e: EmitEnum.ComponentEvent,
+    componentEvent: ComponentEvent,
+    ...args: any
   ): void
   (
-    e: 'batch-operate',
+    e: EmitEnum.BatchOperate,
     payload: {
       ids: (string | number)[]
       item: PowerfulTableLabelValue
       rows: Row[]
     }
   ): void
-  (e: 'row-click', ...args: any): void
+  (e: EmitEnum.Select, ...args: any): void
+  (e: EmitEnum.SelectionChange, ...args: any): void
+  (e: EmitEnum.SelectAll, ...args: any): void
+  (e: EmitEnum.CellMouseEnter, ...args: any): void
+  (e: EmitEnum.CellMouseLeave, ...args: any): void
+  (e: EmitEnum.CellClick, ...args: any): void
+  (e: EmitEnum.CellDblclick, ...args: any): void
+  (e: EmitEnum.CellContextmenu, ...args: any): void
+  (e: EmitEnum.RowClick, ...args: any): void
+  (e: EmitEnum.RowContextmenu, ...args: any): void
+  (e: EmitEnum.RowDblclick, ...args: any): void
+  (e: EmitEnum.HeaderClick, ...args: any): void
+  (e: EmitEnum.HeaderContextmenu, ...args: any): void
+  (e: EmitEnum.FilterChange, ...args: any): void
+  (e: EmitEnum.CurrentChange, ...args: any): void
+  (e: EmitEnum.HeaderDragend, ...args: any): void
+  (e: EmitEnum.ExpandChange, ...args: any): void
+  (
+    e: EmitEnum.SortCustom,
+    payload: { column: any; prop: string; order: string }
+  ): void
 }
-export type EmitType =
-  | 'btn-plus-change'
-  | 'btn-plus-refresh'
-  | 'btn-click'
-  | 'switch-change'
-  | 'size-change'
-  | 'component-emit'
-  | 'sort-custom'
-  | 'batch-operate'
-  | 'row-click'
