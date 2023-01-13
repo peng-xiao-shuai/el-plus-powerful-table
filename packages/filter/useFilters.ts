@@ -3,7 +3,7 @@
  * @Author: chenle
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2023-01-06 17:25:18
+ * @Last Modified time: 2023-01-13 10:29:14
  */
 
 import { computed, unref } from 'vue'
@@ -13,12 +13,12 @@ import type {
   PowerfulTableHeaderProps,
 } from '../../typings'
 import type {
-  PowerFulTableProps,
+  PowerfulTableProps,
   StateData,
 } from '../powerful-table/src/powerful-table-data'
 export function useFilters<L>(
   state: StateData<L>,
-  props: PowerFulTableProps<L>,
+  props: PowerfulTableProps<L>,
   Table: any
 ) {
   /**
@@ -47,7 +47,7 @@ export function useFilters<L>(
       recursionFilterFun<L>(
         unref(Table).treeProps,
         deepClone(tableLists),
-        (data: typeof tableLists[number]): boolean => {
+        (data: (typeof tableLists)[number]): boolean => {
           // 类型断言
           const D = data as L & { [s: string]: any }
           const isShow = value.some((prop) => {
@@ -76,7 +76,7 @@ export function useFilters<L>(
       recursionFilterFun<L>(
         unref(Table).treeProps,
         deepClone(tableLists),
-        (data: typeof tableLists[number]): boolean =>
+        (data: (typeof tableLists)[number]): boolean =>
           compare(
             (data as L & { [s: string]: any })[propObj.prop],
             valueAs[0],
@@ -88,7 +88,7 @@ export function useFilters<L>(
       recursionFilterFun<L>(
         unref(Table).treeProps,
         deepClone(tableLists),
-        (data: typeof tableLists[number]) =>
+        (data: (typeof tableLists)[number]) =>
           String(
             (data as L & { [s: string]: any })[propObj.prop] || ''
           ).includes(String(value)),
