@@ -11,8 +11,10 @@
       :select-compare="selectCompare"
       :header="headers"
       :operate-data="operateData"
-      :total="total"
-      :page-sizes="[2, 5, 7]"
+      :pagination-property="{
+        total: total,
+        pageSizes: [2, 5, 7],
+      }"
       :tree="{ props: { hasChildren: 'hasChildren', children: 'cd' } }"
       :property="{
         rowClassName: ({index}: any) => 'powerful-table-plus-row'
