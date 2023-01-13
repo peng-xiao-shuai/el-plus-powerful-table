@@ -11,6 +11,13 @@ import type {
 import { SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
 
+const isFun = <T,>(key: string, data?: T) => {
+  if (typeof data == 'function') {
+    return data()[key]
+  } else {
+    return data ? (data as { [s: string]: any })[key] : ''
+  }
+}
 const FSelect = defineComponent({
   name: 'PTFSelect',
   props: {
@@ -67,11 +74,19 @@ const FSelect = defineComponent({
           arr.push(
             {
               value: t(LangKey.Open),
-              key: (newProps.data as SetDataType<'switch'>).activeValue || 1,
+              key:
+                isFun(
+                  'activeValue',
+                  (newProps.data as SetDataType<'switch'>)?.property
+                ) || 1,
             },
             {
               value: t(LangKey.Close),
-              key: (newProps.data as SetDataType<'switch'>).inactiveValue || 0,
+              key:
+                isFun(
+                  'inactiveValue',
+                  (newProps.data as SetDataType<'switch'>)?.property
+                ) || 0,
             }
           )
           state.options = arr
