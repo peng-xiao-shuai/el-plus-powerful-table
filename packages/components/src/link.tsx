@@ -5,7 +5,7 @@ import {
   isProperty,
   powerfulTableComponentProp,
 } from '~/powerful-table/src/powerful-table-data'
-import { JustifyFunSymbol, SizeSymbol } from '~/keys'
+import { SizeSymbol } from '~/keys'
 
 const Link = defineComponent({
   name: 'PTLink',
@@ -18,7 +18,6 @@ const Link = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props) {
-    const justifyFun = inject(JustifyFunSymbol)!
     const size = inject(SizeSymbol)
 
     return () => (
