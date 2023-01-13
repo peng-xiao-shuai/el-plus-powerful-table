@@ -1,10 +1,10 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus/es'
 import en from 'element-plus/lib/locale/lang/en'
-import PowerfulTable from '../lib/es/packages/index.mjs'
+// import PowerfulTable from '../lib/es/packages/index.mjs'
 import App from './App.vue'
 import { langPackages } from './indexData'
-// import PowerfulTable from '~/index'
+import PowerfulTable from '~/index'
 import 'element-plus/theme-chalk/src/index.scss'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 // import "../lib/es/style.css"
