@@ -266,7 +266,7 @@
           v-bind="{
             pageSizes: [10, 20, 30],
             layout: 'total, sizes, prev, pager, next',
-            // ...(paginationProperty || {}),
+            ...(paginationProperty || {}),
           }"
         />
       </div>
