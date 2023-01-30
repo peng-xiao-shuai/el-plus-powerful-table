@@ -115,6 +115,7 @@ app.mount("#app");
 | ---- | ---- | --- | ----- | ------ |
 | `btnSlot` | 是否启用顶部按钮插槽 `all / ''(全部显示)`，`left(只显示左侧按钮)`，`right(只显示右侧按钮)` | `enum` | `'left' / 'right' / 'none'` | - |
 | `btnList` | 左侧按钮配置 | `BtnList[]` | - | - |
+| `btnRightList` | 右侧按钮配置 | `BtnList[]` | - | - |
 
 #### <font color='#50BEFF'>btnList 左侧按钮配置</font>
 
@@ -126,6 +127,9 @@ app.mount("#app");
 | `text` | 按钮文字 | `string` | - | - |
 | `effect` | 自定义数据将会在自定义事件 `btn-plus-change` 抛出 | `string` | - | - |
 | `showBtn` | 控制按钮显示隐藏 | `(row: Row, index: number) => boolean / boolean` | - | - |
+| `tip` | 按钮提示，不传则没有提示 | `string` | - | - |
+| `beforeClick` | 按钮点击前事件 | `({btnItem, rows}: {btnItem: BtnList， rows: Row}, resolve: (value: boolean) => void) => void` | - | - |
+| `property` | `el-button` 组件扩展字段 (支持 `el-button` 组件所有参数) | `Partial<ButtonProps>` | - | - |
 ---
 
 <a href='https://github.com/Peng-Xiao-Shuai-0902/el-plus-powerful-table/blob/master/src/indexData.js'>查看 JSON 参数</a>

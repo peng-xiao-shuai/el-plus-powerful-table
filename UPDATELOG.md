@@ -2,7 +2,13 @@
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
-## 2.1.0 202201023
+## 2.1.1 20230130
+
+- `btn-plus` 文件重构（`vue` 改成 `tsx`)
+- - `btnConfig` 新增参数 `btnRightList` 类型为 `BtnList[]`
+- - 类型 `BtnList` 新增参数 `tip beforeClick property`
+
+## 2.1.0 20230107
 
 - 删除 `btn-plus` 组件中 `BtnConfig.BtnList` 的 `type icon showTip tipContent`
 - 删除 内部组件 `data` 部分参数（由于提供的参数不完整和 `element-plus` 存在差异，全部提供则感觉有点冗余，推荐使用 `property` 参数。内部组件只会保存部分默认值，但是可以通过 `property` 传参替换）
