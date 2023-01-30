@@ -3,3 +3,4 @@ lib
 node_modules
 README.md
 pnpm-lock.yaml
+icon.js
