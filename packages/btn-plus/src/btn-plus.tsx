@@ -1,11 +1,5 @@
 import './style.scss'
-import {
-  defineComponent,
-  getCurrentInstance,
-  inject,
-  reactive,
-  watch,
-} from 'vue'
+import { defineComponent, inject, reactive, watch } from 'vue'
 import { PowerfulTableSymbol, SizeSymbol } from '../../keys'
 import type { BtnConfig, PowerfulTableHeader } from '../../../typings'
 import type { PropType } from 'vue'
@@ -229,7 +223,7 @@ const PTBtnPlus = defineComponent({
                 placement="bottom"
                 trigger="click"
                 width="250"
-                hide-after="0"
+                hide-after={0}
                 popper-style="padding: 0"
                 v-slots={popoverSlots(item, index)}
               />
