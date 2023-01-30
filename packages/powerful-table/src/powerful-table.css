@@ -125,9 +125,7 @@
   margin-bottom: 5px;
   margin-top: 5px;
 }
-.pt .btnType .notSpan span {
-  display: none;
-}
+
 .pt .el-table th.el-table__cell {
   padding: 10px 0 !important;
 }
