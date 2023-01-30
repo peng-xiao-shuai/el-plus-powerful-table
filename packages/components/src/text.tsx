@@ -1,5 +1,4 @@
 import { defineComponent, ref } from 'vue'
-import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
 import {
@@ -73,13 +72,24 @@ const Text = defineComponent({
           <span
             style={{
               position: develop.value[props.index || 0] ? 'absolute' : 'static',
+              display: 'flex',
+              'justify-content': 'center',
+              'align-items': 'center',
             }}
           >
             {develop.value[props.index || 0]
               ? t(LangKey.PackUp)
               : t(LangKey.ReadFullText)}
             <el-icon>
-              {develop.value[props.index || 0] ? <ArrowUp /> : <ArrowDown />}
+              {develop.value[props.index || 0] ? (
+                <svg class="icon" aria-hidden="true">
+                  <use xlinkHref="#pt-arrow-up"></use>
+                </svg>
+              ) : (
+                <svg class="icon" aria-hidden="true">
+                  <use xlinkHref="#pt-arrow-down"></use>
+                </svg>
+              )}
             </el-icon>
           </span>
         </div>

@@ -1,4 +1,3 @@
-import { ArrowUp, Search } from '@element-plus/icons-vue'
 import type { PropType } from 'vue'
 import type { PowerfulTableFilter, PowerfulTableHeader } from '../../../typings'
 
@@ -24,7 +23,16 @@ export const props = {
 // 输入框插槽
 export const btnSlots = (fun: () => void) => {
   return {
-    append: () => <el-button icon={Search} onClick={fun}></el-button>,
+    append: () => (
+      <el-button
+        icon={
+          <svg class="icon" aria-hidden="true">
+            <use xlinkHref="#pt-search"></use>
+          </svg>
+        }
+        onClick={fun}
+      ></el-button>
+    ),
   }
 }
 
@@ -48,7 +56,9 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
             v-show={header.defaultFilter}
             class={state.visible ? 'arrow-down' : 'arrow-up'}
           >
-            <ArrowUp />
+            <svg class="icon" aria-hidden="true">
+              <use xlinkHref="#pt-arrow-up"></use>
+            </svg>
           </el-icon>
         </span>
       )

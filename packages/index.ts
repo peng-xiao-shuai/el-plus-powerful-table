@@ -1,6 +1,7 @@
 import components from './components'
 import PowerfulTable from './powerful-table'
 import fComponents from './filter'
+import './icon.js'
 import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
 import type { _TYPE } from '../typings'

@@ -6,7 +6,6 @@ import {
   ref,
   watchEffect,
 } from 'vue'
-import { ArrowUp } from '@element-plus/icons-vue'
 import { props } from './common'
 import type { App } from 'vue'
 import type { SFCWithInstall } from '../../../typings'
@@ -64,7 +63,9 @@ const FDatePicker = defineComponent({
       >
         {props.headerData.label}
         <el-icon class={state.visible ? 'arrow-down' : 'arrow-up'}>
-          <ArrowUp />
+          <svg class="icon" aria-hidden="true">
+            <use xlinkHref="#pt-arrow-up"></use>
+          </svg>
         </el-icon>
         <el-date-picker
           v-model={state.value}
