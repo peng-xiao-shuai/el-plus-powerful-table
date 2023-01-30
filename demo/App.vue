@@ -159,13 +159,13 @@ export default defineComponent({
     function btnChange(e: any) {
       if (e.effect === 'add') {
         ElMessage.success('新增操作，参数详情，查看控制台')
-        console.log('新增操作', e.effect, e.list)
+        console.log('新增操作', e)
       } else if (e.effect === 'edit') {
         ElMessage.success('修改操作，参数详情，查看控制台')
-        console.log('修改操作', e.effect, e.list)
+        console.log('修改操作', e)
       } else if (e.effect === 'remove') {
         ElMessage.success('批量删除操作，参数详情，查看控制台')
-        console.log('批量删除操作', e.effect, e.list)
+        console.log('批量删除操作', e)
       }
     }
 

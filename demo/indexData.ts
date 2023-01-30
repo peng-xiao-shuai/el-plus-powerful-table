@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
 import { ElMessageBox } from 'element-plus/es'
-import { Delete, Edit, Plus } from '@element-plus/icons-vue'
+import { Delete, Edit, Grid, Plus, Refresh } from '@element-plus/icons-vue'
 import { setData } from '../packages/index'
 import type {
   BtnConfig,
@@ -37,6 +37,21 @@ type Lists = {
 const btnConfig: BtnConfig.Config = {
   // hidden: 'none',
   btnSlot: 'all',
+  btnRightList: [
+    {
+      effect: 'refresh',
+      property: {
+        icon: markRaw(Refresh),
+        type: 'primary',
+      },
+    },
+    {
+      effect: 'columns',
+      property: {
+        icon: markRaw(Grid),
+      },
+    },
+  ],
   btnList: [
     {
       text: '新增',
@@ -51,7 +66,7 @@ const btnConfig: BtnConfig.Config = {
       text: '修改',
       operateType: 'single',
       effect: 'edit',
-      showBtn: () => false,
+      // showBtn: () => false,
       property: {
         icon: markRaw(Edit),
         type: 'primary',
@@ -373,7 +388,6 @@ const header: PowerfulTableHeader<Lists>[] = [
         prop: 'btn',
         data: setData<'btn', Lists>([
           {
-            text: '编辑',
             tip: '编辑按钮',
             // showBtn: false,
             // isTooltip: true,
