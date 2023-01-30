@@ -313,19 +313,12 @@ import {
   usePowerfulTableStates,
 } from './powerful-table-data'
 import type { ComponentEvent } from './powerful-table-data'
-import type {
-  BtnConfig,
-  BtnDataType,
-  PowerfulTableLabelValue,
-} from '../../../typings'
+import type { BtnDataType, PowerfulTableLabelValue } from '../../../typings'
 import { LangKey, t } from '~/locale/lang'
 type Row = any
 // 自定义事件类型
 type EmitEventType<Row = any> = {
-  (
-    e: EmitEnum.BtnPlusChange,
-    payload: { effect: BtnConfig.BtnList['effect']; rows: Row[] }
-  ): void
+  (e: EmitEnum.BtnPlusChange, ...args: any): void
   (e: EmitEnum.BtnPlusRefresh): void
   (
     e: EmitEnum.BtnClick,
