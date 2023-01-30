@@ -153,7 +153,7 @@ export type ImageDataType<Row = any> = {
 
 export type BtnDataType<Row = any> = {
   tip?: string
-  text: string
+  text?: string
   beforeClick?: (
     {
       row,
@@ -237,7 +237,8 @@ export namespace BtnConfig {
     disabled?: boolean
     operateType?: 'none' | 'single' | 'batch'
     text?: string
-    effect?: any
+    tip?: string
+    effect?: string
     showBtn?: (() => boolean) | boolean
     beforeClick?: (
       {
@@ -247,13 +248,14 @@ export namespace BtnConfig {
         btnItem: BtnList
         rows: Row
       },
-      resolve: (value: unknown) => void
+      resolve: (value: boolean) => void
     ) => void
-    property?: object
+    property?: ElComponentProp<'btn', ButtonProps, Row>
   }
   export type Config = {
     btnSlot?: 'left' | 'right' | 'all'
-    btnList: BtnList[]
+    btnList?: BtnList[]
+    btnRightList?: BtnList[]
   }
 }
 

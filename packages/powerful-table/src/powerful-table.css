@@ -80,6 +80,11 @@
   margin: 5px;
 }
 
+.pt .no-margin,
+.pt .no-margin > span {
+  margin: 0 !important;
+}
+
 .pt .content {
   position: relative;
   padding-bottom: 23px;
