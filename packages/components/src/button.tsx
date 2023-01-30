@@ -28,7 +28,7 @@ const Button = defineComponent({
 
     const btn = (item: BtnDataType, btnIndex: number[]) => (
       <el-button
-        class={item.text == '' ? 'notSpan' : ''}
+        class={item.text ? '' : 'no-margin'}
         size={size}
         style={item.style || {}}
         type={'primary'}
