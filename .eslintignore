@@ -1,5 +1,6 @@
 dist
 lib
+es
 node_modules
 README.md
 pnpm-lock.yaml

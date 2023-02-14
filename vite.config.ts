@@ -1,5 +1,5 @@
 import path, { resolve } from 'path'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
@@ -7,13 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import pkg from './package.json'
 
 // 如果开启压缩banner and footer将只能简单英文文字
-const banner = `/**
-  license: ${pkg.license}
-  author: ${pkg.author}
-  email: ${pkg.bugs.email}
-  name: ${pkg.name}
-  version: ${pkg.version}
-*/`
+const banner = `/** license: ${pkg.license} author: ${pkg.author} email: ${pkg.bugs.email} name: ${pkg.name} version: ${pkg.version} */`
 
 export default defineConfig(({ mode }) => {
   const common = {
@@ -52,15 +46,16 @@ export default defineConfig(({ mode }) => {
         entryRoot: '.',
         noEmitOnError: true,
         skipDiagnostics: false,
-        outputDir: [
-          resolve(__dirname, './lib/es'),
-          resolve(__dirname, './lib/cjs'),
-        ],
+        outputDir: [resolve(__dirname, './es'), resolve(__dirname, './lib')],
         //指定使用的tsconfig.json为我们整个项目根目录下掉,如果不配置,你也可以在components下新建tsconfig.json
         tsConfigFilePath: './tsconfig.json',
         compilerOptions: {
           types: [],
         },
+        beforeWriteFile: (filePath, content) => ({
+          filePath: filePath.replace('\\packages', ''),
+          content,
+        }),
       })
     )
     return {
@@ -68,14 +63,14 @@ export default defineConfig(({ mode }) => {
       build: {
         target: 'modules',
         //打包文件目录
-        outDir: 'es',
+        // sourcemap: 'hidden',
         //压缩
         minify: true,
         //css分离
-        //cssCodeSplit: true,
+        // cssCodeSplit: true,
         rollupOptions: {
           //忽略打包vue文件
-          external: ['vue'],
+          external: ['vue', 'element-plus'],
           input: ['./packages/index.ts'],
           output: [
             {
@@ -87,7 +82,8 @@ export default defineConfig(({ mode }) => {
               preserveModules: true,
               exports: 'named',
               //配置打包根目录
-              dir: resolve(__dirname, './lib/es'),
+              dir: resolve(__dirname, './es'),
+              compact: true,
             },
             {
               format: 'cjs',
@@ -97,7 +93,7 @@ export default defineConfig(({ mode }) => {
               preserveModules: true,
               exports: 'named',
               //配置打包根目录
-              dir: resolve(__dirname, './lib/cjs'),
+              dir: resolve(__dirname, './lib'),
             },
           ],
         },

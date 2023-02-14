@@ -2,6 +2,7 @@
 node_modules
 /test/unit/coverage
 /lib
+/es
 /dist
 
 
