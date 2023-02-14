@@ -27,13 +27,12 @@
     ]
   },
   "include": [
-    "packages/**/**/*",
-    "packages/**/*",
+    "demo",
+    "packages",
     "typings",
     "global.d.ts"
   ],
   "exclude": [
-    "lib",
     "dist",
     "node_modules/**",
     "env.d.ts"

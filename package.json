@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": false,
   "type": "module",
   "keywords": [
@@ -22,20 +22,24 @@
   "license": "MIT",
   "author": "peng-xiao-shuai",
   "files": [
+    "es",
     "lib"
   ],
-  "main": "lib/cjs/packages/index.js",
-  "module": "lib/es/packages/index.mjs",
-  "style": "lib/es/style.css",
-  "types": "lib/es/typings/index.d.ts",
+  "main": "lib/packages/index.js",
+  "module": "es/packages/index.mjs",
+  "style": "es/style.css",
+  "types": "es/typings/index.d.ts",
   "exports": {
     ".": {
-      "require": "./lib/cjs/packages/index.js",
-      "import": "./lib/es/packages/index.mjs",
-      "types": "./lib/es/typings/index.d.ts"
+      "require": "./lib/packages/index.js",
+      "import": "./es/packages/index.mjs",
+      "types": "./es/typings/index.d.ts"
     },
-    "./lib/*": "./lib/*",
-    "./global": "./lib/es/global.d.ts"
+    "./es": "./es/index.mjs",
+    "./lib": "./lib/index.js",
+    "./type": "./es/typings/index.d.ts",
+    "./global": "./es/global.d.ts",
+    "./*": "./*"
   },
   "repository": {
     "type": "git",
@@ -44,14 +48,13 @@
   "scripts": {
     "dev": "vite --force",
     "tsc": "vue-tsc --noEmit",
-    "lib": "rimraf ./lib && vite build --mode lib && esno script/copy.js",
+    "lib": "rimraf ./lib ./es && vite build --mode lib",
     "gitBuild": "vite build --base=/el-plus-powerful-table/"
   },
   "peerDependencies": {
     "vue": "^3.2.0"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^1.1.4",
     "element-plus": "2.2.28",
     "vue": "^3.2.45"
   },
@@ -62,6 +65,7 @@
   ],
   "devDependencies": {
     "@element-plus/eslint-config": "^0.0.20221218",
+    "@element-plus/icons-vue": "^1.1.4",
     "@vitejs/plugin-vue": "^3.2.0",
     "@vitejs/plugin-vue-jsx": "^2.1.1",
     "@vue/runtime-core": "^3.2.45",
