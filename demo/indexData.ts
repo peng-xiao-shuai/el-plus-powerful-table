@@ -8,7 +8,9 @@ import type {
   PowerfulTableFilter,
   PowerfulTableHeader,
 } from '../typings/powerful-table'
-import { LangKey } from '~/locale/lang'
+import { LangKey } from '~/locale/packages'
+
+console.log(LangKey)
 
 type Lists = {
   id?: number
