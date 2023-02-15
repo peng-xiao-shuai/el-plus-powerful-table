@@ -5,7 +5,7 @@ import type {
   BtnDataType,
   PowerfulTableHeaderProps,
   SFCWithInstall,
-} from '../../../typings'
+} from '@/index'
 import {
   isProperty,
   powerfulTableComponentProp,

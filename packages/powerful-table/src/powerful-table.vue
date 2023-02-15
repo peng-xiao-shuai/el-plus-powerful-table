@@ -313,7 +313,7 @@ import {
   usePowerfulTableStates,
 } from './powerful-table-data'
 import type { ComponentEvent } from './powerful-table-data'
-import type { BtnDataType, PowerfulTableLabelValue } from '../../../typings'
+import type { BtnDataType, PowerfulTableLabelValue } from '@/index'
 import { LangKey, t } from '~/locale/lang'
 type Row = any
 // 自定义事件类型

@@ -11,7 +11,7 @@ import type {
   PowerfulTableOperateData,
   PowerfulTableProps,
   _TYPE,
-} from '../../../typings'
+} from '@/index'
 import { LangKey, t } from '~/locale/lang'
 
 export enum EmitEnum {

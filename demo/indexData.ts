@@ -7,7 +7,7 @@ import type {
   LangPackages,
   PowerfulTableFilter,
   PowerfulTableHeader,
-} from '../typings/powerful-table'
+} from '@/index'
 import { LangKey } from '~/locale/packages'
 
 console.log(LangKey)

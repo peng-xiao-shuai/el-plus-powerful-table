@@ -8,10 +8,7 @@
 
 import { computed, unref } from 'vue'
 import { deepClone } from '../index'
-import type {
-  PowerfulTableHeader,
-  PowerfulTableHeaderProps,
-} from '../../typings'
+import type { PowerfulTableHeader, PowerfulTableHeaderProps } from '@/index'
 import type {
   PowerfulTableProps,
   StateData,

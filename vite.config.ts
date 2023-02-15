@@ -4,10 +4,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import pkg from './package.json'
-
-// 如果开启压缩banner and footer将只能简单英文文字
-const banner = `/** license: ${pkg.license} author: ${pkg.author} email: ${pkg.bugs.email} name: ${pkg.name} version: ${pkg.version} */`
 
 export default defineConfig(({ mode }) => {
   const common = {
@@ -15,6 +11,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '~': path.resolve('./packages'),
+        '@': path.resolve('./typings'),
       },
     },
     base: mode === 'production' ? '/el-plus-powerful-table/' : '/',
@@ -70,11 +67,10 @@ export default defineConfig(({ mode }) => {
         // cssCodeSplit: true,
         rollupOptions: {
           //忽略打包vue文件
-          external: ['vue', 'element-plus'],
+          external: ['vue', /^element-plus*/],
           input: ['./packages/index.ts'],
           output: [
             {
-              banner,
               format: 'es',
               //不用打包成.es.js,这里我们想把它打包成.js
               entryFileNames: '[name].mjs',
@@ -84,6 +80,7 @@ export default defineConfig(({ mode }) => {
               //配置打包根目录
               dir: resolve(__dirname, './es'),
               compact: true,
+              sourcemap: true,
             },
             {
               format: 'cjs',

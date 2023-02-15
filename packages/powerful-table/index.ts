@@ -5,7 +5,7 @@ import type { App } from 'vue'
 powerful.install = (app: App): void => {
   app.component(powerful.name, powerful)
 }
-export const PowerfulTable = powerful as import('../../typings').SFCWithInstall<
+export const PowerfulTable = powerful as import('@/index').SFCWithInstall<
   typeof powerful
 >
 

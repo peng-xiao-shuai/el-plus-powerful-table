@@ -15,6 +15,9 @@
     "paths": {
       "~/*": [
         "./packages/*"
+      ],
+      "@/*": [
+        "./typings/*"
       ]
     },
     "types": [

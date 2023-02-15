@@ -8,7 +8,7 @@ import {
 } from 'vue'
 import { props } from './common'
 import type { App } from 'vue'
-import type { SFCWithInstall } from '../../../typings'
+import type { SFCWithInstall } from '@/index'
 import { SizeSymbol } from '~/keys'
 
 const FDatePicker = defineComponent({

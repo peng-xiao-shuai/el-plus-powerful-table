@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import type { App, PropType } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
   powerfulTableComponentProp,
   useREmit,

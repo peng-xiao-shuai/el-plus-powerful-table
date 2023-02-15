@@ -1,5 +1,5 @@
 import type { PropType } from 'vue'
-import type { PowerfulTableFilter, PowerfulTableHeader } from '../../../typings'
+import type { PowerfulTableFilter, PowerfulTableHeader } from '@/index'
 
 export type State<T = string | (string | number)[]> = {
   value: T

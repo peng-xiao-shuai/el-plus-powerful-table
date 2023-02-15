@@ -67,7 +67,7 @@
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { btnConfig, header, lists } from './indexData'
-import type { PowerfulTableOperateData } from '../typings'
+import type { PowerfulTableOperateData } from '@/index'
 
 export default defineComponent({
   components: {

@@ -1,7 +1,7 @@
 import { defineComponent, inject, reactive } from 'vue'
 import { btnSlots, props, slots } from './common'
 import type { App } from 'vue'
-import type { SFCWithInstall } from '../../../typings'
+import type { SFCWithInstall } from '@/index'
 import { SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
 

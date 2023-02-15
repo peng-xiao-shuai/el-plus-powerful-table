@@ -1,7 +1,7 @@
 import { defineComponent, inject } from 'vue'
 import { filterFun } from './filter'
 import type { App, PropType } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '../../../typings'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
   isProperty,
   powerfulTableComponentProp,

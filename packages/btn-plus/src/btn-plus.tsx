@@ -1,7 +1,7 @@
 import './style.scss'
 import { defineComponent, inject, reactive, watch } from 'vue'
 import { PowerfulTableSymbol, SizeSymbol } from '../../keys'
-import type { BtnConfig, PowerfulTableHeader } from '../../../typings'
+import type { BtnConfig, PowerfulTableHeader } from '@/index'
 import type { PropType } from 'vue'
 import { LangKey, t } from '~/locale/lang'
 

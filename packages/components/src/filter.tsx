@@ -4,7 +4,7 @@ import type {
   PowerfulTableFilter,
   PowerfulTableHeaderProps,
   SFCWithInstall,
-} from '../../../typings'
+} from '@/index'
 import {
   powerfulTableComponentProp,
   useREmit,

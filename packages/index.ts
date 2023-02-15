@@ -4,7 +4,7 @@ import fComponents from './filter'
 import './icon.js'
 import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
-import type { _TYPE } from '../typings'
+import type { _TYPE } from '@/index'
 import type { App, Plugin } from 'vue'
 export { default as PTBtnPlus } from './btn-plus'
 export { default as PowerfulTable } from './powerful-table'
@@ -38,7 +38,7 @@ export const setData = <T extends keyof _TYPE<L>, L = any>(
 ): _TYPE<L>[T] => data
 
 const makeInstaller = (components: Plugin[] = []) => {
-  const install = (app: App, options?: import('../typings').InjectProps) => {
+  const install = (app: App, options?: import('@/index').InjectProps) => {
     components.forEach((c) => {
       app.use(c)
     })
