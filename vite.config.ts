@@ -49,10 +49,16 @@ export default defineConfig(({ mode }) => {
         compilerOptions: {
           types: [],
         },
-        beforeWriteFile: (filePath, content) => ({
-          filePath: filePath.replace('\\packages', ''),
-          content,
-        }),
+        beforeWriteFile: (filePath, content) => {
+          return {
+            // 处理文件名
+            filePath: filePath.replace('\\packages', ''),
+            // 处理typings路径
+            content: content
+              .replace(/'..\/typings/gi, "'./typings")
+              .replace(/\/..\/typings/gi, '/typings'),
+          }
+        },
       })
     )
     return {
