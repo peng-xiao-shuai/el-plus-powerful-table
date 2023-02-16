@@ -18,6 +18,12 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.5 20230216
+
+- 修复未全局安装 `element-plus` 时引发组件不能使用 `bug`
+- 删除内部组件 `input` 的 `onClick` 事件， 因为和 `onFocus` 重合
+- 删除内部组件 `rate` 的 `onClick` 事件，因为 `ElRate` 上不存在 `onClick`
+
 ## 2.1.3 20230215
 
 - 修复 `lib | es` 文件夹内 `.d.ts` 文件中引入的 `typings` 文件路径找不到
