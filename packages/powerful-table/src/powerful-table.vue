@@ -276,7 +276,13 @@
       </div>
 
       <!-- 分页操作 -->
-      <div v-if="isPagination" class="pagination">
+      <div
+        v-if="
+          isPagination &&
+          (paginationProperty.total || paginationProperty.pageCount)
+        "
+        class="pagination"
+      >
         <ElPagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
