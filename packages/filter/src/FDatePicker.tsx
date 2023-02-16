@@ -6,6 +6,7 @@ import {
   ref,
   watchEffect,
 } from 'vue'
+import { ElDatePicker, ElIcon } from 'element-plus'
 import { props } from './common'
 import type { App } from 'vue'
 import type { SFCWithInstall } from '@/index'
@@ -20,7 +21,6 @@ const FDatePicker = defineComponent({
     const datePickerRef = ref<any>()
     const state: import('./common').State & {
       defaultTime: Date[]
-      isAutoTrigger: boolean
     } = reactive({
       value: '',
       visible: false,
@@ -28,7 +28,6 @@ const FDatePicker = defineComponent({
         new Date(2000, 1, 1, 0, 0, 0),
         new Date(2000, 2, 1, 23, 59, 59),
       ],
-      isAutoTrigger: false,
     })
 
     const datePickerChange = (value: any) => {
@@ -52,22 +51,19 @@ const FDatePicker = defineComponent({
         style={state.value ? { color: 'var(--el-color-primary)' } : {}}
         onClick={async (e) => {
           e.stopPropagation()
-          if (!state.isAutoTrigger) {
-            state.visible = !state.visible
-            if (!state.visible) return
-            await nextTick()
-            datePickerRef.value.focus()
-          }
-          state.isAutoTrigger = false
+          state.visible = !state.visible
+          if (!state.visible) return
+          await nextTick()
+          datePickerRef.value.focus()
         }}
       >
         {props.headerData.label}
-        <el-icon class={state.visible ? 'arrow-down' : 'arrow-up'}>
+        <ElIcon class={state.visible ? 'arrow-down' : 'arrow-up'}>
           <svg class="icon" aria-hidden="true">
             <use xlinkHref="#pt-arrow-up"></use>
           </svg>
-        </el-icon>
-        <el-date-picker
+        </ElIcon>
+        <ElDatePicker
           v-model={state.value}
           type="datetimerange"
           value-format="YYYY-MM-DD HH:mm:ss"
@@ -76,12 +72,11 @@ const FDatePicker = defineComponent({
           class="date_style"
           style="padding: 0; overflow: hidden"
           size={size || 'small'}
-          onChange={datePickerChange}
-          onBlur={() => {
-            state.isAutoTrigger = true
-            state.visible = false
+          onUpdate:modelValue={datePickerChange}
+          onVisible-change={(b: boolean) => {
+            state.visible = b
           }}
-        ></el-date-picker>
+        ></ElDatePicker>
       </span>
     )
   },

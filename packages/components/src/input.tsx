@@ -1,4 +1,5 @@
 import { defineComponent, inject } from 'vue'
+import { ElInput } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
@@ -27,7 +28,7 @@ const Input = defineComponent({
 
     return () => (
       <>
-        <el-input
+        <ElInput
           v-slots={{
             [props.prop.data?.slot as string]: () => (
               <span style={{ padding: '0 10px' }}>
@@ -35,29 +36,22 @@ const Input = defineComponent({
               </span>
             ),
           }}
-          rows={3}
           style={props.prop.data?.style || {}}
           size={size}
           v-model={props.row[props.prop.prop]}
-          onClick={(event: Event) => {
-            event.stopPropagation()
-            REmit('click', {
-              row: props.row,
-              index: props.index,
-              prop: props.prop.prop,
-              event,
-            })
-          }}
           onBlur={(...arg: any) => REmit('blur', ...arg)}
           onFocus={(...arg: any) => REmit('focus', ...arg)}
           onChange={(...arg: any) => REmit('change', ...arg)}
           onInput={(...arg: any) => REmit('input', ...arg)}
           onClear={(...arg: any) => REmit('clear', ...arg)}
-          {...isProperty(
-            { row: props.row, index: props.index!, props: props.prop },
-            props.prop.data?.property
-          )}
-        ></el-input>
+          {...{
+            rows: 3,
+            ...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            ),
+          }}
+        ></ElInput>
       </>
     )
   },

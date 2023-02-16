@@ -1,4 +1,11 @@
 import { defineComponent, inject } from 'vue'
+import {
+  ElButton,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
+  ElTooltip,
+} from 'element-plus'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 import type { App, PropType } from 'vue'
 import type {
@@ -27,7 +34,7 @@ const Button = defineComponent({
     const size = inject(SizeSymbol)
 
     const btn = (item: BtnDataType, btnIndex: number[]) => (
-      <el-button
+      <ElButton
         class={item.text ? '' : 'no-margin'}
         size={size}
         style={item.style || {}}
@@ -75,14 +82,14 @@ const Button = defineComponent({
         )}
       >
         {item.text}
-      </el-button>
+      </ElButton>
     )
 
     // 提示
     const tipRender = (item: BtnDataType, index: number[]) => (
       <>
         {item.tip ? (
-          <el-tooltip
+          <ElTooltip
             popper-class={item.tip ? '' : 'no-tooltip'}
             effect="dark"
             content={item.tip}
@@ -90,7 +97,7 @@ const Button = defineComponent({
             {...item.tipProperty}
           >
             {btn(item, index)}
-          </el-tooltip>
+          </ElTooltip>
         ) : (
           <>{btn(item, index)}</>
         )}
@@ -122,19 +129,19 @@ const Button = defineComponent({
             })
             .map((item, index) => {
               return Array.isArray(item) ? (
-                <el-dropdown
+                <ElDropdown
                   class="el-dropdown-more"
                   v-slots={{
                     dropdown: () => (
-                      <el-dropdown-menu>
+                      <ElDropdownMenu>
                         {(item as BtnDataType[])
                           .filter((each) => !each.isMore)
                           .map((each, i) => (
-                            <el-dropdown-item key={index}>
+                            <ElDropdownItem key={index}>
                               {tipRender(each, [index, i])}
-                            </el-dropdown-item>
+                            </ElDropdownItem>
                           ))}
-                      </el-dropdown-menu>
+                      </ElDropdownMenu>
                     ),
                   }}
                 >
@@ -146,7 +153,7 @@ const Button = defineComponent({
                       <>{btn(each, [index])}</>
                     ))}
                   </div>
-                </el-dropdown>
+                </ElDropdown>
               ) : (
                 tipRender(item, [index])
               )

@@ -1,4 +1,5 @@
 import { defineComponent } from 'vue'
+import { ElImage } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
@@ -25,14 +26,13 @@ const Image = defineComponent({
 
     return () => (
       <>
-        <el-image
+        <ElImage
           src={props.row[props.prop.prop]}
           preview-src-list={[props.row[props.prop.prop]]}
           lazy={true}
           fit={'cover'}
           preview-teleported={true}
           style={props.prop.data?.style}
-          onClick={(e: Event) => e.stopPropagation()}
           onLoad={(...arg: any) => REmit('load', ...arg)}
           onError={(...arg: any) => REmit('error', ...arg)}
           onSwitch={(...arg: any) => REmit('switch', ...arg)}
@@ -41,7 +41,7 @@ const Image = defineComponent({
             { row: props.row, index: props.index!, props: props.prop },
             props.prop.data?.property
           )}
-        ></el-image>
+        ></ElImage>
       </>
     )
   },

@@ -1,4 +1,5 @@
 import { defineComponent, inject } from 'vue'
+import { ElLink } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
@@ -18,26 +19,25 @@ const Link = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props) {
-    const size = inject(SizeSymbol)
-
     return () => (
       <>
-        <el-link
-          size={size}
-          target={props.prop.data?.target || '_blank'}
+        <ElLink
           type={'primary'}
           underline={false}
           href={props.row[props.prop.prop]}
           style={props.prop.data?.style || {}}
-          {...isProperty(
-            { row: props.row, index: props.index!, props: props.prop },
-            props.prop.data?.property
-          )}
+          {...{
+            target: props.prop.data?.target || '_blank',
+            ...isProperty(
+              { row: props.row, index: props.index!, props: props.prop },
+              props.prop.data?.property
+            ),
+          }}
         >
           {typeof props.prop.data?.text == 'function'
             ? props.prop.data?.text(props.row)
             : props.prop.data?.text}
-        </el-link>
+        </ElLink>
       </>
     )
   },

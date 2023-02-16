@@ -1,4 +1,5 @@
 import { defineComponent, inject } from 'vue'
+import { ElSwitch } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
@@ -27,16 +28,13 @@ const Switch = defineComponent({
 
     return () => (
       <>
-        <el-switch
+        <ElSwitch
           size={size}
           style={props.prop.data?.style || {}}
           v-model={props.row[props.prop.prop]}
           active-value={'1'}
           inactive-value={'0'}
           onChange={(...arg: any) => REmit('change', ...arg)}
-          onClick={(e: Event) => {
-            e.stopPropagation()
-          }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
             props.prop.data?.property

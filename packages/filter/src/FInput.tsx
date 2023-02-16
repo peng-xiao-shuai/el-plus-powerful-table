@@ -1,4 +1,5 @@
 import { defineComponent, inject, reactive } from 'vue'
+import { ElInput, ElPopover } from 'element-plus'
 import { btnSlots, props, slots } from './common'
 import type { App } from 'vue'
 import type { SFCWithInstall } from '@/index'
@@ -35,23 +36,22 @@ const FInput = defineComponent({
     })
 
     return () => (
-      <el-popover
+      <ElPopover
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
         width={lengthToWidth(state.value.length)}
         trigger="contextmenu"
         v-slots={slots(state, props.headerData)}
       >
-        <el-input
+        <ElInput
           placeholder={t(LangKey.InputContent)}
           v-model={state.value}
           size={size || 'small'}
           clearable
-          teleported={false}
           class="input-with-select"
           v-slots={btnSlots(inputChange)}
-        ></el-input>
-      </el-popover>
+        ></ElInput>
+      </ElPopover>
     )
   },
 })

@@ -19,7 +19,7 @@
       </template>
     </PTBtnPlus>
 
-    <el-table
+    <ElTable
       ref="multipleTable"
       v-loading="listLoading"
       class="powerful-table"
@@ -64,7 +64,7 @@
         </slot>
       </template>
 
-      <el-table-column
+      <ElTableColumn
         v-if="isSelect"
         align="center"
         type="selection"
@@ -72,7 +72,7 @@
         :selectable="selectable ? selectable : () => true"
       />
 
-      <el-table-column
+      <ElTableColumn
         v-for="(item, index) in headerLists"
         :key="item.label + index"
         v-bind="{
@@ -150,6 +150,7 @@
               display: index == 0 ? 'inline-block' : 'block',
               ...prop.style,
             }"
+            @click="(event: Event) => event.stopPropagation()"
           >
             <!-- 插槽 -->
             <slot
@@ -233,8 +234,8 @@
             </div>
           </div>
         </template>
-      </el-table-column>
-    </el-table>
+      </ElTableColumn>
+    </ElTable>
 
     <div
       style="display: flex; justify-content: space-between; margin-top: 20px"
@@ -244,7 +245,7 @@
         v-if="operate && isSelect && operate.operates"
         class="pagination left"
       >
-        <el-select
+        <ElSelect
           v-model="operate.value"
           v-bind="{
             clearable: true,
@@ -258,9 +259,9 @@
             :label="item.label"
             :value="item.value"
           />
-        </el-select>
+        </ElSelect>
 
-        <el-button
+        <ElButton
           class="search-button"
           v-bind="{
             style: { marginLeft: '20px' },
@@ -271,12 +272,12 @@
           @click="batchOperate"
         >
           {{ t(LangKey.Confirm) }}
-        </el-button>
+        </ElButton>
       </div>
 
       <!-- 分页操作 -->
       <div v-if="isPagination" class="pagination">
-        <el-pagination
+        <ElPagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
           :small="Size === 'small' ? true : false"
@@ -302,6 +303,13 @@ import {
   watch,
   watchEffect,
 } from 'vue'
+import {
+  ElButton,
+  ElPagination,
+  ElSelect,
+  ElTable,
+  ElTableColumn,
+} from 'element-plus/es'
 import { deepClone } from '../../index'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";

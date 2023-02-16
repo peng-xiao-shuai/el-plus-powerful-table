@@ -1,4 +1,5 @@
 import { defineComponent, inject, reactive, watch } from 'vue'
+import { ElOption, ElPopover, ElSelect } from 'element-plus'
 import { props, slots } from './common'
 import type { State } from './common'
 import type { App, PropType } from 'vue'
@@ -101,14 +102,14 @@ const FSelect = defineComponent({
     })
 
     return () => (
-      <el-popover
+      <ElPopover
         v-model={[state.visible, 'visible']}
         placement="bottom-start"
         trigger="contextmenu"
         width={200}
         v-slots={slots(state, props.headerData)}
       >
-        <el-select
+        <ElSelect
           v-model={state.value}
           multiple
           collapse-tags
@@ -117,23 +118,20 @@ const FSelect = defineComponent({
           style="width: 100%"
           teleported={false}
           size={size || 'small'}
-          onVisibleChange={selectVisibleChange}
-          onVisible-change={(val: boolean) => {
-            if (!val) state.visible = false
-          }}
+          onVisible-change={selectVisibleChange}
           onChange={selectChange}
         >
           {state.options?.map((item, index) => {
             return (
-              <el-option
+              <ElOption
                 key={index}
                 label={item.value}
                 value={item.key}
-              ></el-option>
+              ></ElOption>
             )
           })}
-        </el-select>
-      </el-popover>
+        </ElSelect>
+      </ElPopover>
     )
   },
 })

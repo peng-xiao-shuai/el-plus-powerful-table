@@ -1,4 +1,5 @@
 import { defineComponent, inject } from 'vue'
+import { ElRate } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
@@ -27,20 +28,11 @@ const Rate = defineComponent({
 
     return () => (
       <>
-        <el-rate
+        <ElRate
           size={size}
           v-model={props.row[props.prop.prop]}
           disabled={true}
           style={props.prop.data?.style || {}}
-          onClick={(event: Event) => {
-            event.stopPropagation()
-            REmit('click', {
-              row: props.row,
-              index: props.index,
-              prop: props.prop.prop,
-              event,
-            })
-          }}
           onChange={(...arg: any) => REmit('change', ...arg)}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },

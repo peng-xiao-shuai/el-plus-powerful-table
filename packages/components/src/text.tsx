@@ -1,4 +1,5 @@
 import { defineComponent, ref } from 'vue'
+import { ElIcon } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
@@ -80,7 +81,7 @@ const Text = defineComponent({
             {develop.value[props.index || 0]
               ? t(LangKey.PackUp)
               : t(LangKey.ReadFullText)}
-            <el-icon>
+            <ElIcon>
               {develop.value[props.index || 0] ? (
                 <svg class="icon" aria-hidden="true">
                   <use xlinkHref="#pt-arrow-up"></use>
@@ -90,7 +91,7 @@ const Text = defineComponent({
                   <use xlinkHref="#pt-arrow-down"></use>
                 </svg>
               )}
-            </el-icon>
+            </ElIcon>
           </span>
         </div>
       </div>

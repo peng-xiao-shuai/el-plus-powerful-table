@@ -1,3 +1,4 @@
+import { ElButton, ElIcon } from 'element-plus'
 import type { PropType } from 'vue'
 import type { PowerfulTableFilter, PowerfulTableHeader } from '@/index'
 
@@ -24,14 +25,14 @@ export const props = {
 export const btnSlots = (fun: () => void) => {
   return {
     append: () => (
-      <el-button
+      <ElButton
         icon={
           <svg class="icon" aria-hidden="true">
             <use xlinkHref="#pt-search"></use>
           </svg>
         }
         onClick={fun}
-      ></el-button>
+      ></ElButton>
     ),
   }
 }
@@ -51,7 +52,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
           }}
         >
           {header.label}
-          <el-icon
+          <ElIcon
             style="margin-left: 5px"
             v-show={header.defaultFilter}
             class={state.visible ? 'arrow-down' : 'arrow-up'}
@@ -59,7 +60,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
             <svg class="icon" aria-hidden="true">
               <use xlinkHref="#pt-arrow-up"></use>
             </svg>
-          </el-icon>
+          </ElIcon>
         </span>
       )
     },

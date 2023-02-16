@@ -1,5 +1,12 @@
 import './style.scss'
 import { defineComponent, inject, reactive, watch } from 'vue'
+import {
+  ElButton,
+  ElButtonGroup,
+  ElPopover,
+  ElScrollbar,
+  ElTooltip,
+} from 'element-plus'
 import { PowerfulTableSymbol, SizeSymbol } from '../../keys'
 import type { BtnConfig, PowerfulTableHeader } from '@/index'
 import type { PropType } from 'vue'
@@ -119,7 +126,7 @@ const PTBtnPlus = defineComponent({
       direction: 'left' | 'right' = 'left'
     ) => {
       const btn = (
-        <el-button
+        <ElButton
           class={item.text ? '' : 'no-margin'}
           size={size}
           style={item.style || {}}
@@ -128,18 +135,18 @@ const PTBtnPlus = defineComponent({
           onClick={() => batchOperate(direction, item)}
         >
           {item.text}
-        </el-button>
+        </ElButton>
       )
       return item.tip ? (
-        <el-tooltip
+        <ElTooltip
           key={key}
-          tip={item.tip}
+          content={item.tip}
           class="each"
           effect="dark"
           placement="top"
         >
           {btn}
-        </el-tooltip>
+        </ElTooltip>
       ) : (
         btn
       )
@@ -168,7 +175,7 @@ const PTBtnPlus = defineComponent({
               <div class="checkbox">{t(LangKey.Hidden)}</div>
               <div class="checkbox">{t(LangKey.Filter)}</div>
             </div>
-            <el-scrollbar style="height: 300px">
+            <ElScrollbar style="height: 300px">
               {state.headerData
                 .filter((row) => row.isShowOrFilterColumn !== false)
                 .map((row, index) => (
@@ -206,7 +213,7 @@ const PTBtnPlus = defineComponent({
                     </div>
                   </div>
                 ))}
-            </el-scrollbar>
+            </ElScrollbar>
           </div>
         ),
         reference: () => tipBtnNode(item, index),
@@ -219,7 +226,7 @@ const PTBtnPlus = defineComponent({
         switch (item.effect) {
           case 'columns':
             return (
-              <el-popover
+              <ElPopover
                 placement="bottom"
                 trigger="click"
                 width="250"
@@ -249,7 +256,7 @@ const PTBtnPlus = defineComponent({
           ) : (
             <slot name="btn-left">
               {/* 左侧操作按钮 */}
-              <el-button-group
+              <ElButtonGroup
                 class={[
                   'filter-item',
                   ['all', 'left', ''].includes(injectProps.btnSlot || '')
@@ -260,7 +267,7 @@ const PTBtnPlus = defineComponent({
                 {filterButtons(props.btnConfig.btnList).map((item, index) =>
                   tipBtnNode(item, index)
                 )}
-              </el-button-group>
+              </ElButtonGroup>
             </slot>
           )}
 
@@ -268,7 +275,7 @@ const PTBtnPlus = defineComponent({
           ['all', 'right', ''].includes(injectProps.btnSlot || '') ? (
             <slot name="btn-right">
               {/* 右侧操作按钮 */}
-              <el-button-group
+              <ElButtonGroup
                 class={[
                   'filter-item',
                   ['all', 'right', ''].includes(injectProps.btnSlot || '')
@@ -277,7 +284,7 @@ const PTBtnPlus = defineComponent({
                 ]}
               >
                 {rightBtnRender()}
-              </el-button-group>
+              </ElButtonGroup>
             </slot>
           ) : (
             <></>

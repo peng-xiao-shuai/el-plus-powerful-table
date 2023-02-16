@@ -1,4 +1,5 @@
 import { defineComponent, inject } from 'vue'
+import { ElTag } from 'element-plus'
 import { filterFun } from './filter'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
@@ -39,7 +40,7 @@ const Tags = defineComponent({
           props.row[props.prop.prop],
           props.prop.data?.number || 3
         ).map((tag) => (
-          <el-tag
+          <ElTag
             style={{
               marginRight: '10px',
               borderColor:
@@ -76,7 +77,7 @@ const Tags = defineComponent({
                 ? props.prop.filters(props.row, props.index)
                 : filterFun(tag, props.prop.filters!)
               : tag}
-          </el-tag>
+          </ElTag>
         ))}
       </>
     )
