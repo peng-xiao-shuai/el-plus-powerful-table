@@ -72,7 +72,7 @@ export const powerfulTableProps = {
   selectData: {
     type: Array as PropType<PowerfulTableProps<DefaultRow>['list']>,
     default: () => {
-      return () => []
+      return []
     },
   },
   isSelect: {
