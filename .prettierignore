@@ -6,3 +6,5 @@ tsconfig.json
 README.md
 pnpm-lock.yaml
 icon.js
+auto-imports.d.ts
+components.d.ts
