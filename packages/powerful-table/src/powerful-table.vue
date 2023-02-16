@@ -303,13 +303,6 @@ import {
   watch,
   watchEffect,
 } from 'vue'
-import {
-  ElButton,
-  ElPagination,
-  ElSelect,
-  ElTable,
-  ElTableColumn,
-} from 'element-plus/es'
 import { deepClone } from '../../index'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
