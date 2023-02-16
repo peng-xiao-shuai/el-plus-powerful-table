@@ -42,6 +42,7 @@ const btnConfig: BtnConfig.Config = {
   btnRightList: [
     {
       effect: 'refresh',
+      tip: '刷新',
       property: {
         icon: markRaw(Refresh),
         type: 'primary',
@@ -198,8 +199,8 @@ const header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: '售价', //显示的标题
-    isShowOrFilterColumn: 'filter',
-    // 如果要使用过滤功能 isFilterColumn 参数是必须的
+    isShowOrFilterColumn: false,
+    // 如果要使用过滤功能 isFilterColumn 参数是必须的, 或者指定 isShowOrFilterColumn 为 'filter'
     headerAlign: 'left',
     props: [
       {
@@ -352,7 +353,7 @@ const header: PowerfulTableHeader<Lists>[] = [
   },
   {
     label: '发售日期（插槽）', //显示的标题
-    isShowOrFilterColumn: false,
+    isShowOrFilterColumn: 'filter',
     width: '180px',
     // hidden: true,
     props: [

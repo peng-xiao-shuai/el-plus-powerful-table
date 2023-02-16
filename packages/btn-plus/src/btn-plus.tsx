@@ -3,6 +3,7 @@ import { defineComponent, inject, reactive, watch } from 'vue'
 import {
   ElButton,
   ElButtonGroup,
+  ElCheckbox,
   ElPopover,
   ElScrollbar,
   ElTooltip,
@@ -184,7 +185,7 @@ const PTBtnPlus = defineComponent({
                       <span class="line-1">{row.label}</span>
                     </div>
                     <div class="checkbox">
-                      <el-checkbox
+                      <ElCheckbox
                         v-model={row.defaultShow}
                         class="checkbox"
                         disabled={
@@ -198,7 +199,7 @@ const PTBtnPlus = defineComponent({
                       />
                     </div>
                     <div class="checkbox">
-                      <el-checkbox
+                      <ElCheckbox
                         v-model={row.defaultFilter}
                         class="checkbox"
                         disabled={
