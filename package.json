@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "private": false,
   "type": "module",
   "keywords": [
@@ -25,14 +25,14 @@
     "es",
     "lib"
   ],
-  "main": "lib/packages/index.js",
-  "module": "es/packages/index.mjs",
+  "main": "lib/index.js",
+  "module": "es/index.mjs",
   "style": "es/style.css",
   "types": "es/typings/index.d.ts",
   "exports": {
     ".": {
-      "require": "./lib/packages/index.js",
-      "import": "./es/packages/index.mjs",
+      "require": "./lib/index.js",
+      "import": "./es/index.mjs",
       "types": "./es/typings/index.d.ts"
     },
     "./es": "./es/index.mjs",
