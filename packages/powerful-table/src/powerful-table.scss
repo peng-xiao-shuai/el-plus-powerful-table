@@ -1,0 +1,154 @@
+.pt {
+  /* 树表格时icon和文字居中 */
+  .cell {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > div {
+      width: 100%;
+    }
+
+    > .el-table__indent + .el-table__placeholder + div {
+      width: auto;
+    }
+
+    > .el-table__expand-icon + div {
+      width: auto;
+    }
+
+    /* 修改输入框插槽内边距 */
+    .el-input-group__append,
+    .el-input-group__prepend {
+      padding: 0;
+    }
+
+    /* 操作按钮 */
+    .el-button + .el-button {
+      margin-left: 0;
+    }
+    .el-button {
+      margin: 5px;
+    }
+
+    .no-margin,
+    .no-margin > span {
+      margin: 0 !important;
+    }
+  }
+
+  .center .cell {
+    justify-content: center;
+  }
+  .right .cell {
+    justify-content: flex-end;
+  }
+  /* 隐藏按钮提示 */
+  .no-tooltip.el-popper.is-dark {
+    display: none !important;
+  }
+
+  /* 隐藏过滤 fDatePicker组件的选择框 */
+  .date_style {
+    margin-left: -10px;
+    height: 0px !important;
+    width: 10px !important;
+    z-index: -1;
+  }
+
+  /* 使图标文字垂直居中 */
+  .el-popover-center {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* 表头点击图标 */
+  .powerful-table .el-icon.arrow-up {
+    animation: ArrowUp 0.2s forwards;
+  }
+  .powerful-table .el-icon.arrow-down {
+    animation: ArrowDown 0.2s forwards;
+  }
+
+  .content {
+    position: relative;
+    padding-bottom: 23px;
+
+    > .develop {
+      text-align: center;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      border-radius: 10px;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.5)
+      );
+
+      span {
+        /* position: absolute; */
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        font-size: 12px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .develop {
+    width: 100%;
+    color: var(--el-color-primary);
+  }
+
+  .btnType {
+    flex-wrap: wrap;
+    .btnEach {
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+  }
+
+  .el-table th.el-table__cell {
+    padding: 10px 0 !important;
+  }
+
+  > .bottom-operate {
+    display: flex;
+    justify-content: space-between;
+    > div{
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+
+      &.bottom-operate-left {
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  .el-pagination {
+    width: auto;
+  }
+}
+
+@keyframes ArrowUp {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes ArrowDown {
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(0);
+  }
+}

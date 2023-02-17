@@ -237,13 +237,11 @@
       </ElTableColumn>
     </ElTable>
 
-    <div
-      style="display: flex; justify-content: space-between; margin-top: 20px"
-    >
+    <div class="bottom-operate">
       <!-- 批量操作 -->
       <div
         v-if="operate && isSelect && operate.operates"
-        class="pagination left"
+        class="bottom-operate-left"
       >
         <ElSelect
           v-model="operate.value"
@@ -281,7 +279,7 @@
           isPagination &&
           (paginationProperty.total || paginationProperty.pageCount)
         "
-        class="pagination"
+        class="bottom-operate-right"
       >
         <ElPagination
           v-model:current-page="currentPage"
@@ -563,4 +561,4 @@ export default {
 }
 </script>
 
-<style src="./powerful-table.css"></style>
+<style src="./powerful-table.scss"></style>
