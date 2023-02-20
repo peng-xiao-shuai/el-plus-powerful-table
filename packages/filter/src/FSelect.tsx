@@ -67,7 +67,7 @@ const FSelect = defineComponent({
           else {
             console.warn(
               props.headerData.label,
-              'The filter attribute of the column must be an array.'
+              'The filter attribute of the column must be an array Or set the isShowOrFilterColumn property to false'
             )
           }
         } else if (newProps.type === 'switch') {
