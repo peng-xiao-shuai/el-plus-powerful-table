@@ -112,10 +112,10 @@
           <template v-else>
             <PTFSelect
               v-if="
-                getPropObj(item).filters ||
-                getPropObj(item).filtersType === 'select' ||
-                getPropObj(item).type === 'switch' ||
-                getPropObj(item).type === 'tag'
+                (getPropObj(item).filters &&
+                  Array.isArray(getPropObj(item).filters) &&
+                  getPropObj(item).filtersType === 'select') ||
+                getPropObj(item).type === 'switch'
               "
               ref="filterComponents"
               :header-data="item"
@@ -168,6 +168,12 @@
                 justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
               }"
             >
+              <span
+                v-if="prop.text"
+                :style="{ marginRight: prop.text ? '10px' : '0px' }"
+              >
+                {{ prop.text }}
+              </span>
               <PTRenderJsx
                 v-if="typeof prop.render == 'function'"
                 :row="scope.row"
@@ -175,62 +181,58 @@
                 :prop="prop"
                 :aligning="(item.property?.align as any) || item.headerAlign"
               />
-              <span
-                v-else-if="prop.text"
-                :style="{ marginRight: prop.text ? '10px' : '0px' }"
-              >
-                {{ prop.text }}
-              </span>
-              <div
-                v-if="
-                  (scope.row[prop.prop] == undefined ||
-                    scope.row[prop.prop] == null) &&
-                  prop.type != 'btn'
-                "
-              >
-                <div v-if="prop.reserve" v-html="prop.reserve" />
-                <div v-else>
-                  <span>{{ t(LangKey.NoData) }}</span>
+              <template v-else>
+                <div
+                  v-if="
+                    (scope.row[prop.prop] == undefined ||
+                      scope.row[prop.prop] == null) &&
+                    prop.type != 'btn'
+                  "
+                >
+                  <div v-if="prop.reserve" v-html="prop.reserve" />
+                  <div v-else>
+                    <span>{{ t(LangKey.NoData) }}</span>
+                  </div>
                 </div>
-              </div>
-              <!-- 动态组件 -->
-              <component
-                :is="matchComponents(prop.type)"
-                v-else-if="
-                  prop.type &&
-                  [
-                    'image',
-                    'btn',
-                    'switch',
-                    'input',
-                    'textarea',
-                    'iconfont',
-                    'tag',
-                    'rate',
-                    'href',
-                    'video',
-                  ].includes(prop.type)
-                "
-                v-bind="bindAttr(prop, scope, item)"
-                @return-emit="returnEmit"
-                @component-emit="componentEmit"
-              />
-              <!-- 正常 -->
-              <PTText
-                v-else-if="scope.row[prop.prop]"
-                v-bind="bindAttr(prop, scope, item)"
-                :list-length="tableLists.length"
-                @component-emit="componentEmit"
-              />
-              <!-- 筛选 -->
-              <PTFilter
-                v-else-if="
-                  prop.filters &&
-                  (prop.type == 'text' || prop.type == undefined)
-                "
-                v-bind="bindAttr(prop, scope, item)"
-                @component-emit="componentEmit"
-              />
+                <!-- 动态组件 -->
+                <component
+                  :is="matchComponents(prop.type)"
+                  v-else-if="
+                    prop.type &&
+                    [
+                      'image',
+                      'btn',
+                      'switch',
+                      'input',
+                      'textarea',
+                      'iconfont',
+                      'tag',
+                      'rate',
+                      'href',
+                      'video',
+                    ].includes(prop.type)
+                  "
+                  v-bind="bindAttr(prop, scope, item)"
+                  @return-emit="returnEmit"
+                  @component-emit="componentEmit"
+                />
+                <!-- 正常 -->
+                <PTText
+                  v-else-if="scope.row[prop.prop]"
+                  v-bind="bindAttr(prop, scope, item)"
+                  :list-length="tableLists.length"
+                  @component-emit="componentEmit"
+                />
+                <!-- 筛选 -->
+                <PTFilter
+                  v-else-if="
+                    prop.filters &&
+                    (prop.type == 'text' || prop.type == undefined)
+                  "
+                  v-bind="bindAttr(prop, scope, item)"
+                  @component-emit="componentEmit"
+                />
+              </template>
             </div>
           </div>
         </template>
