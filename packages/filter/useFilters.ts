@@ -1,9 +1,9 @@
 /*
  * 局部过滤hook
- * @Author: chenle
+ * @Author: peng-xiao-shuai
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2023-01-13 10:29:14
+ * @Last Modified time: 2023-02-20 19:06:02
  */
 
 import { computed, unref } from 'vue'
@@ -37,8 +37,7 @@ export function useFilters<L>(
 
     // 判断监听类型
     if (
-      propObj.filters ||
-      propObj.filtersType === 'select' ||
+      (propObj.filters && propObj.filtersType === 'select') ||
       propObj.type === 'switch'
     ) {
       recursionFilterFun<L>(
@@ -66,8 +65,6 @@ export function useFilters<L>(
         },
         (state.tableLists = [])
       )
-      // TODO 暂时无法并列过滤数据
-      // state.tableLists = [...state.tableLists, ...tableData];
     } else if (propObj.filtersType === 'date') {
       const valueAs = value as string[]
       recursionFilterFun<L>(
