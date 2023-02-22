@@ -54,7 +54,7 @@ const FSelect = defineComponent({
 
     const selectChange = (val: (number | string)[]) => {
       if (!val.length) val = []
-      emit('headerFilterChange', val, props.headerData, props.propData)
+      emit('headerFilterChange', val, props.headerData)
     }
 
     watch(
@@ -99,6 +99,7 @@ const FSelect = defineComponent({
     // 暴露状态
     expose({
       state,
+      header: props.headerData,
     })
 
     return () => (

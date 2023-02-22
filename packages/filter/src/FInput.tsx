@@ -33,6 +33,7 @@ const FInput = defineComponent({
     // 暴露状态
     expose({
       state,
+      header: props.headerData,
     })
 
     return () => (
