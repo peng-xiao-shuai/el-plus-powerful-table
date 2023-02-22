@@ -118,8 +118,10 @@ export const powerfulTableProps = {
   tree: {
     type: Object as PropType<PowerfulTableProps<DefaultRow>['tree']>,
     default: () => ({
-      children: 'children',
-      hasChildren: 'hasChildren',
+      props: {
+        children: 'children',
+        hasChildren: 'hasChildren',
+      },
     }),
   },
   property: {

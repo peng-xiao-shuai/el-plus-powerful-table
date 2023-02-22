@@ -3,7 +3,7 @@
  * @Author: peng-xiao-shuai
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2023-02-22 18:50:26
+ * @Last Modified time: 2023-02-22 19:03:33
  */
 
 import { computed } from 'vue'
@@ -20,6 +20,7 @@ export function useFilters<L>(
   filterComponents: FilterComponents
 ) {
   const treeProps = props.tree?.props!
+
   // 为list数据排序，使其存在树形数据的在前面
   let tableLists: (L & { [s: string]: any; _cdSort: number })[] = []
   /**
@@ -120,8 +121,6 @@ export function useFilters<L>(
     value: string | (number | string)[],
     column: PowerfulTableHeader<L>
   ) => {
-    console.log('触发')
-
     let filterList: any[] = []
     // item.state 是存在的不确定是否是vue的bug. vue文件 <script setup> 中使用 expose 没有问题，
     // 但是在 tsx 中使用 expose 组件ref可以获取到 expose 暴露的数据，但是类型上不存在 expose 暴露的数据
