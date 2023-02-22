@@ -34,7 +34,7 @@ export interface PowerfulTableProps<Row = any> {
 export type PowerfulTableTree = {
   lazy?: boolean
   load?: (row, treeNode, resolve) => void
-  props?: object
+  props?: { children: string; hasChildren: string }
 }
 
 /* ------ operateData 批量操作 ------ */
@@ -98,6 +98,11 @@ export interface PowerfulTableHeaderProps<
   style?: CSSProperties
   filterItem?: boolean // 指定过滤项
   filtersType?: 'select' | 'date' | 'input'
+  customFilter?: (
+    v: string | (number | string)[],
+    column: PowerfulTableHeader<Row>,
+    resolve: (value: any[]) => void
+  ) => void
 }
 
 export type _TYPE<Row = any> = {
@@ -135,7 +140,7 @@ type ElComponentProp<T extends keyof _TYPE, P = any, Row = any> =
 export type TextDataType<Row = any> = {
   line?: number
   develop?: boolean
-  customFilterFun?: ({
+  formatting?: ({
     row,
     index,
     props,

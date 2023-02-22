@@ -18,6 +18,11 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.7 20230222
+
+- `type = 'text'` `data` 中的 `customFilterFun` 属性值更改为 `formatting`
+- `PowerfulTableHeaderProps` 类型上新增属性 `customFilter` 自定义过滤
+
 ## 2.1.6 20230221
 
 - 修改自定义过滤头部渲染逻辑
@@ -39,13 +44,13 @@ vue3.0 的 element-plus 二次开发表格组件
 ## 2.1.1 20230130
 
 - `btn-plus` 文件重构（`vue` 改成 `tsx`)
-- - `btnConfig` 新增参数 `btnRightList` 类型为 `BtnList[]`
-- - 类型 `BtnList` 新增参数 `tip beforeClick property`
+- - `btnConfig` 新增属性 `btnRightList` 类型为 `BtnList[]`
+- - 类型 `BtnList` 新增属性 `tip beforeClick property`
 
 ## 2.1.0 20230107
 
 - 删除 `btn-plus` 组件中 `BtnConfig.BtnList` 的 `type icon showTip tipContent`
-- 删除 内部组件 `data` 部分参数（由于提供的参数不完整和 `element-plus` 存在差异，全部提供则感觉有点冗余，推荐使用 `property` 参数。内部组件只会保存部分默认值，但是可以通过 `property` 传参替换）
+- 删除 内部组件 `data` 部分属性（由于提供的属性不完整和 `element-plus` 存在差异，全部提供则感觉有点冗余，推荐使用 `property` 属性。内部组件只会保存部分默认值，但是可以通过 `property` 传参替换）
 - - `image` 删除 `lazy zIndex style fit `。保留部分默认值 `fit = 'cover'`，`lazy, preview-teleported = true`（`el-image` 中 `lazy preview-teleported` 默认 `false`）
 - - `input` 删除 `type placeholder disabled rows`。保留部分默认值 `rows = 3`
 - - `href` 删除 `type placeholder rows disabled`。 保留部分默认值 `type = 'primary'`，`underline = false`
@@ -53,17 +58,17 @@ vue3.0 的 element-plus 二次开发表格组件
 - - `switch` 删除 `activeColor inactiveColor inactiveText activeText activeValue inactiveValue disabled isConfirmTip confirmTip beforeFunction` 保留部分默认值 `inactiveValue = '0'`，`activeValue = '1'`
 - - `tag` 删除 `closable type effect hit` 保留部分默认值 `type = ''`
 - - `video` 删除 `poster loop` 保留部分默认值 `controls = true`，`loop = false`
-- - `button` 删除 `icon disabled type emit isTooltip isConfirmTip confirmTip` 保留部分默认值 `type = 'primary'`。添加 `beforeClick tipProperty` 参数
+- - `button` 删除 `icon disabled type emit isTooltip isConfirmTip confirmTip` 保留部分默认值 `type = 'primary'`。添加 `beforeClick tipProperty` 属性
 - 内部组件 `property` 支持函数类型
-- `componentProps` 参数更改为 `property`
-- `type` 类型为 `video` 新增 `property` 扩展参数
-- `BtnConfig.BtnList` 新增 `property` 扩展参数
+- `componentProps` 属性更改为 `property`
+- `type` 类型为 `video` 新增 `property` 扩展属性
+- `BtnConfig.BtnList` 新增 `property` 扩展属性
 - 内部组件新增自定义事件，详情看 `type == 'XX'`（XX 为某个类型）, 内部组件传递到 `powerful-table` 组件由 `component-event` 抛出
-- `type = 'text'` `data` 中的 `customFilterFun` 参数值更改
-- 修改 组件 `InjectProps` 类型中 `local` 的类型。注入的 `local` 参数现在主要是用于 替换或者扩展组件内部提示文字
+- `type = 'text'` `data` 中的 `customFilterFun` 属性值更改
+- 修改 组件 `InjectProps` 类型中 `local` 的类型。注入的 `local` 属性现在主要是用于 替换或者扩展组件内部提示文字
 - 优化 `button` 在表格中样式
 - 修改 `selectable` 默认不允许勾选问题
-- `header` 表格头部数据参数中 `filters` 更改为 `defaultFilter`. `hidden` 更改为 `defaultShow`
+- `header` 表格头部数据属性中 `filters` 更改为 `defaultFilter`. `hidden` 更改为 `defaultShow`
 - `props` 单元格数据 `filter` 更改为 `filters`
 - 删除 组件 `props` 中的 `local`
 - 使用`vite`进行构建
@@ -80,17 +85,17 @@ vue3.0 的 element-plus 二次开发表格组件
 - - `link` 的 `data` 中 `text` 没有值时将显示 `prop` 数据在页面上
 - `input` 类型新增 `type` 同 `el-input type`
 - 修复 `rate` 类型中 `locale` 警告
-- 优化 `link` 的 `data` 中 `target` 参数类型固定
+- 优化 `link` 的 `data` 中 `target` 属性类型固定
 - 修复 `Failed to resolve component: PTBtnPlus` 警告
 
 ## 2.0.0 20220314
 
 - **新增支持内置组件导出`PT`开头：例如:`PTImage，PTButton`**
 - - 主要用于 `powerful-table-draggable` 组件的引用
-- `switch、btn` 类型新增参数
+- `switch、btn` 类型新增属性
 - - `isConfirmTip` 是否开启点击时确认框提示
 - - `isConfirmTip` 确认框提示文字
-- 优化 `el-pagination small`参数随组件或全局 `size` 参数更改
+- 优化 `el-pagination small`属性随组件或全局 `size` 属性更改
 - 解决鼠标悬浮在组件上没有类型
 
 ## 1.1.0 20211231
@@ -98,10 +103,10 @@ vue3.0 的 element-plus 二次开发表格组件
 - 新增表格顶部按钮功能
 - - 新增配置项 <a href="btnConfig">**传送门**</a>
 - - 新增插槽 `btn-left` `btn-right`
-- `header` 新增参数
+- `header` 新增属性
 - - `isShowOrFilterColumn` 是否开启过滤或者显示隐藏列的开关
 - - `selectable` 行是否可以选中
-- `prop` 新增参数
+- `prop` 新增属性
 - - `filtersType` 过滤类型
 - - `filterItem` 指定过滤项
 
@@ -114,7 +119,7 @@ vue3.0 的 element-plus 二次开发表格组件
 - - 可配置二维数组
 - - 删除 `emit`
 - - 新增 `isTooltip` 是否显示提示
-- - 新增 `params`，`isMore` 参数。`params` 自定义传入数据，将会在点击按钮时返回。例如：
+- - 新增 `params`，`isMore` 属性。`params` 自定义传入数据，将会在点击按钮时返回。例如：
 
 ```js
 {
