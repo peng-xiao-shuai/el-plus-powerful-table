@@ -114,17 +114,23 @@ const header: PowerfulTableHeader<Lists>[] = [
     defaultShow: false,
   },
   {
-    label: '制作厂', //显示的名称
+    label: '制造商', //显示的名称
     width: 200,
     overflowTooltip: true,
     isShowOrFilterColumn: 'filter',
-    defaultFilter: false,
+    defaultFilter: true,
     headerAlign: 'left',
     props: [
       {
         type: 'href',
         prop: 'manufacturerHref',
         text: '厂商：',
+        filterItem: true,
+        customFilter: (val, column, resolve) => {
+          console.log('自定义过滤')
+
+          resolve([lists[0]])
+        },
         data: setData<'href', Lists>({
           text: (row: any) => row.manufacturer,
           property: {
@@ -290,7 +296,7 @@ const header: PowerfulTableHeader<Lists>[] = [
         },
       ],
       data: setData<'text', Lists>({
-        customFilterFun: ({ row, props }) =>
+        formatting: ({ row, props }) =>
           row.engineLocation! +
           (props.filters as PowerfulTableFilter[]).find(
             (item) => item.key == row.driveType
@@ -526,14 +532,10 @@ export const langPackages: LangPackages = {
     [LangKey.ColumnName]: 'Column name',
     [LangKey.Hidden]: 'Hidden',
     [LangKey.Filter]: 'Filter',
-    [LangKey.Refresh]: 'Refresh',
     [LangKey.Cancel]: 'Cancel',
     [LangKey.Hint]: 'Hint',
-    [LangKey.OperateHint]: (s) => `Whether to carry out ${s} operate?`,
     [LangKey.More]: 'More',
     [LangKey.NoData]: 'NO DATA',
-    [LangKey.Update]: 'Update',
-    [LangKey.Edit]: 'Edit',
     [LangKey.PackUp]: 'Pack up',
     [LangKey.ReadFullText]: 'Read full text',
     [LangKey.InputContent]: 'Input content',
@@ -551,14 +553,10 @@ export const langPackages: LangPackages = {
     [LangKey.ColumnName]: '列名',
     [LangKey.Hidden]: '隐藏',
     [LangKey.Filter]: '过滤',
-    [LangKey.Refresh]: '刷新',
     [LangKey.Cancel]: '取消',
     [LangKey.Hint]: '提示',
-    [LangKey.OperateHint]: (s) => `是否要进行 ${s} 操作?`,
     [LangKey.More]: '更多',
     [LangKey.NoData]: '暂无数据',
-    [LangKey.Update]: '修改',
-    [LangKey.Edit]: '编辑',
     [LangKey.PackUp]: '收起',
     [LangKey.ReadFullText]: '展开阅读全文',
     [LangKey.InputContent]: '请输入内容',

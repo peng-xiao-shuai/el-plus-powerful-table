@@ -3,47 +3,61 @@
  * @Author: peng-xiao-shuai
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2023-02-20 19:06:02
+ * @Last Modified time: 2023-02-22 16:37:28
  */
 
-import { computed, unref } from 'vue'
+import { computed } from 'vue'
 import { deepClone } from '../index'
 import type { PowerfulTableHeader, PowerfulTableHeaderProps } from '@/index'
 import type {
+  FilterComponents,
   PowerfulTableProps,
   StateData,
 } from '../powerful-table/src/powerful-table-data'
 export function useFilters<L>(
   state: StateData<L>,
   props: PowerfulTableProps<L>,
-  Table: any
+  filterComponents: FilterComponents
 ) {
+  const treeProps = props.tree?.props!
+  // 为list数据排序，使其存在树形数据的在前面
+  let tableLists: (L & { [s: string]: any; _cdSort: number })[] = []
   /**
    * 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示。
    */
-  const headerFilterChange = (
+  const headerFilter = (
     value: (number | string)[],
-    column: PowerfulTableHeader<L>
+    column: PowerfulTableHeader<L>,
+    // 初始数据
+    initList: any[] = deepClone(props.list)
   ) => {
-    // console.log(value, column);
-    const tableLists = props.list
-
-    if (!value || (Array.isArray(value) && !value.length)) {
-      state.tableLists = props.list
-      return false
+    // 存在值则不在进行排序，优化性能
+    if (!tableLists.length) {
+      tableLists = deepClone(
+        <PowerfulTableProps<L & { [s: string]: any; _cdSort: number }>>props
+      ).list.sort((a, b) => {
+        a._cdSort = a[treeProps?.children!] ? 1 : 0
+        b._cdSort = b[treeProps?.children!] ? 1 : 0
+        return b._cdSort - a._cdSort
+      })
     }
 
-    const propObj: PowerfulTableHeaderProps<null, L> = propObjs(column)
+    const filterList = initList
 
+    if (!value || (Array.isArray(value) && !value.length)) {
+      return props.list
+    }
+
+    const propObj = propObjs<L>(column)
     // 判断监听类型
     if (
       (propObj.filters && propObj.filtersType === 'select') ||
       propObj.type === 'switch'
     ) {
       recursionFilterFun<L>(
-        unref(Table).treeProps,
-        deepClone(tableLists),
-        (data: (typeof tableLists)[number]): boolean => {
+        treeProps,
+        tableLists,
+        (data: (typeof props.list)[number]): boolean => {
           // 类型断言
           const D = data as L & { [s: string]: any }
           const isShow = value.some((prop) => {
@@ -63,32 +77,33 @@ export function useFilters<L>(
           })
           return isShow
         },
-        (state.tableLists = [])
+        filterList
       )
     } else if (propObj.filtersType === 'date') {
       const valueAs = value as string[]
       recursionFilterFun<L>(
-        unref(Table).treeProps,
-        deepClone(tableLists),
-        (data: (typeof tableLists)[number]): boolean =>
+        treeProps,
+        tableLists,
+        (data: (typeof props.list)[number]): boolean =>
           compare(
             (data as L & { [s: string]: any })[propObj.prop],
             valueAs[0],
             valueAs[1]
           ),
-        (state.tableLists = [])
+        filterList
       )
     } else {
       recursionFilterFun<L>(
-        unref(Table).treeProps,
-        deepClone(tableLists),
-        (data: (typeof tableLists)[number]) =>
+        treeProps,
+        tableLists,
+        (data: (typeof props.list)[number]) =>
           String(
             (data as L & { [s: string]: any })[propObj.prop] || ''
           ).includes(String(value)),
-        (state.tableLists = [])
+        filterList
       )
     }
+    return filterList
   }
 
   /**
@@ -101,8 +116,39 @@ export function useFilters<L>(
       }
   )
 
+  const handleHeaderFilterChange = (
+    value: string | (number | string)[],
+    column: PowerfulTableHeader<L>
+  ) => {
+    let filterList: any[] = []
+    // item.state 是存在的不确定是否是vue的bug. vue文件 <script setup> 中使用 expose 没有问题，
+    // 但是在 tsx 中使用 expose 组件ref可以获取到 expose 暴露的数据，但是类型上不存在 expose 暴露的数据
+    const componentData = filterComponents.value?.filter(
+      (item: any) => item.state.value.length
+    )
+
+    if (componentData?.length) {
+      // 自定义过滤逻辑
+      if (typeof getPropObj.value(column).customFilter === 'function') {
+        new Promise<any[]>((resolve) => {
+          getPropObj.value(column).customFilter!(value, column, resolve)
+        }).then((res) => {
+          state.tableLists = res
+        })
+        return
+      }
+
+      componentData.forEach((item: any) => {
+        filterList = headerFilter(item.state.value, item.header, filterList)
+        state.tableLists = filterList
+      })
+    } else {
+      state.tableLists = props.list
+    }
+  }
+
   return {
-    headerFilterChange,
+    handleHeaderFilterChange,
     getPropObj,
   }
 }
@@ -127,7 +173,7 @@ const recursionFilterFun = <L>(
       if (D[propValue.children] && D[propValue.children].length) {
         // 清除子集，避免添加的数据中不符合过滤的子集仍然存在
         D[propValue.children] = []
-        callback(item) ? lists.push(D) : ''
+        isPush(callback(item), lists, D)
 
         recursionFilterFun<L>(
           propValue,
@@ -136,9 +182,29 @@ const recursionFilterFun = <L>(
           callback(item) ? lists[lists.length - 1][propValue.children] : lists
         )
       } else {
-        callback(item) ? lists.push(D) : ''
+        isPush(callback(item), lists, D)
       }
     })
+  }
+}
+
+// 判断是否可以添加数据，如果list中存在一样的 data 数据则不添加
+// TODO 不支持树形表格，多个表头参数查询，非树形表格没问题
+const isPush = <D>(bool: boolean, list: any[], data: D) => {
+  if (bool) {
+    if (list.length) {
+      const listStr = list.map((item) => JSON.stringify(item))
+
+      listStr.some((item) => {
+        return item
+          .replace(/,"_cdSort":\d/, '')
+          .includes(JSON.stringify(data).replace(/,"_cdSort":\d/, ''))
+      })
+        ? ''
+        : list.push(data)
+    } else {
+      list.push(data)
+    }
   }
 }
 

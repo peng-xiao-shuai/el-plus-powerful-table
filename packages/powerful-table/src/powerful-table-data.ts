@@ -2,6 +2,8 @@ import { getCurrentInstance, inject, reactive, ref } from 'vue'
 import { useGlobalConfig } from 'element-plus/es'
 import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
+import type { ElTable } from 'element-plus/es'
+import type { FDatePicker, FInput, FSelect } from '../../filter'
 import type { PropType } from 'vue'
 import type {
   EmitEventType,
@@ -13,6 +15,7 @@ import type {
   _TYPE,
 } from '@/index'
 import { LangKey, t } from '~/locale/lang'
+// console.log(PTFDatePicker, PTFInput, PTFSelect)
 
 export enum EmitEnum {
   BtnPlusChange = 'btn-plus-change',
@@ -49,6 +52,9 @@ export type ComponentEvent = {
   componentName: keyof _TYPE | 'filter'
   eventType: string
 }
+export type FilterComponents = import('vue').Ref<
+  InstanceType<typeof FSelect | typeof FInput | typeof FDatePicker>[] | null
+>
 
 // 主组件props
 export const powerfulTableProps = {
@@ -111,7 +117,10 @@ export const powerfulTableProps = {
   },
   tree: {
     type: Object as PropType<PowerfulTableProps<DefaultRow>['tree']>,
-    default: () => ({}),
+    default: () => ({
+      children: 'children',
+      hasChildren: 'hasChildren',
+    }),
   },
   property: {
     type: Object as PropType<PowerfulTableProps<DefaultRow>['property']>,
@@ -184,8 +193,8 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
   const injectProps = inject(PowerfulTableSymbol, {})
 
   /* ----- 组件实例 ----- */
-  const multipleTable = ref<any>(null)
-  const filterComponents = ref<any>(null)
+  const multipleTable = ref<InstanceType<typeof ElTable> | null>(null)
+  const filterComponents: FilterComponents | null = ref(null)
 
   /* ------  表格数据  ------ */
   const powerfulTableData: PowerfulTableData<L> = reactive({

@@ -32,10 +32,7 @@
         'highlight-current-row': true,
         lazy: (tree && tree.lazy) || false,
         load: tree && tree.load,
-        'tree-props': (tree && tree.props) || {
-          children: 'children',
-          hasChildren: 'hasChildren',
-        },
+        'tree-props': tree && tree.props,
         size: Size,
         ...property,
       }"
@@ -121,21 +118,21 @@
               :header-data="item"
               :list="list"
               :prop-data="getPropObj(item)"
-              @header-filter-change="headerFilterChange"
+              @header-filter-change="handleHeaderFilterChange"
             />
             <PTFDatePicker
               v-else-if="getPropObj(item).filtersType === 'date'"
               ref="filterComponents"
               :header-data="item"
               :list="list"
-              @header-filter-change="headerFilterChange"
+              @header-filter-change="handleHeaderFilterChange"
             />
             <PTFInput
               v-else
               ref="filterComponents"
               :header-data="item"
               :list="list"
-              @header-filter-change="headerFilterChange"
+              @header-filter-change="handleHeaderFilterChange"
             />
           </template>
         </template>
@@ -322,7 +319,7 @@ import {
 import type { ComponentEvent } from './powerful-table-data'
 import type { BtnDataType, PowerfulTableLabelValue } from '@/index'
 import { LangKey, t } from '~/locale/lang'
-type Row = any
+type Row = (typeof props.list)[number]
 // 自定义事件类型
 type EmitEventType<Row = any> = {
   (e: EmitEnum.BtnPlusChange, ...args: any): void
@@ -389,10 +386,10 @@ const { powerfulTableData, multipleTable, filterComponents, stateData, Size } =
   usePowerfulTableStates<Row>(props)
 
 // 局部过滤hook
-const { headerFilterChange, getPropObj } = useFilters<Row>(
+const { handleHeaderFilterChange, getPropObj } = useFilters<Row>(
   stateData,
   props,
-  multipleTable
+  filterComponents
 )
 
 /* ------  操作方法  ------ */
@@ -457,10 +454,6 @@ watch(
       filterComponents.value.forEach((item: any) => {
         item.state.value = ''
       })
-    } else {
-      // filterComponents.value.forEach((item: any) => {
-      // item.state.value = ''
-      // })
     }
 
     get()
