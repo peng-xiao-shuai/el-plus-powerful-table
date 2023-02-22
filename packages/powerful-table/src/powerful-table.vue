@@ -191,7 +191,6 @@
                     <span>{{ t(LangKey.NoData) }}</span>
                   </div>
                 </div>
-                <!-- 动态组件 -->
                 <component
                   :is="matchComponents(prop.type)"
                   v-else-if="
@@ -213,14 +212,12 @@
                   @return-emit="returnEmit"
                   @component-emit="componentEmit"
                 />
-                <!-- 正常 -->
                 <PTText
                   v-else-if="scope.row[prop.prop]"
                   v-bind="bindAttr(prop, scope, item)"
                   :list-length="tableLists.length"
                   @component-emit="componentEmit"
                 />
-                <!-- 筛选 -->
                 <PTFilter
                   v-else-if="
                     prop.filters &&
@@ -319,7 +316,7 @@ import {
 import type { ComponentEvent } from './powerful-table-data'
 import type { BtnDataType, PowerfulTableLabelValue } from '@/index'
 import { LangKey, t } from '~/locale/lang'
-type Row = (typeof props.list)[number]
+type Row = any
 // 自定义事件类型
 type EmitEventType<Row = any> = {
   (e: EmitEnum.BtnPlusChange, ...args: any): void

@@ -193,8 +193,8 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
   const injectProps = inject(PowerfulTableSymbol, {})
 
   /* ----- 组件实例 ----- */
-  const multipleTable = ref<InstanceType<typeof ElTable> | null>(null)
-  const filterComponents: FilterComponents | null = ref(null)
+  const multipleTable = ref<any>(null)
+  const filterComponents: FilterComponents = ref(null)
 
   /* ------  表格数据  ------ */
   const powerfulTableData: PowerfulTableData<L> = reactive({
