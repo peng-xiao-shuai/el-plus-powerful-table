@@ -18,8 +18,10 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.8 20230222
 ## 2.1.7 20230222
 
+- 修复类型为 `tag` 时，数据为 `undefined` 报错
 - `type = 'text'` `data` 中的 `customFilterFun` 属性值更改为 `formatting`
 - `PowerfulTableHeaderProps` 类型上新增属性 `customFilter` 自定义过滤
 
