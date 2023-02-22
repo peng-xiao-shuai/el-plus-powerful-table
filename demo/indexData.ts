@@ -335,6 +335,7 @@ const header: PowerfulTableHeader<Lists>[] = [
       {
         prop: 'tag',
         type: 'tag',
+        filtersType: 'select',
         data: setData<'tag', Lists>({
           number: 2,
           style: {

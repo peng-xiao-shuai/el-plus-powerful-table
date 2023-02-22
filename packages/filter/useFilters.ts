@@ -3,7 +3,7 @@
  * @Author: peng-xiao-shuai
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2023-02-22 16:37:28
+ * @Last Modified time: 2023-02-22 18:50:26
  */
 
 import { computed } from 'vue'
@@ -31,7 +31,7 @@ export function useFilters<L>(
     // 初始数据
     initList: any[] = deepClone(props.list)
   ) => {
-    // 存在值则不在进行排序，优化性能
+    // 存在值则不在进行排序，优化性能 用于树形排序，目前树形排序存在问题，所有没什么作用
     if (!tableLists.length) {
       tableLists = deepClone(
         <PowerfulTableProps<L & { [s: string]: any; _cdSort: number }>>props
@@ -68,8 +68,8 @@ export function useFilters<L>(
                   typeof D[propObj.prop] == 'string'
                     ? D[propObj.prop].split(',')
                     : D[propObj.prop]
-                ).map((num: string | number) => String(num))
-                return tagVal.includes(String(prop))
+                )?.map((num: string | number) => String(num))
+                return tagVal?.includes(String(prop))
               }
               default:
                 return D[propObj.prop] == prop
@@ -120,6 +120,8 @@ export function useFilters<L>(
     value: string | (number | string)[],
     column: PowerfulTableHeader<L>
   ) => {
+    console.log('触发')
+
     let filterList: any[] = []
     // item.state 是存在的不确定是否是vue的bug. vue文件 <script setup> 中使用 expose 没有问题，
     // 但是在 tsx 中使用 expose 组件ref可以获取到 expose 暴露的数据，但是类型上不存在 expose 暴露的数据
