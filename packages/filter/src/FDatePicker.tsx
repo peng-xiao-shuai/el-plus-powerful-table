@@ -87,5 +87,5 @@ const PTFDatePicker = FDatePicker as SFCWithInstall<typeof FDatePicker>
 PTFDatePicker.install = (app: App) => {
   app.component(FDatePicker.name, FDatePicker)
 }
-export { PTFDatePicker }
+export { PTFDatePicker, FDatePicker }
 export default FDatePicker

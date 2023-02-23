@@ -61,5 +61,5 @@ const PTFInput = FInput as SFCWithInstall<typeof FInput>
 PTFInput.install = (app: App) => {
   app.component(FInput.name, FInput)
 }
-export { PTFInput }
+export { PTFInput, FInput }
 export default FInput
