@@ -2,7 +2,6 @@ import { getCurrentInstance, inject, reactive, ref } from 'vue'
 import { useGlobalConfig } from 'element-plus/es'
 import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
-import type { ElTable } from 'element-plus/es'
 import type { FDatePicker, FInput, FSelect } from '../../filter'
 import type { PropType } from 'vue'
 import type {
