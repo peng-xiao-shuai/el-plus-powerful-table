@@ -248,7 +248,7 @@
             ...(operate.selectProperty || {}),
           }"
         >
-          <el-option
+          <ElOption
             v-for="(item, index) in operate.operates"
             :key="'operate' + index"
             :label="item.label"
