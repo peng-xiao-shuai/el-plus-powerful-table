@@ -18,6 +18,9 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.12 20230311
+
+- `powerful-table` 导入 `element-plus` 组件, 避免使用自动导入的开发者使用自动导入时，插件忽略 `node_modules`
 ## 2.1.11 20230311
 
 - 删除 `btnConfig.Config` 以及 `InjectProps` 中 `btnSlot` 参数
