@@ -13,6 +13,7 @@
     "allowJs": false,
     "skipLibCheck": true,
     "paths": {
+      // 避免dts构建TS报错
       "element-plus": [
         "node_modules/element-plus"
       ],
@@ -25,7 +26,7 @@
     },
     "types": [
       "vite/client",
-      "element-plus/global"
+      "element-plus/global",
     ],
     "lib": [
       "dom",

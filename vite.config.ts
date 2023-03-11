@@ -71,6 +71,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
       Components({
+        include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
         resolvers: [
           ElementPlusResolver({
             importStyle: false,
@@ -128,6 +129,7 @@ export default defineConfig(({ mode }) => {
     common.plugins = [
       ...common.plugins,
       Components({
+        include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
         resolvers: [
           ElementPlusResolver({
             importStyle: 'sass',
