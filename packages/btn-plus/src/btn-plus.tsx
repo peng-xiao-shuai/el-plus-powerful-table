@@ -8,7 +8,7 @@ import {
   ElScrollbar,
   ElTooltip,
 } from 'element-plus'
-import { PowerfulTableSymbol, SizeSymbol } from '../../keys'
+import { SizeSymbol } from '../../keys'
 import type { BtnConfig, PowerfulTableHeader } from '@/index'
 import type { PropType } from 'vue'
 import { LangKey, t } from '~/locale/lang'
@@ -19,7 +19,7 @@ const PTBtnPlus = defineComponent({
     // 按钮的配置数据
     btnConfig: {
       type: Object as PropType<BtnConfig.Config>,
-      required: true,
+      // required: true,
     },
     // 表格的配置数据
     headerList: Array as PropType<PowerfulTableHeader[]>,
@@ -32,9 +32,8 @@ const PTBtnPlus = defineComponent({
     isTable: Boolean,
   },
   emits: ['update:isTable', 'refresh', 'change'],
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const size = inject(SizeSymbol)
-    const injectProps = inject(PowerfulTableSymbol, {})
 
     type State = {
       headerData: PowerfulTableHeader[]
@@ -223,7 +222,7 @@ const PTBtnPlus = defineComponent({
 
     // 右侧按钮渲染
     const rightBtnRender = () => {
-      return filterButtons(props.btnConfig.btnRightList).map((item, index) => {
+      return filterButtons(props.btnConfig?.btnRightList).map((item, index) => {
         switch (item.effect) {
           case 'columns':
             return (
@@ -250,45 +249,23 @@ const PTBtnPlus = defineComponent({
             state.isPC ? 'cl-btn-plus' : 'cl-btn-plus-mobile',
           ]}
         >
-          {/* 占位 */}
-          {injectProps &&
-          !['all', 'left', ''].includes(injectProps.btnSlot || '') ? (
-            <div />
+          {slots['btn-left'] ? (
+            slots['btn-left']()
           ) : (
-            <slot name="btn-left">
-              {/* 左侧操作按钮 */}
-              <ElButtonGroup
-                class={[
-                  'filter-item',
-                  ['all', 'left', ''].includes(injectProps.btnSlot || '')
-                    ? 'btn-plus-left'
-                    : '',
-                ]}
-              >
-                {filterButtons(props.btnConfig.btnList).map((item, index) =>
-                  tipBtnNode(item, index)
-                )}
-              </ElButtonGroup>
-            </slot>
+            // /* 左侧操作按钮 */
+            <ElButtonGroup class="filter-item btn-plus-left">
+              {filterButtons(props.btnConfig?.btnList).map((item, index) =>
+                tipBtnNode(item, index)
+              )}
+            </ElButtonGroup>
           )}
 
-          {injectProps &&
-          ['all', 'right', ''].includes(injectProps.btnSlot || '') ? (
-            <slot name="btn-right">
-              {/* 右侧操作按钮 */}
-              <ElButtonGroup
-                class={[
-                  'filter-item',
-                  ['all', 'right', ''].includes(injectProps.btnSlot || '')
-                    ? 'btn-plus-right'
-                    : '',
-                ]}
-              >
-                {rightBtnRender()}
-              </ElButtonGroup>
-            </slot>
+          {slots['btn-right'] ? (
+            slots['btn-right']()
           ) : (
-            <></>
+            <ElButtonGroup class="filter-item btn-plus-right">
+              {rightBtnRender()}
+            </ElButtonGroup>
           )}
         </div>
       </>
