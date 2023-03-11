@@ -13,6 +13,9 @@
     "allowJs": false,
     "skipLibCheck": true,
     "paths": {
+      "element-plus": [
+        "node_modules/element-plus"
+      ],
       "~/*": [
         "./packages/*"
       ],

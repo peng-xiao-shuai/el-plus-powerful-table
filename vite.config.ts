@@ -16,9 +16,6 @@ export default defineConfig(({ mode }) => {
       AutoImport({
         resolvers: [ElementPlusResolver()],
       }),
-      Components({
-        resolvers: [ElementPlusResolver()],
-      }),
     ],
     resolve: {
       alias: {
@@ -50,7 +47,8 @@ export default defineConfig(({ mode }) => {
   }
   if (mode === 'lib') {
     // 添加dts 插件
-    common.plugins.push(
+    common.plugins = [
+      ...common.plugins,
       dts({
         entryRoot: '.',
         noEmitOnError: true,
@@ -71,8 +69,16 @@ export default defineConfig(({ mode }) => {
               .replace(/\/..\/typings/gi, '/typings'),
           }
         },
-      })
-    )
+      }),
+      Components({
+        resolvers: [
+          ElementPlusResolver({
+            importStyle: false,
+          }),
+        ],
+      }),
+    ]
+
     return {
       ...common,
       build: {
@@ -119,8 +125,16 @@ export default defineConfig(({ mode }) => {
       },
     }
   } else {
-    return {
-      ...common,
-    }
+    common.plugins = [
+      ...common.plugins,
+      Components({
+        resolvers: [
+          ElementPlusResolver({
+            importStyle: 'sass',
+          }),
+        ],
+      }),
+    ]
+    return common
   }
 })
