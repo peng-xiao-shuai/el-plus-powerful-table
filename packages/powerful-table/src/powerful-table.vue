@@ -274,7 +274,7 @@
       <div
         v-if="
           isPagination &&
-          (paginationProperty.total || paginationProperty.pageCount)
+          (paginationProperty?.total || paginationProperty?.pageCount)
         "
         class="bottom-operate-right"
       >

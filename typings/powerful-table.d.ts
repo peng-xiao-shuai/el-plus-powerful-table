@@ -26,8 +26,8 @@ export interface PowerfulTableProps<Row = any> {
   operateData?: PowerfulTableOperateData
   isPagination?: boolean
   tree?: PowerfulTableTree
-  paginationProperty?: any
-  property?: Partial<TableProps>
+  paginationProperty?: Partial<PaginationProps>
+  property?: Partial<TableProps<Row>>
 }
 
 /* ------ tree 树结构数据 ------ */
