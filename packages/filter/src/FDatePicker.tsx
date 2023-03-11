@@ -7,6 +7,7 @@ import {
   watchEffect,
 } from 'vue'
 import { ElDatePicker, ElIcon } from 'element-plus'
+import { ArrowUp } from '@element-plus/icons'
 import { props } from './common'
 import type { App } from 'vue'
 import type { SFCWithInstall } from '@/index'
@@ -60,9 +61,7 @@ const FDatePicker = defineComponent({
       >
         {props.headerData.label}
         <ElIcon class={state.visible ? 'arrow-down' : 'arrow-up'}>
-          <svg class="icon" aria-hidden="true">
-            <use xlinkHref="#pt-arrow-up"></use>
-          </svg>
+          <ArrowUp />
         </ElIcon>
         <ElDatePicker
           v-model={state.value}

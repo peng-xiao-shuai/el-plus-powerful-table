@@ -1,4 +1,5 @@
 import { ElButton, ElIcon } from 'element-plus'
+import { ArrowUp } from '@element-plus/icons'
 import type { PropType } from 'vue'
 import type { PowerfulTableFilter, PowerfulTableHeader } from '@/index'
 
@@ -57,9 +58,7 @@ export const slots = (state: State, header: PowerfulTableHeader) => {
             v-show={header.defaultFilter}
             class={state.visible ? 'arrow-down' : 'arrow-up'}
           >
-            <svg class="icon" aria-hidden="true">
-              <use xlinkHref="#pt-arrow-up"></use>
-            </svg>
+            <ArrowUp />
           </ElIcon>
         </span>
       )

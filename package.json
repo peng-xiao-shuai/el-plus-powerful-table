@@ -1,8 +1,7 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "private": false,
-  "type": "module",
   "keywords": [
     "element-plus",
     "vue3.0",
@@ -31,9 +30,9 @@
   "types": "es/typings/index.d.ts",
   "exports": {
     ".": {
+      "types": "./es/typings/index.d.ts",
       "require": "./lib/index.js",
-      "import": "./es/index.mjs",
-      "types": "./es/typings/index.d.ts"
+      "import": "./es/index.mjs"
     },
     "./es": "./es/index.mjs",
     "./lib": "./lib/index.js",
@@ -55,6 +54,7 @@
     "vue": "^3.2.0"
   },
   "dependencies": {
+    "@element-plus/icons": "^0.0.11",
     "element-plus": "^2.2.30",
     "vue": "^3.2.47"
   },
