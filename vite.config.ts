@@ -91,7 +91,7 @@ export default defineConfig(({ mode }) => {
         // cssCodeSplit: true,
         rollupOptions: {
           //忽略打包vue文件
-          external: ['vue', /^element-plus*/],
+          external: ['vue', /^(@e|e)lement-plus*/],
           input: ['./packages/index.ts'],
           output: [
             {
