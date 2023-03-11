@@ -60,7 +60,7 @@ export const powerfulTableProps = {
   // 按钮组件配置数据
   btnConfig: {
     type: Object as PropType<PowerfulTableProps<DefaultRow>['btnConfig']>,
-    default: () => [{}],
+    default: undefined,
   },
   // 组件大小
   size: {

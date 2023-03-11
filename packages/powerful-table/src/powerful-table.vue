@@ -1,8 +1,9 @@
 <template>
   <div class="pt">
-    <!-- 按钮组件 -->
     <PTBtnPlus
-      v-if="btnConfig !== undefined"
+      v-if="
+        btnConfig !== undefined || $slots['btn-left'] || $slots['btn-right']
+      "
       ref="btnPlusRef"
       v-model:isTable="isTable"
       :btn-config="btnConfig"
@@ -316,6 +317,7 @@ import {
 import type { ComponentEvent } from './powerful-table-data'
 import type { BtnDataType, PowerfulTableLabelValue } from '@/index'
 import { LangKey, t } from '~/locale/lang'
+
 type Row = any
 // 自定义事件类型
 type EmitEventType<Row = any> = {
