@@ -232,7 +232,6 @@ export interface LangPackages {
 // 组件注入数据
 export type InjectProps = {
   locale?: LangPackages
-  btnSlot?: 'left' | 'right' | 'none' // 控制所有的组件 显示左侧或右侧操作按钮
 }
 
 // btnPlus组件
@@ -258,7 +257,6 @@ export namespace BtnConfig {
     property?: ElComponentProp<'btn', ButtonProps, Row>
   }
   export type Config = {
-    btnSlot?: 'left' | 'right' | 'all'
     btnList?: BtnList[]
     btnRightList?: BtnList[]
   }

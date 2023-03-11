@@ -38,7 +38,6 @@ type Lists = {
 
 const btnConfig: BtnConfig.Config = {
   // hidden: 'none',
-  btnSlot: 'all',
   btnRightList: [
     {
       effect: 'refresh',
