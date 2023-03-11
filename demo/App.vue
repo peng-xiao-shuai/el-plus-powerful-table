@@ -1,7 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- <PTButton></PTButton> -->
-    <!-- <PTFDatePicker></PTFDatePicker> -->
     <PowerfulTable
       ref="powerfulTable"
       :list="list"
@@ -33,11 +31,11 @@
           <el-button>1</el-button>
           <el-button>2</el-button>
         </div>
-      </template> -->
-      <!-- <template #btn-right>
-        <div>
-          <el-button>1</el-button>
-          <el-button>2</el-button>
+      </template>
+      <template #btn-right>
+        <div class="111">
+          <el-button>3</el-button>
+          <el-button>4</el-button>
         </div>
       </template> -->
       <template #empty>
