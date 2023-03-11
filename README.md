@@ -18,6 +18,11 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.11 20230311
+
+- 删除 `btnConfig.Config` 以及 `InjectProps` 中 `btnSlot` 参数
+- 修复 `btn-left` 以及 `btn-right` 插槽无效 `bug`
+
 ## 2.1.10 20230223
 
 - 修复鼠标悬浮组件没有类型提示 `bug`
