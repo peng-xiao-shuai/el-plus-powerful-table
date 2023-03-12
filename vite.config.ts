@@ -60,13 +60,18 @@ export default defineConfig(({ mode }) => {
           types: [],
         },
         beforeWriteFile: (filePath, content) => {
+          let upContent = content
+            .replace(/'..\/typings/gi, "'./typings")
+            .replace(/\/..\/typings/gi, '/typings')
+          // 修改typings文件夹中的内容
+          if (filePath.includes('\\typings')) {
+            upContent = upContent.replace(/\/packages/g, '')
+          }
           return {
             // 处理文件名
             filePath: filePath.replace('\\packages', ''),
             // 处理typings路径
-            content: content
-              .replace(/'..\/typings/gi, "'./typings")
-              .replace(/\/..\/typings/gi, '/typings'),
+            content: upContent,
           }
         },
       }),
