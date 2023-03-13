@@ -1,5 +1,11 @@
-import type { EmitEnum } from '../packages/powerful-table/src/powerful-table-data'
-import type { CSSProperties, Plugin, VNode, VideoHTMLAttributes, h } from 'vue'
+import type { EmitEnum } from '../powerful-table/src/powerful-table-data'
+import type {
+  CSSProperties,
+  Plugin,
+  VNode,
+  VideoHTMLAttributes,
+  h as createElemnt,
+} from 'vue'
 import type {
   ButtonProps,
   ElTooltipProps,
@@ -12,11 +18,12 @@ import type {
   TableColumnCtx,
   TableProps,
   TagProps,
+  TreeNode,
 } from 'element-plus'
 /* ------ props ------ */
 export interface PowerfulTableProps<Row = any> {
   list: Row[]
-  btnConfig?: BtnConfig.Config
+  btnConfig?: BtnConfig.Config<Row>
   size?: Size
   selectData?: any[]
   isSelect?: boolean
@@ -25,15 +32,15 @@ export interface PowerfulTableProps<Row = any> {
   header: PowerfulTableHeader<Row>[]
   operateData?: PowerfulTableOperateData
   isPagination?: boolean
-  tree?: PowerfulTableTree
+  tree?: PowerfulTableTree<Row>
   paginationProperty?: Partial<PaginationProps>
   property?: Partial<TableProps<Row>>
 }
 
 /* ------ tree 树结构数据 ------ */
-export type PowerfulTableTree = {
+export type PowerfulTableTree<Row = any> = {
   lazy?: boolean
-  load?: (row, treeNode, resolve) => void
+  load?: (row: Row, treeNode: TreeNode, resolve: (data: Row[]) => void) => void
   props?: { children: string; hasChildren: string }
 }
 
@@ -71,8 +78,8 @@ export interface PowerfulTableHeader<Row = any> {
   headerAlign?: 'left' | 'center' | 'right'
   headerSlotName?: string
   props:
-    | PowerfulTableHeaderProps<null, Row>[]
-    | PowerfulTableHeaderProps<null, Row>
+    | PowerfulTableHeaderProps<'text', Row>[]
+    | PowerfulTableHeaderProps<'text', Row>
   property?: Partial<TableColumnCtx<Row>>
 }
 
@@ -80,10 +87,7 @@ export type SetDataType<T extends keyof _TYPE, Row = any> = {
   [key in keyof _TYPE<Row>[T]]: _TYPE<Row>[T][key]
 }
 // props 单元格数据
-export interface PowerfulTableHeaderProps<
-  T extends keyof _TYPE | null | undefined,
-  Row = any
-> {
+export interface PowerfulTableHeaderProps<T extends keyof _TYPE, Row = any> {
   prop: string
   data?: SetDataType<T, Row>
   type?: keyof _TYPE
@@ -93,7 +97,11 @@ export interface PowerfulTableHeaderProps<
     | ((row: Row, index?: number) => string | number)
   text?: string
   slotName?: string
-  render?: (h: h, row: Row, index: number) => VNode | string | number
+  render?: (
+    h: typeof createElemnt,
+    row: Row,
+    index: number
+  ) => VNode | string | number
   reserve?: string | HTMLElement
   style?: CSSProperties
   filterItem?: boolean // 指定过滤项
@@ -170,7 +178,7 @@ export type BtnDataType<Row = any> = {
       row: Row
       index: number
       btnIndex: number[]
-      props: PowerfulTableHeaderProps
+      props: PowerfulTableHeaderProps<'btn'>
       params: any
     },
     resolve: (value: unknown) => void
@@ -236,7 +244,7 @@ export type InjectProps = {
 
 // btnPlus组件
 export namespace BtnConfig {
-  export type BtnList = {
+  export type BtnList<Row = any> = {
     style?: CSSProperties
     disabled?: boolean
     operateType?: 'none' | 'single' | 'batch'
@@ -254,11 +262,11 @@ export namespace BtnConfig {
       },
       resolve: (value: boolean) => void
     ) => void
-    property?: ElComponentProp<'btn', ButtonProps, Row>
+    property?: ElComponentProp<'btn', ButtonProps, any>
   }
-  export type Config = {
-    btnList?: BtnList[]
-    btnRightList?: BtnList[]
+  export type Config<Row> = {
+    btnList?: BtnList<Row>[]
+    btnRightList?: BtnList<Row>[]
   }
 }
 
