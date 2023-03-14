@@ -1,4 +1,4 @@
-import { defineComponent, inject } from 'vue'
+import { defineComponent } from 'vue'
 import { ElLink } from 'element-plus'
 import type { App, PropType } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
@@ -6,7 +6,6 @@ import {
   isProperty,
   powerfulTableComponentProp,
 } from '~/powerful-table/src/powerful-table-data'
-import { SizeSymbol } from '~/keys'
 
 const Link = defineComponent({
   name: 'PTLink',

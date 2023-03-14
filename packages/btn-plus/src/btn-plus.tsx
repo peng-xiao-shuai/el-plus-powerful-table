@@ -18,7 +18,7 @@ const PTBtnPlus = defineComponent({
   props: {
     // 按钮的配置数据
     btnConfig: {
-      type: Object as PropType<BtnConfig.Config>,
+      type: Object as PropType<BtnConfig.Config<any>>,
       // required: true,
     },
     // 表格的配置数据

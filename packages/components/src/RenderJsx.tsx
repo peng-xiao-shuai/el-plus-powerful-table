@@ -8,7 +8,7 @@ const RenderJsx = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<null>>,
+      type: Object as PropType<PowerfulTableHeaderProps<'text'>>,
       default: () => ({}),
     },
   },
