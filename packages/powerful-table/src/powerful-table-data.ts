@@ -393,13 +393,13 @@ export const useFunction = <L>(
     get,
     matchComponents,
     bindAttr(
-      prop: PowerfulTableHeaderProps<null, L>,
+      prop: PowerfulTableHeaderProps<'text', L>,
       scope: { $index: number; row: L },
       item: PowerfulTableHeader<L>
     ): {
       row: L
       index: number
-      prop: PowerfulTableHeaderProps<null, L>
+      prop: PowerfulTableHeaderProps<'text', L>
       aligning: 'left' | 'center' | 'right'
     } {
       return {
