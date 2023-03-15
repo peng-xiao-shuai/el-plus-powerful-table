@@ -78,8 +78,8 @@ export interface PowerfulTableHeader<Row = any> {
   headerAlign?: 'left' | 'center' | 'right'
   headerSlotName?: string
   props:
-    | PowerfulTableHeaderProps<'text', Row>[]
-    | PowerfulTableHeaderProps<'text', Row>
+    | PowerfulTableHeaderProps<any, Row>[]
+    | PowerfulTableHeaderProps<any, Row>
   property?: Partial<TableColumnCtx<Row>>
 }
 
@@ -275,37 +275,80 @@ export type SFCWithInstall<T> = T & Plugin
 export type ThemeType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 export type Size = '' | 'large' | 'default' | 'small'
 
+export type ComponentEvent<Row = any> = {
+  componentName: keyof _TYPE | 'filter'
+  eventType: string
+  row: Row
+  index?: number
+  props: PowerfulTableHeaderProps<any>[] | PowerfulTableHeaderProps<any>
+}
+
 export type EmitType = `${EmitEnum}`
+export type EmitTypeArgs<Row = any> = {
+  [EmitEnum.BtnPlusChange]: {
+    effect: BtnConfig.BtnList['effect']
+    rows: Row[]
+  }
+  [EmitEnum.BtnClick]: {
+    params: BtnDataType['params']
+    row: Row
+    index: number
+  }
+  [EmitEnum.SizeChange]: {
+    params: { pageNum: number; pageSize: number }
+    select: Row[]
+  }
+  [EmitEnum.ComponentEvent]: {
+    componentEvent: ComponentEvent<Row>
+    scope: {
+      row: any
+      index: number
+      props: PowerfulTableHeaderProps<any>
+    }
+  }
+  [EmitEnum.BatchOperate]: {
+    ids: (string | number)[]
+    item: PowerfulTableLabelValue
+    rows: Row[]
+  }
+}
+export interface Handlers<Row = any> {
+  [EmitEnum.BtnPlusChange]: (
+    payload: EmitTypeArgs<Row>[EmitEnum.BtnPlusChange]
+  ) => void
+  [EmitEnum.BtnPlusRefresh]: () => void
+  [EmitEnum.BtnClick]: (payload: EmitTypeArgs<Row>[EmitEnum.BtnClick]) => void
+  [EmitEnum.SizeChange]: (
+    payload: EmitTypeArgs<Row>[EmitEnum.SizeChange]
+  ) => void
+  [EmitEnum.ComponentEvent]: (
+    payload: EmitTypeArgs<Row>[EmitEnum.ComponentEvent],
+    ...args: any
+  ) => void
+  [EmitEnum.BatchOperate]: (
+    payload: EmitTypeArgs<Row>[EmitEnum.BatchOperate]
+  ) => void
+}
 // 自定义事件类型
-export type EmitEventType<Row> = {
+export type EmitEventType<Row = any> = {
   (
     e: EmitEnum.BtnPlusChange,
-    payload: { effect: BtnConfig.BtnList['effect']; rows: Row[] }
+    payload: EmitTypeArgs<Row>[EmitEnum.BtnPlusChange]
   ): void
   (e: EmitEnum.BtnPlusRefresh): void
-  (
-    e: EmitEnum.BtnClick,
-    payload: { params: BtnDataType['params']; row: Row; index: number }
-  ): void
+  (e: EmitEnum.BtnClick, payload: EmitTypeArgs<Row>[EmitEnum.BtnClick]): void
   (
     e: EmitEnum.SizeChange,
-    payload: {
-      params: { pageNum: number; pageSize: number }
-      select: Row[]
-    }
+    payload: EmitTypeArgs<Row>[EmitEnum.SizeChange]
   ): void
   (
     e: EmitEnum.ComponentEvent,
-    componentEvent: ComponentEvent,
+    payload: EmitTypeArgs<Row>[EmitEnum.ComponentEvent],
     ...args: any
   ): void
   (
     e: EmitEnum.BatchOperate,
-    payload: {
-      ids: (string | number)[]
-      item: PowerfulTableLabelValue
-      rows: Row[]
-    }
+    payload: EmitTypeArgs<Row>[EmitEnum.BatchOperate]
   ): void
   (e: EmitEnum.Select, ...args: any): void
   (e: EmitEnum.SelectionChange, ...args: any): void

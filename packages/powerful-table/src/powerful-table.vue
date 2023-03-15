@@ -314,8 +314,11 @@ import {
   useFunction,
   usePowerfulTableStates,
 } from './powerful-table-data'
-import type { ComponentEvent } from './powerful-table-data'
-import type { BtnDataType, PowerfulTableLabelValue } from '@/index'
+import type {
+  BtnDataType,
+  ComponentEvent,
+  PowerfulTableLabelValue,
+} from '@/index'
 import { LangKey, t } from '~/locale/lang'
 
 type Row = any
