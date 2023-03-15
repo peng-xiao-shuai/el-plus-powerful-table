@@ -20,7 +20,12 @@ const Video = defineComponent({
   setup(props, { emit }) {
     const { REmit } = useREmit(
       emit as (event: 'component-emit', ...args: any[]) => void,
-      'video'
+      'video',
+      {
+        row: props.row,
+        index: props.index,
+        props: props.prop,
+      }
     )
 
     return () => (

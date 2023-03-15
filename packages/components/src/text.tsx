@@ -24,7 +24,11 @@ const Text = defineComponent({
   },
   emits: ['component-emit'],
   setup(props, { emit }) {
-    const { REmit } = useREmit(emit, 'text')
+    const { REmit } = useREmit(emit, 'text', {
+      row: props.row,
+      index: props.index,
+      props: props.prop,
+    })
     const develop = ref(Array.from({ length: props.listLength }).fill(false))
     return () => (
       <div class={{ content: develop.value[props.index || 0] }}>

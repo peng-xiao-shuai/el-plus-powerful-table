@@ -18,6 +18,12 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.15 20230315
+
+- 解决切换批量操作点击确定后选择的批量操作类型永远是第一个 `bug`
+- `component-event` 自定义事件参数返回更改， 由原来的 `{ componentName:  string, eventType:  string }` 改为
+`{ componentName: string, eventType: string, index: number, prop:  PowerfulTableHeaderProps<any>[] | PowerfulTableHeaderProps<any>, row: any }`
+
 ## 2.1.14 20230312
 
 - 解决没有类型提示 `bug`

@@ -23,7 +23,12 @@ const Switch = defineComponent({
     const size = inject(SizeSymbol)
     const { REmit } = useREmit(
       emit as (event: 'component-emit', ...args: any[]) => void,
-      'switch'
+      'switch',
+      {
+        row: props.row,
+        index: props.index,
+        props: props.prop,
+      }
     )
 
     return () => (

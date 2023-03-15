@@ -19,7 +19,12 @@ const Icon = defineComponent({
   setup(props, { emit }) {
     const { REmit } = useREmit(
       emit as (event: 'component-emit', ...args: any[]) => void,
-      'iconfont'
+      'iconfont',
+      {
+        row: props.row,
+        index: props.index,
+        props: props.prop,
+      }
     )
 
     return () => (
@@ -28,9 +33,6 @@ const Icon = defineComponent({
           onClick={(event: Event) => {
             event.stopPropagation()
             REmit('click', {
-              row: props.row,
-              index: props.index,
-              prop: props.prop.prop,
               event,
             })
           }}
@@ -39,9 +41,9 @@ const Icon = defineComponent({
               ? [
                   props.row[props.prop.prop],
                   props.prop.data?.class &&
-                  typeof props.prop.data?.class === 'string'
-                    ? props.prop.data?.class
-                    : (props.prop.data?.class as string[]).join(','),
+                    (typeof props.prop.data?.class === 'string'
+                      ? props.prop.data?.class
+                      : (props.prop.data?.class as string[]).join(',')),
                 ]
               : ['']
           }

@@ -24,7 +24,12 @@ const Tags = defineComponent({
     const size = inject(SizeSymbol)
     const { REmit } = useREmit(
       emit as (event: 'component-emit', ...args: any[]) => void,
-      'tag'
+      'tag',
+      {
+        row: props.row,
+        index: props.index,
+        props: props.prop,
+      }
     )
 
     /* ------ 标签string转array ------ */

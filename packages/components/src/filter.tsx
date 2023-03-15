@@ -29,7 +29,11 @@ const Filter = defineComponent({
   },
   emits: ['component-emit'],
   setup(props, { emit }) {
-    const { REmit } = useREmit(emit, 'filter')
+    const { REmit } = useREmit(emit, 'filter', {
+      row: props.row,
+      index: props.index,
+      props: props.prop,
+    })
 
     return () => (
       <>
@@ -37,9 +41,6 @@ const Filter = defineComponent({
           onClick={(event: Event) => {
             event.stopPropagation()
             REmit('click', {
-              row: props.row,
-              index: props.index,
-              prop: props.prop.prop,
               event,
             })
           }}

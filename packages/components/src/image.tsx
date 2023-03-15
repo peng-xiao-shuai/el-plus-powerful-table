@@ -21,7 +21,12 @@ const Image = defineComponent({
   setup(props, { emit }) {
     const { REmit } = useREmit(
       emit as (event: 'component-emit', ...args: any[]) => void,
-      'image'
+      'image',
+      {
+        row: props.row,
+        index: props.index,
+        props: props.prop,
+      }
     )
 
     return () => (

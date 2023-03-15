@@ -1,10 +1,11 @@
 import { getCurrentInstance, inject, reactive, ref } from 'vue'
-import { useGlobalConfig } from 'element-plus/es'
+import { ElMessage, ElMessageBox, useGlobalConfig } from 'element-plus/es'
 import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
 import type { FDatePicker, FInput, FSelect } from '../../filter'
 import type { PropType } from 'vue'
 import type {
+  ComponentEvent,
   EmitEventType,
   EmitType,
   PowerfulTableHeader,
@@ -47,10 +48,7 @@ type DefaultRow = any
 type TranslatePair = {
   [key: string]: string | string[] | TranslatePair
 }
-export type ComponentEvent = {
-  componentName: keyof _TYPE | 'filter'
-  eventType: string
-}
+
 export type FilterComponents = import('vue').Ref<
   InstanceType<typeof FSelect | typeof FInput | typeof FDatePicker>[] | null
 >
@@ -146,7 +144,12 @@ export const powerfulTableComponentProp = {
 // 附属组件自定义事件抛出
 export const useREmit = (
   emit: (s: 'component-emit', event: ComponentEvent, ...arg: any) => void,
-  componentName: keyof _TYPE | 'filter'
+  componentName: keyof _TYPE | 'filter',
+  props: {
+    row: any
+    index?: number
+    props: PowerfulTableHeaderProps<any>[] | PowerfulTableHeaderProps<any>
+  }
 ) => {
   const REmit = (eventType: string, ...arg: any) => {
     emit(
@@ -154,6 +157,7 @@ export const useREmit = (
       {
         componentName,
         eventType,
+        ...props,
       },
       ...arg
     )
@@ -264,34 +268,27 @@ export const useFunction = <L>(
         powerfulTableData.operate == null) &&
       powerfulTableData.operate !== 0
     ) {
-      proxy.$message({
-        message: t(LangKey.SelectOperateType),
-        type: 'warning',
-        duration: 1000,
-      })
+      ElMessage.warning(t(LangKey.SelectOperateType))
       return
     }
 
     if (powerfulTableData.currentSelect.length == 0) {
-      proxy.$message({
-        message: t(LangKey.SelectOperateData),
-        type: 'warning',
-        duration: 1000,
-      })
+      ElMessage.warning(t(LangKey.SelectOperateData))
       return
     }
-    proxy
-      .$confirm(
-        t<(s: string) => string>(LangKey.BatchOperate)(
-          powerfulTableData.operate.operates[0].label
-        ),
-        t(LangKey.Hint),
-        {
-          confirmButtonText: t(LangKey.Confirm),
-          cancelButtonText: t(LangKey.Cancel),
-          type: 'warning',
-        }
-      )
+
+    ElMessageBox.confirm(
+      t<(s: string) => string>(LangKey.BatchOperate)(
+        powerfulTableData.operate.operates[powerfulTableData.operate.value || 0]
+          .label
+      ),
+      t(LangKey.Hint),
+      {
+        confirmButtonText: t(LangKey.Confirm),
+        cancelButtonText: t(LangKey.Cancel),
+        type: 'warning',
+      }
+    )
       .then(() => {
         const ids = powerfulTableData.otherSelect
           .concat(powerfulTableData.currentSelect)
@@ -306,7 +303,9 @@ export const useFunction = <L>(
 
         emit(EmitEnum.BatchOperate, {
           ids,
-          item: powerfulTableData.operate.operates[0],
+          item: powerfulTableData.operate.operates[
+            powerfulTableData.operate.value || 0
+          ],
           rows,
         })
       })
