@@ -76,13 +76,46 @@ export default defineConfig(({ mode }) => {
         },
       }),
       Components({
-        include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
+        globs: ['**/src/*.{tsx|vue}'],
+        include: [/\.(vue|tsx)$/, /\.vue\?vue/],
         resolvers: [
           ElementPlusResolver({
-            importStyle: false,
+            importStyle: 'sass',
           }),
         ],
       }),
+      (function injectCss() {
+        return {
+          name: 'injectCss',
+          transform(code: string, id: string) {
+            if (id.includes('packages/index.ts')) {
+              let scssUrl = ''
+              // 使用到的scss文件
+              ;[
+                'button-group',
+                'message',
+                'message-box',
+                'popover',
+                'checkbox',
+                'scrollbar',
+                'tooltip',
+                'button',
+                'image',
+                'input',
+                'link',
+                'rate',
+                'switch',
+                'tag',
+              ].forEach((item) => {
+                scssUrl += `import 'element-plus/es/components/${item}/style/index'\n`
+              })
+              code = scssUrl + code
+            }
+
+            return { code, map: null }
+          },
+        }
+      })(),
     ]
 
     return {
