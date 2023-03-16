@@ -284,6 +284,7 @@ export type ComponentEvent<Row = any> = {
 }
 
 export type EmitType = `${EmitEnum}`
+// 定义自定义事件上参数
 export type EmitTypeArgs<Row = any> = {
   [EmitEnum.BtnPlusChange]: {
     effect: BtnConfig.BtnList['effect']
@@ -298,20 +299,16 @@ export type EmitTypeArgs<Row = any> = {
     params: { pageNum: number; pageSize: number }
     select: Row[]
   }
-  [EmitEnum.ComponentEvent]: {
-    componentEvent: ComponentEvent<Row>
-    scope: {
-      row: any
-      index: number
-      props: PowerfulTableHeaderProps<any>
-    }
-  }
+  [EmitEnum.ComponentEvent]: ComponentEvent<Row>
   [EmitEnum.BatchOperate]: {
     ids: (string | number)[]
     item: PowerfulTableLabelValue
     rows: Row[]
   }
+  [EmitEnum.SortCustom]: { column: any; prop: string; order: string }
 }
+
+// 函数类型
 export interface Handlers<Row = any> {
   [EmitEnum.BtnPlusChange]: (
     payload: EmitTypeArgs<Row>[EmitEnum.BtnPlusChange]
@@ -327,6 +324,9 @@ export interface Handlers<Row = any> {
   ) => void
   [EmitEnum.BatchOperate]: (
     payload: EmitTypeArgs<Row>[EmitEnum.BatchOperate]
+  ) => void
+  [EmitEnum.SortCustom]: (
+    payload: EmitTypeArgs<Row>[EmitEnum.SortCustom]
   ) => void
 }
 // 自定义事件类型
@@ -369,6 +369,6 @@ export type EmitEventType<Row = any> = {
   (e: EmitEnum.ExpandChange, ...args: any): void
   (
     e: EmitEnum.SortCustom,
-    payload: { column: any; prop: string; order: string }
+    payload: EmitTypeArgs<Row>[EmitEnum.SortCustom]
   ): void
 }
