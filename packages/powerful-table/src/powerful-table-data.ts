@@ -1,4 +1,3 @@
-import { getCurrentInstance, inject, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, useGlobalConfig } from 'element-plus/es'
 import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
@@ -229,8 +228,17 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
     isTable: true,
   })
 
+  // 为表格数据重新赋值
+  watch(
+    () => props.list as L[],
+    (newList) => {
+      stateData.tableLists = newList || []
+    },
+    { immediate: true, deep: true }
+  )
+
   return {
-    Size: props.size || useGlobalConfig()?.value?.size || 'small',
+    Size: props.size || useGlobalConfig()?.value?.size,
     multipleTable,
     filterComponents,
     powerfulTableData,
@@ -241,9 +249,24 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
 
 export const useFunction = <L>(
   emit: EmitEventType<L>,
-  powerfulTableData: PowerfulTableData<L>
+  powerfulTableData: PowerfulTableData<L>,
+  filterComponents: FilterComponents
 ) => {
   const { proxy } = getCurrentInstance() as any
+
+  watch(
+    () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
+    () => {
+      // 切换页面清除表头选中
+      if (Array.isArray(filterComponents.value)) {
+        filterComponents.value.forEach((item: any) => {
+          item.state.value = ''
+        })
+      }
+
+      get()
+    }
+  )
 
   /**
    * 排序方法

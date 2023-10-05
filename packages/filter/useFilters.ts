@@ -6,7 +6,6 @@
  * @Last Modified time: 2023-03-14 09:58:12
  */
 
-import { computed } from 'vue'
 import { deepClone } from '../index'
 import type { PowerfulTableHeader, PowerfulTableHeaderProps } from '@/index'
 import type {

@@ -1,4 +1,3 @@
-import { defineComponent, inject, reactive } from 'vue'
 import { ElInput, ElPopover } from 'element-plus'
 import { btnSlots, props, slots } from './common'
 import type { App } from 'vue'
@@ -47,7 +46,7 @@ const FInput = defineComponent({
         <ElInput
           placeholder={t(LangKey.InputContent)}
           v-model={state.value}
-          size={size || 'small'}
+          size={size}
           clearable
           class="input-with-select"
           v-slots={btnSlots(inputChange)}

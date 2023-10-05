@@ -298,16 +298,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  nextTick,
-  provide,
-  toRefs,
-  useAttrs,
-  useSlots,
-  watch,
-  watchEffect,
-} from 'vue'
 import { deepClone } from '../../index'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
@@ -411,10 +401,9 @@ const {
   componentEmit,
   sortChange,
   batchOperate,
-  get,
   matchComponents,
   bindAttr,
-} = useFunction<Row>(emit, powerfulTableData)
+} = useFunction<Row>(emit, powerfulTableData, filterComponents)
 
 const { tableLists, isTable } = toRefs(stateData)
 const { listLoading, currentPage, pageSize, currentSelect, operate } =
@@ -450,28 +439,6 @@ watch(
 )
 
 /* --- 按钮组件参数及方法begin --- */
-// 为表格数据重新赋值
-watch(
-  () => props.list as Row[],
-  (newList) => {
-    stateData.tableLists = newList || []
-  },
-  { immediate: true, deep: true }
-)
-watch(
-  () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
-  () => {
-    // 切换页面清除表头选中
-    if (Array.isArray(filterComponents.value)) {
-      filterComponents.value.forEach((item: any) => {
-        item.state.value = ''
-      })
-    }
-
-    get()
-  }
-)
-
 // 过滤被隐藏的列
 const headerLists = computed(() => {
   return props.header.filter((column) =>

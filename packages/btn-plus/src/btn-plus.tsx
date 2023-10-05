@@ -1,5 +1,4 @@
 import './style.scss'
-import { defineComponent, inject, reactive, watch } from 'vue'
 import {
   ElButton,
   ElButtonGroup,
@@ -10,7 +9,6 @@ import {
 } from 'element-plus'
 import { SizeSymbol } from '../../keys'
 import type { BtnConfig, PowerfulTableHeader } from '@/index'
-import type { PropType } from 'vue'
 import { LangKey, t } from '~/locale/lang'
 
 const PTBtnPlus = defineComponent({
@@ -193,7 +191,7 @@ const PTBtnPlus = defineComponent({
                             row.isShowOrFilterColumn === undefined
                           )
                         }
-                        size={size || 'small'}
+                        size={size}
                         onChange={() => functionBtnChange()}
                       />
                     </div>
@@ -207,7 +205,7 @@ const PTBtnPlus = defineComponent({
                             row.isShowOrFilterColumn === undefined
                           )
                         }
-                        size={size || 'small'}
+                        size={size}
                         onChange={() => functionBtnChange()}
                       />
                     </div>

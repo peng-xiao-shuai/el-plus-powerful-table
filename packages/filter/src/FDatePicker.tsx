@@ -1,11 +1,3 @@
-import {
-  defineComponent,
-  inject,
-  nextTick,
-  reactive,
-  ref,
-  watchEffect,
-} from 'vue'
 import { ElDatePicker, ElIcon } from 'element-plus'
 import { ArrowUp } from '@element-plus/icons'
 import { props } from './common'
@@ -71,7 +63,7 @@ const FDatePicker = defineComponent({
           ref={datePickerRef}
           class="date_style"
           style="padding: 0; overflow: hidden"
-          size={size || 'small'}
+          size={size}
           onUpdate:modelValue={datePickerChange}
           onVisible-change={(b: boolean) => {
             state.visible = b

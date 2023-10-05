@@ -14,6 +14,12 @@ export default defineConfig(({ mode }) => {
       vue(),
       vueJsx(),
       AutoImport({
+        include: [
+          /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+          /\.vue$/,
+        ],
+        imports: ['vue'],
+        dirs: [],
         resolvers: [ElementPlusResolver()],
       }),
     ],

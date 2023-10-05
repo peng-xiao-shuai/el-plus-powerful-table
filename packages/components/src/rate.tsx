@@ -1,6 +1,5 @@
-import { defineComponent, inject } from 'vue'
 import { ElRate } from 'element-plus'
-import type { App, PropType } from 'vue'
+import type { App } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
   isProperty,

@@ -1,4 +1,3 @@
-import { defineComponent, inject, reactive, watch } from 'vue'
 import { ElOption, ElPopover, ElSelect } from 'element-plus'
 import { props, slots } from './common'
 import type { State } from './common'
@@ -118,7 +117,7 @@ const FSelect = defineComponent({
           placeholder={t(LangKey.Select)}
           style="width: 100%"
           teleported={false}
-          size={size || 'small'}
+          size={size}
           onVisible-change={selectVisibleChange}
           onChange={selectChange}
         >

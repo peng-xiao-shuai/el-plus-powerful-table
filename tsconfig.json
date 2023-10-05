@@ -25,6 +25,7 @@
       ]
     },
     "types": [
+      "@types/node",
       "vite/client",
       "element-plus/global",
     ],
@@ -37,7 +38,9 @@
     "demo",
     "packages",
     "typings",
-    "global.d.ts"
+    "global.d.ts",
+    "auto-imports.d.ts",
+    "components.d.ts",
   ],
   "exclude": [
     "dist",

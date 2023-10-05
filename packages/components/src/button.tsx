@@ -1,4 +1,3 @@
-import { defineComponent, inject } from 'vue'
 import {
   ElButton,
   ElDropdown,
@@ -7,7 +6,7 @@ import {
   ElTooltip,
 } from 'element-plus'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
-import type { App, PropType } from 'vue'
+import type { App } from 'vue'
 import type {
   BtnDataType,
   PowerfulTableHeaderProps,
