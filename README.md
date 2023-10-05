@@ -21,6 +21,7 @@ vue3.0 的 element-plus 二次开发表格组件
 ## 2.1.16 20231005
 - 新增 `type = 'btn'` 时，添加 `click` 属性，需要注意的事，存在 `click` 属性时将不会触发 `beforeClick` 属性
 - 优化了内部组件 `button` 文件中的 `class` 由原来的 `class={item.text ? '' : 'no-margin'}` 改成空。
+- 新增全局组件注入 `emptyElement`
 
 ## 2.1.15 20230315
 

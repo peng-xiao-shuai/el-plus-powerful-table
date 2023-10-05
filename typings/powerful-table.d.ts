@@ -1,6 +1,7 @@
 import type { EmitEnum } from '../powerful-table/src/powerful-table-data'
 import type {
   CSSProperties,
+  Component,
   Plugin,
   VNode,
   VideoHTMLAttributes,
@@ -251,6 +252,7 @@ export interface LangPackages {
 // 组件注入数据
 export type InjectProps = {
   locale?: LangPackages
+  emptyElement?: Component
 }
 
 // btnPlus组件

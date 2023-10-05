@@ -58,7 +58,11 @@
     >
       <template #empty>
         <slot name="empty">
-          <span>{{ t(LangKey.NoData) }}</span>
+          <component
+            :is="injectProps.emptyElement"
+            v-if="injectProps.emptyElement"
+          />
+          <span v-else>{{ t(LangKey.NoData) }}</span>
         </slot>
       </template>
 
@@ -384,8 +388,14 @@ const justifyFun = (val: string): string => {
 }
 
 /* ------ data数据 ------ */
-const { powerfulTableData, multipleTable, filterComponents, stateData, Size } =
-  usePowerfulTableStates<Row>(props)
+const {
+  powerfulTableData,
+  multipleTable,
+  filterComponents,
+  stateData,
+  Size,
+  injectProps,
+} = usePowerfulTableStates<Row>(props)
 
 // 局部过滤hook
 const { handleHeaderFilterChange, getPropObj } = useFilters<Row>(
