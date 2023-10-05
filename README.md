@@ -18,6 +18,10 @@ vue3.0 的 element-plus 二次开发表格组件
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.1.16 20231005
+- 新增 `type = 'btn'` 时，添加 `click` 属性，需要注意的事，存在 `click` 属性时将不会触发 `beforeClick` 属性
+- 优化了内部组件 `button` 文件中的 `class` 由原来的 `class={item.text ? '' : 'no-margin'}` 改成空。
+
 ## 2.1.15 20230315
 
 - 解决切换批量操作点击确定后选择的批量操作类型永远是第一个 `bug`

@@ -27,6 +27,11 @@
     .el-button + .el-button {
       margin-left: 0;
     }
+    .el-button + .el-dropdown {
+      .el-button {
+        margin-left: 0;
+      }
+    }
     .el-button {
       margin: 5px;
     }

@@ -35,13 +35,22 @@ const Button = defineComponent({
 
     const btn = (item: BtnDataType, btnIndex: number[]) => (
       <ElButton
-        class={item.text ? '' : 'no-margin'}
         size={size}
         style={item.style || {}}
         type={'primary'}
         onClick={(e: Event) => {
           e.stopPropagation()
           if (!item.isMore) {
+            if (typeof item.click === 'function') {
+              item.click({
+                props: props.prop,
+                params: item.params,
+                row: props.row,
+                index: props.index!,
+              })
+              return
+            }
+
             if (typeof item.beforeClick === 'function') {
               new Promise((resolve) => {
                 item.beforeClick!(

@@ -167,6 +167,17 @@ export type ImageDataType<Row = any> = {
 export type BtnDataType<Row = any> = {
   tip?: string
   text?: string
+  click?: ({
+    props,
+    params,
+    row,
+    index,
+  }: {
+    props: PowerfulTableHeaderProps<'btn'>
+    params: any
+    row: Row
+    index: number
+  }) => void
   beforeClick?: (
     {
       row,
