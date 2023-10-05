@@ -1,6 +1,13 @@
 import { markRaw } from 'vue'
 import { ElMessageBox } from 'element-plus/es'
-import { Delete, Edit, Grid, Plus, Refresh } from '@element-plus/icons-vue'
+import {
+  Delete,
+  Edit,
+  Grid,
+  Plus,
+  Refresh,
+  View,
+} from '@element-plus/icons-vue'
 import { setData } from '../packages/index'
 import type {
   BtnConfig,
@@ -36,7 +43,7 @@ type Lists = {
   [s: string]: any
 }
 
-const btnConfig: BtnConfig.Config = {
+const btnConfig: BtnConfig.Config<Lists> = {
   // hidden: 'none',
   btnRightList: [
     {
@@ -396,6 +403,22 @@ const header: PowerfulTableHeader<Lists>[] = [
         type: 'btn',
         prop: 'btn',
         data: setData<'btn', Lists>([
+          {
+            tip: '查看',
+            // showBtn: false,
+            params: {
+              emit: 'view',
+            },
+            property: {
+              type: 'primary',
+              icon: markRaw(View),
+            },
+            // 在存在 click 时 beforeClick 将不会被触发
+            // beforeClick({ row, index, btnIndex, props, params }, resolve) {},
+            click: ({ props, params, row, index }) => {
+              console.log(props, params, row, index)
+            },
+          },
           {
             tip: '编辑按钮',
             // showBtn: false,
