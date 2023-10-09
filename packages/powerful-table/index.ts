@@ -1,13 +1,13 @@
-import powerful from './src/powerful-table.vue'
+import PowerfulTableComponent from './src/powerful-table.vue'
 import type { App } from 'vue'
 
 // 定义 install 方法， App 作为参数
-powerful.install = (app: App): void => {
-  app.component(powerful.name, powerful)
+PowerfulTableComponent.install = (app: App): void => {
+  app.component(PowerfulTableComponent.name, PowerfulTableComponent)
 }
-export const PowerfulTable = powerful as import('@/index').SFCWithInstall<
-  typeof powerful
->
+const powerfulTable =
+  PowerfulTableComponent as import('@/index').SFCWithInstall<
+    typeof PowerfulTableComponent
+  >
 
-export { powerful }
-export default PowerfulTable
+export { PowerfulTableComponent, powerfulTable, powerfulTable as default }

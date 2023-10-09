@@ -1,12 +1,12 @@
 import components from './components'
-import PowerfulTable from './powerful-table'
+import powerfulTable from './powerful-table'
 import fComponents from './filter'
 import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
 import type { _TYPE } from '@/index'
 import type { App, Plugin } from 'vue'
 export { default as PTBtnPlus } from './btn-plus'
-export { default as PowerfulTable } from './powerful-table'
+export * from './powerful-table'
 export * from './filter'
 export * from './components'
 // 获取类型
@@ -53,6 +53,6 @@ export default {
     ...components,
     ...fComponents,
     BtnPlus,
-    PowerfulTable,
+    powerfulTable,
   ]),
 }
