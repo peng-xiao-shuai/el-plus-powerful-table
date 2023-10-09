@@ -1,3 +1,4 @@
+import type { ElTable } from 'element-plus/es'
 import type { EmitEnum } from '../powerful-table/src/powerful-table-data'
 import type {
   CSSProperties,
@@ -5,8 +6,9 @@ import type {
   Plugin,
   VNode,
   VideoHTMLAttributes,
-  h as createElemnt,
+  h as createElement,
 } from 'vue'
+import type { FDatePicker, FInput, FSelect } from '../../filter'
 import type {
   ButtonProps,
   ElTooltipProps,
@@ -21,6 +23,24 @@ import type {
   TagProps,
   TreeNode,
 } from 'element-plus'
+
+export interface PowerfulTableExpose<Row = any> {
+  $slots: Readonly<InternalSlots>
+  $attrs: Data
+  $refs: {
+    multipleTable: InstanceType<typeof ElTable>
+    filterComponents: import('vue').Ref<
+      InstanceType<typeof FSelect | typeof FInput | typeof FDatePicker>[] | null
+    >
+  }
+  headerLists: ComputedRef<PowerfulTableHeader<Row>[]>
+  powerfulTableData: PowerfulTableData<Row>
+  stateData: StateData<Row>
+  resetList: (() => void) | undefined
+  getListData: (() => void) | undefined
+  handleSelectionChange: (e: Row[]) => void
+  anewRender: () => void
+}
 /* ------ props ------ */
 export interface PowerfulTableProps<Row = any> {
   list: Row[]
@@ -36,6 +56,17 @@ export interface PowerfulTableProps<Row = any> {
   tree?: PowerfulTableTree<Row>
   paginationProperty?: Partial<PaginationProps>
   property?: Partial<TableProps<Row>>
+
+  // 2.1.16
+  listRequest?: {
+    listApi: (params: object) => Promise
+    listQuery?: object
+    pageSizeKey?: string
+    pageNoKey?: string
+    responseKey?: string // 例如 'data.data.result'
+    listsKey?: string
+    totalKey?: string
+  }
 }
 
 /* ------ tree 树结构数据 ------ */
@@ -99,7 +130,7 @@ export interface PowerfulTableHeaderProps<T extends keyof _TYPE, Row = any> {
   text?: string
   slotName?: string
   render?: (
-    h: typeof createElemnt,
+    h: typeof createElement,
     row: Row,
     index: number
   ) => VNode | string | number
@@ -252,6 +283,13 @@ export interface LangPackages {
 // 组件注入数据
 export type InjectProps = {
   locale?: LangPackages
+  listRequest?: {
+    pageSizeKey?: string
+    pageNoKey?: string
+    responseKey?: string // 例如 'data.data.result'
+    listsKey?: string
+    totalKey?: string
+  }
   emptyElement?: Component
 }
 
