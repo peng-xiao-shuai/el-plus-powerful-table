@@ -1,6 +1,7 @@
 import { ElMessage, ElMessageBox, useGlobalConfig } from 'element-plus/es'
 import { deepClone } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
+import type { ElTable } from 'element-plus/es'
 import type { FDatePicker, FInput, FSelect } from '../../filter'
 import type { PropType } from 'vue'
 import type {
@@ -204,7 +205,7 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
   const injectProps = inject(PowerfulTableSymbol, {})
 
   /* ----- 组件实例 ----- */
-  const multipleTable = ref<any>(null)
+  const multipleTable = ref<InstanceType<typeof ElTable> | null>(null)
   const filterComponents: FilterComponents = ref(null)
 
   /* ------  表格数据  ------ */
