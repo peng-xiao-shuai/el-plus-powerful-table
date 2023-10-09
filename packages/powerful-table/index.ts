@@ -9,4 +9,5 @@ export const PowerfulTable = powerful as import('@/index').SFCWithInstall<
   typeof powerful
 >
 
+export { powerful }
 export default PowerfulTable

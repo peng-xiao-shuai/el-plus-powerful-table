@@ -275,13 +275,7 @@
       </div>
 
       <!-- 分页操作 -->
-      <div
-        v-if="
-          isPagination &&
-          (paginationProperty?.total || paginationProperty?.pageCount)
-        "
-        class="bottom-operate-right"
-      >
+      <div v-if="isPagination && total" class="bottom-operate-right">
         <ElPagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
@@ -290,6 +284,7 @@
             pageSizes: [10, 20, 30],
             layout: 'total, sizes, prev, pager, next',
             ...(paginationProperty || {}),
+            total: paginationProperty?.pageCount ? undefined : total,
           }"
         />
       </div>
@@ -306,6 +301,7 @@ import {
   EmitEnum,
   powerfulTableProps,
   useFunction,
+  useInitiateListRequest,
   usePowerfulTableStates,
 } from './powerful-table-data'
 import type {
@@ -394,6 +390,13 @@ const { handleHeaderFilterChange, getPropObj } = useFilters<Row>(
   filterComponents
 )
 
+const { resetList, getListData } = useInitiateListRequest<Row>(
+  powerfulTableData,
+  props,
+  injectProps,
+  stateData
+)
+
 /* ------  操作方法  ------ */
 const {
   handleSelectionChange,
@@ -401,12 +404,13 @@ const {
   componentEmit,
   sortChange,
   batchOperate,
+  get,
   matchComponents,
   bindAttr,
-} = useFunction<Row>(emit, powerfulTableData, filterComponents)
+} = useFunction<Row>(emit, powerfulTableData)
 
 const { tableLists, isTable } = toRefs(stateData)
-const { listLoading, currentPage, pageSize, currentSelect, operate } =
+const { listLoading, currentPage, pageSize, currentSelect, operate, total } =
   toRefs(powerfulTableData)
 
 /* ------ 注入数据 ------ */
@@ -435,6 +439,24 @@ watch(
   {
     immediate: true,
     deep: true,
+  }
+)
+
+watch(
+  () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
+  () => {
+    // 切换页面清除表头选中
+    if (Array.isArray(filterComponents.value)) {
+      filterComponents.value.forEach((item: any) => {
+        item.state.value = ''
+      })
+    }
+
+    if (props.listRequest?.listApi) {
+      getListData?.()
+    }
+
+    get()
   }
 )
 
@@ -524,6 +546,8 @@ defineExpose({
   headerLists,
   powerfulTableData,
   stateData,
+  resetList,
+  getListData,
   handleSelectionChange,
   anewRender,
 })

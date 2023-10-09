@@ -7,6 +7,7 @@ import type {
   ComponentEvent,
   EmitEventType,
   EmitType,
+  InjectProps,
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
   PowerfulTableOperateData,
@@ -124,6 +125,11 @@ export const powerfulTableProps = {
     type: Object as PropType<PowerfulTableProps<DefaultRow>['property']>,
     default: () => ({}),
   },
+
+  listRequest: {
+    type: Object as PropType<PowerfulTableProps<DefaultRow>['listRequest']>,
+    default: undefined,
+  },
 }
 
 export const powerfulTableComponentProp = {
@@ -184,6 +190,7 @@ interface PowerfulTableData<L = DefaultRow> {
   currentSelect: PowerfulTableProps<L>['list']
   otherSelect: PowerfulTableProps<L>['list']
   operate: PowerfulTableOperateData
+  total: number
 }
 
 interface StateData<L = DefaultRow> {
@@ -219,6 +226,8 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
       style: undefined,
       operates: [],
     },
+
+    total: props.paginationProperty?.total || 0,
   })
 
   // 组件参数
@@ -228,14 +237,16 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
     isTable: true,
   })
 
-  // 为表格数据重新赋值
-  watch(
-    () => props.list as L[],
-    (newList) => {
-      stateData.tableLists = newList || []
-    },
-    { immediate: true, deep: true }
-  )
+  // 为表格数据重新赋值。listApi 存在时 tableLists 由 useInitiateListRequest 函数中处理
+  if (typeof props.listRequest?.listApi !== 'function') {
+    watch(
+      () => props.list as L[],
+      (newList) => {
+        stateData.tableLists = newList || []
+      },
+      { immediate: true, deep: true }
+    )
+  }
 
   return {
     Size: props.size || useGlobalConfig()?.value?.size,
@@ -249,24 +260,9 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
 
 export const useFunction = <L>(
   emit: EmitEventType<L>,
-  powerfulTableData: PowerfulTableData<L>,
-  filterComponents: FilterComponents
+  powerfulTableData: PowerfulTableData<L>
 ) => {
   const { proxy } = getCurrentInstance() as any
-
-  watch(
-    () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
-    () => {
-      // 切换页面清除表头选中
-      if (Array.isArray(filterComponents.value)) {
-        filterComponents.value.forEach((item: any) => {
-          item.state.value = ''
-        })
-      }
-
-      get()
-    }
-  )
 
   /**
    * 排序方法
@@ -434,6 +430,81 @@ export const useFunction = <L>(
           'center',
       }
     },
+  }
+}
+
+export const useInitiateListRequest = <L>(
+  powerfulTableData: PowerfulTableData<L>,
+  props: PowerfulTableProps<L>,
+  injectProps: InjectProps,
+  stateData: StateData<L>
+) => {
+  const resolution = (data: object, key: string) => {
+    const keys = key.split('.')
+    let rtn: { [s: string]: any } = data
+    keys.forEach((key) => {
+      rtn = rtn[key]
+    })
+
+    return rtn
+  }
+  // 重置列表，将pageNo 改为 1，其余条件不变
+  let resetList: () => void
+
+  // 发起请求
+  let getListData: () => void
+
+  if (typeof props.listRequest?.listApi === 'function') {
+    getListData = () => {
+      // 获取 key 值
+      const [pageNoKey, pageSizeKey, responseKey, totalKey, listsKey] = [
+        props.listRequest?.pageNoKey ||
+          injectProps.listRequest?.pageNoKey ||
+          'pageNo',
+        props.listRequest?.pageSizeKey ||
+          injectProps.listRequest?.pageSizeKey ||
+          'pageSize',
+        props.listRequest?.responseKey ||
+          injectProps.listRequest?.responseKey ||
+          'data.data.result',
+        props.listRequest?.totalKey ||
+          injectProps.listRequest?.totalKey ||
+          'total',
+        props.listRequest?.listsKey ||
+          injectProps.listRequest?.listsKey ||
+          'lists',
+      ]
+
+      props.listRequest
+        ?.listApi({
+          ...(props.listRequest.listQuery || {}),
+          [pageNoKey]: powerfulTableData.currentPage,
+          [pageSizeKey]: powerfulTableData.pageSize,
+        })
+        .then((res: any) => {
+          const response = resolution(res, responseKey)
+          stateData.tableLists = response[listsKey]
+          powerfulTableData.total = response[totalKey]
+        })
+    }
+
+    resetList = () => {
+      powerfulTableData.currentPage = 1
+
+      getListData()
+    }
+
+    getListData()
+
+    return {
+      resetList,
+      getListData,
+    }
+  }
+
+  return {
+    resetList: undefined,
+    getListData: undefined,
   }
 }
 
