@@ -461,7 +461,9 @@ watch(
 )
 
 /* --- 按钮组件参数及方法begin --- */
-// 过滤被隐藏的列
+/**
+ * 过滤被隐藏的列
+ */
 const headerLists = computed(() => {
   return props.header.filter((column) =>
     typeof column.defaultShow == 'boolean' ? column.defaultShow : true
