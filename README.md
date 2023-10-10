@@ -1,4 +1,4 @@
-## [DEMO](https://peng-xiao-shuai.github.io/el-plus-powerful-table/)
+## [DEMO](https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component/powerful-table-demo.html)
 
 ## [DOCS](https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component/powerful-table-doc.html)
 
@@ -12,16 +12,18 @@
 此插件已 `el-plus-powerful-table` 作为基础，进行重构。部分功能将领先 `el-plus-powerful-table` 基础版本。
 `el-plus-powerful-table` 的 `ts` 版本
 
-vue3.0 的 element-plus 二次开发表格组件
+`vue3.0` 的 `element-plus` 二次开发表格组件
 
 ## 简要
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
-## 2.1.16 20231005
+## 2.2.0 20231005
 - 新增 `type = 'btn'` 时，添加 `click` 属性，需要注意的事，存在 `click` 属性时将不会触发 `beforeClick` 属性
 - 优化了内部组件 `button` 文件中的 `class` 由原来的 `class={item.text ? '' : 'no-margin'}` 改成空。
 - 新增全局组件注入 `emptyElement`
+- 新增全局组件注入 `listRequest`，以及在 `Props` 属性上添加。
+- 组件添加暴露数据，类型为 `PowerfulTableExpose`
 
 ## 2.1.15 20230315
 
