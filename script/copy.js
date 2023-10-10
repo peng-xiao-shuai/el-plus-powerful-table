@@ -13,8 +13,8 @@ const OriginFilePath = [
   },
 ]
 const CopyFilePath = [
-  ['lib/es/typings', 'lib/cjs/typings'],
-  ['lib/es/global.d.ts', 'lib/cjs/global.d.ts'],
+  ['es/typings', 'lib/typings'],
+  ['es/global.d.ts', 'lib/global.d.ts'],
 ]
 
 function getFiles(OriginFilePath, CopyFilePath) {

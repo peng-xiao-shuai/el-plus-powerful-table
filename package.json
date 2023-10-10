@@ -47,7 +47,7 @@
   "scripts": {
     "dev": "vite --force",
     "tsc": "vue-tsc --noEmit",
-    "lib": "rimraf ./lib ./es && vite build --mode lib",
+    "lib": "rimraf ./lib ./es && vite build --mode lib && esno ./script/copy.js ",
     "gitBuild": "vite build --base=/el-plus-powerful-table/"
   },
   "peerDependencies": {
