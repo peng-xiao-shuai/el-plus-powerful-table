@@ -56,15 +56,11 @@ export default defineConfig(({ mode }) => {
     common.plugins = [
       ...common.plugins,
       dts({
-        entryRoot: '.',
-        noEmitOnError: true,
-        skipDiagnostics: false,
-        outputDir: [resolve(__dirname, './es'), resolve(__dirname, './lib')],
+        entryRoot: './packages',
+        outDir: [resolve(__dirname, './es'), resolve(__dirname, './lib')],
         //指定使用的tsconfig.json为我们整个项目根目录下掉,如果不配置,你也可以在components下新建tsconfig.json
-        tsConfigFilePath: './tsconfig.json',
-        compilerOptions: {
-          types: [],
-        },
+        tsconfigPath: './tsconfig.json',
+        include: ['typings/**', 'packages/**', 'global.d.ts'],
         beforeWriteFile: (filePath, content) => {
           let upContent = content
             .replace(/'..\/typings/gi, "'./typings")

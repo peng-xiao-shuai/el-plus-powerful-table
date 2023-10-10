@@ -27,7 +27,7 @@
     "types": [
       "@types/node",
       "vite/client",
-      "element-plus/global",
+      "element-plus/global"
     ],
     "lib": [
       "dom",
@@ -40,7 +40,7 @@
     "typings",
     "global.d.ts",
     "auto-imports.d.ts",
-    "components.d.ts",
+    "components.d.ts"
   ],
   "exclude": [
     "dist",
