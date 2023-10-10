@@ -1,8 +1,18 @@
 <template>
   <div class="app-container">
+    <a
+      style="
+        display: block;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      "
+      href="https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component/powerful-table-demo.html"
+      >更多示例</a
+    >
+
     <PowerfulTable
       ref="powerfulTable"
-      :list="list"
       :is-select="true"
       :btn-config="btnConfigs"
       :select-data="selectData"
@@ -10,8 +20,10 @@
       :header="headers"
       :operate-data="operateData"
       :pagination-property="{
-        total: total,
         pageSizes: [2, 5, 7],
+      }"
+      :list-request="{
+        listApi,
       }"
       :tree="{ props: { hasChildren: 'hasChildren', children: 'cd' } }"
       :property="{
@@ -47,7 +59,6 @@
             v-model="engineName"
             size="small"
             placeholder="输入发动机名称"
-            @input="(e) => e.length ? (list = currentList.filter((item: any) => item.engine.indexOf(e) != -1)) : list = currentList"
           />
         </div>
       </template>
@@ -62,18 +73,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { btnConfig, header, lists } from './indexData'
-import type { PowerfulTableOperateData } from '@/index'
+import type { PowerfulTableOperateData, PowerfulTableExpose } from '@/index'
 
 export default defineComponent({
   components: {
     // PTBtnPlus
   },
-  setup(props, context) {
+  setup() {
     const rowA = reactive({ value: {} })
-    const list = ref<any>([])
     const currentList = ref<any>([])
     // 所有页面选中数组
     const selectData = ref([{ a: 1 }, { a: 3 }])
@@ -83,7 +92,7 @@ export default defineComponent({
     const headers = reactive(header)
     const btnConfigs = reactive(btnConfig)
     const total = ref(lists.length)
-    const powerfulTable = ref(null)
+    const powerfulTable = ref<PowerfulTableExpose | null>(null)
     const operateData = reactive<PowerfulTableOperateData>({
       value: '',
       operates: [
@@ -120,14 +129,46 @@ export default defineComponent({
         console.log('page', listQuery, '选中数组', selectData)
       }
       // listLoading.value = true
-      setTimeout(() => {
-        currentList.value = lists.filter((item, index) => {
-          return (
-            index >= (listQuery.pageNum - 1) * listQuery.pageSize &&
-            index < listQuery.pageNum * listQuery.pageSize
-          )
+    }
+
+    const listApi = (params: any) => {
+      console.log(params)
+
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          currentList.value = lists.filter((item, index) => {
+            return (
+              index >= (params.pageNo - 1) * params.pageSize &&
+              index < params.pageNo * params.pageSize
+            )
+          })
+
+          console.log({
+            data: {
+              data: {
+                result: {
+                  rows: currentList.value,
+                  total: lists.length,
+                },
+                message: '成功',
+                code: 200,
+              },
+            },
+          })
+
+          resolve({
+            data: {
+              data: {
+                result: {
+                  rows: currentList.value,
+                  total: lists.length,
+                },
+                message: '成功',
+                code: '200',
+              },
+            },
+          })
         })
-        list.value = currentList.value
       })
     }
 
@@ -178,7 +219,7 @@ export default defineComponent({
     return {
       // 变量
       rowA,
-      list,
+      // list,
       btnConfigs,
       selectData,
       selectCompare,
@@ -191,6 +232,8 @@ export default defineComponent({
       total,
       operateData,
       // 方法
+      listApi,
+
       handlerSort,
       handleComponentEvent,
       getList,

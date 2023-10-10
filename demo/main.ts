@@ -18,5 +18,12 @@ const app = createApp(App)
 app.use(PowerfulTable, {
   locale: langPackages,
   emptyElement: Empty,
+  listRequest: {
+    totalKey: 'total',
+    pageNoKey: 'pageNo',
+    pageSizeKey: 'pageSize',
+    responseKey: 'data.data.result',
+    listsKey: 'rows',
+  },
 })
 app.mount('#app')
