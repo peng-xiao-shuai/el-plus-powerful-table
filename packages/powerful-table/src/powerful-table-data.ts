@@ -11,7 +11,8 @@ import type {
   InjectProps,
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
-  PowerfulTableOperateData,
+  PowerfulTableData,
+  StateData,
   PowerfulTableProps,
   _TYPE,
 } from '@/index'
@@ -183,23 +184,6 @@ export const isProperty = <T, R>(e: T, property?: R | ((e: T) => R)) => {
   return isFish(property) ? property : property!(e)
 }
 
-interface PowerfulTableData<L = DefaultRow> {
-  listLoading: boolean
-  develop: boolean[]
-  currentPage: number
-  pageSize: number
-  currentSelect: PowerfulTableProps<L>['list']
-  otherSelect: PowerfulTableProps<L>['list']
-  operate: PowerfulTableOperateData
-  total: number
-}
-
-interface StateData<L = DefaultRow> {
-  tableLists: PowerfulTableProps<L>['list']
-  isPC: boolean
-  isTable: boolean
-}
-
 export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
   // 全局此组件注入的数据
   const injectProps = inject(PowerfulTableSymbol, {})
@@ -250,7 +234,7 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
   }
 
   return {
-    Size: props.size || useGlobalConfig()?.value?.size,
+    Size: props.size || useGlobalConfig()?.value?.size || 'default',
     multipleTable,
     filterComponents,
     powerfulTableData,

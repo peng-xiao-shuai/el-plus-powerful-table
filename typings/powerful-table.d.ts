@@ -4,6 +4,7 @@ import type {
   CSSProperties,
   Component,
   Plugin,
+  SetupContext,
   VNode,
   VideoHTMLAttributes,
   h as createElement,
@@ -24,23 +25,68 @@ import type {
   TreeNode,
 } from 'element-plus'
 
+export interface PowerfulTableData<Row = any> {
+  listLoading: boolean
+  develop: boolean[]
+  currentPage: number
+  pageSize: number
+  currentSelect: PowerfulTableProps<Row>['list']
+  otherSelect: PowerfulTableProps<Row>['list']
+  operate: PowerfulTableOperateData
+  total: number
+}
+
+export interface StateData<Row = any> {
+  tableLists: PowerfulTableProps<Row>['list']
+  isPC: boolean
+  isTable: boolean
+}
+
 export interface PowerfulTableExpose<Row = any> {
-  $slots: Readonly<InternalSlots>
-  $attrs: Data
+  $slots: SetupContext['slots']
+  $attrs: SetupContext['attrs']
   $refs: {
+    /**
+     * 表格 Ref 实例
+     */
     multipleTable: InstanceType<typeof ElTable>
+    /**
+     * 筛选组件 Ref 实例
+     */
     filterComponents: import('vue').Ref<
       InstanceType<typeof FSelect | typeof FInput | typeof FDatePicker>[] | null
     >
   }
+  /**
+   * 过滤隐藏后的列
+   */
   headerLists: ComputedRef<PowerfulTableHeader<Row>[]>
+  /**
+   * 内置数据也就是 vue2 中的 data
+   */
   powerfulTableData: PowerfulTableData<Row>
+  /**
+   * 状态数据
+   */
   stateData: StateData<Row>
+  /**
+   * 重置数据发送请求
+   */
   resetList: (() => void) | undefined
+  /**
+   * 重新发送请求
+   */
   getListData: (() => void) | undefined
+  /**
+   * 添加选中行
+   */
   handleSelectionChange: (e: Row[]) => void
+  /**
+   * 重新计算表格布局位置
+   */
   anewRender: () => void
 }
+
 /* ------ props ------ */
 export interface PowerfulTableProps<Row = any> {
   list: Row[]
