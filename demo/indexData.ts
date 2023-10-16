@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import { ElMessageBox } from 'element-plus/es'
+import { ElMessageBox, ElMessage } from 'element-plus/es'
 import {
   Delete,
   Edit,
@@ -56,6 +56,7 @@ const btnConfig: BtnConfig.Config<Lists> = {
     },
     {
       effect: 'columns',
+      tip: '列',
       property: {
         icon: markRaw(Grid),
       },
@@ -76,6 +77,9 @@ const btnConfig: BtnConfig.Config<Lists> = {
       operateType: 'single',
       effect: 'edit',
       // showBtn: () => false,
+      click() {
+        ElMessage.success('click 事件触发，非 emit 触发')
+      },
       property: {
         icon: markRaw(Edit),
         type: 'primary',
@@ -105,7 +109,7 @@ const btnConfig: BtnConfig.Config<Lists> = {
   ],
 }
 
-const header: PowerfulTableHeader<Lists>[] = [
+const header: () => PowerfulTableHeader<Lists>[] = () => [
   {
     label: '编号', //显示的标题
     minWidth: '100px', //对应列的最小宽度

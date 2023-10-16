@@ -34,7 +34,7 @@
       @btn-click="handlerUpdate"
       @size-change="getList"
       @btn-plus-change="btnChange"
-      @refresh="handleRefresh"
+      @btn-plus-refresh="handleRefresh"
       @row-click="handleClick"
       @component-event="handleComponentEvent"
     >
@@ -89,7 +89,7 @@ export default defineComponent({
     const selectCompare = reactive(['a', 'id'])
     // let listLoading= ref(true)
     const isSelect = ref(true)
-    const headers = reactive(header)
+    const headers = reactive(header())
     const btnConfigs = reactive(btnConfig)
     const total = ref(lists.length)
     const powerfulTable = ref<PowerfulTableExpose | null>(null)
