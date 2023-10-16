@@ -63,6 +63,14 @@ const PTBtnPlus = defineComponent({
       // proxy.$parent.anewRender()
     }
     const batchOperate = (type: string, btnItem: BtnConfig.BtnList) => {
+      if (typeof btnItem.click === 'function') {
+        btnItem.click({
+          btnItem,
+          rows: props.multipleSelection,
+        })
+        return
+      }
+
       const cb = () => {
         if (type === 'left') {
           emit('change', {
@@ -87,6 +95,7 @@ const PTBtnPlus = defineComponent({
         cb()
         return false
       }
+
       // 是否显示提示
       new Promise((resolve) => {
         btnItem.beforeClick!(
@@ -101,23 +110,27 @@ const PTBtnPlus = defineComponent({
         cb()
       })
     }
-    watch(
-      () => [props.headerList],
-      ([newHeaderList]: any) => {
-        state.headerData = newHeaderList
-        state.headerData.forEach((item) => {
-          item.defaultFilter =
-            typeof item.defaultFilter == 'boolean'
-              ? item.defaultFilter
-              : item.isShowOrFilterColumn == 'filter'
-          item.defaultShow =
-            typeof item.defaultShow == 'undefined' ? true : item.defaultShow
-        })
+    const stop = watch(
+      () => props.headerList,
+      (newHeaderList) => {
+        if (newHeaderList) {
+          state.headerData = newHeaderList
+          state.headerData.forEach((item) => {
+            item.defaultFilter =
+              typeof item.defaultFilter == 'boolean'
+                ? item.defaultFilter
+                : item.isShowOrFilterColumn == 'filter'
+            item.defaultShow =
+              typeof item.defaultShow == 'undefined' ? true : item.defaultShow
+          })
+        }
       },
       { immediate: true, deep: true }
     )
 
-    // 判断是否弹出提示
+    /**
+     * 判断是否弹出提示
+     */
     const tipBtnNode = (
       item: BtnConfig.BtnList,
       key: string | number,
@@ -150,7 +163,9 @@ const PTBtnPlus = defineComponent({
       )
     }
 
-    // 过滤按钮数组
+    /**
+     * 过滤按钮数组
+     */
     const filterButtons = (buttons?: BtnConfig.BtnList[]) => {
       return buttons
         ? buttons.filter((item) =>
@@ -163,7 +178,9 @@ const PTBtnPlus = defineComponent({
         : []
     }
 
-    // 气泡框渲染函数
+    /**
+     * 气泡框渲染函数
+     */
     const popoverSlots = (item: BtnConfig.BtnList, index: number) => {
       return {
         default: () => (
@@ -214,11 +231,13 @@ const PTBtnPlus = defineComponent({
             </ElScrollbar>
           </div>
         ),
-        reference: () => tipBtnNode(item, index),
+        reference: () => <div>{tipBtnNode(item, index)}</div>,
       }
     }
 
-    // 右侧按钮渲染
+    /**
+     * 右侧按钮渲染
+     */
     const rightBtnRender = () => {
       return filterButtons(props.btnConfig?.btnRightList).map((item, index) => {
         switch (item.effect) {
@@ -238,6 +257,10 @@ const PTBtnPlus = defineComponent({
         }
       })
     }
+
+    onBeforeUnmount(() => {
+      stop()
+    })
 
     return () => (
       <>

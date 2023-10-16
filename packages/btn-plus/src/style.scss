@@ -10,6 +10,7 @@
     align-content: center;
     .filter-item {
       align-self: end;
+      display: flex;
     }
   }
   & .el-popover-menu {
