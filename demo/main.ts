@@ -22,7 +22,7 @@ app.use(PowerfulTable, {
     totalKey: 'total',
     pageNoKey: 'pageNo',
     pageSizeKey: 'pageSize',
-    responseKey: 'data.data.result',
+    responseKey: 'data.result',
     listsKey: 'rows',
   },
 })

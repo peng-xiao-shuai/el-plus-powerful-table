@@ -128,44 +128,35 @@ export default defineComponent({
         ElMessage.success('切换页面操作，参数详情，查看控制台')
         console.log('page', listQuery, '选中数组', selectData)
       }
+
+      listApi({
+        pageNo: 1,
+        pageSize: 2,
+      }).then((res: any) => {
+        currentList.value = res.result.rows
+      })
       // listLoading.value = true
     }
 
-    const listApi = (params: any) => {
+    const listApi = (params?: any) => {
       console.log(params)
 
       return new Promise((resolve) => {
         setTimeout(() => {
-          currentList.value = lists.filter((item, index) => {
+          const rows = lists.filter((item, index) => {
             return (
               index >= (params.pageNo - 1) * params.pageSize &&
               index < params.pageNo * params.pageSize
             )
           })
-
-          console.log({
-            data: {
-              data: {
-                result: {
-                  rows: currentList.value,
-                  total: lists.length,
-                },
-                message: '成功',
-                code: 200,
-              },
-            },
-          })
-
           resolve({
             data: {
-              data: {
-                result: {
-                  rows: currentList.value,
-                  total: lists.length,
-                },
-                message: '成功',
-                code: '200',
+              result: {
+                rows: rows,
+                total: lists.length,
               },
+              message: '成功',
+              code: '200',
             },
           })
         })
