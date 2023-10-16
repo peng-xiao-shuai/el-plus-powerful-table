@@ -18,6 +18,10 @@
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.2.2 20231016
+- 更改 `list-request.responseKey` 属性默认值 `'data.data.result'` 为 `'data.result'`
+- 更改 `list-request.listsKey` 属性默认值 `'lists'` 为 `'rows'`
+
 ## 2.2.1 20231016
 - `BtnList` 补充 `click` 属性
 - 组件销毁前清除监听事件
