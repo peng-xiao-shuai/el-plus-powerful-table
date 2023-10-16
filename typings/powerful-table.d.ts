@@ -6,6 +6,7 @@ import type {
   Plugin,
   SetupContext,
   VNode,
+  WatchStopHandle,
   VideoHTMLAttributes,
   h as createElement,
 } from 'vue'
@@ -30,6 +31,7 @@ export interface PowerfulTableData<Row = any> {
   develop: boolean[]
   currentPage: number
   pageSize: number
+  watchCache: WatchStopHandle[]
   currentSelect: PowerfulTableProps<Row>['list']
   otherSelect: PowerfulTableProps<Row>['list']
   operate: PowerfulTableOperateData
@@ -349,6 +351,7 @@ export namespace BtnConfig {
     tip?: string
     effect?: string
     showBtn?: (() => boolean) | boolean
+    click?: ({ btnItem, rows }: { btnItem: BtnList; rows: Row }) => void
     beforeClick?: (
       {
         btnItem,
