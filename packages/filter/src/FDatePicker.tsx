@@ -28,10 +28,14 @@ const FDatePicker = defineComponent({
       emit('headerFilterChange', value, props.headerData)
     }
 
-    watchEffect(() => {
+    const stop = watchEffect(() => {
       if (props.list.length && state.value?.length) {
         datePickerChange(state.value)
       }
+    })
+
+    onBeforeUnmount(() => {
+      stop()
     })
 
     // 暴露状态

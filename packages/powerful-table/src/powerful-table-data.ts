@@ -202,6 +202,8 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
       : 10, //一页多少条
     currentSelect: [], // 当前页选中
     otherSelect: [], // 其他页选中
+    // 存储 watch 返回
+    watchCache: [],
     operate: {
       // 承载props的operateData
       value: undefined,
@@ -224,14 +226,21 @@ export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
 
   // 为表格数据重新赋值。listApi 存在时 tableLists 由 useInitiateListRequest 函数中处理
   if (typeof props.listRequest?.listApi !== 'function') {
-    watch(
-      () => props.list as L[],
-      (newList) => {
-        stateData.tableLists = newList || []
-      },
-      { immediate: true, deep: true }
+    powerfulTableData.watchCache.push(
+      watch(
+        () => props.list as L[],
+        (newList) => {
+          stateData.tableLists = newList || []
+        },
+        { immediate: true, deep: true }
+      )
     )
   }
+
+  onBeforeUnmount(() => {
+    // 清除监听事件
+    powerfulTableData.watchCache.forEach((item) => item())
+  })
 
   return {
     Size: props.size || useGlobalConfig()?.value?.size || 'default',

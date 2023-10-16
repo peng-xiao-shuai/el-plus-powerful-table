@@ -56,7 +56,7 @@ const FSelect = defineComponent({
       emit('headerFilterChange', val, props.headerData)
     }
 
-    watch(
+    const stop = watch(
       () => props.propData,
       (newProps) => {
         // 首先判断是否存在filter属性
@@ -99,6 +99,10 @@ const FSelect = defineComponent({
     expose({
       state,
       header: props.headerData,
+    })
+
+    onBeforeUnmount(() => {
+      stop()
     })
 
     return () => (

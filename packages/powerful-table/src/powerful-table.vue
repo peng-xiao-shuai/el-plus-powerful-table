@@ -419,45 +419,50 @@ provide(SizeSymbol, Size)
 // 单元格内布局
 provide(JustifyFunSymbol, justifyFun)
 
-watchEffect(() => {
-  Object.assign(powerfulTableData.operate, props.operateData)
+powerfulTableData.watchCache.push(
+  watchEffect(() => {
+    Object.assign(powerfulTableData.operate, props.operateData)
 
-  // list数据有的话 关闭加载中...
-  // 更具当前list 数据 添加develop
-  powerfulTableData.develop = Array.from<boolean>({
-    length: stateData.tableLists.length,
-  }).fill(false)
-  powerfulTableData.listLoading = false
-})
-
+    // list数据有的话 关闭加载中...
+    // 更具当前list 数据 添加develop
+    powerfulTableData.develop = Array.from<boolean>({
+      length: stateData.tableLists.length,
+    }).fill(false)
+    powerfulTableData.listLoading = false
+  })
+)
 // 判断列表是否存在数据，存在则查询选中
-watch(
-  () => stateData.tableLists,
-  (val) => {
-    if (val.length) nextTick(() => getSelect())
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
+powerfulTableData.watchCache.push(
+  watch(
+    () => stateData.tableLists,
+    (val) => {
+      if (val.length) nextTick(() => getSelect())
+    },
+    {
+      immediate: true,
+      deep: true,
+    }
+  )
 )
 
-watch(
-  () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
-  () => {
-    // 切换页面清除表头选中
-    if (Array.isArray(filterComponents.value)) {
-      filterComponents.value.forEach((item: any) => {
-        item.state.value = ''
-      })
-    }
+powerfulTableData.watchCache.push(
+  watch(
+    () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
+    () => {
+      // 切换页面清除表头选中
+      if (Array.isArray(filterComponents.value)) {
+        filterComponents.value.forEach((item: any) => {
+          item.state.value = ''
+        })
+      }
 
-    if (props.listRequest?.listApi) {
-      getListData?.()
-    }
+      if (props.listRequest?.listApi) {
+        getListData?.()
+      }
 
-    get()
-  }
+      get()
+    }
+  )
 )
 
 /* --- 按钮组件参数及方法begin --- */

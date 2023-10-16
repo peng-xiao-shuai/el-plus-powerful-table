@@ -138,6 +138,10 @@
   .el-pagination {
     width: auto;
   }
+
+  :focus-visible {
+    outline: none;
+  }
 }
 
 @keyframes ArrowUp {
