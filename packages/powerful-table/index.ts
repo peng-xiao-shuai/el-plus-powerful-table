@@ -5,9 +5,9 @@ import type { App } from 'vue'
 PowerfulTableComponent.install = (app: App): void => {
   app.component(PowerfulTableComponent.name, PowerfulTableComponent)
 }
-const powerfulTable =
+const PowerfulTable =
   PowerfulTableComponent as import('@/index').SFCWithInstall<
     typeof PowerfulTableComponent
   >
 
-export { PowerfulTableComponent, powerfulTable, powerfulTable as default }
+export { PowerfulTableComponent, PowerfulTable, PowerfulTable as default }
