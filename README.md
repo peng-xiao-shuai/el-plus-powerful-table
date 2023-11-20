@@ -18,6 +18,11 @@
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 2.2.3 20231119
+- 更改 `PowerfulTableExpose` 类型为只读
+- - `PowerfulTableExpose` 类型下添加 `props、injectProps`
+- - 修复 `PowerfulTableExpose 类型下 headerLists 类型` 为 `ComputedRef<PowerfulTableHeader<Row>[]>` 但是实际类型为 `PowerfulTableHeader<Row>[]`。更改后类型为 `PowerfulTableHeader<Row>[]`
+
 ## 2.2.2 20231016
 - 更改 `list-request.responseKey` 属性默认值 `'data.data.result'` 为 `'data.result'`
 - 更改 `list-request.listsKey` 属性默认值 `'lists'` 为 `'rows'`

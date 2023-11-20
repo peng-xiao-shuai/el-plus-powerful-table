@@ -10,7 +10,7 @@ import type {
   VideoHTMLAttributes,
   h as createElement,
 } from 'vue'
-import type { FDatePicker, FInput, FSelect } from '../../filter'
+import type { FDatePicker, FInput, FSelect } from '../filter'
 import type {
   ButtonProps,
   ElTooltipProps,
@@ -44,7 +44,7 @@ export interface StateData<Row = any> {
   isTable: boolean
 }
 
-export interface PowerfulTableExpose<Row = any> {
+export type PowerfulTableExpose<Row = any> = Readonly<{
   $slots: SetupContext['slots']
   $attrs: SetupContext['attrs']
   $refs: {
@@ -60,9 +60,17 @@ export interface PowerfulTableExpose<Row = any> {
     >
   }
   /**
+   * 组件 props
+   */
+  props: PowerfulTableProps<Row>
+  /**
+   * 全局注入数据
+   */
+  injectProps: InjectProps
+  /**
    * 过滤隐藏后的列
    */
-  headerLists: ComputedRef<PowerfulTableHeader<Row>[]>
+  headerLists: PowerfulTableHeader<Row>[]
   /**
    * 内置数据也就是 vue2 中的 data
    */
@@ -87,7 +95,7 @@ export interface PowerfulTableExpose<Row = any> {
    * 重新计算表格布局位置
    */
   anewRender: () => void
-}
+}>
 
 /* ------ props ------ */
 export interface PowerfulTableProps<Row = any> {
@@ -107,7 +115,7 @@ export interface PowerfulTableProps<Row = any> {
 
   // 2.1.16
   listRequest?: {
-    listApi: (params: object) => Promise
+    listApi: (params: object) => Promise<any>
     listQuery?: object
     pageSizeKey?: string
     pageNoKey?: string

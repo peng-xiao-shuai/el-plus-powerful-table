@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "private": false,
   "keywords": [
     "element-plus",
@@ -54,7 +54,8 @@
     "vue": "^3.2.0"
   },
   "dependencies": {
-    "@element-plus/icons": "^0.0.11",
+    "@element-plus/icons-vue": "^2.1.0",
+    "el-plus-powerful-table-ts": "^2.2.2",
     "element-plus": "^2.3.14",
     "vue": "^3.3.4"
   },
@@ -65,7 +66,6 @@
   ],
   "devDependencies": {
     "@element-plus/eslint-config": "^0.0.20231008",
-    "@element-plus/icons-vue": "^2.1.0",
     "@types/node": "^20.8.3",
     "@vitejs/plugin-vue": "^4.4.0",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
@@ -77,8 +77,8 @@
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
     "vite": "^4.4.11",
-    "vite-plugin-dts": "^3.6.0",
-    "vue-tsc": "^1.8.18"
+    "vite-plugin-dts": "^3.6.3",
+    "vue-tsc": "^1.8.22"
   },
   "lint-staged": {
     "*.{vue,js,ts,jsx,tsx,md,json}": "eslint --fix"
