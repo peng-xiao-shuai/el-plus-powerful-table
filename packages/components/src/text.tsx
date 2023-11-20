@@ -1,5 +1,5 @@
 import { ElIcon } from 'element-plus'
-import { ArrowDown, ArrowUp } from '@element-plus/icons'
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import type { App } from 'vue'
 import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
 import {
