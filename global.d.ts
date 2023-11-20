@@ -1,4 +1,6 @@
-declare module '@vue/runtime-core' {
+export {}
+
+declare module 'vue' {
   export interface GlobalComponents {
     PTImage: typeof import('el-plus-powerful-table-ts/es')['PTImage']
     PTButton: typeof import('el-plus-powerful-table-ts/es')['PTButton']
@@ -19,5 +21,3 @@ declare module '@vue/runtime-core' {
     PowerfulTable: typeof import('el-plus-powerful-table-ts/es')['PowerfulTable']
   }
 }
-
-export {}

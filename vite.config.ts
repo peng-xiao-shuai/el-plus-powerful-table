@@ -60,7 +60,13 @@ export default defineConfig(({ mode }) => {
         outDir: [resolve(__dirname, './es'), resolve(__dirname, './lib')],
         //指定使用的tsconfig.json为我们整个项目根目录下掉,如果不配置,你也可以在components下新建tsconfig.json
         tsconfigPath: './tsconfig.json',
-        include: ['typings/**', 'packages/**', 'global.d.ts'],
+        include: [
+          'packages',
+          'typings',
+          'global.d.ts',
+          'auto-imports.d.ts',
+          'components.d.ts',
+        ],
         beforeWriteFile: (filePath, content) => {
           let upContent = content
             .replace(/'..\/typings/gi, "'./typings")

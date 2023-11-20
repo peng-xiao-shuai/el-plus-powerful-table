@@ -11,10 +11,15 @@ const OriginFilePath = [
     path: 'global.d.ts',
     isFile: true,
   },
+  {
+    path: 'auto-imports.d.ts',
+    isFile: true,
+  },
 ]
 const CopyFilePath = [
   ['es/typings', 'lib/typings'],
   ['es/global.d.ts', 'lib/global.d.ts'],
+  ['es/auto-imports.d.ts', 'lib/auto-imports.d.ts'],
 ]
 
 function getFiles(OriginFilePath, CopyFilePath) {

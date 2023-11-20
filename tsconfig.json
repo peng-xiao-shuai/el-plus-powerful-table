@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "skipLibCheck": true,
+    "noEmit": true,
     "paths": {
       // 避免dts构建TS报错
       "element-plus": [
