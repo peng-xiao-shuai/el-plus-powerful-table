@@ -133,7 +133,7 @@ export default defineComponent({
         pageNo: 1,
         pageSize: 2,
       }).then((res: any) => {
-        currentList.value = res.result.rows
+        currentList.value = res.data.result.rows
       })
       // listLoading.value = true
     }
