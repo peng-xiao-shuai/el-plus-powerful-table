@@ -21,12 +21,12 @@ const Tags = defineComponent({
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const size = inject(SizeSymbol)
-    const { REmit } = useREmit(
+    const { REmit, event } = useREmit<'tag'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'tag',
       {
         row: props.row,
-        index: props.index,
+        index: props.index!,
         props: props.prop,
       }
     )
@@ -61,16 +61,20 @@ const Tags = defineComponent({
                 props.prop.data?.color(props.row, tag)) ||
               ''
             }
-            onClick={(event: Event) => {
-              event.stopPropagation()
+            onClick={(evt: Event) => {
+              evt.stopPropagation()
               REmit('click', {
                 row: props.row,
                 index: props.index,
                 prop: props.prop.prop,
-                event,
+                evt,
               })
+              event('click', evt)
             }}
-            onClose={(...arg: any) => REmit('close', ...arg)}
+            onClose={(...arg: any) => {
+              REmit('close', ...arg)
+              event('close', ...arg)
+            }}
             {...isProperty(
               { row: props.row, index: props.index!, props: props.prop },
               props.prop.data?.property

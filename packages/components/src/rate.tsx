@@ -20,12 +20,12 @@ const Rate = defineComponent({
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const size = inject(SizeSymbol)
-    const { REmit } = useREmit(
+    const { REmit, event } = useREmit<'rate'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'rate',
       {
         row: props.row,
-        index: props.index,
+        index: props.index!,
         props: props.prop,
       }
     )
@@ -37,7 +37,10 @@ const Rate = defineComponent({
           v-model={props.row[props.prop.prop]}
           disabled={true}
           style={props.prop.data?.style || {}}
-          onChange={(...arg: any) => REmit('change', ...arg)}
+          onChange={(...arg: any) => {
+            REmit('change', ...arg)
+            event('change', ...arg)
+          }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
             props.prop.data?.property

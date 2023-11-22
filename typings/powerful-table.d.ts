@@ -1,4 +1,4 @@
-import type { ElTable } from 'element-plus/es'
+import type { ElTable, InputInstance } from 'element-plus/es'
 import type { EmitEnum } from '../powerful-table/src/powerful-table-data'
 import type {
   CSSProperties,
@@ -216,6 +216,8 @@ export type _TYPE<Row = any> = {
   textarea: InputDataType<Row>
 }
 
+export type EventType = Exclude<keyof _TYPE, 'slot' | 'btn' | 'href'>
+
 export type PowerfulTableFilter = {
   key: string | number
   value: string
@@ -233,9 +235,18 @@ type ElComponentProp<T extends keyof _TYPE, P = any, Row = any> =
       props: PowerfulTableHeaderProps<T, Row>
     }) => Partial<P>)
 
+export type OnEmit<T> = Partial<{
+  click: ({ props, index, row }: T, ...arg: any) => void
+}>
+
 export type TextDataType<Row = any> = {
   line?: number
   develop?: boolean
+  on?: OnEmit<{
+    props: PowerfulTableHeaderProps<'text'>
+    index: number
+    row: Row
+  }>
   formatting?: ({
     row,
     index,
@@ -247,8 +258,20 @@ export type TextDataType<Row = any> = {
   }) => string | number
 }
 
+export type ImageEmit<T> = {
+  load?: ({ props, index, row }: T, ...arg: any) => void
+  error?: ({ props, index, row }: T, ...arg: any) => void
+  switch?: ({ props, index, row }: T, ...arg: any) => void
+  close?: ({ props, index, row }: T, ...arg: any) => void
+  show?: ({ props, index, row }: T, ...arg: any) => void
+}
 export type ImageDataType<Row = any> = {
   style: CSSProperties
+  on?: ImageEmit<{
+    props: PowerfulTableHeaderProps<'image'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'image', ImageProps, Row>
 }
 
@@ -290,30 +313,72 @@ export type BtnDataType<Row = any> = {
   property?: ElComponentProp<'btn', ButtonProps, Row>
 }
 
+export type SwitchEmit<T> = {
+  change?: ({ props, index, row }: T, ...arg: any) => void
+}
 export type SwitchDataType<Row = any> = {
   style?: CSSProperties
+  on?: SwitchEmit<{
+    props: PowerfulTableHeaderProps<'switch'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'switch', SwitchProps, Row>
 }
 
+export type InputEmit<T> = {
+  blur?: ({ props, index, row }: T, ...arg: any) => void
+  change?: ({ props, index, row }: T, ...arg: any) => void
+  input?: ({ props, index, row }: T, ...arg: any) => void
+  focus?: ({ props, index, row }: T, ...arg: any) => void
+  clear?: ({ props, index, row }: T, ...arg: any) => void
+}
 export type InputDataType<Row = any> = {
   symbol?: string
   style?: CSSProperties
   slot?: 'prepend' | 'append' | 'prefix' | 'suffix'
+  on?: InputEmit<{
+    props: PowerfulTableHeaderProps<'input'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'input', InputProps, Row>
 }
 
+export type VideoEmit<T> = {
+  play?: ({ props, index, row }: T, ...arg: any) => void
+  pause?: ({ props, index, row }: T, ...arg: any) => void
+}
 export type VideoDataType<Row = any> = {
   style?: CSSProperties
+  on?: VideoEmit<{
+    props: PowerfulTableHeaderProps<'video'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'video', VideoHTMLAttributes, Row>
 }
 
 export type IconFontDataType = {
   class?: string[] | string
+  on?: OnEmit<{
+    props: PowerfulTableHeaderProps<'iconfont'>
+    index: number
+    row: Row
+  }>
   style?: CSSProperties
 }
 
+export type RateEmit<T> = {
+  change?: ({ props, index, row }: T, ...arg: any) => void
+}
 export type RateDataType<Row = any> = {
   style?: CSSProperties
+  on?: RateEmit<{
+    props: PowerfulTableHeaderProps<'rate'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'rate', RateProps, Row>
 }
 
@@ -321,13 +386,27 @@ export type LinkDataType<Row = any> = {
   target?: '_self' | '_blank' | '_parent' | '_top'
   style?: CSSProperties
   text?: string | ((row: Row) => string)
+  on?: OnEmit<{
+    props: PowerfulTableHeaderProps<'href'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'href', LinkProps, Row>
 }
 
+export type TagEmit<T> = {
+  click?: ({ props, index, row }: T, ...arg: any) => void
+  close?: ({ props, index, row }: T, ...arg: any) => void
+}
 export type TagDataType<Row = any> = {
   style?: CSSProperties
   color?: (row: Row, tag: string) => string
   number?: number
+  on?: TagEmit<{
+    props: PowerfulTableHeaderProps<'tag'>
+    index: number
+    row: Row
+  }>
   property?: ElComponentProp<'tag', TagProps, Row>
 }
 

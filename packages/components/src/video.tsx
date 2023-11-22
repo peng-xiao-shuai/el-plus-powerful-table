@@ -17,12 +17,12 @@ const Video = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const { REmit } = useREmit(
+    const { REmit, event } = useREmit<'video'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'video',
       {
         row: props.row,
-        index: props.index,
+        index: props.index!,
         props: props.prop,
       }
     )
@@ -36,21 +36,23 @@ const Video = defineComponent({
             loop={false}
             class="avatar video-avatar"
             controls={true}
-            onPlay={(event: Event) => {
+            onPlay={(evt: Event) => {
               REmit('play', {
                 row: props.row,
                 index: props.index,
                 prop: props.prop.prop,
-                event,
+                evt,
               })
+              event('play', evt)
             }}
-            onPause={(event: Event) => {
+            onPause={(evt: Event) => {
               REmit('pause', {
                 row: props.row,
                 index: props.index,
                 prop: props.prop.prop,
-                event,
+                evt,
               })
+              event('pause', evt)
             }}
             {...isProperty(
               { row: props.row, index: props.index!, props: props.prop },

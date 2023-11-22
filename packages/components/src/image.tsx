@@ -18,12 +18,12 @@ const Image = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const { REmit } = useREmit(
+    const { REmit, event } = useREmit<'image'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'image',
       {
         row: props.row,
-        index: props.index,
+        index: props.index!,
         props: props.prop,
       }
     )
@@ -37,10 +37,22 @@ const Image = defineComponent({
           fit={'cover'}
           preview-teleported={true}
           style={props.prop.data?.style}
-          onLoad={(...arg: any) => REmit('load', ...arg)}
-          onError={(...arg: any) => REmit('error', ...arg)}
-          onSwitch={(...arg: any) => REmit('switch', ...arg)}
-          onClose={(...arg: any) => REmit('close', ...arg)}
+          onLoad={(...arg: any) => {
+            REmit('load', ...arg)
+            event('load', ...arg)
+          }}
+          onError={(...arg: any) => {
+            REmit('error', ...arg)
+            event('error', ...arg)
+          }}
+          onSwitch={(...arg: any) => {
+            REmit('switch', ...arg)
+            event('switch', ...arg)
+          }}
+          onClose={(...arg: any) => {
+            REmit('close', ...arg)
+            event('close', ...arg)
+          }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
             props.prop.data?.property

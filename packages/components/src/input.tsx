@@ -20,12 +20,12 @@ const Input = defineComponent({
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const size = inject(SizeSymbol)
-    const { REmit } = useREmit(
+    const { REmit, event } = useREmit<'input'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'input',
       {
         row: props.row,
-        index: props.index,
+        index: props.index!,
         props: props.prop,
       }
     )
@@ -43,11 +43,26 @@ const Input = defineComponent({
           style={props.prop.data?.style || {}}
           size={size}
           v-model={props.row[props.prop.prop]}
-          onBlur={(...arg: any) => REmit('blur', ...arg)}
-          onFocus={(...arg: any) => REmit('focus', ...arg)}
-          onChange={(...arg: any) => REmit('change', ...arg)}
-          onInput={(...arg: any) => REmit('input', ...arg)}
-          onClear={(...arg: any) => REmit('clear', ...arg)}
+          onBlur={(...arg: any) => {
+            REmit('blur', ...arg)
+            event('blur', ...arg)
+          }}
+          onFocus={(...arg: any) => {
+            REmit('focus', ...arg)
+            event('focus', ...arg)
+          }}
+          onChange={(...arg: any) => {
+            REmit('change', ...arg)
+            event('change', ...arg)
+          }}
+          onInput={(...arg: any) => {
+            REmit('input', ...arg)
+            event('input', ...arg)
+          }}
+          onClear={(...arg: any) => {
+            REmit('clear', ...arg)
+            event('clear', ...arg)
+          }}
           {...{
             rows: 3,
             ...isProperty(

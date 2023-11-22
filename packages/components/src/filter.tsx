@@ -28,20 +28,21 @@ const Filter = defineComponent({
   },
   emits: ['component-emit'],
   setup(props, { emit }) {
-    const { REmit } = useREmit(emit, 'filter', {
+    const { REmit, event } = useREmit<'text'>(emit, 'filter', {
       row: props.row,
-      index: props.index,
+      index: props.index!,
       props: props.prop,
     })
 
     return () => (
       <>
         <div
-          onClick={(event: Event) => {
-            event.stopPropagation()
+          onClick={(evt: Event) => {
+            evt.stopPropagation()
             REmit('click', {
-              event,
+              evt,
             })
+            event('click', evt)
           }}
         >
           {typeof props.prop.filters == 'function'

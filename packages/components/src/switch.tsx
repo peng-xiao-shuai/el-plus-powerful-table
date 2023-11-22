@@ -20,12 +20,12 @@ const Switch = defineComponent({
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
     const size = inject(SizeSymbol)
-    const { REmit } = useREmit(
+    const { REmit, event } = useREmit<'switch'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'switch',
       {
         row: props.row,
-        index: props.index,
+        index: props.index!,
         props: props.prop,
       }
     )
@@ -38,7 +38,10 @@ const Switch = defineComponent({
           v-model={props.row[props.prop.prop]}
           active-value={'1'}
           inactive-value={'0'}
-          onChange={(...arg: any) => REmit('change', ...arg)}
+          onChange={(...arg: any) => {
+            REmit('change', ...arg)
+            event('change', ...arg)
+          }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
             props.prop.data?.property

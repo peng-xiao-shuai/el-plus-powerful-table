@@ -1,5 +1,5 @@
 import { ElMessage, ElMessageBox, useGlobalConfig } from 'element-plus/es'
-import { deepClone } from '../../index'
+import { deepClone, isTypeProtect } from '../../index'
 import { PowerfulTableSymbol } from '../../keys'
 import type { ElTable } from 'element-plus/es'
 import type { FDatePicker, FInput, FSelect } from '../../filter'
@@ -15,6 +15,8 @@ import type {
   StateData,
   PowerfulTableProps,
   _TYPE,
+  SetDataType,
+  EventType,
 } from '@/index'
 import { LangKey, t } from '~/locale/lang'
 // console.log(PTFDatePicker, PTFInput, PTFSelect)
@@ -148,14 +150,24 @@ export const powerfulTableComponentProp = {
   },
 }
 
+// 对部分支持函数的 property 参数进行判断返回
+export const isProperty = <T, R>(e: T, property?: R | ((e: T) => R)) => {
+  return isTypeProtect<typeof property, R>(
+    property,
+    (pet) => typeof (<R>pet) != 'function'
+  )
+    ? property
+    : property!(e)
+}
+
 // 附属组件自定义事件抛出
-export const useREmit = (
+export const useREmit = <T extends EventType>(
   emit: (s: 'component-emit', event: ComponentEvent, ...arg: any) => void,
-  componentName: keyof _TYPE | 'filter',
+  componentName: EventType | 'filter',
   props: {
     row: any
-    index?: number
-    props: PowerfulTableHeaderProps<any>[] | PowerfulTableHeaderProps<any>
+    index: number
+    props: PowerfulTableHeaderProps<Exclude<typeof componentName, 'filter'>>
   }
 ) => {
   const REmit = (eventType: string, ...arg: any) => {
@@ -170,18 +182,27 @@ export const useREmit = (
     )
   }
 
+  const event = (
+    eventType: keyof NonNullable<SetDataType<T>['on']>,
+    ...arg: any
+  ) => {
+    if (
+      isTypeProtect<SetDataType<EventType>, SetDataType<EventType>>(
+        props.props.data!,
+        (data) => typeof data.on != undefined
+      )
+    ) {
+      ;(props.props.data?.on as { [key: string]: any })?.[eventType as string](
+        { ...props },
+        ...arg
+      )
+    }
+  }
+
   return {
     REmit,
+    event,
   }
-}
-
-// 对部分支持函数的 property 参数进行判断返回
-export const isProperty = <T, R>(e: T, property?: R | ((e: T) => R)) => {
-  const isFish = (pet: typeof property): pet is R => {
-    return typeof (<R>pet) != 'function'
-  }
-
-  return isFish(property) ? property : property!(e)
 }
 
 export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {

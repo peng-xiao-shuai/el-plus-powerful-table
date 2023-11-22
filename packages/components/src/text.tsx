@@ -23,9 +23,9 @@ const Text = defineComponent({
   },
   emits: ['component-emit'],
   setup(props, { emit }) {
-    const { REmit } = useREmit(emit, 'text', {
+    const { REmit, event } = useREmit<'text'>(emit, 'text', {
       row: props.row,
-      index: props.index,
+      index: props.index!,
       props: props.prop,
     })
     const develop = ref(Array.from({ length: props.listLength }).fill(false))
@@ -33,14 +33,15 @@ const Text = defineComponent({
       <div class={{ content: develop.value[props.index || 0] }}>
         {/* <!-- 主体内容 --> */}
         <div
-          onClick={(event: Event) => {
-            event.stopPropagation()
+          onClick={(evt: Event) => {
+            evt.stopPropagation()
             REmit('click', {
               row: props.row,
               index: props.index,
               prop: props.prop.prop,
-              event,
+              evt,
             })
+            event('click', evt)
           }}
           style={
             props.prop.data && props.prop.data.develop
