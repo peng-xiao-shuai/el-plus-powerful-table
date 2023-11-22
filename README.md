@@ -18,7 +18,7 @@
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
-## 2.2.4 20231122
+## 2.2.4/5 20231122
 - `"image" | "text" | "switch" | "video" | "input" | "iconfont" | "tag" | "rate" | "textarea"` 类型中 `data` 属性下新增 `on` 可选属性
 
 ## 2.2.3 20231119
