@@ -179,8 +179,11 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
           { key: 'Audi', value: '奥迪' },
           { key: 'BMW', value: '宝马' },
         ],
-        render: (h, row) =>
-          h('b', `${row.brand}（${{ Audi: '奥迪', BMW: '宝马' }[row.brand!]})`),
+        render: (h, row) => (
+          <b>
+            {row.brand}（{{ Audi: '奥迪', BMW: '宝马' }[row.brand!]}）
+          </b>
+        ),
       },
       {
         type: 'href',
