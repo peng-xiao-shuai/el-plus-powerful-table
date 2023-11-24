@@ -189,7 +189,7 @@ export interface PowerfulTableHeaderProps<T extends keyof _TYPE, Row = any> {
     h: typeof createElement,
     row: Row,
     index: number
-  ) => VNode | string | number
+  ) => VNode | string | number | JSX.Element
   reserve?: string | HTMLElement
   style?: CSSProperties
   filterItem?: boolean // 指定过滤项

@@ -10,7 +10,7 @@ export * from './powerful-table'
 export * from './filter'
 export * from './components'
 // 获取类型
-const getType = <T>(target: T) =>
+export const getType = <T>(target: T) =>
   Object.prototype.toString.call(target).slice(8, -1)
 
 // 深度克隆
