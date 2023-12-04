@@ -1,5 +1,4 @@
-import '@vue/runtime-core'
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   export interface GlobalComponents {
     PTImage: typeof import('../packages/index')['PTImage']
     PTButton: typeof import('../packages/index')['PTButton']
@@ -21,5 +20,4 @@ declare module '@vue/runtime-core' {
   }
 }
 
-// eslint-disable-next-line prettier/prettier
-export { };
+export {}

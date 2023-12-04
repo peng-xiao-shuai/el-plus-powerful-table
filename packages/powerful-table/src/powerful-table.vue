@@ -9,7 +9,7 @@
       :btn-config="btnConfig"
       :header-list="header"
       :multiple-selection="currentSelect"
-      @change="(...arg) => emit(EmitEnum.BtnPlusChange, ...arg)"
+      @change="(...arg: any) => emit(EmitEnum.BtnPlusChange, ...arg)"
       @refresh="emit(EmitEnum.BtnPlusRefresh)"
     >
       <template v-if="$slots['btn-left']" #btn-left>
