@@ -18,6 +18,14 @@
 
 - 以下【内部组件】为该文件夹中 `packages/components/src` 下的组件
 
+## 更新预告
+- 3.0.0 版本
+- - 删除 `component-event` 事件
+- - `_TYPE` 类型的 `key` 改为枚举
+
+## 2.2.7 20231204
+- 类型补充提示
+
 ## 2.2.6 20231124
 - `PowerfulTableHeaderProps` 下 `render` 函数类型支持返回 `JSX.Element`
 
