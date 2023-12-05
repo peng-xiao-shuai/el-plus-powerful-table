@@ -189,7 +189,7 @@ export const useREmit = <T extends EventType>(
     if (
       isTypeProtect<SetDataType<EventType>, SetDataType<EventType>>(
         props.props.data!,
-        (data) => typeof data.on != undefined
+        (data) => typeof data?.on != undefined
       )
     ) {
       ;(props.props.data?.on as { [key: string]: any })?.[eventType as string](
@@ -464,13 +464,13 @@ export const useInitiateListRequest = <L>(
     return rtn
   }
   // 重置列表，将pageNo 改为 1，其余条件不变
-  let resetList: () => void
+  let resetList: (params?: object) => void
 
   // 发起请求
-  let getListData: () => void
+  let getListData: (params?: object) => void
 
   if (typeof props.listRequest?.listApi === 'function') {
-    getListData = () => {
+    getListData = (params: object = {}) => {
       // 获取 key 值
       const [pageNoKey, pageSizeKey, responseKey, totalKey, listsKey] = [
         props.listRequest?.pageNoKey ||
@@ -493,6 +493,7 @@ export const useInitiateListRequest = <L>(
       props.listRequest
         ?.listApi({
           ...(props.listRequest.listQuery || {}),
+          ...params,
           [pageNoKey]: powerfulTableData.currentPage,
           [pageSizeKey]: powerfulTableData.pageSize,
         })
@@ -503,10 +504,10 @@ export const useInitiateListRequest = <L>(
         })
     }
 
-    resetList = () => {
+    resetList = (params: object = {}) => {
       powerfulTableData.currentPage = 1
 
-      getListData()
+      getListData(params)
     }
 
     getListData()
