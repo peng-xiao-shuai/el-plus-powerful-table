@@ -23,6 +23,10 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.9 20231205
+- 修改暴露的 `resetList、getListData` 函数支持传递参数
+- 修复已知 `bug`
+
 ## 2.2.8 20231205
 - 修复 `header` 配置项中 `props` 下属性 `filters` 的情况下，当前的相应的数据存在值的情况则不会被 `filters` 过滤
 <details> <summary>示例说明</summary>
