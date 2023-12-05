@@ -217,18 +217,18 @@
                   @return-emit="returnEmit"
                   @component-emit="componentEmit"
                 />
-                <PTText
-                  v-else-if="scope.row[prop.prop]"
-                  v-bind="bindAttr(prop, scope, item)"
-                  :list-length="tableLists.length"
-                  @component-emit="componentEmit"
-                />
                 <PTFilter
                   v-else-if="
                     prop.filters &&
                     (prop.type == 'text' || prop.type == undefined)
                   "
                   v-bind="bindAttr(prop, scope, item)"
+                  @component-emit="componentEmit"
+                />
+                <PTText
+                  v-else="scope.row[prop.prop]"
+                  v-bind="bindAttr(prop, scope, item)"
+                  :list-length="tableLists.length"
                   @component-emit="componentEmit"
                 />
               </template>
