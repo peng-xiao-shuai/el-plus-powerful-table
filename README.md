@@ -23,6 +23,35 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.8 20231205
+- 修复 `header` 配置项中 `props` 下属性 `filters` 的情况下，当前的相应的数据存在值的情况则不会被 `filters` 过滤
+<details> <summary>示例说明</summary>
+
+``` ts
+const list = [{status: 0},{status: 1}]
+const header = [{
+  label: '性别',
+  props: {
+    prop:'status',
+    filters: [
+      {
+        text: '男',
+        value: 1
+      },
+      {
+        text: '女',
+        value: 0
+      }
+    ],
+  }
+}]
+// [修复]：第二条数据的 status 将不会进行过滤的情况
+```
+
+</details>
+
+- 修复 `type = text` 时 `0` 不会显示
+
 ## 2.2.7 20231204
 - 类型补充提示
 
@@ -180,6 +209,7 @@
 - - 删除 `emit`
 - - 新增 `isTooltip` 是否显示提示
 - - 新增 `params`，`isMore` 属性。`params` 自定义传入数据，将会在点击按钮时返回。例如：
+<details> <summary>示例说明</summary>
 
 ```js
 {
@@ -257,6 +287,7 @@ const handleOperate = ({ row, params, index }) => ({})
   ]
 }
 ```
+</details>
 
 - 删除 `child` 字段
 - 新增全局组件注入 `locale` 和 `size`
