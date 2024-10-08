@@ -23,6 +23,9 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.10 20241008
+- 修复已知 `bug`
+
 ## 2.2.9 20231205
 - 修改暴露的 `resetList、getListData` 函数支持传递参数
 - 修复已知 `bug`
