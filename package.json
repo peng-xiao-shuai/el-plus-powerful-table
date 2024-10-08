@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.2.9",
+  "version": "2.2.10",
   "private": false,
   "keywords": [
     "element-plus",
@@ -55,7 +55,6 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
-    "el-plus-powerful-table-ts": "^2.2.2",
     "element-plus": "^2.3.14",
     "vue": "^3.3.4"
   },

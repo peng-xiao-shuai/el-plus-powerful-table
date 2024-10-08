@@ -157,7 +157,7 @@ export const isProperty = <T, R>(e: T, property?: R | ((e: T) => R)) => {
     (pet) => typeof (<R>pet) != 'function'
   )
     ? property
-    : property!(e)
+    : property!(e || ({ row: {}, index: undefined, props: {} } as T))
 }
 
 // 附属组件自定义事件抛出
