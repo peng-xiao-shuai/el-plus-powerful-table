@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.2.10",
+  "version": "2.2.11",
   "private": false,
   "keywords": [
     "element-plus",
@@ -42,7 +42,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/peng-xiao-shuai/el-plus-powerful-table.git"
+    "url": "git+https://github.com/peng-xiao-shuai/el-plus-powerful-table.git"
+  },
+  "publishConfig": {
+    "branch": "master-ts"
   },
   "scripts": {
     "dev": "vite --force",
@@ -69,6 +72,7 @@
     "@vitejs/plugin-vue": "^4.4.0",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
     "@vue/runtime-core": "^3.3.4",
+    "el-plus-powerful-table-ts": "^2.2.10",
     "eslint": "^8.51.0",
     "eslint-define-config": "^1.24.0",
     "sass": "^1.69.0",
@@ -81,8 +85,5 @@
   },
   "lint-staged": {
     "*.{vue,js,ts,jsx,tsx,md,json}": "eslint --fix"
-  },
-  "publishConfig": {
-    "branch": "master-ts"
   }
 }

@@ -6,6 +6,7 @@
     "sourceMap": false,
     "strict": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "moduleResolution": "node",
     "baseUrl": ".",
     "esModuleInterop": true,
@@ -28,7 +29,6 @@
     "types": [
       "@types/node",
       "vite/client",
-      "element-plus/global"
     ],
     "lib": [
       "dom",
