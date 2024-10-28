@@ -8,15 +8,14 @@ import type {
   ComponentEvent,
   EmitEventType,
   EmitType,
+  EventType,
   InjectProps,
+  PowerfulTableData,
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
-  PowerfulTableData,
-  StateData,
   PowerfulTableProps,
-  _TYPE,
   SetDataType,
-  EventType,
+  StateData,
 } from '@/index'
 import { LangKey, t } from '~/locale/lang'
 // console.log(PTFDatePicker, PTFInput, PTFSelect)
@@ -310,12 +309,12 @@ export const useFunction = <L>(
       ElMessage.warning(t(LangKey.SelectOperateData))
       return
     }
+    const currentItem = powerfulTableData.operate.operates.find(
+      (item) => item.value == powerfulTableData.operate.value
+    )
 
     ElMessageBox.confirm(
-      t<(s: string) => string>(LangKey.BatchOperate)(
-        powerfulTableData.operate.operates[powerfulTableData.operate.value || 0]
-          .label
-      ),
+      t<(s: string) => string>(LangKey.BatchOperate)(currentItem!.label),
       t(LangKey.Hint),
       {
         confirmButtonText: t(LangKey.Confirm),
@@ -337,9 +336,7 @@ export const useFunction = <L>(
 
         emit(EmitEnum.BatchOperate, {
           ids,
-          item: powerfulTableData.operate.operates[
-            powerfulTableData.operate.value || 0
-          ],
+          item: currentItem,
           rows,
         })
       })

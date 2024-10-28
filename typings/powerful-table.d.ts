@@ -6,8 +6,8 @@ import type {
   Plugin,
   SetupContext,
   VNode,
-  WatchStopHandle,
   VideoHTMLAttributes,
+  WatchStopHandle,
   h as createElement,
 } from 'vue'
 import type { FDatePicker, FInput, FSelect } from '../filter'
@@ -189,7 +189,7 @@ export interface PowerfulTableOperateData {
    * 当前批量操作下拉框选中的值
    * @default ''
    */
-  value?: number | ''
+  value?: PowerfulTableLabelValue['value']
   /**
    * `@batchOperate` 事件返回的对象中 ids 组成的值。假设为 id 时，那 `@batchOperate` 事件中 ids 值为 `[选中数据].map(item => item.id)`
    * @default 'id'
