@@ -1,6 +1,6 @@
 {
   "name": "el-plus-powerful-table-ts",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "private": false,
   "keywords": [
     "element-plus",
@@ -50,7 +50,7 @@
   "scripts": {
     "dev": "vite --force",
     "tsc": "vue-tsc --noEmit",
-    "lib": "rimraf ./lib ./es && vite build --mode lib && esno ./script/copy.js ",
+    "lib": "rimraf ./lib ./es && vite build --config vite.lib.ts --mode lib && esno ./script/copy.js ",
     "gitBuild": "vite build --base=/el-plus-powerful-table/"
   },
   "peerDependencies": {
