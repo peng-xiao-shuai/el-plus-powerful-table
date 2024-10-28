@@ -3,7 +3,7 @@ import type { App } from 'vue'
 
 // 定义 install 方法， App 作为参数
 BtnPlus.install = (app: App): void => {
-  app.component(BtnPlus.name, BtnPlus)
+  app.component(BtnPlus.name!, BtnPlus)
 }
 
 export const PTBtnPlus = BtnPlus as import('@/index').SFCWithInstall<

@@ -55,7 +55,7 @@ const Tags = defineComponent({
             }}
             size={size}
             key={tag}
-            type={''}
+            type={'primary'}
             color={
               (typeof props.prop.data?.color == 'function' &&
                 props.prop.data?.color(props.row, tag)) ||
