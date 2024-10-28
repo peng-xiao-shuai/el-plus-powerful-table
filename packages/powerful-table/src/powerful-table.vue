@@ -5,7 +5,7 @@
         btnConfig !== undefined || $slots['btn-left'] || $slots['btn-right']
       "
       ref="btnPlusRef"
-      v-model:isTable="isTable"
+      v-model:is-table="isTable"
       :btn-config="btnConfig"
       :header-list="header"
       :multiple-selection="currentSelect"
@@ -144,15 +144,11 @@
 
         <template #default="scope">
           <div style="display: inline-block">
-            <div
+            <template
               v-for="(prop, idx) in Array.isArray(item.props)
                 ? item.props
                 : [item.props]"
               :key="'props' + idx"
-              :style="{
-                ...prop.style,
-              }"
-              @click="(event: Event) => event.stopPropagation()"
             >
               <!-- 插槽 -->
               <slot
@@ -160,15 +156,18 @@
                 :name="prop.slotName || 'default'"
                 :row="scope.row"
                 :index="scope.$index"
+                @click="(event: Event) => event.stopPropagation()"
               />
               <div
                 v-else
                 :style="{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
-              }"
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
+                  ...(prop.style || {}),
+                }"
+                @click="(event: Event) => event.stopPropagation()"
               >
                 <span
                   v-if="prop.text"
@@ -226,14 +225,14 @@
                     @component-emit="componentEmit"
                   />
                   <PTText
-                    v-else="scope.row[prop.prop]"
+                    v-else
                     v-bind="bindAttr(prop, scope, item)"
                     :list-length="tableLists.length"
                     @component-emit="componentEmit"
                   />
                 </template>
               </div>
-            </div>
+            </template>
           </div>
         </template>
       </ElTableColumn>
@@ -422,6 +421,7 @@ provide(SizeSymbol, Size)
 // 单元格内布局
 provide(JustifyFunSymbol, justifyFun)
 
+// 判断列表是否存在数据，存在则查询选中
 powerfulTableData.watchCache.push(
   watchEffect(() => {
     Object.assign(powerfulTableData.operate, props.operateData)
@@ -432,10 +432,7 @@ powerfulTableData.watchCache.push(
       length: stateData.tableLists.length,
     }).fill(false)
     powerfulTableData.listLoading = false
-  })
-)
-// 判断列表是否存在数据，存在则查询选中
-powerfulTableData.watchCache.push(
+  }),
   watch(
     () => stateData.tableLists,
     (val) => {
@@ -445,10 +442,7 @@ powerfulTableData.watchCache.push(
       immediate: true,
       deep: true,
     }
-  )
-)
-
-powerfulTableData.watchCache.push(
+  ),
   watch(
     () => [powerfulTableData.currentPage, powerfulTableData.pageSize],
     () => {
@@ -573,4 +567,4 @@ export default {
 }
 </script>
 
-<style src="./powerful-table.scss" scoped></style>
+<style src="./powerful-table.scss"></style>
