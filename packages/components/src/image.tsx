@@ -64,7 +64,7 @@ const Image = defineComponent({
 })
 
 Image.install = (app: App) => {
-  app.component(Image.name, Image)
+  app.component(Image.name!, Image)
 }
 export const PTImage = Image as SFCWithInstall<typeof Image>
 export default Image

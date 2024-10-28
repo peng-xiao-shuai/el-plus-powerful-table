@@ -53,7 +53,7 @@ const Switch = defineComponent({
 })
 
 Switch.install = (app: App) => {
-  app.component(Switch.name, Switch)
+  app.component(Switch.name!, Switch)
 }
 export const PTSwitch = Switch as SFCWithInstall<typeof Switch>
 export default Switch

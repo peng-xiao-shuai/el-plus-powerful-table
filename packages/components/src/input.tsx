@@ -77,7 +77,7 @@ const Input = defineComponent({
 })
 
 Input.install = (app: App) => {
-  app.component(Input.name, Input)
+  app.component(Input.name!, Input)
 }
 export const PTInput = Input as SFCWithInstall<typeof Input>
 export default Input

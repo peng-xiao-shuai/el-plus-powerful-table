@@ -142,7 +142,7 @@ const FSelect = defineComponent({
 
 const PTFSelect = FSelect as SFCWithInstall<typeof FSelect>
 PTFSelect.install = (app: App) => {
-  app.component(FSelect.name, FSelect)
+  app.component(FSelect.name!, FSelect)
 }
 export { PTFSelect, FSelect }
 export default FSelect

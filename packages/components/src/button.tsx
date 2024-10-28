@@ -173,7 +173,7 @@ const Button = defineComponent({
 })
 
 Button.install = (app: App) => {
-  app.component(Button.name, Button)
+  app.component(Button.name!, Button)
 }
 export const PTButton = Button as SFCWithInstall<typeof Button>
 export default Button

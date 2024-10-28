@@ -55,7 +55,7 @@ const Icon = defineComponent({
 })
 
 Icon.install = (app: App) => {
-  app.component(Icon.name, Icon)
+  app.component(Icon.name!, Icon)
 }
 export const PTIcon = Icon as SFCWithInstall<typeof Icon>
 export default Icon

@@ -66,7 +66,7 @@ const Video = defineComponent({
 })
 
 Video.install = (app: App) => {
-  app.component(Video.name, Video)
+  app.component(Video.name!, Video)
 }
 export const PTVideo = Video as SFCWithInstall<typeof Video>
 export default Video

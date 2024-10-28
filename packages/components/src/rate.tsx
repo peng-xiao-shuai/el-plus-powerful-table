@@ -52,7 +52,7 @@ const Rate = defineComponent({
 })
 
 Rate.install = (app: App) => {
-  app.component(Rate.name, Rate)
+  app.component(Rate.name!, Rate)
 }
 export const PTRate = Rate as SFCWithInstall<typeof Rate>
 export default Rate

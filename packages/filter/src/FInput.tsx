@@ -58,7 +58,7 @@ const FInput = defineComponent({
 
 const PTFInput = FInput as SFCWithInstall<typeof FInput>
 PTFInput.install = (app: App) => {
-  app.component(FInput.name, FInput)
+  app.component(FInput.name!, FInput)
 }
 export { PTFInput, FInput }
 export default FInput

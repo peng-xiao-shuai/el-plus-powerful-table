@@ -42,7 +42,7 @@ const Link = defineComponent({
 })
 
 Link.install = (app: App) => {
-  app.component(Link.name, Link)
+  app.component(Link.name!, Link)
 }
 export const PTLink = Link as SFCWithInstall<typeof Link>
 export default Link

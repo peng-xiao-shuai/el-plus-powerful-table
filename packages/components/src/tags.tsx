@@ -93,7 +93,7 @@ const Tags = defineComponent({
 })
 
 Tags.install = (app: App) => {
-  app.component(Tags.name, Tags)
+  app.component(Tags.name!, Tags)
 }
 export const PTTags = Tags as SFCWithInstall<typeof Tags>
 export default Tags

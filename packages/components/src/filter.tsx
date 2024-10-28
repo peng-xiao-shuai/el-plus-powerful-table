@@ -61,7 +61,7 @@ const Filter = defineComponent({
   },
 })
 Filter.install = (app: App) => {
-  app.component(Filter.name, Filter)
+  app.component(Filter.name!, Filter)
 }
 export const PTFilter = Filter as SFCWithInstall<typeof Filter>
 export default Filter

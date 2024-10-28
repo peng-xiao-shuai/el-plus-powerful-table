@@ -18,7 +18,7 @@ const RenderJsx = defineComponent({
 
 const PTRenderJsx = RenderJsx as SFCWithInstall<typeof RenderJsx>
 PTRenderJsx.install = (app: App) => {
-  app.component(RenderJsx.name, RenderJsx)
+  app.component(RenderJsx.name!, RenderJsx)
 }
 export { PTRenderJsx }
 export default RenderJsx

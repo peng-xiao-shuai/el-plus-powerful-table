@@ -49,6 +49,7 @@ const Text = defineComponent({
                   display: '-webkit-box',
                   overflow: 'hidden',
                   '-webkit-box-orient': 'vertical',
+                  'word-break': 'break-all',
                   '-webkit-line-clamp': develop.value[props.index || 0]
                     ? 99999
                     : (props.prop.data && props.prop.data.line) || 3,
@@ -96,7 +97,7 @@ const Text = defineComponent({
 })
 
 Text.install = (app: App) => {
-  app.component(Text.name, Text)
+  app.component(Text.name!, Text)
 }
 export const PTText = Text as SFCWithInstall<typeof Text>
 export default Text
