@@ -80,6 +80,7 @@
     padding-bottom: 23px;
 
     > .develop {
+      pointer-events: none;
       text-align: center;
       height: 100%;
       position: absolute;
@@ -94,6 +95,7 @@
 
       span {
         /* position: absolute; */
+        pointer-events: auto;
         bottom: 0;
         left: 0;
         width: 100%;
