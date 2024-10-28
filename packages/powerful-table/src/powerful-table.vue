@@ -143,95 +143,96 @@
         </template>
 
         <template #default="scope">
-          <div
-            v-for="(prop, idx) in Array.isArray(item.props)
-              ? item.props
-              : [item.props]"
-            :key="'props' + idx"
-            :style="{
-              display: index == 0 ? 'inline-block' : 'block',
-              ...prop.style,
-            }"
-            @click="(event: Event) => event.stopPropagation()"
-          >
-            <!-- 插槽 -->
-            <slot
-              v-if="prop.type == 'slot'"
-              :name="prop.slotName || 'default'"
-              :row="scope.row"
-              :index="scope.$index"
-            />
+          <div style="display: inline-block">
             <div
-              v-else
+              v-for="(prop, idx) in Array.isArray(item.props)
+                ? item.props
+                : [item.props]"
+              :key="'props' + idx"
               :style="{
+                ...prop.style,
+              }"
+              @click="(event: Event) => event.stopPropagation()"
+            >
+              <!-- 插槽 -->
+              <slot
+                v-if="prop.type == 'slot'"
+                :name="prop.slotName || 'default'"
+                :row="scope.row"
+                :index="scope.$index"
+              />
+              <div
+                v-else
+                :style="{
                 display: 'flex',
                 alignItems: 'center',
                 width: '100%',
                 justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
               }"
-            >
-              <span
-                v-if="prop.text"
-                :style="{ marginRight: prop.text ? '10px' : '0px' }"
               >
-                {{ prop.text }}
-              </span>
-              <PTRenderJsx
-                v-if="typeof prop.render == 'function'"
-                :row="scope.row"
-                :index="scope.$index"
-                :prop="prop"
-                :aligning="(item.property?.align as any) || item.headerAlign"
-              />
-              <template v-else>
-                <div
-                  v-if="
-                    (scope.row[prop.prop] == undefined ||
-                      scope.row[prop.prop] == null) &&
-                    prop.type != 'btn'
-                  "
+                <span
+                  v-if="prop.text"
+                  :style="{ marginRight: prop.text ? '10px' : '0px' }"
                 >
-                  <div v-if="prop.reserve" v-html="prop.reserve" />
-                  <div v-else>
-                    <span>{{ t(LangKey.NoData) }}</span>
+                  {{ prop.text }}
+                </span>
+                <PTRenderJsx
+                  v-if="typeof prop.render == 'function'"
+                  :row="scope.row"
+                  :index="scope.$index"
+                  :prop="prop"
+                  :aligning="(item.property?.align as any) || item.headerAlign"
+                />
+                <template v-else>
+                  <div
+                    v-if="
+                      (scope.row[prop.prop] == undefined ||
+                        scope.row[prop.prop] == null) &&
+                      prop.type != 'btn'
+                    "
+                  >
+                    <div v-if="prop.reserve" v-html="prop.reserve" />
+                    <div v-else>
+                      <span>{{ t(LangKey.NoData) }}</span>
+                    </div>
                   </div>
-                </div>
-                <component
-                  :is="matchComponents(prop.type)"
-                  v-else-if="
-                    prop.type &&
-                    [
-                      'image',
-                      'btn',
-                      'switch',
-                      'input',
-                      'textarea',
-                      'iconfont',
-                      'tag',
-                      'rate',
-                      'href',
-                      'video',
-                    ].includes(prop.type)
-                  "
-                  v-bind="bindAttr(prop, scope, item)"
-                  @return-emit="returnEmit"
-                  @component-emit="componentEmit"
-                />
-                <PTFilter
-                  v-else-if="
-                    prop.filters &&
-                    (prop.type == 'text' || prop.type == undefined)
-                  "
-                  v-bind="bindAttr(prop, scope, item)"
-                  @component-emit="componentEmit"
-                />
-                <PTText
-                  v-else="scope.row[prop.prop]"
-                  v-bind="bindAttr(prop, scope, item)"
-                  :list-length="tableLists.length"
-                  @component-emit="componentEmit"
-                />
-              </template>
+                  <component
+                    :is="matchComponents(prop.type)"
+                    v-else-if="
+                      prop.type &&
+                      [
+                        'image',
+                        'btn',
+                        'switch',
+                        'input',
+                        'textarea',
+                        'iconfont',
+                        'tag',
+                        'rate',
+                        'href',
+                        'video',
+                      ].includes(prop.type)
+                    "
+                    v-bind="bindAttr(prop, scope, item)"
+                    @return-emit="returnEmit"
+                    @component-emit="componentEmit"
+                  />
+                  <PTFilter
+                    v-else-if="
+                      prop.filters &&
+                      (prop.type == 'text' || prop.type == undefined)
+                    "
+                    v-bind="bindAttr(prop, scope, item)"
+                    @component-emit="componentEmit"
+                  />
+                  <PTText
+                    v-else="scope.row[prop.prop]"
+                    v-bind="bindAttr(prop, scope, item)"
+                    :list-length="tableLists.length"
+                    @component-emit="componentEmit"
+                  />
+                </template>
+              </div>
             </div>
           </div>
         </template>
@@ -249,7 +250,9 @@
           v-bind="{
             clearable: true,
             size: Size,
-            ...(operate.selectProperty || {}),
+            ...(operate.selectProperty || {
+              style: '200px',
+            }),
           }"
         >
           <ElOption
@@ -570,4 +573,4 @@ export default {
 }
 </script>
 
-<style src="./powerful-table.scss"></style>
+<style src="./powerful-table.scss" scoped></style>
