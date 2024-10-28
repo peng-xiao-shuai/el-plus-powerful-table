@@ -9,7 +9,7 @@ import { langPackages } from './indexData'
 import PowerfulTable from '~/index'
 import 'element-plus/theme-chalk/src/index.scss'
 import 'element-plus/theme-chalk/dark/css-vars.css'
-// import "../lib/es/style.css"
+import 'el-plus-powerful-table-ts/es/style.css'
 const app = createApp(App)
 // app.use(ElementPlus, {
 //   size: 'large',
