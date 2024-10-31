@@ -35,13 +35,12 @@ export default defineConfig(() => {
           'components.d.ts',
         ],
         beforeWriteFile: (filePath, content) => {
-          let upContent = content
-            .replace(/'..\/typings/gi, "'./typings")
-            .replace(/\/..\/typings/gi, '/typings')
+          const upContent = content.replace(/'..\/typings/gi, "'./typings")
+          // .replace(/\/..\/typings/gi, '/typings')
           // 修改typings文件夹中的内容
-          if (filePath.includes('\\typings')) {
-            upContent = upContent.replace(/\/packages/g, '')
-          }
+          // if (filePath.includes('\\typings')) {
+          //   upContent = upContent.replace(/\/packages/g, '')
+          // }
           return {
             // 处理文件名
             filePath: filePath.replace('\\packages', ''),
@@ -96,7 +95,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '~': path.resolve('./packages'),
-        '@': path.resolve('./typings'),
+        '#': path.resolve('./typings'),
       },
     },
     // 控制台打印

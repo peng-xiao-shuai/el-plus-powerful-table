@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '~': path.resolve('./packages'),
-        '@': path.resolve('./typings'),
+        '#': path.resolve('./typings'),
       },
     },
     base: mode === 'production' ? '/el-plus-powerful-table/' : '/',
