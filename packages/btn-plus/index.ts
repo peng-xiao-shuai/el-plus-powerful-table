@@ -6,7 +6,7 @@ BtnPlus.install = (app: App): void => {
   app.component(BtnPlus.name!, BtnPlus)
 }
 
-export const PTBtnPlus = BtnPlus as import('@/index').SFCWithInstall<
+export const PTBtnPlus = BtnPlus as import('~/index').SFCWithInstall<
   typeof BtnPlus
 >
 

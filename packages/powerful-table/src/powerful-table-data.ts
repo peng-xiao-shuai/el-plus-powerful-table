@@ -16,7 +16,7 @@ import type {
   PowerfulTableProps,
   SetDataType,
   StateData,
-} from '@/index'
+} from '~/index'
 import { LangKey, t } from '~/locale/lang'
 // console.log(PTFDatePicker, PTFInput, PTFSelect)
 

@@ -8,7 +8,7 @@ import {
   ElTooltip,
 } from 'element-plus'
 import { SizeSymbol } from '../../keys'
-import type { BtnConfig, PowerfulTableHeader } from '@/index'
+import type { BtnConfig, PowerfulTableHeader } from '~/index'
 import { LangKey, t } from '~/locale/lang'
 
 const PTBtnPlus = defineComponent({

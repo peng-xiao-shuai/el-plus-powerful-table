@@ -6,7 +6,7 @@ PowerfulTableComponent.install = (app: App): void => {
   app.component(PowerfulTableComponent.name!, PowerfulTableComponent)
 }
 const PowerfulTable =
-  PowerfulTableComponent as import('@/index').SFCWithInstall<
+  PowerfulTableComponent as import('~/index').SFCWithInstall<
     typeof PowerfulTableComponent
   >
 

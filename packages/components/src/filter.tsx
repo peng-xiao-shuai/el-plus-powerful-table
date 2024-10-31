@@ -10,7 +10,7 @@ import type {
   PowerfulTableFilter,
   PowerfulTableHeaderProps,
   SFCWithInstall,
-} from '@/index'
+} from '~/index'
 import {
   powerfulTableComponentProp,
   useREmit,

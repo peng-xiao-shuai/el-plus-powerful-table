@@ -1,4 +1,4 @@
-import type { LangPackages } from '@/index'
+import type { LangPackages } from '~/index'
 
 export enum LangKey {
   Confirm = 'confirm',

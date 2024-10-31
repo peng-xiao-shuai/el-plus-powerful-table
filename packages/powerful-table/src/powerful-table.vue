@@ -310,7 +310,7 @@ import type {
   BtnDataType,
   ComponentEvent,
   PowerfulTableLabelValue,
-} from '@/index'
+} from '~/index'
 import { LangKey, t } from '~/locale/lang'
 
 type Row = any

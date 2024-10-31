@@ -2,7 +2,7 @@ import { ElDatePicker, ElIcon } from 'element-plus'
 import { ArrowUp } from '@element-plus/icons-vue'
 import { props } from './common'
 import type { App } from 'vue'
-import type { SFCWithInstall } from '@/index'
+import type { SFCWithInstall } from '~/index'
 import { SizeSymbol } from '~/keys'
 
 const FDatePicker = defineComponent({

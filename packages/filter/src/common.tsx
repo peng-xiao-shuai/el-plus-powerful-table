@@ -1,6 +1,6 @@
 import { ElButton, ElIcon } from 'element-plus'
 import { ArrowUp } from '@element-plus/icons-vue'
-import type { PowerfulTableFilter, PowerfulTableHeader } from '@/index'
+import type { PowerfulTableFilter, PowerfulTableHeader } from '~/index'
 
 export type State<T = string | (string | number)[]> = {
   value: T

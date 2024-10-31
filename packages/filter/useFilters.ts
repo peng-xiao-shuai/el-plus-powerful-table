@@ -7,7 +7,7 @@
  */
 
 import { deepClone } from '../index'
-import type { PowerfulTableHeader, PowerfulTableHeaderProps } from '@/index'
+import type { PowerfulTableHeader, PowerfulTableHeaderProps } from '~/index'
 import type {
   FilterComponents,
   PowerfulTableProps,

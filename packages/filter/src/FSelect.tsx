@@ -7,7 +7,7 @@ import type {
   PowerfulTableHeaderProps,
   SFCWithInstall,
   SetDataType,
-} from '@/index'
+} from '~/index'
 import { SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
 

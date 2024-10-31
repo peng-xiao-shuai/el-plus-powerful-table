@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
 import { powerfulTableComponentProp } from '~/powerful-table/src/powerful-table-data'
 
 const RenderJsx = defineComponent({

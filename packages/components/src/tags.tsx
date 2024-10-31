@@ -1,7 +1,7 @@
 import { ElTag } from 'element-plus'
 import { filterFun } from './filter'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '@/index'
+import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,

@@ -1,4 +1,4 @@
-import type { ElTable, InputInstance } from 'element-plus/es'
+import type { ElTable } from 'element-plus/es'
 import type { EmitEnum } from '../powerful-table/src/powerful-table-data'
 import type {
   CSSProperties,

@@ -11,7 +11,7 @@ import type {
   BtnDataType,
   PowerfulTableHeaderProps,
   SFCWithInstall,
-} from '@/index'
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
