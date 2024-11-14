@@ -1,6 +1,10 @@
 import { ElRate } from 'element-plus'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
@@ -13,12 +17,13 @@ const Rate = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'rate'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'rate'>
     const size = inject(SizeSymbol)
     const { REmit, event } = useREmit<'rate'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
@@ -36,14 +41,14 @@ const Rate = defineComponent({
           size={size}
           v-model={props.row[props.prop.prop]}
           disabled={true}
-          style={props.prop.data?.style || {}}
+          style={data?.style || {}}
           onChange={(...arg: any) => {
             REmit('change', ...arg)
             event('change', ...arg)
           }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
-            props.prop.data?.property
+            data?.property
           )}
         />
       </>

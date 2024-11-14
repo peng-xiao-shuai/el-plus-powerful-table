@@ -1,5 +1,9 @@
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
@@ -11,12 +15,13 @@ const Video = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'video'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'video'>
     const { REmit, event } = useREmit<'video'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'video',
@@ -29,7 +34,7 @@ const Video = defineComponent({
 
     return () => (
       <>
-        <div style={props.prop.data?.style || {}}>
+        <div style={data?.style || {}}>
           <video
             style="width:100%;height: 100%"
             src={props.row[props.prop.prop]}
@@ -56,7 +61,7 @@ const Video = defineComponent({
             }}
             {...isProperty(
               { row: props.row, index: props.index!, props: props.prop },
-              props.prop.data?.property
+              data?.property
             )}
           />
         </div>

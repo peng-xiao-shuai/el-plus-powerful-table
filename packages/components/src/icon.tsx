@@ -1,5 +1,9 @@
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   powerfulTableComponentProp,
   useREmit,
@@ -10,12 +14,14 @@ const Icon = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'iconfont'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'iconfont'>
+
     const { REmit, event } = useREmit<'iconfont'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'iconfont',
@@ -40,14 +46,14 @@ const Icon = defineComponent({
             props.row[props.prop.prop]
               ? [
                   props.row[props.prop.prop],
-                  props.prop.data?.class &&
-                    (typeof props.prop.data?.class === 'string'
-                      ? props.prop.data?.class
-                      : (props.prop.data?.class as string[]).join(',')),
+                  data?.class &&
+                    (typeof data?.class === 'string'
+                      ? data?.class
+                      : (data?.class as string[]).join(',')),
                 ]
               : ['']
           }
-          style={props.prop.data?.style || {}}
+          style={data?.style || {}}
         ></i>
       </>
     )

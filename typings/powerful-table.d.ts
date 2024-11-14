@@ -282,9 +282,7 @@ export interface PowerfulTableHeader<Row = any> {
   /**
    * 单元格显示数据
    */
-  props:
-    | PowerfulTableHeaderProps<any, Row>[]
-    | PowerfulTableHeaderProps<any, Row>
+  props: PowerfulTableHeaderProps<Row>[] | PowerfulTableHeaderProps<Row>
   /**
    * el-tableColumn props 表格列属性
    * @see https://element-plus.gitee.io/zh-CN/component/table.html#table-column-%E5%B1%9E%E6%80%A7
@@ -295,25 +293,66 @@ export interface PowerfulTableHeader<Row = any> {
 export type SetDataType<T extends keyof _TYPE, Row = any> = {
   [key in keyof _TYPE<Row>[T]]: _TYPE<Row>[T][key]
 }
-/**
- * props 单元格数据
- */
-export interface PowerfulTableHeaderProps<T extends keyof _TYPE, Row = any> {
+
+export type PowerfulTableHeaderPropsData<Row = any> =
+  | {
+      type: 'image'
+      data?: SetDataType<'image', Row>
+    }
+  | {
+      type: 'text'
+      data?: SetDataType<'text', Row>
+    }
+  | {
+      type: 'switch'
+      data?: SetDataType<'switch', Row>
+    }
+  | {
+      type: 'btn'
+      data?: SetDataType<'btn', Row>
+    }
+  | {
+      type: 'video'
+      data?: SetDataType<'video', Row>
+    }
+  | {
+      type: 'input'
+      data?: SetDataType<'input', Row>
+    }
+  | {
+      type: 'iconfont'
+      data?: SetDataType<'iconfont', Row>
+    }
+  | {
+      type: 'tag'
+      data?: SetDataType<'tag', Row>
+    }
+  | {
+      type: 'rate'
+      data?: SetDataType<'rate', Row>
+    }
+  | {
+      type: 'href'
+      data?: SetDataType<'href', Row>
+    }
+  | {
+      type: 'slot'
+      data?: SetDataType<'slot', Row>
+    }
+  | {
+      type: 'textarea'
+      data?: SetDataType<'textarea', Row>
+    }
+  | {
+      type?: undefined
+      data?: SetDataType<'text', Row>
+    }
+
+export interface PowerfulTableBaseProps<Row = any> {
   /**
    * 属性：字符串类型
    */
   prop: string
-
-  /**
-   * 数据：可选的SetDataType方法的参数
-   */
-  data?: SetDataType<T, Row>
-
-  /**
-   * 类型：可选的_TYPE枚举类型的关键字
-   * @default 'text'
-   */
-  type?: keyof _TYPE
 
   /**
    * 过滤器：可选的PowerfulTableFilter数组，或一个函数用于接收行和索引作为参数并返回字符串或数字
@@ -383,6 +422,23 @@ export interface PowerfulTableHeaderProps<T extends keyof _TYPE, Row = any> {
     resolve: (value: any[]) => void
   ) => void
 }
+/**
+ * props 单元格数据
+ */
+export type PowerfulTableHeaderProps<Row = any> =
+  PowerfulTableHeaderPropsData<Row> &
+    PowerfulTableBaseProps<Row> & {
+      /**
+       * 数据：可选的SetDataType方法的参数
+       */
+      data?: SetDataType<T, Row>
+
+      /**
+       * 类型：可选的_TYPE枚举类型的关键字
+       * @default 'text'
+       */
+      type?: keyof _TYPE
+    }
 
 export type _TYPE<Row = any> = {
   image: ImageDataType<Row>
@@ -412,7 +468,7 @@ export type PowerfulTableFilter = {
   value: string
 }
 
-type ElComponentProp<T extends keyof _TYPE, P = any, Row = any> =
+type ElComponentProp<P = any, Row = any> =
   | Partial<P>
   | (({
       /**
@@ -430,7 +486,7 @@ type ElComponentProp<T extends keyof _TYPE, P = any, Row = any> =
     }: {
       row: Row
       index: number
-      props: PowerfulTableHeaderProps<T, Row>
+      props: PowerfulTableHeaderProps<Row>
     }) => Partial<P>)
 
 export type OnEmit<T> = Partial<{
@@ -456,7 +512,7 @@ export type TextDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'text'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 当前行下标
      */
@@ -485,7 +541,7 @@ export type TextDataType<Row = any> = {
   }: {
     row: Row
     index?: number
-    props: PowerfulTableHeaderProps<'text'>
+    props: PowerfulTableHeaderProps<Row>
   }) => string | number
 }
 
@@ -542,7 +598,7 @@ export type ImageDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'image'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 当前行下标
      */
@@ -556,7 +612,7 @@ export type ImageDataType<Row = any> = {
    * el-image props 图片属性
    * @see https://element-plus.gitee.io/zh-CN/component/image.html#image-attributes
    */
-  property?: ElComponentProp<'image', ImageProps, Row>
+  property?: ElComponentProp<ImageProps, Row>
 }
 
 export type BtnDataType<Row = any> = {
@@ -589,7 +645,7 @@ export type BtnDataType<Row = any> = {
      */
     index,
   }: {
-    props: PowerfulTableHeaderProps<'btn'>
+    props: PowerfulTableHeaderProps<Row>
     params: any
     row: Row
     index: number
@@ -617,7 +673,7 @@ export type BtnDataType<Row = any> = {
       /**
        * 单元格配置数据
        */
-      props: PowerfulTableHeaderProps<'btn'>
+      props: PowerfulTableHeaderProps<Row>
       /**
        * 自定义数据，data.params 数据，原封不动返回
        */
@@ -662,7 +718,7 @@ export type BtnDataType<Row = any> = {
    * el-button props 按钮属性
    * @see https://element-plus.gitee.io/zh-CN/component/button.html#button-attributes
    */
-  property?: ElComponentProp<'btn', ButtonProps, Row>
+  property?: ElComponentProp<ButtonProps, Row>
 }
 
 export type SwitchEmit<T> = {
@@ -680,7 +736,7 @@ export type SwitchDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'switch'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 当前行下标
      */
@@ -694,7 +750,7 @@ export type SwitchDataType<Row = any> = {
    * el-switch props 开关属性
    * @see https://element-plus.gitee.io/zh-CN/component/switch.html#attributes
    */
-  property?: ElComponentProp<'switch', SwitchProps, Row>
+  property?: ElComponentProp<SwitchProps, Row>
 }
 
 export type InputEmit<T> = {
@@ -762,7 +818,7 @@ export type InputDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'input'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * index属性表示当前行在表格中的索引值
      */
@@ -774,9 +830,9 @@ export type InputDataType<Row = any> = {
   }>
 
   /**
-   * 表示一个可选的property属性，类型为 ElComponentProp<'input', InputProps, Row>的实例
+   * 表示一个可选的property属性，类型为 ElComponentProp<InputProps, Row>的实例
    */
-  property?: ElComponentProp<'input', InputProps, Row>
+  property?: ElComponentProp<InputProps, Row>
 }
 
 /**
@@ -810,7 +866,7 @@ export type VideoDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'video'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 数字类型的索引
      */
@@ -824,7 +880,7 @@ export type VideoDataType<Row = any> = {
    * 视频属性
    * @see https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
    */
-  property?: ElComponentProp<'video', VideoHTMLAttributes, Row>
+  property?: ElComponentProp<VideoHTMLAttributes, Row>
 }
 
 export type IconFontDataType<Row = any> = {
@@ -840,7 +896,7 @@ export type IconFontDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'iconfont'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 数字类型的索引
      */
@@ -876,7 +932,7 @@ export type RateDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'rate'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 数字类型的索引
      */
@@ -891,7 +947,7 @@ export type RateDataType<Row = any> = {
    * el-rate props 评分属性
    * @see https://element-plus.gitee.io/zh-CN/component/rate.html#attributes
    */
-  property?: ElComponentProp<'rate', RateProps, Row>
+  property?: ElComponentProp<RateProps, Row>
 }
 
 export type LinkDataType<Row = any> = {
@@ -914,7 +970,7 @@ export type LinkDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'href'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 数字类型的索引
      */
@@ -928,7 +984,7 @@ export type LinkDataType<Row = any> = {
    * el-link props 链接属性
    * @see https://element-plus.gitee.io/zh-CN/component/link.html#attributes
    */
-  property?: ElComponentProp<'href', LinkProps, Row>
+  property?: ElComponentProp<LinkProps, Row>
 }
 
 export type TagEmit<T> = {
@@ -974,7 +1030,7 @@ export type TagDataType<Row = any> = {
     /**
      * 单元格配置数据
      */
-    props: PowerfulTableHeaderProps<'tag'>
+    props: PowerfulTableHeaderProps<Row>
     /**
      * 数字类型的索引
      */
@@ -988,7 +1044,7 @@ export type TagDataType<Row = any> = {
    * el-tag props 标签属性
    * @see https://element-plus.gitee.io/zh-CN/component/tag.html#attributes
    */
-  property?: ElComponentProp<'tag', TagProps, Row>
+  property?: ElComponentProp<TagProps, Row>
 }
 
 export interface LangPackages {
@@ -1110,7 +1166,7 @@ export namespace BtnConfig {
      * 按钮组件的属性对象
      * @see https://element-plus.gitee.io/zh-CN/component/button.html#attributes
      */
-    property?: ElComponentProp<'btn', ButtonProps, any>
+    property?: ElComponentProp<ButtonProps, any>
   }
   export type Config<Row> = {
     /**

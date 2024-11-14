@@ -3,7 +3,7 @@
  * @Author: peng-xiao-shuai
  * @Date: 2021-09-22 16:31:33
  * @Last Modified by: peng-xiao-shuai
- * @Last Modified time: 2023-03-14 09:58:12
+ * @Last Modified time: 2024-11-14 16:05:01
  */
 
 import { deepClone } from '../index'
@@ -111,7 +111,7 @@ export function useFilters<L>(
    */
   const getPropObj = computed(
     () =>
-      (column: PowerfulTableHeader): PowerfulTableHeaderProps<'text', L> => {
+      (column: PowerfulTableHeader): PowerfulTableHeaderProps<L> => {
         return propObjs<L>(column)
       }
   )
@@ -210,9 +210,9 @@ const isPush = <D>(bool: boolean, list: any[], data: D) => {
 
 const propObjs = <L>(
   column: PowerfulTableHeader
-): PowerfulTableHeaderProps<'text', L> => {
+): PowerfulTableHeaderProps<L> => {
   // 获取过滤项
-  let propObj: PowerfulTableHeaderProps<'text', L> = { prop: '' }
+  let propObj: PowerfulTableHeaderProps<L> = { prop: '' }
   // 判断是否数组
   if (!Array.isArray(column.props)) {
     propObj = column.props

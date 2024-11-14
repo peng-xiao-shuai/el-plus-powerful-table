@@ -24,7 +24,7 @@ const FSelect = defineComponent({
     ...props,
     // 过滤的配置数据
     propData: {
-      type: Object as PropType<PowerfulTableHeaderProps<'text'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => {
         return {
           prop: '',

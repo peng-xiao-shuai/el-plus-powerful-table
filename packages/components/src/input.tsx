@@ -1,6 +1,10 @@
 import { ElInput } from 'element-plus'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
@@ -13,12 +17,13 @@ const Input = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'input'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'input'>
     const size = inject(SizeSymbol)
     const { REmit, event } = useREmit<'input'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
@@ -34,13 +39,11 @@ const Input = defineComponent({
       <>
         <ElInput
           v-slots={{
-            [props.prop.data?.slot as string]: () => (
-              <span style={{ padding: '0 10px' }}>
-                {props.prop.data?.symbol}
-              </span>
+            [data?.slot as string]: () => (
+              <span style={{ padding: '0 10px' }}>{data?.symbol}</span>
             ),
           }}
-          style={props.prop.data?.style || {}}
+          style={data?.style || {}}
           size={size}
           v-model={props.row[props.prop.prop]}
           onBlur={(...arg: any) => {
@@ -67,7 +70,7 @@ const Input = defineComponent({
             rows: 3,
             ...isProperty(
               { row: props.row, index: props.index!, props: props.prop },
-              props.prop.data?.property
+              data?.property
             ),
           }}
         ></ElInput>

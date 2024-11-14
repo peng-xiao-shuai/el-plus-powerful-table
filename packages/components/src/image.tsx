@@ -1,6 +1,10 @@
 import { ElImage } from 'element-plus'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
@@ -12,12 +16,14 @@ const Image = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'image'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'image'>
+
     const { REmit, event } = useREmit<'image'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'image',
@@ -36,7 +42,7 @@ const Image = defineComponent({
           lazy={true}
           fit={'cover'}
           preview-teleported={true}
-          style={props.prop.data?.style}
+          style={data?.style}
           onLoad={(...arg: any) => {
             REmit('load', ...arg)
             event('load', ...arg)
@@ -55,7 +61,7 @@ const Image = defineComponent({
           }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
-            props.prop.data?.property
+            data?.property
           )}
         ></ElImage>
       </>

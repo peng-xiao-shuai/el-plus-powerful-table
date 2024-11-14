@@ -1,7 +1,11 @@
 import { ElIcon } from 'element-plus'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   powerfulTableComponentProp,
   useREmit,
@@ -13,7 +17,7 @@ const Text = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'text'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
     listLength: {
@@ -23,6 +27,7 @@ const Text = defineComponent({
   },
   emits: ['component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'text'>
     const { REmit, event } = useREmit<'text'>(emit, 'text', {
       row: props.row,
       index: props.index!,
@@ -44,7 +49,7 @@ const Text = defineComponent({
             event('click', evt)
           }}
           style={
-            props.prop.data && props.prop.data.develop
+            data && data.develop
               ? {
                   display: '-webkit-box',
                   overflow: 'hidden',
@@ -52,13 +57,13 @@ const Text = defineComponent({
                   'word-break': 'break-all',
                   '-webkit-line-clamp': develop.value[props.index || 0]
                     ? 99999
-                    : (props.prop.data && props.prop.data.line) || 3,
+                    : (data && data.line) || 3,
                 }
               : {}
           }
         >
-          {props.prop.data && typeof props.prop.data.formatting == 'function'
-            ? props.prop.data.formatting({
+          {data && typeof data.formatting == 'function'
+            ? data.formatting({
                 row: props.row,
                 index: props.index,
                 props: props.prop,
@@ -68,7 +73,7 @@ const Text = defineComponent({
 
         {/* <!-- 展开全文或收起 --> */}
         <div
-          v-show={props.prop.data && props.prop.data.develop}
+          v-show={data && data.develop}
           class="develop"
           onClick={(event: Event) => {
             event.stopPropagation()

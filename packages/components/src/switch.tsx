@@ -1,6 +1,10 @@
 import { ElSwitch } from 'element-plus'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
@@ -13,12 +17,13 @@ const Switch = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'switch'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
+    const data = props.prop.data as SetDataType<'switch'>
     const size = inject(SizeSymbol)
     const { REmit, event } = useREmit<'switch'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
@@ -34,7 +39,7 @@ const Switch = defineComponent({
       <>
         <ElSwitch
           size={size}
-          style={props.prop.data?.style || {}}
+          style={data?.style || {}}
           v-model={props.row[props.prop.prop]}
           active-value={'1'}
           inactive-value={'0'}
@@ -44,7 +49,7 @@ const Switch = defineComponent({
           }}
           {...isProperty(
             { row: props.row, index: props.index!, props: props.prop },
-            props.prop.data?.property
+            data?.property
           )}
         />
       </>

@@ -166,7 +166,7 @@ export const useREmit = <T extends EventType>(
   props: {
     row: any
     index: number
-    props: PowerfulTableHeaderProps<Exclude<typeof componentName, 'filter'>>
+    props: PowerfulTableHeaderProps
   }
 ) => {
   const REmit = (eventType: string, ...arg: any) => {
@@ -185,13 +185,14 @@ export const useREmit = <T extends EventType>(
     eventType: keyof NonNullable<SetDataType<T>['on']>,
     ...arg: any
   ) => {
+    const data = props.props.data as SetDataType<EventType>
     if (
       isTypeProtect<SetDataType<EventType>, SetDataType<EventType>>(
-        props.props.data!,
+        data as SetDataType<EventType>,
         (data) => typeof data?.on != undefined
       )
     ) {
-      ;(props.props.data?.on as { [key: string]: any })?.[eventType as string](
+      ;(data?.on as { [key: string]: any })?.[eventType as string](
         { ...props },
         ...arg
       )
@@ -423,13 +424,13 @@ export const useFunction = <L>(
     get,
     matchComponents,
     bindAttr(
-      prop: PowerfulTableHeaderProps<'text', L>,
+      prop: PowerfulTableHeaderProps<L>,
       scope: { $index: number; row: L },
       item: PowerfulTableHeader<L>
     ): {
       row: L
       index: number
-      prop: PowerfulTableHeaderProps<'text', L>
+      prop: PowerfulTableHeaderProps<L>
       aligning: 'left' | 'center' | 'right'
     } {
       return {

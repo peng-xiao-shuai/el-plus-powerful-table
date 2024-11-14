@@ -1,6 +1,10 @@
 import { ElLink } from 'element-plus'
 import type { App } from 'vue'
-import type { PowerfulTableHeaderProps, SFCWithInstall } from '~/index'
+import type {
+  PowerfulTableHeaderProps,
+  SFCWithInstall,
+  SetDataType,
+} from '~/index'
 import {
   isProperty,
   powerfulTableComponentProp,
@@ -11,30 +15,30 @@ const Link = defineComponent({
   props: {
     ...powerfulTableComponentProp,
     prop: {
-      type: Object as PropType<PowerfulTableHeaderProps<'href'>>,
+      type: Object as PropType<PowerfulTableHeaderProps>,
       default: () => ({}),
     },
   },
   emits: ['return-emit', 'component-emit'],
   setup(props) {
+    const data = props.prop.data as SetDataType<'href'>
+
     return () => (
       <>
         <ElLink
           type={'primary'}
           underline={false}
           href={props.row[props.prop.prop]}
-          style={props.prop.data?.style || {}}
+          style={data?.style || {}}
           {...{
-            target: props.prop.data?.target || '_blank',
+            target: data?.target || '_blank',
             ...isProperty(
               { row: props.row, index: props.index!, props: props.prop },
-              props.prop.data?.property
+              data?.property
             ),
           }}
         >
-          {typeof props.prop.data?.text == 'function'
-            ? props.prop.data?.text(props.row)
-            : props.prop.data?.text}
+          {typeof data?.text == 'function' ? data?.text(props.row) : data?.text}
         </ElLink>
       </>
     )
