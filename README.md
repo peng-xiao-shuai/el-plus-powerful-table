@@ -23,6 +23,23 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.15 20241114
+- 更改类型，在声明 `header` 时，`props` 下属性 `data` 属性在不使用 `setData` 函数时同样可以获得智能提示。已使用 `setData` 不受影响
+
+```ts
+const header = [{
+  label: '性别',
+  props: {
+    type: 'text',
+    prop: 'gender',
+    data: { // 该类型会被推断为 (SetDataType<"input", Lists> & SetDataType<T, Lists>) | undefined
+      develop: true,
+      // 输入 l 时会提示 line 属性
+    },
+  }
+}]
+```
+
 ## 2.2.14 20241031
 - 修复类型错误
 
