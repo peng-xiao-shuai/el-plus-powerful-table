@@ -75,8 +75,7 @@
 <script lang="ts">
 import { ElMessage } from 'element-plus'
 import { btnConfig, header, lists } from './indexData'
-import type { PowerfulTableOperateData, PowerfulTableExpose } from '@/index'
-
+import type { PowerfulTableExpose, PowerfulTableOperateData } from 'es'
 export default defineComponent({
   components: {
     // PTBtnPlus
@@ -152,7 +151,7 @@ export default defineComponent({
           resolve({
             data: {
               result: {
-                rows: rows,
+                rows,
                 total: lists.length,
               },
               message: '成功',

@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import { ElMessageBox, ElMessage } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
 import {
   Delete,
   Edit,
@@ -14,7 +14,7 @@ import type {
   LangPackages,
   PowerfulTableFilter,
   PowerfulTableHeader,
-} from '@/index'
+} from '~/index'
 import { LangKey } from '~/locale/packages'
 
 console.log(LangKey)
@@ -152,14 +152,14 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
         prop: 'icon',
         type: 'iconfont',
         text: '车标：',
-        data: setData<'iconfont', Lists>({
+        data: {
           class: 'viteIcon',
           style: {
             height: '40px',
             lineHeight: '40px',
             fontSize: '40px',
           },
-        }),
+        },
       },
     ],
   },
@@ -240,7 +240,7 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
       {
         prop: 'price',
         type: 'input',
-        data: setData<'input', Lists>({
+        data: {
           slot: 'append',
           symbol: '万',
           style: { width: '100%' },
@@ -249,7 +249,7 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
               placeholder: '售价',
             }
           },
-        }),
+        },
       },
     ],
   },
