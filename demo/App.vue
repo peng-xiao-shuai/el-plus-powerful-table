@@ -75,7 +75,13 @@
 <script lang="ts">
 import { ElMessage } from 'element-plus'
 import { btnConfig, header, lists } from './indexData'
-import type { PowerfulTableExpose, PowerfulTableOperateData } from 'es'
+import type { Lists } from './indexData'
+import type {
+  EmitEnum,
+  Handlers,
+  PowerfulTableExpose,
+  PowerfulTableOperateData,
+} from 'es'
 export default defineComponent({
   components: {
     // PTBtnPlus
@@ -172,7 +178,7 @@ export default defineComponent({
       console.log('修改', e)
     }
     // 修改
-    function handlerUpdate(e: any) {
+    const handlerUpdate: Handlers<Lists>[EmitEnum.BtnClick] = (e) => {
       ElMessage.success('按钮修改操作，参数详情，查看控制台')
       console.log('修改', e)
     }

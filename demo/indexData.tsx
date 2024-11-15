@@ -19,7 +19,7 @@ import { LangKey } from '~/locale/packages'
 
 console.log(LangKey)
 
-type Lists = {
+export type Lists = {
   id?: number
   name?: string
   engine?: string
