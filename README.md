@@ -1,6 +1,6 @@
-## [DEMO](https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component/powerful-table-demo.html)
+## [DEMO](https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component_directive/component/powerful-table-demo.html)
 
-## [DOCS](https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component/powerful-table-doc.html)
+## [DOCS](https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component_directive/component/powerful-table-doc.html)
 
 ## 语言
 对于语言方面组件是默认使用 `英语` 因为 `element-plus` 默认是使用英语，不引用中文包的主要原因是避免增大体积。
