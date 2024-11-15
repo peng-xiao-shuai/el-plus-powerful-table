@@ -10,6 +10,7 @@ export { default as PTBtnPlus } from './btn-plus'
 export * from './powerful-table'
 export * from './filter'
 export * from './components'
+export { EmitEnum } from './powerful-table/src/powerful-table-data'
 // 获取类型
 export const getType = <T>(target: T) =>
   Object.prototype.toString.call(target).slice(8, -1)
