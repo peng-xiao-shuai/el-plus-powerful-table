@@ -320,7 +320,7 @@ type EmitEventType<Row = any> = {
   (e: EmitEnum.BtnPlusRefresh): void
   (
     e: EmitEnum.BtnClick,
-    payload: { params: BtnDataType['params']; row: Row; index: number }
+    payload: Parameters<NonNullable<BtnDataType['click']>>[0]
   ): void
   (
     e: EmitEnum.SizeChange,

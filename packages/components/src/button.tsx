@@ -46,6 +46,7 @@ const Button = defineComponent({
                 params: item.params,
                 row: props.row,
                 index: props.index!,
+                btnIndex,
               })
               return
             }

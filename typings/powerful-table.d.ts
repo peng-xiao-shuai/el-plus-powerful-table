@@ -644,11 +644,16 @@ export type BtnDataType<Row = any> = {
      * 当前行索引
      */
     index,
+    /**
+     * 当前按钮索引
+     */
+    btnIndex,
   }: {
     props: PowerfulTableHeaderProps<Row>
     params: any
     row: Row
     index: number
+    btnIndex: number[]
   }) => void
   beforeClick?: (
     {
@@ -1215,11 +1220,8 @@ export type EmitTypeArgs<Row = any> = {
     effect: BtnConfig.BtnList['effect']
     rows: Row[]
   }
-  [EmitEnum.BtnClick]: {
-    params: BtnDataType['params']
-    row: Row
-    index: number
-  }
+  [EmitEnum.BtnClick]: Parameters<NonNullable<BtnDataType['click']>>[0]
+
   [EmitEnum.SizeChange]: {
     params: { pageNum: number; pageSize: number }
     select: Row[]
