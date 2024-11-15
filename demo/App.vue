@@ -7,7 +7,7 @@
         font-weight: bold;
         margin-bottom: 20px;
       "
-      href="https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component/powerful-table-demo.html"
+      href="https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component_directive/component/powerful-table-demo.html"
       >更多示例</a
     >
 
