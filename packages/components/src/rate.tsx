@@ -41,6 +41,7 @@ const Rate = defineComponent({
           size={size}
           v-model={props.row[props.prop.prop]}
           disabled={true}
+          allow-half
           style={data?.style || {}}
           onChange={(...arg: any) => {
             REmit('change', ...arg)
