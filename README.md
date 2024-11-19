@@ -7,7 +7,7 @@
 组件内部语言跟随 `element-plus`。 部分 提示文字 语言，组件内部也支持 `中、英` 文，如果你需要支持更多语言或者更改组件内部
 的语言，可以在 `use(PowerfulTable, { local: 您的语言变量 })` 替换。也可以参考我们提供的 `demo` 实现。
 
-## el-plus-powerful-table-ts
+## el-plus-powerful-table-ts （*已更名为 el-plus-powerful-table*）
 
 此插件已 `el-plus-powerful-table` 作为基础，进行重构。部分功能将领先 `el-plus-powerful-table` 基础版本。
 `el-plus-powerful-table` 的 `ts` 版本
