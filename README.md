@@ -23,6 +23,9 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.17 20241127
+- 修复 `btn-plus` 组件中 `btn-left` 和 `btn-right` 样式问题
+
 ## 2.2.16 20241115
 - 修复类型
 
