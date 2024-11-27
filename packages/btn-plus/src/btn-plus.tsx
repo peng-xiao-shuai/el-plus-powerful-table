@@ -138,15 +138,23 @@ const PTBtnPlus = defineComponent({
     ) => {
       const btn = (
         <ElButton
-          class={item.text ? '' : 'no-margin'}
+          class={[
+            item.text ? '' : 'no-margin',
+            direction === 'left' ? 'btn-plus-left-item' : 'btn-plus-right-item',
+          ]}
           size={size}
           style={item.style || {}}
           disabled={item.disabled || btnDisabled(item.operateType)}
           {...item.property}
           onClick={() => batchOperate(direction, item)}
-        >
-          {item.text}
-        </ElButton>
+          v-slots={
+            item.text
+              ? {
+                  default: () => item.text,
+                }
+              : {}
+          }
+        ></ElButton>
       )
       return item.tip ? (
         <ElTooltip
@@ -272,21 +280,27 @@ const PTBtnPlus = defineComponent({
         >
           {slots['btn-left'] ? (
             slots['btn-left']()
-          ) : (
+          ) : filterButtons(props.btnConfig?.btnList).length > 1 ? (
             // /* 左侧操作按钮 */
             <ElButtonGroup class="filter-item btn-plus-left">
               {filterButtons(props.btnConfig?.btnList).map((item, index) =>
                 tipBtnNode(item, index)
               )}
             </ElButtonGroup>
+          ) : (
+            <div class="filter-item btn-plus-left">
+              {tipBtnNode(filterButtons(props.btnConfig?.btnList)[0], 0)}
+            </div>
           )}
 
           {slots['btn-right'] ? (
             slots['btn-right']()
-          ) : (
+          ) : filterButtons(props.btnConfig?.btnRightList).length > 1 ? (
             <ElButtonGroup class="filter-item btn-plus-right">
               {rightBtnRender()}
             </ElButtonGroup>
+          ) : (
+            <div class="filter-item btn-plus-right">{rightBtnRender()}</div>
           )}
         </div>
       </>
