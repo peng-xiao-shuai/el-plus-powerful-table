@@ -61,6 +61,13 @@ const btnConfig: BtnConfig.Config<Lists> = {
         icon: markRaw(Grid),
       },
     },
+    {
+      effect: 'other',
+      tip: '列',
+      property: {
+        icon: markRaw(Grid),
+      },
+    },
   ],
   btnList: [
     {
