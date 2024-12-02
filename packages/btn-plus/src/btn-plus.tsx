@@ -87,6 +87,12 @@ const PTBtnPlus = defineComponent({
               break
             case 'columns':
               break
+            default:
+              emit('change', {
+                effect: btnItem.effect,
+                rows: props.multipleSelection,
+              })
+              break
           }
         }
       }
