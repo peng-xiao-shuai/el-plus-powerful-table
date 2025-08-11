@@ -477,9 +477,11 @@ export const useInitiateListRequest = <L>(
         props.listRequest?.pageSizeKey ||
           injectProps.listRequest?.pageSizeKey ||
           'pageSize',
-        props.listRequest?.responseKey ||
-          injectProps.listRequest?.responseKey ||
-          'data.result',
+        typeof props.listRequest?.responseKey === 'undefined'
+          ? typeof injectProps.listRequest?.responseKey === 'undefined'
+            ? 'data.result'
+            : injectProps.listRequest?.responseKey
+          : props.listRequest?.responseKey,
         props.listRequest?.totalKey ||
           injectProps.listRequest?.totalKey ||
           'total',
@@ -496,7 +498,7 @@ export const useInitiateListRequest = <L>(
           [pageSizeKey]: powerfulTableData.pageSize,
         })
         .then((res: any) => {
-          const response = resolution(res, responseKey)
+          const response = responseKey ? resolution(res, responseKey) : res
           stateData.tableLists = response[listsKey]
           powerfulTableData.total = Number(response[totalKey])
         })

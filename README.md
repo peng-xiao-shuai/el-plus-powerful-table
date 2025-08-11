@@ -23,6 +23,11 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+
+## 2.2.18 20241127
+- 需要支持 `responseKey` 为空的情况
+- 取消对 `scss` 的强制依赖
+
 ## 2.2.17 20241127
 - 修复 `btn-plus` 组件中 `btn-left` 和 `btn-right` 样式问题
 

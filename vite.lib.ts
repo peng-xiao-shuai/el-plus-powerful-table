@@ -81,7 +81,7 @@ export default defineConfig(() => {
                 'switch',
                 'tag',
               ].forEach((item) => {
-                scssUrl += `import 'element-plus/es/components/${item}/style/index'\n`
+                scssUrl += `import 'element-plus/theme-chalk/el-${item}.css'\n`
               })
               scssUrl += `import './style.css'\n`
               code = scssUrl + code
