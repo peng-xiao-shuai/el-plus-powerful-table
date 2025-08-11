@@ -309,6 +309,7 @@ import {
 import type {
   BtnDataType,
   ComponentEvent,
+  PowerfulTableExpose,
   PowerfulTableLabelValue,
 } from '~/index'
 import { LangKey, t } from '~/locale/lang'
@@ -542,7 +543,7 @@ const getSelect = (arr = props.selectData, list = stateData.tableLists) => {
   }
 }
 
-defineExpose({
+defineExpose<PowerfulTableExpose<Row>>({
   $slots: useSlots(),
   $attrs: useAttrs(),
   $refs: {

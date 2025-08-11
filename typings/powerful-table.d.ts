@@ -44,6 +44,18 @@ export interface StateData<Row = any> {
   isTable: boolean
 }
 
+// usePowerfulTableStates 函数的返回类型
+export interface PowerfulTableStatesReturn<Row = any> {
+  Size: 'large' | 'default' | 'small'
+  multipleTable: import('vue').Ref<InstanceType<typeof ElTable> | null>
+  filterComponents: import('vue').Ref<
+    InstanceType<typeof FSelect | typeof FInput | typeof FDatePicker>[] | null
+  >
+  powerfulTableData: PowerfulTableData<Row>
+  injectProps: Record<string, any>
+  stateData: StateData<Row>
+}
+
 export type PowerfulTableExpose<Row = any> = Readonly<{
   $slots: SetupContext['slots']
   $attrs: SetupContext['attrs']
@@ -51,7 +63,7 @@ export type PowerfulTableExpose<Row = any> = Readonly<{
     /**
      * 表格 Ref 实例
      */
-    multipleTable: InstanceType<typeof ElTable>
+    multipleTable: import('vue').Ref<InstanceType<typeof ElTable> | null>
     /**
      * 筛选组件 Ref 实例
      */
@@ -82,11 +94,11 @@ export type PowerfulTableExpose<Row = any> = Readonly<{
   /**
    * 重置数据发送请求
    */
-  resetList: (params?: object) => void | undefined
+  resetList?: (params?: object) => void
   /**
    * 重新发送请求
    */
-  getListData: (params?: object) => void | undefined
+  getListData?: (params?: object) => void
   /**
    * 添加选中行
    */

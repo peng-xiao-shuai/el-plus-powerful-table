@@ -14,6 +14,7 @@ import type {
   PowerfulTableHeader,
   PowerfulTableHeaderProps,
   PowerfulTableProps,
+  PowerfulTableStatesReturn,
   SetDataType,
   StateData,
 } from '~/index'
@@ -205,7 +206,9 @@ export const useREmit = <T extends EventType>(
   }
 }
 
-export const usePowerfulTableStates = <L>(props: PowerfulTableProps<L>) => {
+export const usePowerfulTableStates = <L>(
+  props: PowerfulTableProps<L>
+): PowerfulTableStatesReturn<L> => {
   // 全局此组件注入的数据
   const injectProps = inject(PowerfulTableSymbol, {})
 
