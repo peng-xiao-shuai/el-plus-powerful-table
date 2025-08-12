@@ -94,11 +94,11 @@ export type PowerfulTableExpose<Row = any> = Readonly<{
   /**
    * 重置数据发送请求
    */
-  resetList: (params?: object) => void
+  resetList: ((params?: object) => void) | undefined
   /**
    * 重新发送请求
    */
-  getListData: (params?: object) => void
+  getListData: ((params?: object) => void) | undefined
   /**
    * 添加选中行
    */

@@ -85,6 +85,21 @@ export default defineConfig(() => {
 
             return { code, map: null }
           },
+          generateBundle(options, bundle) {
+            // 在生成的文件中手动添加 CSS 导入
+            Object.keys(bundle).forEach((fileName) => {
+              if (fileName === 'index.mjs' || fileName === 'index.js') {
+                const chunk = bundle[fileName]
+                if (chunk.type === 'chunk' && typeof chunk.code === 'string') {
+                  // 在文件开头添加 CSS 导入，确保扩展名正确
+                  chunk.code = chunk.code.replace(
+                    /style.css.(mjs|js)/,
+                    'style.css'
+                  )
+                }
+              }
+            })
+          },
         }
       })(),
     ],
