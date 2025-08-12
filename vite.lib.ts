@@ -52,11 +52,7 @@ export default defineConfig(() => {
       Components({
         globs: ['**/src/*.{tsx|vue}'],
         include: [/\.(vue|tsx)$/, /\.vue\?vue/],
-        resolvers: [
-          ElementPlusResolver({
-            importStyle: 'sass',
-          }),
-        ],
+        resolvers: [ElementPlusResolver()],
       }),
       (function injectCss() {
         return {
@@ -114,7 +110,7 @@ export default defineConfig(() => {
       // cssCodeSplit: true,
       rollupOptions: {
         //忽略打包vue文件
-        external: ['vue', './style.css', /^(@e|e)lement-plus*/],
+        external: ['vue', /^(@e|e)lement-plus*/],
         input: ['./packages/index.ts'],
         output: [
           {

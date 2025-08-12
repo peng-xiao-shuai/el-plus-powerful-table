@@ -568,4 +568,4 @@ export default {
 }
 </script>
 
-<style src="./powerful-table.scss"></style>
+<style src="./powerful-table.css"></style>
