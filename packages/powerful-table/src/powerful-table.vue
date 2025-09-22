@@ -161,12 +161,12 @@
               <div
                 v-else
                 :style="{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
-                  ...(prop.style || {}),
-                }"
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
+                ...(prop.style || {}),
+              }"
                 @click="(event: Event) => event.stopPropagation()"
               >
                 <span
@@ -187,6 +187,7 @@
                     v-if="
                       (scope.row[prop.prop] == undefined ||
                         scope.row[prop.prop] == null) &&
+                      !prop.filters &&
                       prop.type != 'btn'
                     "
                   >

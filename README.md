@@ -23,6 +23,9 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.23 20250922
+- 调整即使 `scope.row[prop.prop]` 没有值时，但是 `filters` 存在，不进行空渲染
+
 ## 2.2.22 20250826
 - 修复 `tag` 类型时，值不为 `string | array` 时解析出错
 
