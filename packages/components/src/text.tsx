@@ -34,6 +34,16 @@ const Text = defineComponent({
       props: props.prop,
     })
     const develop = ref(Array.from({ length: props.listLength }).fill(false))
+    const content = computed(() => {
+      return data && typeof data.formatting == 'function'
+        ? data.formatting({
+            row: props.row,
+            index: props.index,
+            props: props.prop,
+          })
+        : props.row[props.prop.prop]
+    })
+
     return () => (
       <div class={{ content: develop.value[props.index || 0] }}>
         {/* <!-- 主体内容 --> */}
@@ -48,8 +58,9 @@ const Text = defineComponent({
             })
             event('click', evt)
           }}
+          title={content.value}
           style={
-            data && data.develop
+            data
               ? {
                   display: '-webkit-box',
                   overflow: 'hidden',
@@ -62,13 +73,7 @@ const Text = defineComponent({
               : {}
           }
         >
-          {data && typeof data.formatting == 'function'
-            ? data.formatting({
-                row: props.row,
-                index: props.index,
-                props: props.prop,
-              })
-            : props.row[props.prop.prop]}
+          {content.value}
         </div>
 
         {/* <!-- 展开全文或收起 --> */}
