@@ -17,6 +17,7 @@ import type {
   PowerfulTableStatesReturn,
   SetDataType,
   StateData,
+  _TYPE,
 } from '~/index'
 import { LangKey, t } from '~/locale/lang'
 // console.log(PTFDatePicker, PTFInput, PTFSelect)
@@ -403,7 +404,7 @@ export const useFunction = <L>(
    * @param {string} type 类型
    * @returns 组件名称
    */
-  const matchComponents = (type: string) => {
+  const matchComponents = (type: Exclude<keyof _TYPE, 'text' | 'slot'>) => {
     return {
       image: 'PTImage',
       btn: 'PTButton',

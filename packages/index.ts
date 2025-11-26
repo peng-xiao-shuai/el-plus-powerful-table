@@ -3,7 +3,7 @@ import powerfulTable from './powerful-table'
 import fComponents from './filter'
 import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
-import type { _TYPE } from '#/index'
+import type { PowerfulTableHeaderProps, _TYPE } from '#/index'
 import type { App, Plugin } from 'vue'
 export type * from '../typings/index'
 export { default as PTBtnPlus } from './btn-plus'
@@ -14,6 +14,27 @@ export { EmitEnum } from './powerful-table/src/powerful-table-data'
 // 获取类型
 export const getType = <T>(target: T) =>
   Object.prototype.toString.call(target).slice(8, -1)
+
+export const getPropType = <T>(
+  prop: PowerfulTableHeaderProps<T>,
+  scope: {
+    row: T
+    index: number
+  }
+) => {
+  function isFunction<T>(
+    value: T | ((...args: any[]) => any)
+  ): value is Extract<T, (...args: any[]) => any> {
+    return typeof value === 'function'
+  }
+
+  const { type } = prop
+  if (type !== undefined && isFunction(type)) {
+    return type(scope.row, scope.index)
+  } else {
+    return type
+  }
+}
 
 // 深度克隆
 export const deepClone = <T>(target: T) => {

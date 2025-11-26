@@ -152,7 +152,7 @@
             >
               <!-- 插槽 -->
               <slot
-                v-if="prop.type == 'slot'"
+                v-if="getPropType < Row > (prop, scope) == 'slot'"
                 :name="prop.slotName || 'default'"
                 :row="scope.row"
                 :index="scope.$index"
@@ -188,7 +188,7 @@
                       (scope.row[prop.prop] == undefined ||
                         scope.row[prop.prop] == null) &&
                       !prop.filters &&
-                      prop.type != 'btn'
+                      getPropType < Row > (prop, scope) != 'btn'
                     "
                   >
                     <div v-if="prop.reserve" v-html="prop.reserve" />
@@ -197,9 +197,9 @@
                     </div>
                   </div>
                   <component
-                    :is="matchComponents(prop.type)"
+                    :is="matchComponents(getPropType<Row>(prop, scope) as Exclude<keyof _TYPE, 'text' | 'slot'>)"
                     v-else-if="
-                      prop.type &&
+                      getPropType<Row>(prop, scope) &&
                       [
                         'image',
                         'btn',
@@ -211,7 +211,7 @@
                         'rate',
                         'href',
                         'video',
-                      ].includes(prop.type)
+                      ].includes(getPropType<Row>(prop, scope) as Exclude<keyof _TYPE, 'text' | 'slot'>)
                     "
                     v-bind="bindAttr(prop, scope, item)"
                     @return-emit="returnEmit"
@@ -220,7 +220,8 @@
                   <PTFilter
                     v-else-if="
                       prop.filters &&
-                      (prop.type == 'text' || prop.type == undefined)
+                      (getPropType < Row > (prop, scope) == 'text' ||
+                        getPropType < Row > (prop, scope) == undefined)
                     "
                     v-bind="bindAttr(prop, scope, item)"
                     @component-emit="componentEmit"
@@ -296,7 +297,7 @@
 </template>
 
 <script setup lang="ts">
-import { deepClone } from '../../index'
+import { deepClone, getPropType } from '../../index'
 import { JustifyFunSymbol, SizeSymbol } from '../../keys'
 // import en from "element-plus/lib/locale/lang/en";
 import { useFilters } from '../../filter/useFilters'
@@ -312,6 +313,7 @@ import type {
   ComponentEvent,
   PowerfulTableExpose,
   PowerfulTableLabelValue,
+  _TYPE,
 } from '~/index'
 import { LangKey, t } from '~/locale/lang'
 

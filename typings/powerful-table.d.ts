@@ -359,6 +359,10 @@ export type PowerfulTableHeaderPropsData<Row = any> =
       type?: undefined
       data?: SetDataType<'text', Row>
     }
+  | {
+      type?: (row: Row, index: number) => keyof _TYPE
+      data?: SetDataType<keyof _TYPE, Row>
+    }
 
 export interface PowerfulTableBaseProps<Row = any> {
   /**
@@ -438,19 +442,7 @@ export interface PowerfulTableBaseProps<Row = any> {
  * props 单元格数据
  */
 export type PowerfulTableHeaderProps<Row = any> =
-  PowerfulTableHeaderPropsData<Row> &
-    PowerfulTableBaseProps<Row> & {
-      /**
-       * 数据：可选的SetDataType方法的参数
-       */
-      data?: SetDataType<T, Row>
-
-      /**
-       * 类型：可选的_TYPE枚举类型的关键字
-       * @default 'text'
-       */
-      type?: keyof _TYPE
-    }
+  PowerfulTableHeaderPropsData<Row> & PowerfulTableBaseProps<Row>
 
 export type _TYPE<Row = any> = {
   image: ImageDataType<Row>
