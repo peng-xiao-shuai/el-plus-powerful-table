@@ -194,7 +194,7 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
       },
       {
         type: ((row: Lists) =>
-          row.brand == 'Audi' ? 'href' : undefined) as unknown as 'href',
+          row.brand == 'Audi' ? 'href' : 'href') as unknown as 'href',
         prop: 'href',
         text: '型号：',
         data: {
@@ -212,6 +212,8 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
         prop: 'imageUrl',
         data: setData<'image', Lists>({
           style: {
+            width: '60px',
+            height: '60px',
             borderRadius: '10px',
           },
           property: ({ row, index, props }) => {
@@ -247,17 +249,17 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
       },
       {
         prop: 'price',
-        type: 'input',
-        data: {
-          slot: 'append',
-          symbol: '万',
-          style: { width: '100%' },
-          property({ row, index, props }) {
-            return {
+        type: (row: Lists) => (row.brand == 'Audi' ? 'input' : 'text'),
+        data: setData<'input', Lists>(({ row }) => {
+          return {
+            slot: 'append',
+            symbol: (row.price as number) > 150 ? '万' : '萬',
+            style: { width: '100%' },
+            property: {
               placeholder: '售价',
-            }
-          },
-        },
+            },
+          }
+        }),
       },
     ],
   },

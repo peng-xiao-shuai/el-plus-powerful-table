@@ -23,6 +23,24 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.3.0 20251126
+- 调整 `data` 支持 `function` 类型为 `({row: Row, index: number, props: [当前data的父级配置项]}) => _TYPE[type]`。正常使用 `type = 'href'` 时 `data` 自主推断不受影响，`type` 为函数时参照下面示例
+```ts
+{
+  prop: 'price',
+  type: (row: Lists) => (row.brand == 'Audi' ? 'input' : 'text'),
+  data: setData<'input', Lists>(({ row }) => {
+    return {
+      slot: 'append',
+      symbol: (row.price as number) > 150 ? '万' : '萬',
+      style: { width: '100%' },
+      property: {
+        placeholder: '售价',
+      },
+    }
+  }),
+},
+```
 ## 2.2.24 20251126
 - 修复 `type = undefined | text` 时，仅传递 `line` 不传递 `develop` 时 `line` 失效
 - 调整 `type` 支持 `function` 类型为 `(row: Row, index: number) => keyof _TYPE | undefined`。正常使用 `type = 'href'` 时 `data` 自主推断不受影响
