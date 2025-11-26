@@ -5,8 +5,10 @@ import type {
   PowerfulTableHeaderProps,
   SFCWithInstall,
   SetDataType,
+  _TYPE,
 } from '~/index'
 import {
+  isData,
   isProperty,
   powerfulTableComponentProp,
   useREmit,
@@ -24,7 +26,10 @@ const Tags = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const data = props.prop.data as SetDataType<'tag'>
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.prop },
+      props.prop.data
+    ) as _TYPE['tag']
     const size = inject(SizeSymbol)
     const { REmit, event } = useREmit<'tag'>(
       emit as (event: 'component-emit', ...args: any[]) => void,

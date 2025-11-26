@@ -6,10 +6,11 @@ import type {
   PowerfulTableFilter,
   PowerfulTableHeaderProps,
   SFCWithInstall,
-  SetDataType,
+  _TYPE,
 } from '~/index'
 import { SizeSymbol } from '~/keys'
 import { LangKey, t } from '~/locale/lang'
+import { isData } from '~/powerful-table/src/powerful-table-data'
 
 const isFun = <T,>(key: string, data?: T) => {
   if (typeof data == 'function') {
@@ -59,6 +60,11 @@ const FSelect = defineComponent({
     const stop = watch(
       () => props.propData,
       (newProps) => {
+        const data = isData(
+          { row: {}, index: 0, props: newProps },
+          newProps.data
+        ) as _TYPE['switch']
+
         // 首先判断是否存在filter属性
         if (newProps.filters) {
           // filter 属性支持 数组和函数 这里在判断是否数组
@@ -74,19 +80,11 @@ const FSelect = defineComponent({
           arr.push(
             {
               value: t(LangKey.Open),
-              key:
-                isFun(
-                  'activeValue',
-                  (newProps.data as SetDataType<'switch'>)?.property
-                ) || 1,
+              key: isFun('activeValue', data?.property) || 1,
             },
             {
               value: t(LangKey.Close),
-              key:
-                isFun(
-                  'inactiveValue',
-                  (newProps.data as SetDataType<'switch'>)?.property
-                ) || 0,
+              key: isFun('inactiveValue', data?.property) || 0,
             }
           )
           state.options = arr

@@ -151,6 +151,16 @@ export const powerfulTableComponentProp = {
   },
 }
 
+// 对部分支持函数的 data 参数进行判断返回
+export const isData = <T, R>(e: T, data?: R | ((e: T) => R)) => {
+  return isTypeProtect<typeof data, R>(
+    data,
+    (pet) => typeof (<R>pet) != 'function'
+  )
+    ? data
+    : data!(e || ({ row: {}, index: undefined, props: {} } as T))
+}
+
 // 对部分支持函数的 property 参数进行判断返回
 export const isProperty = <T, R>(e: T, property?: R | ((e: T) => R)) => {
   return isTypeProtect<typeof property, R>(
@@ -183,17 +193,12 @@ export const useREmit = <T extends EventType>(
     )
   }
 
-  const event = (
-    eventType: keyof NonNullable<SetDataType<T>['on']>,
-    ...arg: any
-  ) => {
-    const data = props.props.data as SetDataType<EventType>
-    if (
-      isTypeProtect<SetDataType<EventType>, SetDataType<EventType>>(
-        data as SetDataType<EventType>,
-        (data) => typeof data?.on != undefined
-      )
-    ) {
+  const event = (eventType: keyof NonNullable<_TYPE[T]['on']>, ...arg: any) => {
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.props },
+      props.props.data
+    ) as _TYPE[EventType]
+    if (typeof data?.on == 'object') {
       ;(data?.on as { [key: string]: any })?.[eventType as string](
         { ...props },
         ...arg

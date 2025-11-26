@@ -5,8 +5,10 @@ import type {
   PowerfulTableHeaderProps,
   SFCWithInstall,
   SetDataType,
+  _TYPE,
 } from '~/index'
 import {
+  isData,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -27,7 +29,10 @@ const Text = defineComponent({
   },
   emits: ['component-emit'],
   setup(props, { emit }) {
-    const data = props.prop.data as SetDataType<'text'>
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.prop },
+      props.prop.data
+    ) as _TYPE['text']
     const { REmit, event } = useREmit<'text'>(emit, 'text', {
       row: props.row,
       index: props.index!,

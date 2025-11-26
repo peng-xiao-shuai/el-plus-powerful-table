@@ -1,10 +1,7 @@
 import type { App } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-  SetDataType,
-} from '~/index'
+import type { PowerfulTableHeaderProps, SFCWithInstall, _TYPE } from '~/index'
 import {
+  isData,
   isProperty,
   powerfulTableComponentProp,
   useREmit,
@@ -21,7 +18,10 @@ const Video = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const data = props.prop.data as SetDataType<'video'>
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.prop },
+      props.prop.data
+    ) as _TYPE['video']
     const { REmit, event } = useREmit<'video'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'video',

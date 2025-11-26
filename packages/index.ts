@@ -3,7 +3,7 @@ import powerfulTable from './powerful-table'
 import fComponents from './filter'
 import BtnPlus from './btn-plus'
 import { PowerfulTableSymbol } from './keys'
-import type { PowerfulTableHeaderProps, _TYPE } from '#/index'
+import type { PowerfulTableHeaderProps, SetDataType, _TYPE } from '#/index'
 import type { App, Plugin } from 'vue'
 export type * from '../typings/index'
 export { default as PTBtnPlus } from './btn-plus'
@@ -74,8 +74,8 @@ export const isTypeProtect = <T, P extends T>(
 
 // 不同类型的data数据类型提示
 export const setData = <T extends keyof _TYPE<L>, L = any>(
-  data: _TYPE<L>[T]
-): _TYPE<L>[T] => data
+  data: SetDataType<T, L>
+): SetDataType<T, L> => data
 
 const makeInstaller = (components: Plugin[] = []) => {
   const install = (app: App, options?: import('~/index').InjectProps) => {

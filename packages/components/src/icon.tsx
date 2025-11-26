@@ -1,10 +1,7 @@
 import type { App } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-  SetDataType,
-} from '~/index'
+import type { PowerfulTableHeaderProps, SFCWithInstall, _TYPE } from '~/index'
 import {
+  isData,
   powerfulTableComponentProp,
   useREmit,
 } from '~/powerful-table/src/powerful-table-data'
@@ -20,8 +17,10 @@ const Icon = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const data = props.prop.data as SetDataType<'iconfont'>
-
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.prop },
+      props.prop.data
+    ) as _TYPE['iconfont']
     const { REmit, event } = useREmit<'iconfont'>(
       emit as (event: 'component-emit', ...args: any[]) => void,
       'iconfont',

@@ -1,11 +1,8 @@
 import { ElInput } from 'element-plus'
 import type { App } from 'vue'
-import type {
-  PowerfulTableHeaderProps,
-  SFCWithInstall,
-  SetDataType,
-} from '~/index'
+import type { PowerfulTableHeaderProps, SFCWithInstall, _TYPE } from '~/index'
 import {
+  isData,
   isProperty,
   powerfulTableComponentProp,
   useREmit,
@@ -23,7 +20,10 @@ const Input = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props, { emit }) {
-    const data = props.prop.data as SetDataType<'input'>
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.prop },
+      props.prop.data
+    ) as _TYPE['input']
     const size = inject(SizeSymbol)
     const { REmit, event } = useREmit<'input'>(
       emit as (event: 'component-emit', ...args: any[]) => void,

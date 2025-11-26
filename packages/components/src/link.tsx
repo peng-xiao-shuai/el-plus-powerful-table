@@ -4,8 +4,10 @@ import type {
   PowerfulTableHeaderProps,
   SFCWithInstall,
   SetDataType,
+  _TYPE,
 } from '~/index'
 import {
+  isData,
   isProperty,
   powerfulTableComponentProp,
 } from '~/powerful-table/src/powerful-table-data'
@@ -21,7 +23,10 @@ const Link = defineComponent({
   },
   emits: ['return-emit', 'component-emit'],
   setup(props) {
-    const data = props.prop.data as SetDataType<'href'>
+    const data = isData(
+      { row: props.row, index: props.index!, props: props.prop },
+      props.prop.data
+    ) as _TYPE['href']
 
     return () => (
       <>

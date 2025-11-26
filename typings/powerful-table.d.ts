@@ -302,9 +302,28 @@ export interface PowerfulTableHeader<Row = any> {
   property?: Partial<TableColumnCtx<Row>>
 }
 
-export type SetDataType<T extends keyof _TYPE, Row = any> = {
-  [key in keyof _TYPE<Row>[T]]: _TYPE<Row>[T][key]
-}
+export type SetDataType<T extends keyof _TYPE, Row = any> =
+  | {
+      [key in keyof _TYPE<Row>[T]]: _TYPE<Row>[T][key]
+    }
+  | (({
+      /**
+       * 当前行数据
+       */
+      row,
+      /**
+       * 当前行索引
+       */
+      index,
+      /**
+       * 单元格配置数据
+       */
+      props,
+    }: {
+      row: Row
+      index: number
+      props: PowerfulTableHeaderProps<Row>
+    }) => _TYPE<Row>[T])
 
 export type PowerfulTableHeaderPropsData<Row = any> =
   | {
