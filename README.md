@@ -23,6 +23,32 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.2.24 20251126
+- 修复 `type = undefined | text` 时，仅传递 `line` 不传递 `develop` 时 `line` 失效
+- 调整 `type` 支持 `function` 类型为 `(row: Row, index: number) => keyof _TYPE | undefined`。正常使用 `type = 'href'` 时 `data` 自主推断不受影响
+```ts
+// 1. 在实际应用中type为函数时无法准确推断data类型，此时可以使用  as unknown as 'href' 推断类型
+{
+  type: ((row: Lists) =>
+    row.brand == 'Audi' ? 'href' : undefined) as unknown as 'href',
+  prop: 'href',
+  text: '型号：',
+  // data 推断除类型为 SetDataType<"href", Lists> | SetDataType<keyof _TYPE<any>, Lists> | undefined
+  data: {
+
+  }
+}
+// 2. 或者使用 setData 函数收窄类型
+{
+  type: (row: Lists) => (row.brand == 'Audi' ? 'href' : undefined),
+  prop: 'href',
+  text: '型号：',
+  data: setData<'href', Lists>({
+    text: (row: any) => row.name,
+  }),
+}
+```
+
 ## 2.2.23 20250922
 - 调整即使 `scope.row[prop.prop]` 没有值时，但是 `filters` 存在，不进行空渲染
 

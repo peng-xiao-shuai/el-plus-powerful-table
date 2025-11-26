@@ -1,44 +1,45 @@
 <template>
-  <div class="app-container">
-    <a
-      style="
-        display: block;
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 20px;
-      "
-      href="https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component_directive/component/powerful-table-demo.html"
-      >更多示例</a
-    >
+  <el-config-provider :locale="zhCn">
+    <div class="app-container">
+      <a
+        style="
+          display: block;
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 20px;
+        "
+        href="https://peng-xiao-shuai.github.io/vite-vue-admin-docs/zh-CN/component_directive/component/powerful-table-demo.html"
+        >更多示例</a
+      >
 
-    <PowerfulTable
-      ref="powerfulTable"
-      :is-select="true"
-      :btn-config="btnConfigs"
-      :select-data="selectData"
-      :select-compare="selectCompare"
-      :header="headers"
-      :operate-data="operateData"
-      :pagination-property="{
-        pageSizes: [2, 5, 7],
-      }"
-      :list-request="{
-        listApi,
-      }"
-      :tree="{ props: { hasChildren: 'hasChildren', children: 'cd' } }"
-      :property="{
+      <PowerfulTable
+        ref="powerfulTable"
+        :is-select="true"
+        :btn-config="btnConfigs"
+        :select-data="selectData"
+        :select-compare="selectCompare"
+        :header="headers"
+        :operate-data="operateData"
+        :pagination-property="{
+          pageSizes: [2, 5, 7],
+        }"
+        :list-request="{
+          listApi,
+        }"
+        :tree="{ props: { hasChildren: 'hasChildren', children: 'cd' } }"
+        :property="{
         rowClassName: ({index}: any) => 'powerful-table-plus-row'
       }"
-      @batch-operate="batchOperate"
-      @switch-change="handleSwitchChange"
-      @btn-click="handlerUpdate"
-      @size-change="getList"
-      @btn-plus-change="btnChange"
-      @btn-plus-refresh="handleRefresh"
-      @row-click="handleClick"
-      @component-event="handleComponentEvent"
-    >
-      <!-- <template #btn-left>
+        @batch-operate="batchOperate"
+        @switch-change="handleSwitchChange"
+        @btn-click="handlerUpdate"
+        @size-change="getList"
+        @btn-plus-change="btnChange"
+        @btn-plus-refresh="handleRefresh"
+        @row-click="handleClick"
+        @component-event="handleComponentEvent"
+      >
+        <!-- <template #btn-left>
         <div>
           <el-button>1</el-button>
           <el-button>2</el-button>
@@ -50,29 +51,31 @@
           <el-button>4</el-button>
         </div>
       </template> -->
-      <!-- <template #empty>
+        <!-- <template #empty>
         <div>暂无车型数据</div>
       </template> -->
-      <template #Link>
-        <div>
-          <el-input
-            v-model="engineName"
-            size="small"
-            placeholder="输入发动机名称"
-          />
-        </div>
-      </template>
+        <template #Link>
+          <div>
+            <el-input
+              v-model="engineName"
+              size="small"
+              placeholder="输入发动机名称"
+            />
+          </div>
+        </template>
 
-      <template #date="{ row }">
-        <div>
-          {{ row.data }}
-        </div>
-      </template>
-    </PowerfulTable>
-  </div>
+        <template #date="{ row }">
+          <div>
+            {{ row.data }}
+          </div>
+        </template>
+      </PowerfulTable>
+    </div>
+  </el-config-provider>
 </template>
 
 <script lang="ts">
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { ElMessage } from 'element-plus'
 import { btnConfig, header, lists } from './indexData'
 import type { Lists } from './indexData'
@@ -229,7 +232,7 @@ export default defineComponent({
       operateData,
       // 方法
       listApi,
-
+      zhCn,
       handlerSort,
       handleComponentEvent,
       getList,

@@ -1,7 +1,8 @@
 {
   "name": "el-plus-powerful-table",
-  "version": "2.2.23",
+  "version": "2.2.24",
   "private": false,
+  "type": "module",
   "keywords": [
     "element-plus",
     "vue3.0",

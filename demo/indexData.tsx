@@ -193,12 +193,13 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
         ),
       },
       {
-        type: 'href',
+        type: ((row: Lists) =>
+          row.brand == 'Audi' ? 'href' : undefined) as unknown as 'href',
         prop: 'href',
         text: '型号：',
-        data: setData<'href', Lists>({
-          text: (row) => row.name!,
-        }),
+        data: {
+          text: (row: any) => row.name,
+        },
       },
     ],
   },
@@ -401,7 +402,6 @@ const header: () => PowerfulTableHeader<Lists>[] = () => [
         prop: 'content',
         type: 'text',
         data: setData<'text', Lists>({
-          develop: true,
           line: 2,
         }),
       },
