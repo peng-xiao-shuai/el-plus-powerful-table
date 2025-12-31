@@ -23,6 +23,10 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.3.1 20251221
+- 修复部分已知bug
+- 升级 `element-plus` 依赖
+
 ## 2.3.0 20251126
 - 调整 `data` 支持 `function` 类型为 `({row: Row, index: number, props: [当前data的父级配置项]}) => _TYPE[type]`。正常使用 `type = 'href'` 时 `data` 自主推断不受影响，`type` 为函数时参照下面示例
 ```ts
