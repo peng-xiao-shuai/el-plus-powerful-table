@@ -52,9 +52,11 @@ const Filter = defineComponent({
             event('click', evt)
           }}
         >
-          {typeof props.prop.filters == 'function'
-            ? props.prop.filters(props.row, props.index)
-            : filterFun(props.row[props.prop.prop], props.prop.filters!)}
+          {props.prop.filters
+            ? typeof props.prop.filters == 'function'
+              ? props.prop.filters(props.row, props.index)
+              : filterFun(props.row[props.prop.prop], props.prop.filters!)
+            : props.row[props.prop.prop]}
         </div>
       </>
     )
