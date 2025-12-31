@@ -199,7 +199,7 @@ export const useREmit = <T extends EventType>(
       props.props.data
     ) as _TYPE[EventType]
     if (typeof data?.on == 'object') {
-      ;(data?.on as { [key: string]: any })?.[eventType as string](
+      ;(data?.on as { [key: string]: any })?.[eventType as string]?.(
         { ...props },
         ...arg
       )
