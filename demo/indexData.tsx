@@ -30,7 +30,7 @@ export type Lists = {
   createTime?: null | string
   price?: string | number
   switchVal?: number
-  tag?: (number | string)[] | string
+  tag?: (number | string)[] | string | number
   rate?: number
   content?: string
   videoUrl?: string
@@ -116,385 +116,388 @@ const btnConfig: BtnConfig.Config<Lists> = {
   ],
 }
 
-const header: () => PowerfulTableHeader<Lists>[] = () => [
-  {
-    label: '编号', //显示的标题
-    minWidth: '100px', //对应列的最小宽度
-    headerAlign: 'center',
-    sortable: true, //排序
-    props: {
-      prop: 'id',
-      // data: {
-      //   develop: false,
-      // },
-    },
-    defaultShow: false,
-  },
-  {
-    label: '制造商', //显示的名称
-    width: 200,
-    overflowTooltip: true,
-    isShowOrFilterColumn: 'filter',
-    defaultFilter: true,
-    headerAlign: 'left',
-    props: [
-      {
-        type: 'href',
-        prop: 'manufacturerHref',
-        text: '厂商：',
-        filterItem: true,
-        customFilter: (val, column, resolve) => {
-          console.log('自定义过滤')
+export const useData = () => {
+  const colors = reactive<Record<string, string>>({})
 
-          resolve([lists[0]])
-        },
-        data: setData<'href', Lists>({
-          text: (row: any) => row.manufacturer,
-          property: {
-            underline: true,
-          },
-        }),
-      },
+  onMounted(() => {
+    setTimeout(() => {
+      Object.assign(colors, {
+        1: '#BD3145',
+        2: '#008DAF008DAF008DAF008DAF008DAF008DAF',
+        3: '#eee',
+        4: '#008000',
+        5: '#FFFF00',
+        6: '#800080',
+        7: '#FFA500',
+      })
+    }, 1000)
+  })
+  const headers = computed((): PowerfulTableHeader<Lists>[] => {
+    return [
       {
-        prop: 'icon',
-        type: 'iconfont',
-        text: '车标：',
-        data: {
-          class: 'viteIcon',
-          style: {
-            height: '40px',
-            lineHeight: '40px',
-            fontSize: '40px',
-          },
-        },
-      },
-    ],
-  },
-  {
-    label: '名称', //显示的名称
-    width: 220,
-    overflowTooltip: true,
-    isShowOrFilterColumn: 'filter',
-    headerAlign: 'left',
-    props: [
-      {
-        text: '品牌：',
-        prop: 'brand',
-        filterItem: true,
-        filtersType: 'select',
-        filters: [
-          { key: 'Audi', value: '奥迪' },
-          { key: 'BMW', value: '宝马' },
-        ],
-        render: (h, row) => (
-          <b>
-            {row.brand}（{{ Audi: '奥迪', BMW: '宝马' }[row.brand!]}）
-          </b>
-        ),
-      },
-      {
-        type: ((row: Lists) =>
-          row.brand == 'Audi' ? 'href' : 'href') as unknown as 'href',
-        prop: 'href',
-        text: '型号：',
-        data: {
-          text: (row: any) => row.name,
-        },
-      },
-    ],
-  },
-  {
-    label: '图片', //显示的标题
-    isShowOrFilterColumn: 'show',
-    props: [
-      {
-        type: 'image',
-        prop: 'imageUrl',
-        data: setData<'image', Lists>({
-          style: {
-            width: '60px',
-            height: '60px',
-            borderRadius: '10px',
-          },
-          property: ({ row, index, props }) => {
-            // console.log(row, index, props)
-            return {
-              // src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
-            }
-          },
-        }),
-      },
-    ],
-  },
-  {
-    label: '售价', //显示的标题
-    isShowOrFilterColumn: false,
-    // 如果要使用过滤功能 isFilterColumn 参数是必须的, 或者指定 isShowOrFilterColumn 为 'filter'
-    headerAlign: 'left',
-    props: [
-      {
-        text: '收藏：',
-        prop: 'switchVal',
-        type: 'switch',
-        data: setData<'switch', Lists>({
-          // isConfirmTip: true, // 开启提示
-          // confirmTip: '确认修改', // 提示语
-          // inactiveText: '关闭',
-          // activeText: '开启',
-          property: {
-            inactiveValue: 0,
-            activeValue: 1,
-          },
-        }),
-      },
-      {
-        prop: 'price',
-        type: (row: Lists) => (row.brand == 'Audi' ? 'input' : 'text'),
-        data: setData<'input', Lists>(({ row }) => {
-          return {
-            slot: 'append',
-            symbol: (row.price as number) > 150 ? '万' : '萬',
-            style: { width: '100%' },
-            property: {
-              placeholder: '售价',
-            },
-          }
-        }),
-      },
-    ],
-  },
-  {
-    label: '发动机名称', // 此标题不会显示，因为配置了 自定义表头 headerSlotName
-    width: '220',
-    isShowOrFilterColumn: 'filter',
-    headerSlotName: 'Link',
-    // property: {
-    //   align: 'left',
-    // },
-    props: [
-      {
-        type: 'text',
-        prop: 'engine',
-        text: '发动机：',
-        filters: (row) => row.engine!,
-      },
-      {
-        type: 'rate',
-        prop: 'rate',
-        text: '评 分：',
-        data: setData<'rate', Lists>({
-          property: {
-            disabled: false,
-          },
-        }),
-      },
-      // {
-      //   type: 'href',
-      //   prop: 'href',
-      //   data: {
-      //     text: (e: any) => e.name,
-      //   },
-      //   render: (h, row, index) => {
-      //     return h('b', {}, row.name)
-      //   },
-      // },
-    ],
-  },
-  {
-    label: '驱动方式',
-    props: {
-      prop: 'driveType',
-      filters: [
-        {
-          key: 'q',
-          value: '前驱',
-        },
-        {
-          key: 'h',
-          value: '后驱',
-        },
-        {
-          key: '4',
-          value: '四驱',
-        },
-      ],
-      data: setData<'text', Lists>({
-        formatting: ({ row, props }) =>
-          row.engineLocation! +
-          (props.filters as PowerfulTableFilter[]).find(
-            (item) => item.key == row.driveType
-          )?.value,
-      }),
-    },
-  },
-  {
-    label: '宣传视频', //显示的标题
-    width: 200,
-    // isFilterColumn: true,
-    props: {
-      prop: 'videoUrl',
-      type: 'video',
-      data: setData<'video', Lists>({
-        style: {
-          width: '100%',
-          height: '117px',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          border: '1px solid #ccc',
-        },
-        property: ({ row }) => ({
-          poster: row.imageUrl,
-          controls: true,
-        }),
-      }),
-    },
-  },
-  {
-    label: '外观颜色(只显示两个)', //显示的标题
-    width: 200,
-    overflowTooltip: false,
-    isShowOrFilterColumn: 'filter',
-    props: [
-      {
-        prop: 'tag',
-        type: 'tag',
-        filtersType: 'select',
-        data: setData<'tag', Lists>({
-          number: 2,
-          style: {
-            color: 'white',
-          },
-          color: (r, tag) => {
-            return (
-              { red: '#BD3145', blue: '#008DAF', white: '#eee' }[tag] || tag
-            )
-          },
-        }),
-        filters: [
-          { key: 'red', value: '红色' },
-          { key: 'black', value: '黑色' },
-          { key: 'blue', value: '蓝色' },
-          { key: 'gray', value: '灰色' },
-          { key: 'white', value: '白色' },
-        ],
-        reserve: '<i><b>VNode</b></i>',
-      },
-    ],
-  },
-  {
-    label: '发售日期（插槽）', //显示的标题
-    isShowOrFilterColumn: 'filter',
-    width: '180px',
-    // hidden: true,
-    props: [
-      {
-        prop: 'data',
-        filtersType: 'date',
-        type: 'slot',
-        slotName: 'date',
-      },
-    ],
-  },
-  {
-    label: '简介', //显示的标题
-    width: '300px',
-    isShowOrFilterColumn: 'filter',
-    props: [
-      {
-        prop: 'content',
-        type: 'text',
-        data: setData<'text', Lists>({
-          line: 2,
-        }),
-      },
-    ],
-  },
-  {
-    label: '操作', //显示的标题
-    width: 250,
-    fixed: 'right',
-    isShowOrFilterColumn: false,
-    props: [
-      {
-        type: 'btn',
-        prop: 'btn',
-        data: setData<'btn', Lists>([
+        label: '制造商', //显示的名称
+        width: 200,
+        overflowTooltip: true,
+        isShowOrFilterColumn: 'filter',
+        defaultFilter: true,
+        headerAlign: 'left',
+        props: [
           {
-            tip: '查看',
-            // showBtn: false,
-            params: {
-              emit: 'view',
+            type: 'href',
+            prop: 'manufacturerHref',
+            text: '厂商：',
+            filterItem: true,
+            customFilter: (val, column, resolve) => {
+              console.log('自定义过滤')
+
+              resolve([lists[0]])
             },
-            property: {
-              type: 'primary',
-              icon: markRaw(View),
-            },
-            // 在存在 click 时 beforeClick 将不会被触发
-            // beforeClick({ row, index, btnIndex, props, params }, resolve) {},
-            click: ({ props, params, row, index }) => {
-              console.log(props, params, row, index)
-            },
+            data: setData<'href', Lists>({
+              text: (row: any) => row.manufacturer,
+              property: {
+                underline: true,
+              },
+            }),
           },
           {
-            tip: '编辑按钮',
-            // showBtn: false,
-            // isTooltip: true,
-            params: {
-              emit: 'update',
-            },
-            beforeClick({ row, index, btnIndex, props, params }, resolve) {
-              ElMessageBox.confirm('正在进行修改操作，确认要修改？', '提示', {
-                confirmButtonText: 'OK',
-                cancelButtonText: 'Cancel',
-                type: 'warning',
-              }).then(() => {
-                resolve(true)
-              })
-            },
-            property: {
-              type: 'info',
-              icon: markRaw(Edit),
+            prop: 'icon',
+            type: 'iconfont',
+            text: '车标：',
+            data: {
+              class: 'viteIcon',
+              style: {
+                height: '40px',
+                lineHeight: '40px',
+                fontSize: '40px',
+              },
             },
           },
-          [
-            {
-              text: '更多',
-              isMore: true,
-              property: {
-                icon: markRaw(Edit),
-              },
+        ],
+      },
+      {
+        label: '名称', //显示的名称
+        width: 220,
+        overflowTooltip: true,
+        isShowOrFilterColumn: 'filter',
+        headerAlign: 'left',
+        props: [
+          {
+            text: '品牌：',
+            prop: 'brand',
+            filterItem: true,
+            filtersType: 'select',
+            filters: [
+              { key: 'Audi', value: '奥迪' },
+              { key: 'BMW', value: '宝马' },
+            ],
+            render: (h, row) => (
+              <b>
+                {row.brand}（{{ Audi: '奥迪', BMW: '宝马' }[row.brand!]}）
+              </b>
+            ),
+          },
+          {
+            type: ((row: Lists) =>
+              row.brand == 'Audi' ? 'href' : 'href') as unknown as 'href',
+            prop: 'href',
+            text: '型号：',
+            data: {
+              text: (row: any) => row.name,
             },
-            // {
-            //   tip: '编辑',
-            //   type: 'text',
-            //   icon: markRaw(Edit),
-            //   params: 'update',
-            // },
-            {
-              text: '删除',
-              params: 'remove',
-              property: {
-                type: 'danger',
-                icon: markRaw(Edit),
+          },
+        ],
+      },
+      {
+        label: '图片', //显示的标题
+        isShowOrFilterColumn: 'show',
+        props: [
+          {
+            type: 'image',
+            prop: 'imageUrl',
+            data: setData<'image', Lists>({
+              style: {
+                width: '60px',
+                height: '60px',
+                borderRadius: '10px',
               },
-            },
-          ],
+              property: ({ row, index, props }) => {
+                // console.log(row, index, props)
+                return {
+                  // src: 'https://t7.baidu.com/it/u=1819248061,230866778&fm=193&f=GIF',
+                }
+              },
+            }),
+          },
+        ],
+      },
+      {
+        label: '售价', //显示的标题
+        isShowOrFilterColumn: false,
+        // 如果要使用过滤功能 isFilterColumn 参数是必须的, 或者指定 isShowOrFilterColumn 为 'filter'
+        headerAlign: 'left',
+        props: [
+          {
+            text: '收藏：',
+            prop: 'switchVal',
+            type: 'switch',
+            data: setData<'switch', Lists>({
+              // isConfirmTip: true, // 开启提示
+              // confirmTip: '确认修改', // 提示语
+              // inactiveText: '关闭',
+              // activeText: '开启',
+              property: {
+                inactiveValue: 0,
+                activeValue: 1,
+              },
+            }),
+          },
+          {
+            prop: 'price',
+            type: (row: Lists) => (row.brand == 'Audi' ? 'input' : 'text'),
+            data: setData<'input', Lists>(({ row }) => {
+              return {
+                slot: 'append',
+                symbol: (row.price as number) > 150 ? '万' : '萬',
+                style: { width: '100%' },
+                property: {
+                  placeholder: '售价',
+                },
+              }
+            }),
+          },
+        ],
+      },
+      {
+        label: '发动机名称', // 此标题不会显示，因为配置了 自定义表头 headerSlotName
+        width: '220',
+        isShowOrFilterColumn: 'filter',
+        headerSlotName: 'Link',
+        // property: {
+        //   align: 'left',
+        // },
+        props: [
+          {
+            type: 'text',
+            prop: 'engine',
+            text: '发动机：',
+            filters: (row) => row.engine!,
+          },
+          {
+            type: 'rate',
+            prop: 'rate',
+            text: '评 分：',
+            data: setData<'rate', Lists>({
+              property: {
+                disabled: false,
+              },
+            }),
+          },
           // {
-          //   tip: '删除',
-          //   type: 'danger',
-          //   icon: markRaw(Edit),
-          //   showBtn: (e: any) => {
-          //     return true
+          //   type: 'href',
+          //   prop: 'href',
+          //   data: {
+          //     text: (e: any) => e.name,
           //   },
-          //   params: {
-          //     emit: 'remove',
+          //   render: (h, row, index) => {
+          //     return h('b', {}, row.name)
           //   },
           // },
-        ]),
+        ],
       },
-    ],
-  },
-]
+      {
+        label: '驱动方式',
+        props: {
+          prop: 'driveType',
+          filters: [
+            {
+              key: 'q',
+              value: '前驱',
+            },
+            {
+              key: 'h',
+              value: '后驱',
+            },
+            {
+              key: '4',
+              value: '四驱',
+            },
+          ],
+          data: setData<'text', Lists>({
+            formatting: ({ row, props }) =>
+              row.engineLocation! +
+              (props.filters as PowerfulTableFilter[]).find(
+                (item) => item.key == row.driveType
+              )?.value,
+          }),
+        },
+      },
+      {
+        label: '宣传视频', //显示的标题
+        width: 200,
+        // isFilterColumn: true,
+        props: {
+          prop: 'videoUrl',
+          type: 'video',
+          data: setData<'video', Lists>({
+            style: {
+              width: '100%',
+              height: '117px',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              border: '1px solid #ccc',
+            },
+            property: ({ row }) => ({
+              poster: row.imageUrl,
+              controls: true,
+            }),
+          }),
+        },
+      },
+      {
+        label: '外观颜色(只显示两个)', //显示的标题
+        width: 200,
+        overflowTooltip: false,
+        isShowOrFilterColumn: 'filter',
+        props: [
+          {
+            prop: 'tag',
+            type: 'tag',
+            filters: Object.keys(colors).map((key) => ({
+              key,
+              value: colors[key],
+            })),
+            reserve: '<i><b>VNode</b></i>',
+            data: {
+              style: {
+                width: '100%',
+              },
+            },
+          },
+        ],
+      },
+      {
+        label: '发售日期（插槽）', //显示的标题
+        isShowOrFilterColumn: 'filter',
+        width: '180px',
+        // hidden: true,
+        props: [
+          {
+            prop: 'data',
+            filtersType: 'date',
+            type: 'slot',
+            slotName: 'date',
+          },
+        ],
+      },
+      {
+        label: '简介', //显示的标题
+        width: '300px',
+        isShowOrFilterColumn: 'filter',
+        props: [
+          {
+            prop: 'content',
+            type: 'text',
+            data: setData<'text', Lists>({
+              line: 2,
+            }),
+          },
+        ],
+      },
+      {
+        label: '操作', //显示的标题
+        width: 250,
+        fixed: 'right',
+        isShowOrFilterColumn: false,
+        props: [
+          {
+            type: 'btn',
+            prop: 'btn',
+            data: setData<'btn', Lists>([
+              {
+                tip: '查看',
+                // showBtn: false,
+                params: {
+                  emit: 'view',
+                },
+                property: {
+                  type: 'primary',
+                  icon: markRaw(View),
+                },
+                // 在存在 click 时 beforeClick 将不会被触发
+                // beforeClick({ row, index, btnIndex, props, params }, resolve) {},
+                click: ({ props, params, row, index }) => {
+                  console.log(props, params, row, index)
+                },
+              },
+              {
+                tip: '编辑按钮',
+                // showBtn: false,
+                // isTooltip: true,
+                params: {
+                  emit: 'update',
+                },
+                beforeClick({ row, index, btnIndex, props, params }, resolve) {
+                  ElMessageBox.confirm(
+                    '正在进行修改操作，确认要修改？',
+                    '提示',
+                    {
+                      confirmButtonText: 'OK',
+                      cancelButtonText: 'Cancel',
+                      type: 'warning',
+                    }
+                  ).then(() => {
+                    resolve(true)
+                  })
+                },
+                property: {
+                  type: 'info',
+                  icon: markRaw(Edit),
+                },
+              },
+              [
+                {
+                  text: '更多',
+                  isMore: true,
+                  property: {
+                    icon: markRaw(Edit),
+                  },
+                },
+                // {
+                //   tip: '编辑',
+                //   type: 'text',
+                //   icon: markRaw(Edit),
+                //   params: 'update',
+                // },
+                {
+                  text: '删除',
+                  params: 'remove',
+                  property: {
+                    type: 'danger',
+                    icon: markRaw(Edit),
+                  },
+                },
+              ],
+              // {
+              //   tip: '删除',
+              //   type: 'danger',
+              //   icon: markRaw(Edit),
+              //   showBtn: (e: any) => {
+              //     return true
+              //   },
+              //   params: {
+              //     emit: 'remove',
+              //   },
+              // },
+            ]),
+          },
+        ],
+      },
+    ]
+  })
+  return {
+    headers,
+  }
+}
 
 const lists: Lists[] = [
   {
@@ -508,7 +511,7 @@ const lists: Lists[] = [
     icon: 'viteaodi',
     price: 146.48,
     switchVal: 1,
-    tag: ['red', 'gray'],
+    tag: undefined,
     rate: 4.5,
     content:
       '奥迪RS7概念车是由一位来自奥地利的设计者设计出来的，该车的车身外观融合了奥迪旗下多款车型的风格。 其侧面车身以及车位的设计与奥迪R8的设计十分相似，而汽车门则采用了兰博基尼经典的剪刀门设计方式。 2013北美（底特律）国际车展于14日开幕，奥迪全新RS7在车展上正式亮相并发布。',
@@ -530,13 +533,13 @@ const lists: Lists[] = [
     icon: 'vitebaoma',
     price: 196.8,
     switchVal: 0,
-    tag: ['white', 'red'],
+    tag: 2,
     rate: 4.5,
     content:
       '宝马M8（BMW M8)是宝马旗下的顶级跑车，采用M部门为其量身打造的4.4T V8双涡轮增压引擎，最大功率可达625马力，峰值扭矩750牛米。这台引擎可以让1.9吨的大家伙在3.2秒内完成0-100加速。M，在宝马车系中代表顶级性能版。',
     imageUrl: 'https://images.unsplash.com/photo-1630037937485-e2da57394d88',
     data: '2022-01-xx',
-    driveType: '4',
+    driveType: undefined,
     engineLocation: '前置',
     cd: [
       {
@@ -740,4 +743,4 @@ export const langPackages: LangPackages = {
   },
 }
 
-export { btnConfig, header, lists }
+export { btnConfig, lists }
