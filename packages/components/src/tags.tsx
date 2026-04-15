@@ -43,6 +43,8 @@ const Tags = defineComponent({
 
     /* ------ 标签string转array ------ */
     const tagToArray = (val: string | [], i: number) => {
+      if (val === undefined || val === null) return []
+
       return typeof val !== 'string'
         ? Array.isArray(val)
           ? val.slice(0, i)

@@ -23,6 +23,9 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.3.2 202604015
+- `scope.row[prop.prop]` 没有值时，进行空渲染
+
 ## 2.3.1 20251221
 - 修复部分已知bug
 - 升级 `element-plus` 依赖

@@ -187,7 +187,6 @@
                     v-if="
                       (scope.row[prop.prop] == undefined ||
                         scope.row[prop.prop] == null) &&
-                      !prop.filters &&
                       getPropType < Row > (prop, scope) != 'btn'
                     "
                   >
