@@ -555,6 +555,7 @@ defineExpose<PowerfulTableExpose<Row>>({
   props,
   injectProps,
   headerLists: headerLists.value,
+  headerListsRef: headerLists,
   powerfulTableData,
   stateData,
   resetList,

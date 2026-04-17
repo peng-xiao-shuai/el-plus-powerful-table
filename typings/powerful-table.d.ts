@@ -83,6 +83,8 @@ export type PowerfulTableExpose<Row = any> = Readonly<{
    * 过滤隐藏后的列
    */
   headerLists: PowerfulTableHeader<Row>[]
+
+  headerListsRef: import('vue').Ref<PowerfulTableHeader<Row>[]>
   /**
    * 内置数据也就是 vue2 中的 data
    */

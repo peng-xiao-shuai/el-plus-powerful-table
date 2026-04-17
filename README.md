@@ -23,6 +23,9 @@
 - - 删除 `component-event` 事件
 - - `_TYPE` 类型的 `key` 改为枚举
 
+## 2.3.3 202604015
+- `defineExpose` 新增暴露 `headerListsRef` 属性，类型为 `Ref<PowerfulTableHeader<Row>[]>`
+
 ## 2.3.2 202604015
 - `scope.row[prop.prop]` 没有值时，进行空渲染
 
