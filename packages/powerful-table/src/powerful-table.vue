@@ -20,230 +20,239 @@
       </template>
     </PTBtnPlus>
 
-    <ElTable
-      ref="multipleTable"
-      v-loading="listLoading"
-      class="powerful-table"
-      :data="tableLists"
-      v-bind="{
-        'element-loading-text': 'Loading',
-        border: true,
-        fit: true,
-        'row-key': 'id',
-        'highlight-current-row': true,
-        lazy: (tree && tree.lazy) || false,
-        load: tree && tree.load,
-        'tree-props': tree && tree.props,
-        size: Size,
-        ...property,
-      }"
-      @selection-change="handleSelectionChange"
-      @sort-change="sortChange"
-      @select="(...arg) => emit(EmitEnum.Select, ...arg)"
-      @select-all="(...arg) => emit(EmitEnum.SelectAll, ...arg)"
-      @cell-mouse-enter="(...arg) => emit(EmitEnum.CellMouseEnter, ...arg)"
-      @cell-mouse-leave="(...arg) => emit(EmitEnum.CellMouseLeave, ...arg)"
-      @cell-click="(...arg) => emit(EmitEnum.CellClick, ...arg)"
-      @cell-dblclick="(...arg) => emit(EmitEnum.CellDblclick, ...arg)"
-      @cell-contextmenu="(...arg) => emit(EmitEnum.CellContextmenu, ...arg)"
-      @row-click="(...arg) => emit(EmitEnum.RowClick, ...arg)"
-      @row-contextmenu="(...arg) => emit(EmitEnum.RowContextmenu, ...arg)"
-      @row-dblclick="(...arg) => emit(EmitEnum.RowDblclick, ...arg)"
-      @header-click="(...arg) => emit(EmitEnum.HeaderClick, ...arg)"
-      @header-contextmenu="(...arg) => emit(EmitEnum.HeaderContextmenu, ...arg)"
-      @filter-change="(...arg) => emit(EmitEnum.FilterChange, ...arg)"
-      @current-change="(...arg) => emit(EmitEnum.CurrentChange, ...arg)"
-      @header-dragend="(...arg) => emit(EmitEnum.HeaderDragend, ...arg)"
-      @expand-change="(...arg) => emit(EmitEnum.ExpandChange, ...arg)"
-    >
-      <template #empty>
-        <slot name="empty">
-          <component
-            :is="injectProps.emptyElement"
-            v-if="injectProps.emptyElement"
-          />
-          <span v-else>{{ t(LangKey.NoData) }}</span>
-        </slot>
-      </template>
-
-      <ElTableColumn
-        v-if="isSelect"
-        align="center"
-        type="selection"
-        width="45"
-        :selectable="selectable ? selectable : () => true"
-      />
-
-      <ElTableColumn
-        v-for="(item, index) in headerLists"
-        :key="item.label + index"
+    <div class="pt-table-container">
+      <ElTable
+        ref="multipleTable"
+        v-loading="listLoading"
+        class="powerful-table"
+        :data="tableLists"
         v-bind="{
-          fixed: item.fixed || false,
-          sortable: item.sortable || false,
-          'header-align': item.headerAlign || 'center',
-          'show-overflow-tooltip': item.overflowTooltip || false,
-          prop: Array.isArray(item.props)
-            ? item.props[0].prop
-            : item.props.prop,
-          label: item.label,
-          'min-width': item.minWidth || 140,
-          width: item.width || '',
-          align: item.headerAlign || 'center',
-          'class-name': item.headerAlign || 'center',
-          ...item.property,
+          'element-loading-text': 'Loading',
+          border: true,
+          fit: true,
+          'row-key': 'id',
+          'highlight-current-row': true,
+          lazy: (tree && tree.lazy) || false,
+          load: tree && tree.load,
+          'tree-props': tree && tree.props,
+          size: Size,
+          ...property,
         }"
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
+        @select="(...arg) => emit(EmitEnum.Select, ...arg)"
+        @select-all="(...arg) => emit(EmitEnum.SelectAll, ...arg)"
+        @cell-mouse-enter="(...arg) => emit(EmitEnum.CellMouseEnter, ...arg)"
+        @cell-mouse-leave="(...arg) => emit(EmitEnum.CellMouseLeave, ...arg)"
+        @cell-click="(...arg) => emit(EmitEnum.CellClick, ...arg)"
+        @cell-dblclick="(...arg) => emit(EmitEnum.CellDblclick, ...arg)"
+        @cell-contextmenu="(...arg) => emit(EmitEnum.CellContextmenu, ...arg)"
+        @row-click="(...arg) => emit(EmitEnum.RowClick, ...arg)"
+        @row-contextmenu="(...arg) => emit(EmitEnum.RowContextmenu, ...arg)"
+        @row-dblclick="(...arg) => emit(EmitEnum.RowDblclick, ...arg)"
+        @header-click="(...arg) => emit(EmitEnum.HeaderClick, ...arg)"
+        @header-contextmenu="
+          (...arg) => emit(EmitEnum.HeaderContextmenu, ...arg)
+        "
+        @filter-change="(...arg) => emit(EmitEnum.FilterChange, ...arg)"
+        @current-change="(...arg) => emit(EmitEnum.CurrentChange, ...arg)"
+        @header-dragend="(...arg) => emit(EmitEnum.HeaderDragend, ...arg)"
+        @expand-change="(...arg) => emit(EmitEnum.ExpandChange, ...arg)"
       >
-        <template
-          v-if="
-            ((item.isShowOrFilterColumn == undefined ||
-              item.isShowOrFilterColumn === 'filter') &&
-              !item.headerSlotName) ||
-            item.headerSlotName
-          "
-          #header
-        >
-          <!-- 用户自定义表头 -->
-          <slot
-            v-if="item.headerSlotName"
-            :name="item.headerSlotName"
-            :item="item"
-            :index="index"
-          />
-
-          <!-- 内置自定义表头 -->
-          <template v-else>
-            <PTFSelect
-              v-if="
-                (getPropObj(item).filters &&
-                  Array.isArray(getPropObj(item).filters) &&
-                  getPropObj(item).filtersType === 'select') ||
-                getPropObj(item).type === 'switch'
-              "
-              ref="filterComponents"
-              :header-data="item"
-              :list="list"
-              :prop-data="getPropObj(item)"
-              @header-filter-change="handleHeaderFilterChange"
+        <template #empty>
+          <slot name="empty">
+            <component
+              :is="injectProps.emptyElement"
+              v-if="injectProps.emptyElement"
             />
-            <PTFDatePicker
-              v-else-if="getPropObj(item).filtersType === 'date'"
-              ref="filterComponents"
-              :header-data="item"
-              :list="list"
-              @header-filter-change="handleHeaderFilterChange"
-            />
-            <PTFInput
-              v-else
-              ref="filterComponents"
-              :header-data="item"
-              :list="list"
-              @header-filter-change="handleHeaderFilterChange"
-            />
-          </template>
+            <span v-else>{{ t(LangKey.NoData) }}</span>
+          </slot>
         </template>
 
-        <template #default="scope">
-          <div style="display: inline-block">
-            <template
-              v-for="(prop, idx) in Array.isArray(item.props)
-                ? item.props
-                : [item.props]"
-              :key="'props' + idx"
-            >
-              <!-- 插槽 -->
-              <slot
-                v-if="getPropType < Row > (prop, scope) == 'slot'"
-                :name="prop.slotName || 'default'"
-                :row="scope.row"
-                :index="scope.$index"
-                @click="(event: Event) => event.stopPropagation()"
+        <ElTableColumn
+          v-if="isSelect"
+          align="center"
+          type="selection"
+          width="45"
+          :selectable="selectable ? selectable : () => true"
+        />
+
+        <ElTableColumn
+          v-for="(item, index) in headerLists"
+          :key="item.label + index"
+          v-bind="{
+            fixed: item.fixed || false,
+            sortable: item.sortable || false,
+            'header-align': item.headerAlign || 'center',
+            'show-overflow-tooltip': item.overflowTooltip || false,
+            prop: Array.isArray(item.props)
+              ? item.props[0].prop
+              : item.props.prop,
+            label: item.label,
+            'min-width': item.minWidth || 140,
+            width: item.width || '',
+            align: item.headerAlign || 'center',
+            'class-name': item.headerAlign || 'center',
+            ...item.property,
+          }"
+        >
+          <template
+            v-if="
+              ((item.isShowOrFilterColumn == undefined ||
+                item.isShowOrFilterColumn === 'filter') &&
+                !item.headerSlotName) ||
+              item.headerSlotName
+            "
+            #header
+          >
+            <!-- 用户自定义表头 -->
+            <slot
+              v-if="item.headerSlotName"
+              :name="item.headerSlotName"
+              :item="item"
+              :index="index"
+            />
+
+            <!-- 内置自定义表头 -->
+            <template v-else>
+              <PTFSelect
+                v-if="
+                  (getPropObj(item).filters &&
+                    Array.isArray(getPropObj(item).filters) &&
+                    getPropObj(item).filtersType === 'select') ||
+                  getPropObj(item).type === 'switch'
+                "
+                ref="filterComponents"
+                :header-data="item"
+                :list="list"
+                :prop-data="getPropObj(item)"
+                @header-filter-change="handleHeaderFilterChange"
               />
-              <div
+              <PTFDatePicker
+                v-else-if="getPropObj(item).filtersType === 'date'"
+                ref="filterComponents"
+                :header-data="item"
+                :list="list"
+                @header-filter-change="handleHeaderFilterChange"
+              />
+              <PTFInput
                 v-else
-                :style="{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
-                ...(prop.style || {}),
-              }"
-                @click="(event: Event) => event.stopPropagation()"
+                ref="filterComponents"
+                :header-data="item"
+                :list="list"
+                @header-filter-change="handleHeaderFilterChange"
+              />
+            </template>
+          </template>
+
+          <template #default="scope">
+            <div style="display: inline-block">
+              <template
+                v-for="(prop, idx) in Array.isArray(item.props)
+                  ? item.props
+                  : [item.props]"
+                :key="'props' + idx"
               >
-                <span
-                  v-if="prop.text"
-                  :style="{ marginRight: prop.text ? '10px' : '0px' }"
-                >
-                  {{ prop.text }}
-                </span>
-                <PTRenderJsx
-                  v-if="typeof prop.render == 'function'"
+                <!-- 插槽 -->
+                <slot
+                  v-if="getPropType < Row > (prop, scope) == 'slot'"
+                  :name="prop.slotName || 'default'"
                   :row="scope.row"
                   :index="scope.$index"
-                  :prop="prop"
-                  :aligning="(item.property?.align as any) || item.headerAlign"
+                  @click="(event: Event) => event.stopPropagation()"
                 />
-                <template v-else>
-                  <div
-                    v-if="
-                      (scope.row[prop.prop] == undefined ||
-                        scope.row[prop.prop] == null) &&
-                      getPropType < Row > (prop, scope) != 'btn'
-                    "
+                <div
+                  v-else
+                  :style="{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  justifyContent: justifyFun((item.property?.align as any) || item.headerAlign),
+                  ...(prop.style || {}),
+                }"
+                  @click="(event: Event) => event.stopPropagation()"
+                >
+                  <span
+                    v-if="prop.text"
+                    :style="{ marginRight: prop.text ? '10px' : '0px' }"
                   >
-                    <div v-if="prop.reserve" v-html="prop.reserve" />
-                    <div v-else>
-                      <span>{{ t(LangKey.NoData) }}</span>
+                    {{ prop.text }}
+                  </span>
+                  <PTRenderJsx
+                    v-if="typeof prop.render == 'function'"
+                    :row="scope.row"
+                    :index="scope.$index"
+                    :prop="prop"
+                    :aligning="(item.property?.align as any) || item.headerAlign"
+                  />
+                  <template v-else>
+                    <div
+                      v-if="
+                        (scope.row[prop.prop] == undefined ||
+                          scope.row[prop.prop] == null) &&
+                        getPropType < Row > (prop, scope) != 'btn'
+                      "
+                    >
+                      <div v-if="prop.reserve" v-html="prop.reserve" />
+                      <div v-else>
+                        <span>{{ t(LangKey.NoData) }}</span>
+                      </div>
                     </div>
-                  </div>
-                  <component
-                    :is="matchComponents(getPropType<Row>(prop, scope) as Exclude<keyof _TYPE, 'text' | 'slot'>)"
-                    v-else-if="
-                      getPropType<Row>(prop, scope) &&
-                      [
-                        'image',
-                        'btn',
-                        'switch',
-                        'input',
-                        'textarea',
-                        'iconfont',
-                        'tag',
-                        'rate',
-                        'href',
-                        'video',
-                      ].includes(getPropType<Row>(prop, scope) as Exclude<keyof _TYPE, 'text' | 'slot'>)
-                    "
-                    v-bind="bindAttr(prop, scope, item)"
-                    @return-emit="returnEmit"
-                    @component-emit="componentEmit"
-                  />
-                  <PTFilter
-                    v-else-if="
-                      prop.filters &&
-                      (getPropType < Row > (prop, scope) == 'text' ||
-                        getPropType < Row > (prop, scope) == undefined)
-                    "
-                    v-bind="bindAttr(prop, scope, item)"
-                    @component-emit="componentEmit"
-                  />
-                  <PTText
-                    v-else
-                    v-bind="bindAttr(prop, scope, item)"
-                    :list-length="tableLists.length"
-                    @component-emit="componentEmit"
-                  />
-                </template>
-              </div>
-            </template>
-          </div>
-        </template>
-      </ElTableColumn>
-    </ElTable>
+                    <component
+                      :is="matchComponents(getPropType<Row>(prop, scope) as Exclude<keyof _TYPE, 'text' | 'slot'>)"
+                      v-else-if="
+                        getPropType<Row>(prop, scope) &&
+                        [
+                          'image',
+                          'btn',
+                          'switch',
+                          'input',
+                          'textarea',
+                          'iconfont',
+                          'tag',
+                          'rate',
+                          'href',
+                          'video',
+                        ].includes(getPropType<Row>(prop, scope) as Exclude<keyof _TYPE, 'text' | 'slot'>)
+                      "
+                      v-bind="bindAttr(prop, scope, item)"
+                      @return-emit="returnEmit"
+                      @component-emit="componentEmit"
+                    />
+                    <PTFilter
+                      v-else-if="
+                        prop.filters &&
+                        (getPropType < Row > (prop, scope) == 'text' ||
+                          getPropType < Row > (prop, scope) == undefined)
+                      "
+                      v-bind="bindAttr(prop, scope, item)"
+                      @component-emit="componentEmit"
+                    />
+                    <PTText
+                      v-else
+                      v-bind="bindAttr(prop, scope, item)"
+                      :list-length="tableLists.length"
+                      @component-emit="componentEmit"
+                    />
+                  </template>
+                </div>
+              </template>
+            </div>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+    </div>
 
-    <div class="bottom-operate">
+    <div
+      v-if="
+        (operate && isSelect && operate.operates) || (isPagination && total)
+      "
+      class="bottom-operate pt-bottom-operate"
+    >
       <!-- 批量操作 -->
       <div
         v-if="operate && isSelect && operate.operates"
-        class="bottom-operate-left"
+        class="pt-bottom-operate-left bottom-operate-left"
       >
         <ElSelect
           v-model="operate.value"
@@ -278,7 +287,10 @@
       </div>
 
       <!-- 分页操作 -->
-      <div v-if="isPagination && total" class="bottom-operate-right">
+      <div
+        v-if="isPagination && total"
+        class="pt-bottom-operate-right bottom-operate-right"
+      >
         <ElPagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
